@@ -2,7 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import { SITE } from 'astrowind:config';
 import { getHomePermalink } from '~/utils/permalinks';
-import { useTranslation } from 'astro-i18next';
+import { getTranslations } from '~/utils/i18n';
 
 interface Link {
   text?: string;
@@ -24,8 +24,19 @@ export interface Props {
   locale?: 'en' | 'de';
 }
 
-const { socialLinks = [], secondaryLinks = [], links = [], theme = 'light' } = Astro.props;
-const { t } = useTranslation();
+const { socialLinks = [], secondaryLinks = [], links = [], theme = 'light', locale = 'en' } = Astro.props;
+// Use static translation loading instead of runtime t function
+const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
+const translations = await getTranslations(safeLocale);
+const t = (key: string) => {
+  const keys = key.split('.');
+  let value: unknown = translations;
+  for (const k of keys) {
+    value = (value as Record<string, unknown>)?.[k];
+    if (value === undefined) break;
+  }
+  return (value as string) || key;
+};
 ---
 
 <footer class:list={[{ dark: theme === 'dark' }, 'relative border-t border-gray-200 dark:border-slate-800 not-prose']}>
@@ -40,7 +51,7 @@ const { t } = useTranslation();
         </div>
         <div class="text-sm text-muted flex gap-1">
           {
-            secondaryLinks.map(({ text, href }, index) => (
+            secondaryLinks.map(({ text, href }: Link, index: number) => (
               <>
                 {index !== 0 ? ' · ' : ''}
                 <a href={href}>{t(`legal.${text}`)}</a>
@@ -50,7 +61,7 @@ const { t } = useTranslation();
         </div>
       </div>
       {
-        links.map(({ title, links }) => (
+        links.map(({ title, links }: Links) => (
           <div>
             <div class="dark:text-gray-300 font-medium mb-2">{t(`footer.${title}`)}</div>
             {links && Array.isArray(links) && links.length > 0 && (
@@ -72,7 +83,7 @@ const { t } = useTranslation();
       {
         socialLinks?.length ? (
           <ul>
-            {socialLinks.map(({ ariaLabel, href, text, icon }) => (
+            {socialLinks.map(({ ariaLabel, href, text, icon }: Link) => (
               <li>
                 <a href={href} aria-label={t(`social.${ariaLabel || text}`)}>
                   {icon && <Icon name={icon} class="w-5 h-5" />}

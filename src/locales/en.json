@@ -34,6 +34,21 @@
     "language_switcher": "Language Switcher",
     "available_in": "Available in",
     "not_available_in": "Not available in",
-    "current": "Current"
+    "current": "Current",
+    "Books": "Books",
+    "Projects": "Projects",
+    "Lab": "Lab",
+    "Life": "Life",
+    "About": "About",
+    "Contact": "Contact",
+    "main": "Main navigation"
+  },
+  "button": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous"
   }
 }

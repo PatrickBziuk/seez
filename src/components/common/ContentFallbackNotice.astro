@@ -3,8 +3,7 @@
  * ContentFallbackNotice Component
  * Displays when content is shown in non-preferred language
  */
-import { useTranslation } from 'astro-i18next';
-import { LANGUAGE_INFO } from '~/utils/i18n';
+import { LANGUAGE_INFO, getTranslations } from '~/utils/i18n';
 import type { SupportedLanguage } from '~/utils/i18n';
 
 export interface Props {
@@ -15,7 +14,17 @@ export interface Props {
 }
 
 const { originalLanguage, currentLanguage, dismissible = true, fallbackUrl } = Astro.props;
-const { t } = useTranslation();
+// Use static translation loading instead of runtime t function
+const translations = await getTranslations(currentLanguage);
+const t = (key: string) => {
+  const keys = key.split('.');
+  let value: unknown = translations;
+  for (const k of keys) {
+    value = (value as Record<string, unknown>)?.[k];
+    if (value === undefined) break;
+  }
+  return (value as string) || key;
+};
 
 // Only show if languages are different
 const shouldShow = originalLanguage !== currentLanguage;
@@ -41,11 +50,11 @@ const shouldShow = originalLanguage !== currentLanguage;
           <p>
             {t('content.not_available_in')} 
             <span class="font-medium">
-              {LANGUAGE_INFO[originalLanguage]?.flag} {LANGUAGE_INFO[originalLanguage]?.label}
+              {LANGUAGE_INFO[originalLanguage as SupportedLanguage]?.flag} {LANGUAGE_INFO[originalLanguage as SupportedLanguage]?.label}
             </span>.
             {t('content.showing_in')} 
             <span class="font-medium">
-              {LANGUAGE_INFO[currentLanguage]?.flag} {LANGUAGE_INFO[currentLanguage]?.label}
+              {LANGUAGE_INFO[currentLanguage as SupportedLanguage]?.flag} {LANGUAGE_INFO[currentLanguage as SupportedLanguage]?.label}
             </span>.
           </p>
           {fallbackUrl && (
