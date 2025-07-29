@@ -1,0 +1,57 @@
+---
+/**
+ * ContentMetadata component for displaying metadata badges
+ */
+import Badge from '../ui/Badge.astro';
+import { getTranslations, detectLanguage } from '~/utils/i18n';
+
+const { language, timestamp, status, tags } = Astro.props;
+
+// Detect current language and load translations
+const currentLanguage = detectLanguage(Astro.url.pathname);
+const translations = await getTranslations(currentLanguage);
+
+const languageLabels: Record<'en' | 'de', { label: string; flag: string }> = {
+  en: { label: translations?.language?.en || 'English', flag: '🇺🇸' },
+  de: { label: translations?.language?.de || 'Deutsch', flag: '🇩🇪' },
+};
+const statusLabels: Record<'Human' | 'AI' | 'AI+Human', string> = {
+  Human: translations?.badges?.human || 'Human',
+  AI: translations?.badges?.ai || 'AI',
+  'AI+Human': translations?.badges?.aiHuman || 'AI+Human',
+};
+const statusIcons: Record<'Human' | 'AI' | 'AI+Human', string> = {
+  Human: '👤',
+  AI: '🤖',
+  'AI+Human': '🤝',
+};
+
+function getStatusVariant(status: 'Human' | 'AI' | 'AI+Human'): 'ai' | 'human' | 'ai-human' {
+  if (status === 'AI') return 'ai';
+  if (status === 'Human') return 'human';
+  return 'ai-human';
+}
+---
+{(language || timestamp || status || tags?.length) && (
+  <div class="border-b border-gray-200 dark:border-gray-700 pb-6 mb-8 flex flex-col gap-2">
+    <div class="flex flex-wrap gap-2 items-center">
+      {language && languageLabels[language as 'en' | 'de'] && (
+        <Badge variant="language" text={languageLabels[language as 'en' | 'de'].label} icon={languageLabels[language as 'en' | 'de'].flag} size="sm" />
+      )}
+      {status?.authoring && statusIcons[status.authoring as 'Human' | 'AI' | 'AI+Human'] && (
+        <Badge variant={getStatusVariant(status.authoring as 'Human' | 'AI' | 'AI+Human')} text={statusLabels[status.authoring as 'Human' | 'AI' | 'AI+Human']} icon={statusIcons[status.authoring as 'Human' | 'AI' | 'AI+Human']} size="sm" />
+      )}
+      {status?.translation && statusIcons[status.translation as 'Human' | 'AI' | 'AI+Human'] && (
+        <Badge variant={getStatusVariant(status.translation as 'Human' | 'AI' | 'AI+Human')} text={statusLabels[status.translation as 'Human' | 'AI' | 'AI+Human']} icon={statusIcons[status.translation as 'Human' | 'AI' | 'AI+Human']} size="sm" />
+      )}
+      {timestamp && <Badge variant="timestamp" text={`${translations?.metadata?.timestamp || 'Timestamp'}: ${new Date(timestamp).toLocaleDateString()}`} icon="📅" size="sm" />}
+    </div>
+    {tags?.length > 0 && (
+      <div class="flex flex-wrap gap-2 mt-1">
+        {tags.map((tag: string) => (
+          <Badge variant="tag" text={translations?.tags?.[tag] || tag} />
+        ))}
+      </div>
+    )}
+  </div>
+)}

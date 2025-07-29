@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "title": "Title",
+    "subtitle": "Subtitle",
+    "language": "Language",
+    "timestamp": "Timestamp",
+    "status": "Status",
+    "tags": "Tags"
+  },
+  "badges": {
+    "ai": "AI",
+    "human": "Human",
+    "ai_human": "AI + Human",
+    "created_by": "Created by",
+    "translated_by": "Translated by",
+    "language": "Language"
+  },
+  "status": {
+    "created": "Created",
+    "translated": "Translated",
+    "authoring": "Authoring",
+    "translation": "Translation"
+  },
+  "content": {
+    "not_available": "Not available in this language.",
+    "redirected_notice": "You have been redirected to the default language.",
+    "dismiss": "Dismiss",
+    "language_fallback_title": "Content Language Notice",
+    "not_available_in": "This content is not available in",
+    "showing_in": "Showing content in",
+    "return_to_preferred": "Return to your preferred language"
+  },
+  "navigation": {
+    "language_switcher": "Language Switcher",
+    "available_in": "Available in",
+    "not_available_in": "Not available in",
+    "current": "Current"
+  }
+}

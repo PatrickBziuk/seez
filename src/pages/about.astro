@@ -1,0 +1,137 @@
+---
+import Features2 from '~/components/widgets/Features2.astro';
+import Features3 from '~/components/widgets/Features3.astro';
+import Hero from '~/components/widgets/Hero.astro';
+import Stats from '~/components/widgets/Stats.astro';
+import Steps2 from '~/components/widgets/Steps2.astro';
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Über mich',
+};
+---
+
+<Layout metadata={metadata}>
+  <Hero
+    tagline="Wer steckt hinter bziuk.com?"
+    image={{
+      src: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=2070&q=80',
+      alt: 'Kabelsalat mit Charakter',
+    }}
+  >
+    <Fragment slot="title">
+      Hallo, ich bin <span class="text-accent dark:text-white">Seez</span>.<br />
+      Techniker mit Haltung. Und ein bisschen Chaos im Kopf.
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      Ich baue digitale Werkzeuge für Selbstbestimmung, schreibe Bücher über das Leben dazwischen
+      – und denke auch mal drei Schritte zu weit. Willkommen auf meiner kleinen Schaltzentrale für alles,
+      was mir wirklich wichtig ist.
+    </Fragment>
+  </Hero>
+
+  <Stats
+    title="Was ich so mache"
+    stats={[
+      { title: 'Eigene Projekte', amount: '3+' },
+      { title: 'Codezeilen mit Bedeutung', amount: 'ca. 148.000' },
+      { title: 'Nachhilfestunden', amount: '300+' },
+      { title: 'Energys pro Woche', amount: '…zu viele' },
+    ]}
+  />
+
+  <Steps2
+    title="Was mich antreibt"
+    subtitle="Ich bin kein Fan von Buzzwords, aber ein paar Grundsätze hab ich trotzdem."
+    items={[
+      {
+        title: 'Technologie mit Haltung',
+        description:
+          'Ich baue keine Apps, um Nutzer festzuhalten. Ich baue Systeme, die dir helfen, dich selbst besser zu verstehen – oder in Ruhe zu lassen.',
+      },
+      {
+        title: 'Klarheit vor Komplexität',
+        description:
+          'Ich liebe komplexe Systeme. Aber sie sollten sich nie so anfühlen. Gute Architektur ist wie ein guter Text: Man versteht ihn – auch ohne Fußnote.',
+      },
+      {
+        title: 'Ethisch statt effektiv um jeden Preis',
+        description:
+          'Ich glaube an Software, die nicht alles kann – aber das Richtige tut. Ohne Tracking, ohne Tricks, ohne „Growth Hacks“.',
+      },
+    ]}
+  />
+
+  <Features3
+    title="Meine Projekte"
+    subtitle="Ein paar Dinge, an denen ich arbeite – nicht um sie zu verkaufen, sondern weil sie gebraucht werden."
+    columns={3}
+    isBeforeContent={true}
+    items={[
+      {
+        title: 'Cosensai',
+        description:
+          'Eine Plattform für persönliche KI-Assistenten – mit Gedächtnis, Haltung und Datenschutz. Kein weiterer Chatbot, sondern ein Denkspiegel.',
+        icon: 'tabler:brain',
+      },
+      {
+        title: 'circles',
+        description:
+          'Ein soziales Netzwerk ohne Likes, ohne Algorithmen – dafür mit echten Verbindungen. Basierend auf Vertrauen, nicht Verweildauer.',
+        icon: 'tabler:users',
+      },
+      {
+        title: 'marken.',
+        description:
+          'Ein Modeprojekt mit QR-Transparenz: Zeigt, woher dein Shirt kommt, was es gekostet hat – und wie viel Wahrheit in Baumwolle steckt.',
+        icon: 'tabler:shirt',
+      },
+    ]}
+  />
+
+  <Steps2
+    title="Und sonst so?"
+    subtitle="Manche nennen es Multitalent. Ich nenne es: Neugier, die nie stillsteht."
+    isReversed={true}
+    callToAction={{
+      text: 'Sag hallo',
+      href: '/contact',
+    }}
+    items={[
+      {
+        title: 'Nachhilfelehrer mit Seele',
+        description: 'Ich unterrichte Mathe, Deutsch und Informatik. Geduldig, empathisch, und ohne Panik vorm Bruch.',
+        icon: 'tabler:chalkboard',
+      },
+      {
+        title: '3D-Druck Bastler',
+        description: 'Ich liebe es, Ideen aus dem Kopf in die Hand zu holen. Von Deko bis Werkzeug – Hauptsache nützlich.',
+        icon: 'tabler:printer',
+      },
+      {
+        title: 'Texte mit Tiefe',
+        description: 'Ich schreibe Bücher über Liebe, Identität, Technologie – und über die Zwischenräume dazwischen.',
+        icon: 'tabler:book',
+      },
+    ]}
+  />
+
+  <Features2
+    title="Leben zwischen den Welten"
+    tagline="Digital. Persönlich. Direkt."
+    columns={2}
+    items={[
+      {
+        title: 'Tumblr-Veteran mit Filterblasenkompetenz',
+        description:
+          'Ich war auf Tumblr, bevor es cool war. Und noch da, als alle gingen. Schreiben war mein Rückzugsort – heute ist es mein Resonanzraum.',
+      },
+      {
+        title: 'Techniker & Träumer',
+        description:
+          'Ich lebe in Schnittmengen: Zwischen Bits und Bauchgefühl, zwischen Plattformstrategie und Poesie. Zwischen Debug und Du.',
+      },
+    ]}
+  />
+</Layout>

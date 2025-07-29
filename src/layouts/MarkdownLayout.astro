@@ -1,0 +1,37 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ContentMetadata from '~/components/common/ContentMetadata.astro';
+import { getTranslations, detectLanguage } from '~/utils/i18n';
+
+import type { MetaData, Status } from '~/types';
+
+export interface Props {
+  frontmatter: {
+    title?: string;
+    language?: string;
+    timestamp?: string;
+    status?: Status;
+    tags?: string[];
+  };
+}
+
+const { frontmatter } = Astro.props;
+const currentLanguage = detectLanguage(Astro.url.pathname);
+const translations = await getTranslations(currentLanguage);
+
+const metadata: MetaData = {
+  title: frontmatter?.title,
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
+    <h1 class="font-bold font-heading text-4xl md:text-5xl leading-tighter tracking-tighter">{frontmatter.title}</h1>
+    <ContentMetadata language={frontmatter.language} timestamp={frontmatter.timestamp} status={frontmatter.status} tags={frontmatter.tags} translations={translations} locale={currentLanguage} />
+    <div
+      class="mx-auto prose prose-lg max-w-4xl dark:prose-invert dark:prose-headings:text-slate-300 prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8"
+    >
+      <slot />
+    </div>
+  </section>
+</Layout>

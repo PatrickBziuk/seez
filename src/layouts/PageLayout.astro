@@ -1,0 +1,28 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import Header from '~/components/widgets/Header.astro';
+import Footer from '~/components/widgets/Footer.astro';
+import { headerData, footerData } from '~/navigation';
+import type { MetaData } from '~/types';
+import { detectLanguage } from '~/utils/i18n';
+
+export interface Props {
+  metadata?: MetaData;
+}
+
+const { metadata } = Astro.props;
+const locale = detectLanguage(Astro.url.pathname);
+---
+
+<Layout metadata={metadata}>
+  <slot name="header">
+    <!-- Only render default header if slot not provided -->
+    <Header {...headerData} locale={locale} isSticky showRssFeed showToggleTheme />
+  </slot>
+  <main>
+    <slot />
+  </main>
+  <slot name="footer">
+    <Footer {...footerData} locale={locale} />
+  </slot>
+</Layout>

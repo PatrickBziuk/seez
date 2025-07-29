@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "title": "Titel",
+    "subtitle": "Untertitel",
+    "language": "Sprache",
+    "timestamp": "Zeitstempel",
+    "status": "Status",
+    "tags": "Tags"
+  },
+  "badges": {
+    "ai": "KI",
+    "human": "Mensch",
+    "ai_human": "KI + Mensch",
+    "created_by": "Erstellt von",
+    "translated_by": "Übersetzt von",
+    "language": "Sprache"
+  },
+  "status": {
+    "created": "Erstellt",
+    "translated": "Übersetzt",
+    "authoring": "Verfasser",
+    "translation": "Übersetzung"
+  },
+  "content": {
+    "not_available": "In dieser Sprache nicht verfügbar.",
+    "redirected_notice": "Sie wurden zur Standardsprache weitergeleitet.",
+    "dismiss": "Schließen",
+    "language_fallback_title": "Sprach-Hinweis",
+    "not_available_in": "Dieser Inhalt ist nicht verfügbar auf",
+    "showing_in": "Inhalt wird angezeigt in",
+    "return_to_preferred": "Zurück zu Ihrer bevorzugten Sprache"
+  },
+  "navigation": {
+    "language_switcher": "Sprachumschalter",
+    "available_in": "Verfügbar in",
+    "not_available_in": "Nicht verfügbar in",
+    "current": "Aktuell"
+  }
+}
