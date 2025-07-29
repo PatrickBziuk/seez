@@ -7,26 +7,58 @@ on:
 
 jobs:
   build-and-deploy:
+    name: Build & Deploy to GitHub Pages
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: 🟢 Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
-      - name: Install dependencies
-        run: pnpm install
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing dependencies with npm..."
+          npm ci
+          echo "✅ Dependencies installed successfully!"
 
-      - name: Build site
-        run: pnpm run build
+      - name: 🔍 Run Astro check (allow failures)
+        continue-on-error: true
+        run: |
+          echo "Running Astro type checking..."
+          npm run check:astro || echo "⚠️ Astro check had issues, but continuing with build"
 
-      - name: Deploy to GitHub Pages
+      - name: 💅 Run linting (allow failures)
+        continue-on-error: true
+        run: |
+          echo "Running code quality checks..."
+          npm run check:eslint || echo "⚠️ ESLint found issues, but continuing with build"
+          npm run check:prettier || echo "⚠️ Prettier found issues, but continuing with build"
+
+      - name: 🏗️ Build Astro site
+        run: |
+          echo "Building Astro site for production..."
+          npm run build
+          echo "✅ Build completed successfully!"
+          echo "Build output directory contents:"
+          ls -la dist/
+
+      - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: gh-pages
           force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: '🚀 Deploy ${{ github.sha }}'
+
+      - name: ✅ Deployment complete
+        run: |
+          echo "🎉 Site successfully deployed to GitHub Pages!"
+          echo "📦 Deployment SHA: ${{ github.sha }}"
+          echo "🌐 Site will be available at your GitHub Pages URL"
