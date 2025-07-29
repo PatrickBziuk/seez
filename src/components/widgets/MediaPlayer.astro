@@ -268,7 +268,8 @@ const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.
       }
       function analyzeAudio() {
         if (!audio.src) return;
-        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioCtx = window.AudioContext || window['webkitAudioContext'];
+        const context = new AudioCtx();
         fetch(audio.src)
           .then(r => r.arrayBuffer())
           .then(b => context.decodeAudioData(b))

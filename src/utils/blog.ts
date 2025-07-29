@@ -46,16 +46,27 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
 
   const {
     publishDate: rawPublishDate = new Date(),
-    updateDate: rawUpdateDate,
+    updateDate: rawUpdateDate = undefined,
     title,
     excerpt,
     image,
     tags: rawTags = [],
-    category: rawCategory,
-    author,
+    category: rawCategory = undefined,
+    author = undefined,
     draft = false,
     metadata = {},
-  } = data;
+  } = data as {
+    publishDate?: Date;
+    updateDate?: Date;
+    title?: string;
+    excerpt?: string;
+    image?: string;
+    tags?: string[];
+    category?: string;
+    author?: string;
+    draft?: boolean;
+    metadata?: import('~/types').MetaData;
+  };
 
   const slug = cleanSlug(id); // cleanSlug(rawSlug.split('/').pop());
   const publishDate = new Date(rawPublishDate);
@@ -81,7 +92,7 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
     publishDate: publishDate,
     updateDate: updateDate,
 
-    title: title,
+    title: title ?? '',
     excerpt: excerpt,
     image: image,
 
@@ -198,7 +209,7 @@ export const getStaticPathsBlogCategory = async ({ paginate }: { paginate: Pagin
   if (!isBlogEnabled || !isBlogCategoryRouteEnabled) return [];
 
   const posts = await fetchPosts();
-  const categories = {};
+  const categories: Record<string, Post['category']> = {};
   posts.map((post) => {
     if (post.category?.slug) {
       categories[post.category?.slug] = post.category;
@@ -222,7 +233,7 @@ export const getStaticPathsBlogTag = async ({ paginate }: { paginate: PaginateFu
   if (!isBlogEnabled || !isBlogTagRouteEnabled) return [];
 
   const posts = await fetchPosts();
-  const tags = {};
+  const tags: Record<string, { slug: string; title: string }> = {};
   posts.map((post) => {
     if (Array.isArray(post.tags)) {
       post.tags.map((tag) => {

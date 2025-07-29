@@ -8,6 +8,7 @@ export const getStaticPaths = () => {
 };
 
 const { lang } = Astro.params as { lang: 'en' | 'de' };
+console.log('Current language:', lang); // Use lang for locale-specific rendering
 // Use 'lang' to filter and render content for the current locale
 // Example: const entries = await getCollection('books', lang);
 // ...existing code...

@@ -104,28 +104,36 @@ export const getAsset = (path: string): string =>
 const definitivePermalink = (permalink: string): string => createPath(BASE_PATHNAME, permalink);
 
 /** */
-export const applyGetPermalinks = (menu: object = {}) => {
+export interface MenuItem {
+  href?: string;
+  type?: string;
+  url?: string;
+  [key: string]: unknown;
+}
+
+export const applyGetPermalinks = (menu: MenuItem | MenuItem[] = {}): unknown => {
   if (Array.isArray(menu)) {
     return menu.map((item) => applyGetPermalinks(item));
   } else if (typeof menu === 'object' && menu !== null) {
-    const obj = {};
+    const obj: MenuItem = {};
     for (const key in menu) {
       if (key === 'href') {
         if (typeof menu[key] === 'string') {
-          obj[key] = getPermalink(menu[key]);
+          obj[key] = getPermalink(menu[key] as string);
         } else if (typeof menu[key] === 'object') {
-          if (menu[key].type === 'home') {
+          const m = menu[key] as MenuItem;
+          if (m.type === 'home') {
             obj[key] = getHomePermalink();
-          } else if (menu[key].type === 'blog') {
+          } else if (m.type === 'blog') {
             obj[key] = getBlogPermalink();
-          } else if (menu[key].type === 'asset') {
-            obj[key] = getAsset(menu[key].url);
-          } else if (menu[key].url) {
-            obj[key] = getPermalink(menu[key].url, menu[key].type);
+          } else if (m.type === 'asset') {
+            obj[key] = getAsset(m.url ?? '');
+          } else if (m.url) {
+            obj[key] = getPermalink(m.url, m.type);
           }
         }
       } else {
-        obj[key] = applyGetPermalinks(menu[key]);
+        obj[key] = applyGetPermalinks(menu[key] as MenuItem);
       }
     }
     return obj;

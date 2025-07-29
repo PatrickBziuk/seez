@@ -1,20 +1,18 @@
 ---
-// src/components/widgets/ChromaGrid.astro
 import MediaPlayer from '~/components/widgets/MediaPlayer.astro';
-const { children, songs = [] } = Astro.props;
-/**
- * @typedef {Object} Song
- * @property {string} src
- * @property {string} title
- * @property {string} artist
- * @property {string} [description]
- * @property {string} [lyrics]
- * @property {Array<{label: string, href: string}>} [links]
- */
+type Song = {
+  src: string;
+  title: string;
+  artist: string;
+  description?: string;
+  lyrics?: string;
+  links?: Array<{ label: string; href: string }>;
+};
+const { children, songs = [] } = Astro.props as { children?: unknown; songs?: Song[] };
 ---
 <div id="chroma-grid" class="relative w-full flex flex-wrap justify-center items-start gap-6">
   {Array.isArray(songs) && songs.length > 0
-    ? songs.map((song, idx) => (
+    ? songs.map((song: Song, idx: number) => (
         <MediaPlayer {...song} key={song.src || idx} />
       ))
     : (children ? children : <slot />)}
