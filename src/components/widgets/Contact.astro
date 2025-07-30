@@ -1,4 +1,11 @@
 ---
+/**
+ * Contact - Contact form widget with headline and customizable form fields
+ * @props {title?: string, subtitle?: string, tagline?: string, inputs?: Array, textarea?: object, disclaimer?: string, button?: string, description?: string, id?: string, isDark?: boolean, classes?: object, bg?: string} - Contact form configuration and content
+ * @behavior Renders contact section with headline and form, supports custom fields, validation, and styling
+ * @dependencies FormContainer.astro (Form.astro), Headline.astro, WidgetWrapper.astro, Tailwind CSS
+ * @usedBy Contact page, footer contact sections, lead generation forms
+ */
 import FormContainer from '~/components/ui/Form.astro';
 import Headline from '~/components/ui/Headline.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';

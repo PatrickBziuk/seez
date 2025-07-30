@@ -1,4 +1,11 @@
 ---
+/**
+ * Headline - Displays structured headings with title, subtitle, and tagline
+ * @props {title?: string, subtitle?: string, tagline?: string, classes?: object} - Heading content and styling options
+ * @behavior Renders semantic heading structure with responsive typography and customizable styling
+ * @dependencies Tailwind CSS, tailwind-merge for class merging
+ * @usedBy Hero.astro, Features.astro, Content.astro, section headers throughout site
+ */
 import type { Headline as Props } from '~/types';
 import { twMerge } from 'tailwind-merge';
 

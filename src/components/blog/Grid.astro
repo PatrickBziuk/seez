@@ -1,4 +1,12 @@
 ---
+/**
+ * Grid - Displays a responsive grid of blog posts or content items
+ * @props {items: Array, columns?: number} - Content items and optional column count
+ * @behavior Renders a grid layout, adapts to screen size, supports dark mode
+ * @dependencies Tailwind CSS
+ * @usedBy Blog index, List.astro, RelatedPosts.astro
+ */
+
 import Item from '~/components/blog/GridItem.astro';
 import type { Post } from '~/types';
 

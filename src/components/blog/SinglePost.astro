@@ -1,4 +1,12 @@
 ---
+/**
+ * SinglePost - Renders the full content of a single blog post
+ * @props {post: Object} - Blog post data
+ * @behavior Displays post title, content, metadata, and related posts
+ * @dependencies RelatedPosts.astro, Tags.astro
+ * @usedBy [slug].astro, Blog index
+ */
+
 import { Icon } from 'astro-icon/components';
 
 import Image from '~/components/common/Image.astro';

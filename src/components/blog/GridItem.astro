@@ -1,4 +1,12 @@
 ---
+/**
+ * GridItem - Renders a single item in a grid, typically a blog post preview
+ * @props {item: Object} - Content item data
+ * @behavior Displays title, excerpt, image, and metadata for a post
+ * @dependencies Tailwind CSS
+ * @usedBy Grid.astro, ListItem.astro
+ */
+
 import { APP_BLOG } from 'astrowind:config';
 import type { Post } from '~/types';
 

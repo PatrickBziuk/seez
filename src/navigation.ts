@@ -1,31 +1,37 @@
-import { getPermalink } from './utils/permalinks';
+import { getLocalizedUrl } from './utils/i18n';
+import type { SupportedLanguage } from './utils/i18n';
 
-export const headerData = {
+export const getHeaderData = (locale: SupportedLanguage = 'en') => ({
   links: [
-    { text: 'Books', href: getPermalink('/books') },
-    { text: 'Projects', href: getPermalink('/projects') },
-    { text: 'Lab', href: getPermalink('/lab') },
-    { text: 'Life', href: getPermalink('/life') },
-    { text: 'About', href: getPermalink('/about') }, // Added after Life
-    { text: 'Contact', href: getPermalink('/contact') }, // Added after About
-    // You can add submenus here if needed in the future
+    { text: 'Books', href: getLocalizedUrl('/books', locale) },
+    { text: 'Projects', href: getLocalizedUrl('/projects', locale) },
+    { text: 'Lab', href: getLocalizedUrl('/lab', locale) },
+    { text: 'Life', href: getLocalizedUrl('/life', locale) },
+    { text: 'About', href: getLocalizedUrl('/about', locale) },
+    { text: 'Contact', href: getLocalizedUrl('/contact', locale) },
   ],
   actions: [],
-  locale: 'en', // Default, will be overridden by prop
-};
+  locale,
+});
 
-export const footerData = {
+// Legacy export for backward compatibility
+export const headerData = getHeaderData();
+
+export const getFooterData = (locale: SupportedLanguage = 'en') => ({
   links: [
     {
-      title: 'lol',
+      title: 'legal', // translation key for footer.legal
       links: [
-        { text: 'About', href: getPermalink('/about') },
-        { text: 'Blog', href: getPermalink('/blog') },
+        { text: 'About', href: getLocalizedUrl('/about', locale) },
+        { text: 'blog', href: getLocalizedUrl('/blog', locale) }, // footer.blog
       ],
     },
   ],
   secondaryLinks: [],
   socialLinks: [],
   footNote: '',
-  locale: 'en', // Default, will be overridden by prop
-};
+  locale,
+});
+
+// Legacy export for backward compatibility
+export const footerData = getFooterData();

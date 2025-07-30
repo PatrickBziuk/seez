@@ -1,4 +1,11 @@
 ---
+/**
+ * ToBlogLink - Renders a link to the main blog page or a specific blog section
+ * @props {href?: string, label?: string} - Optional link URL and label
+ * @behavior Provides navigation to blog, styled for accessibility and responsiveness
+ * @dependencies Tailwind CSS
+ * @usedBy Blog index, SinglePost.astro, RelatedPosts.astro
+ */
 import { Icon } from 'astro-icon/components';
 import { getBlogPermalink } from '~/utils/permalinks';
 import { I18N } from 'astrowind:config';

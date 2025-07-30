@@ -1,4 +1,11 @@
 ---
+/**
+ * Features - Displays feature lists with icons, titles, and descriptions in a grid layout
+ * @props {title?: string, subtitle?: string, tagline?: string, items?: Array, columns?: number, defaultIcon?: string, id?: string, isDark?: boolean, classes?: object, bg?: string} - Feature content and layout configuration
+ * @behavior Renders feature section with headline and grid of feature items, supports responsive columns and custom styling
+ * @dependencies WidgetWrapper.astro, ItemGrid.astro, Headline.astro, Tailwind CSS
+ * @usedBy Product pages, service descriptions, homepage feature sections
+ */
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import ItemGrid from '~/components/ui/ItemGrid.astro';
 import Headline from '~/components/ui/Headline.astro';

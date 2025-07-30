@@ -1,46 +1,7 @@
 ---
-import Layout from '~/layouts/PageLayout.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+// Redirect to language-specific URL
+import { detectLanguage } from '../../utils/i18n';
 
-const books = await getCollection('books') as CollectionEntry<'books'>[];
-const visibleBooks = books.filter(book => !book.data.draft);
-
-const metadata = {
-  title: 'Books',
-  description: 'My reading journey and book notes.',
-};
+const locale = detectLanguage(Astro.url.pathname) || 'en';
+return Astro.redirect(`/${locale}/books`);
 ---
-
-<Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <header class="text-center mb-12">
-      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
-        📚 Bücher
-      </h1>
-      <p class="text-xl text-muted dark:text-slate-400">Alles was mit Schreiben und Fühlen zu tun hat.</p>
-    </header>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {visibleBooks.map(book => (
-        <a 
-          href={`/${book.collection}/${book.id.replace(/\.mdx?$/, '')}`} 
-          class="block p-6 rounded-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition-all duration-200"
-        >
-          <h2 class="text-xl font-semibold mb-2 font-heading dark:text-gray-200">{book.data.title}</h2>
-          {book.data.subtitle && (
-            <p class="text-gray-600 dark:text-gray-400 mb-3">{book.data.subtitle}</p>
-          )}
-          <div class="flex items-center text-sm text-gray-500 dark:text-gray-500">
-            <time datetime={book.data.date.toISOString()}>
-              {new Date(book.data.date).toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
-            </time>
-          </div>
-        </a>
-      ))}
-    </div>
-  </section>
-</Layout>

@@ -1,4 +1,12 @@
 ---
+/**
+ * Pagination - Handles pagination controls for lists of content
+ * @props {currentPage: number, totalPages: number, onPageChange: Function} - Pagination state and handler
+ * @behavior Renders page navigation, updates list on page change
+ * @dependencies Tailwind CSS
+ * @usedBy List.astro, Blog index
+ */
+
 import { Icon } from 'astro-icon/components';
 import { getPermalink } from '~/utils/permalinks';
 import Button from '~/components/ui/Button.astro';

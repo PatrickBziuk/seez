@@ -1,0 +1,58 @@
+---
+/**
+ * About - Multilingual about page using content collection for scalable content management
+ * @props lang: SupportedLanguage - Current language from route params
+ * @behavior Loads content from pages collection based on language, renders markdown content
+ * @dependencies getEntry, SUPPORTED_LANGUAGES, getTranslations, render
+ * @usedBy Direct navigation to /[lang]/about
+ */
+import Layout from '../../layouts/PageLayout.astro';
+import { getEntry, render } from 'astro:content';
+import { SUPPORTED_LANGUAGES, getTranslations } from '../../utils/i18n';
+import type { SupportedLanguage } from '../../utils/i18n';
+
+export const getStaticPaths = () => {
+  return SUPPORTED_LANGUAGES.map(lang => ({
+    params: { lang },
+  }));
+};
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+// Load translations for the current language
+const t = await getTranslations(lang);
+
+// Load page content from content collection
+const pageEntry = await getEntry('pages', `about/${lang}`);
+const { Content } = pageEntry ? await render(pageEntry) : { Content: null };
+
+const metadata = {
+  title: pageEntry?.data.title || t.navigation.About,
+  description: lang === 'de'
+    ? 'Über diese Seite – Erfahre mehr über das Projekt und den Autor.'
+    : 'About page – Learn more about this site and its author.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <header class="text-center mb-12">
+      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
+        {pageEntry?.data.title || t.navigation.About}
+      </h1>
+    </header>
+    
+    <div class="prose prose-lg dark:prose-invert mx-auto">
+      {Content ? (
+        <Content />
+      ) : (
+        <p>
+          {lang === 'de' 
+            ? 'Inhalt wird geladen...'
+            : 'Content is loading...'
+          }
+        </p>
+      )}
+    </div>
+  </section>
+</Layout>

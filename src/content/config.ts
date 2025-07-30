@@ -61,10 +61,19 @@ const post = defineCollection({
   schema: postSchema,
 });
 
+const pages = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
+  schema: z.object({
+    title: z.string(),
+    language: z.enum(['en', 'de']).default('en'),
+  }),
+});
+
 export const collections = {
   books,
   projects,
   lab,
   life,
   post,
+  pages,
 };

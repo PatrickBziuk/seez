@@ -1,4 +1,11 @@
 ---
+/**
+ * Steps - Step-by-step process component with timeline and optional image
+ * @props {title?: string, subtitle?: string, tagline?: string, items?: Array, image?: string, isReversed?: boolean, id?: string, isDark?: boolean, classes?: object, bg?: string} - Steps content and layout configuration
+ * @behavior Renders timeline-based steps with optional side image, supports reversed layout
+ * @dependencies WidgetWrapper.astro, Timeline.astro, Headline.astro, Image.astro, Tailwind CSS
+ * @usedBy Process explanations, tutorials, how-to sections, onboarding flows
+ */
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Timeline from '~/components/ui/Timeline.astro';
 import Headline from '~/components/ui/Headline.astro';

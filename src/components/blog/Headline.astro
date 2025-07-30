@@ -1,4 +1,12 @@
 ---
+/**
+ * Headline - Displays a section or page headline with optional styling
+ * @props {text: string, level?: number} - Headline text and heading level
+ * @behavior Renders heading element, applies style and responsive spacing
+ * @dependencies Tailwind CSS
+ * @usedBy Blog index, List.astro, PageLayout.astro
+ */
+
 const { title = await Astro.slots.render('default'), subtitle = await Astro.slots.render('subtitle') } = Astro.props;
 ---
 

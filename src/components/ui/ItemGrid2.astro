@@ -1,4 +1,11 @@
 ---
+/**
+ * ItemGrid2 - Displays items in a two-column grid layout
+ * @props {items: Array, columns?: number} - Grid items and optional column configuration
+ * @behavior Renders responsive two-column grid, supports mobile stacking
+ * @dependencies Tailwind CSS
+ * @usedBy Features.astro, Services.astro, product showcases
+ */
 import type { ItemGrid as Props } from '~/types';
 import { Icon } from 'astro-icon/components';
 import { twMerge } from 'tailwind-merge';

@@ -1,4 +1,11 @@
 ---
+/**
+ * Hero - Main hero section with title, subtitle, CTA buttons, and optional background image
+ * @props {title?: string, subtitle?: string, tagline?: string, content?: string, actions?: string, image?: string, id?: string, bg?: string} - Hero content and configuration
+ * @behavior Renders full-width hero section with responsive layout, supports background images and call-to-action buttons
+ * @dependencies Image.astro, Button.astro, Tailwind CSS
+ * @usedBy Homepage, landing pages, LandingLayout.astro
+ */
 import Image from '~/components/common/Image.astro';
 import Button from '~/components/ui/Button.astro';
 

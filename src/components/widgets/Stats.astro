@@ -1,4 +1,11 @@
 ---
+/**
+ * Stats - Statistics display component with numbers, titles, and optional icons
+ * @props {title?: string, subtitle?: string, tagline?: string, stats?: Array, id?: string, isDark?: boolean, classes?: object, bg?: string} - Statistics content and configuration
+ * @behavior Renders statistical data in a grid layout with large numbers, titles, and descriptions
+ * @dependencies WidgetWrapper.astro, Headline.astro, astro-icon/components, Tailwind CSS
+ * @usedBy About page, company metrics, achievement sections, performance indicators
+ */
 import type { Stats as Props } from '~/types';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import Headline from '~/components/ui/Headline.astro';

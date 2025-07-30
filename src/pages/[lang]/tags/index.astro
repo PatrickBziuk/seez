@@ -1,0 +1,99 @@
+---
+/**
+ * TagsIndex - Overview page showing all available tags
+ * @props lang: SupportedLanguage - Current language from route params
+ * @behavior Lists all unique tags from all content collections, grouped and sorted
+ * @dependencies getCollection, SUPPORTED_LANGUAGES, getTranslations
+ * @usedBy Direct navigation to /[lang]/tags
+ */
+import Layout from '../../../layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+import { SUPPORTED_LANGUAGES, getTranslations } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+
+export const getStaticPaths = () => {
+  return SUPPORTED_LANGUAGES.map(lang => ({
+    params: { lang },
+  }));
+};
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+const t = await getTranslations(lang);
+
+// Get all content from all collections
+const [books, projects, lab, life] = await Promise.all([
+  getCollection('books'),
+  getCollection('projects'),
+  getCollection('lab'),
+  getCollection('life'),
+]);
+
+// Combine all content and filter by language
+const allContent = [...books, ...projects, ...lab, ...life].filter(
+  item => item.data.language === lang
+);
+
+// Extract unique tags
+const tagCounts = new Map<string, number>();
+allContent.forEach(item => {
+  item.data.tags?.forEach(tag => {
+    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+  });
+});
+
+// Sort tags alphabetically
+const sortedTags = Array.from(tagCounts.entries()).sort(([a], [b]) => a.localeCompare(b));
+
+const metadata = {
+  title: `${t.navigation?.tags || 'Tags'} - ${lang === 'de' ? 'Alle Themen' : 'All Topics'}`,
+  description: lang === 'de' 
+    ? 'Entdecke alle verfügbaren Themen und Tags auf dieser Website.'
+    : 'Discover all available topics and tags on this website.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <nav class="mb-6 text-sm text-gray-500 dark:text-gray-400">
+      <a href={`/${lang}/`}>{lang === 'de' ? 'Startseite' : 'Home'}</a> &gt; <span>{lang === 'de' ? 'Alle Themen' : 'All Topics'}</span>
+    </nav>
+    
+    <header class="text-center mb-12">
+      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
+        {lang === 'de' ? 'Alle Themen' : 'All Topics'}
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">
+        {lang === 'de' 
+          ? `${sortedTags.length} verschiedene Themen gefunden`
+          : `${sortedTags.length} different topics found`
+        }
+      </p>
+    </header>
+    
+    <div class="prose prose-lg dark:prose-invert mx-auto max-w-none">
+      <input type="text" placeholder={lang === 'de' ? 'Tag suchen...' : 'Search tags...'} class="mb-6 px-3 py-2 border rounded w-full" oninput="window.filterTags && window.filterTags(this.value)" />
+      <ul id="tag-list">
+        {sortedTags.map(([tag, count]) => (
+          <li class="mb-2">
+            <a href={`/${lang}/tags/${encodeURIComponent(tag)}`} class="inline-block px-3 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 font-semibold hover:bg-blue-200 dark:hover:bg-blue-800 transition">
+              {tag} <span class="ml-2 text-xs text-gray-500">({count})</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <script>
+        // @ts-expect-error: Extend window with filterTags for tag search
+        window.filterTags = function(query) {
+          const list = document.getElementById('tag-list');
+          if (!list) return;
+          Array.from(list.children).forEach(li => {
+            if (!li.textContent) return;
+            if (li instanceof HTMLElement) {
+              li.style.display = li.textContent.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
+            }
+          });
+        };
+      </script>
+    </div>
+  </section>
+</Layout>

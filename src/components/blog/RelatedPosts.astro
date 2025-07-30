@@ -1,4 +1,12 @@
 ---
+/**
+ * RelatedPosts - Displays a list of related blog posts based on tags or category
+ * @props {currentPost: Object, posts: Array} - Current post and candidate related posts
+ * @behavior Filters and renders related posts, supports responsive layout
+ * @dependencies Grid.astro, List.astro
+ * @usedBy SinglePost.astro, Blog index
+ */
+
 import { APP_BLOG } from 'astrowind:config';
 
 import { getRelatedPosts } from '~/utils/blog';

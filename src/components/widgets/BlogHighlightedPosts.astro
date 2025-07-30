@@ -1,4 +1,12 @@
 ---
+/**
+ * BlogHighlightedPosts - Displays featured or highlighted blog posts
+ * @props {posts: Array, limit?: number} - Blog posts and display limit
+ * @behavior Renders featured posts with enhanced styling and layout
+ * @dependencies Blog utilities, Tailwind CSS
+ * @usedBy Homepage, blog index, RelatedPosts.astro
+ */
+
 import { APP_BLOG } from 'astrowind:config';
 
 import Grid from '~/components/blog/Grid.astro';

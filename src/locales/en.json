@@ -43,6 +43,10 @@
     "Contact": "Contact",
     "main": "Main navigation"
   },
+  "footer": {
+    "legal": "Legal",
+    "blog": "Blog"
+  },
   "button": {
     "submit": "Submit",
     "cancel": "Cancel",

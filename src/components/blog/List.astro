@@ -1,4 +1,12 @@
 ---
+/**
+ * List - Renders a list of blog posts or content items with optional pagination
+ * @props {items: Array, paginated?: boolean} - Content items and pagination toggle
+ * @behavior Displays items in a vertical list, supports pagination and responsive design
+ * @dependencies Tailwind CSS, Pagination.astro
+ * @usedBy Blog index, RelatedPosts.astro
+ */
+
 import Item from '~/components/blog/ListItem.astro';
 import type { Post } from '~/types';
 

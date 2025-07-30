@@ -1,4 +1,11 @@
 ---
+/**
+ * Content - Flexible content section with text, images, and optional feature items
+ * @props {title?: string, subtitle?: string, tagline?: string, content?: string, callToAction?: object, items?: Array, columns?: number, image?: string, isReversed?: boolean, isAfterContent?: boolean, id?: string, isDark?: boolean, classes?: object, bg?: string} - Content layout and configuration options
+ * @behavior Renders flexible content sections with text-image layouts, supports reversed layouts, CTAs, and feature grids
+ * @dependencies Headline.astro, WidgetWrapper.astro, Image.astro, Button.astro, ItemGrid.astro, Tailwind CSS
+ * @usedBy About pages, service descriptions, product showcases, content-heavy sections
+ */
 import type { Content as Props } from '~/types';
 import Headline from '~/components/ui/Headline.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';

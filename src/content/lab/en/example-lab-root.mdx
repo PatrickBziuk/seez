@@ -1,0 +1,123 @@
+---
+title: "Dark Mode Switcher Demo"
+subtitle: "Accessible color mode toggle with Astro components"
+tags: ["ui", "accessibility", "astro"]
+date: 2024-05-10
+draft: false
+---
+
+import Headline from '~/components/ui/Headline.astro';
+import Badge from '~/components/ui/Badge.astro';
+import ContentMetadata from '~/components/common/ContentMetadata.astro';
+import Button from '~/components/ui/Button.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import SocialShare from '~/components/common/SocialShare.astro';
+import Features from '~/components/widgets/Features.astro';
+import Stats from '~/components/widgets/Stats.astro';
+import Pricing from '~/components/widgets/Pricing.astro';
+import Testimonials from '~/components/widgets/Testimonials.astro';
+import Note from '~/components/ui/Note.astro';
+import MediaPlayer from '~/components/ui/MediaPlayer.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+
+<Headline 
+  title="Dark Mode Switcher"
+  subtitle="Accessible color mode toggle"
+  tagline="Experiment Lab Demo"
+/>
+
+<ContentMetadata metadata={{
+  title: "Dark Mode Switcher Demo",
+  language: "en",
+  timestamp: "2024-05-10",
+  status: { authoring: "Human" },
+  tags: ["ui", "accessibility", "astro"]
+}} />
+
+<div style={{ display: 'flex', gap: '1rem', margin: '1.5rem 0' }}>
+  <Badge variant="ai" text="AI" />
+  <Badge variant="human" text="Human" />
+  <Badge variant="tag" text="UI" />
+  <Badge variant="language" text="EN" />
+  <Badge variant="timestamp" text="2024-05-10" />
+</div>
+
+<Button variant="primary" size="md" onClick={() => {
+  document.documentElement.classList.toggle('dark');
+  localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+}}>
+  Toggle Dark Mode
+</Button>
+
+<CallToAction
+  title="Try the Dark Mode Switcher!"
+  subtitle="Accessible, fast, and easy to use."
+  actions={[{ text: "Toggle Now", href: "#", variant: "primary" }]}
+/>
+
+<SocialShare text="Check out this Dark Mode Switcher experiment!" url={Astro.url.pathname} />
+
+<Features
+  title="Component Features"
+  subtitle="What makes these Astro components great?"
+  items={[
+    { title: 'Accessibility', description: 'All components are keyboard and screen reader friendly.', icon: '🦾' },
+    { title: 'Customization', description: 'Easily style and configure via props.', icon: '🎨' },
+    { title: 'Performance', description: 'Optimized for fast rendering and minimal bundle size.', icon: '⚡' },
+  ]}
+  columns={3}
+/>
+
+<Stats
+  title="Lab Stats"
+  subtitle="Component usage in this demo"
+  stats={[
+    { title: 'UI Components', value: 6, description: 'Headline, Badge, Button, etc.' },
+    { title: 'Widgets', value: 8, description: 'Features, Stats, Pricing, etc.' },
+    { title: 'Total', value: 14, description: 'Components in action' },
+  ]}
+/>
+
+<Pricing
+  title="Demo Pricing"
+  subtitle="Example pricing table for your SaaS"
+  prices={[
+    { name: 'Starter', price: 'Free', features: ['Basic components', 'Community support'], cta: { text: 'Get Started', href: '#' } },
+    { name: 'Pro', price: '$9/mo', features: ['All widgets', 'Priority support'], cta: { text: 'Upgrade', href: '#' } },
+    { name: 'Enterprise', price: 'Contact', features: ['Custom integrations', 'Dedicated support'], cta: { text: 'Contact Us', href: '#' } },
+  ]}
+/>
+
+<Testimonials
+  title="What users say"
+  testimonials={[
+    { name: 'Alex', quote: 'These Astro components made my site beautiful and fast!', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
+    { name: 'Samira', quote: 'Widget system is so flexible and easy to use.', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
+  ]}
+/>
+
+<Note variant="info">
+  You can combine widgets and UI components for rich, interactive content sections.
+</Note>
+
+<MediaPlayer src="/sounds/glueck-am-ende.mp3" title="Demo Sound" />
+
+<FAQs
+  title="Frequently Asked Questions"
+  faqs={[
+    { question: 'Can I use these components in any Astro project?', answer: 'Yes, they are designed for reusability and easy integration.' },
+    { question: 'Are all widgets responsive?', answer: 'Absolutely! Tailwind CSS ensures mobile-friendly layouts.' },
+  ]}
+/>
+
+---
+
+A simple experiment to toggle dark/light mode in Astro using Tailwind and localStorage. This demo shows how to use key documented components in context:
+- **Headline** for section titles
+- **Badge** for metadata and status
+- **ContentMetadata** for entry details
+- **Button** for interactive actions
+- **CallToAction** for engagement
+- **SocialShare** for sharing your work
+
+Feel free to extend this demo with more components or custom logic!

@@ -43,12 +43,9 @@ export function getLocalizedUrl(path: string, language: SupportedLanguage): stri
   // Remove existing language prefix
   const cleanPath = path.replace(/^\/[a-z]{2}(?=\/|$)/, '');
   
-  // Add new language prefix (except for default language)
-  if (language === DEFAULT_LANGUAGE) {
-    return cleanPath || '/';
-  }
-  
-  return `/${language}${cleanPath}`;
+  // Add new language prefix for all languages (including default)
+  // since the routing structure uses /[lang]/ for all routes
+  return `/${language}${cleanPath || ''}`;
 }
 
 /**

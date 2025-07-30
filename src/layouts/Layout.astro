@@ -1,4 +1,12 @@
 ---
+/**
+ * Layout - Main site layout, wraps all pages with header, footer, and global styles
+ * @props {children: any} - Page content
+ * @behavior Provides consistent structure, navigation, and global styles
+ * @dependencies CustomStyles.astro, Favicons.astro, Header, Footer
+ * @usedBy All pages, MarkdownLayout.astro, PageLayout.astro
+ */
+
 import '~/assets/styles/tailwind.css';
 
 import { I18N } from 'astrowind:config';
@@ -23,6 +31,16 @@ export interface Props {
 
 const { metadata = {} } = Astro.props;
 const { language, textDirection } = I18N;
+
+// Compute alternateLanguages for hreflang SEO
+const availableLanguages = ['en', 'de'];
+const pathname = String(Astro.url.pathname);
+const slugMatch = pathname.match(/(?:en|de)\/(.*)/);
+const slug = slugMatch ? slugMatch[1] : pathname.replace(/^\//, '');
+const alternateLanguages = availableLanguages.map(lang => ({
+  hreflang: lang,
+  href: `/${lang}/${slug}`
+}));
 ---
 
 <!doctype html>
@@ -32,7 +50,7 @@ const { language, textDirection } = I18N;
     <Favicons />
     <CustomStyles />
     <ApplyColorMode />
-    <Metadata {...metadata} />
+    <Metadata {...metadata} alternateLanguages={alternateLanguages} />
     <SiteVerification />
     <Analytics />
 

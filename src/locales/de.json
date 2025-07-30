@@ -34,6 +34,17 @@
     "language_switcher": "Sprachumschalter",
     "available_in": "Verfügbar in",
     "not_available_in": "Nicht verfügbar in",
-    "current": "Aktuell"
+    "current": "Aktuell",
+    "Books": "Bücher",
+    "Projects": "Projekte",
+    "Lab": "Labor",
+    "Life": "Leben",
+    "About": "Über",
+    "Contact": "Kontakt",
+    "main": "Hauptnavigation"
+  },
+  "footer": {
+    "legal": "Rechtliches",
+    "blog": "Blog"
   }
 }

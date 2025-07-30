@@ -1,0 +1,75 @@
+---
+import Layout from '../../../layouts/PageLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { SUPPORTED_LANGUAGES, getTranslations } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+
+export const getStaticPaths = () => {
+  return SUPPORTED_LANGUAGES.map(lang => ({
+    params: { lang },
+  }));
+};
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+// Load translations for the current language
+const t = await getTranslations(lang);
+
+// Get all books content and filter by language
+const allBooks = await getCollection('books') as CollectionEntry<'books'>[];
+const filteredBooks = allBooks.filter(item => 
+  !item.data.draft && 
+  (item.data.language === lang || (!item.data.language && lang === 'en'))
+);
+
+// Helper function to extract clean slug from content ID
+const getCleanSlug = (id: string) => {
+  // Remove language prefix (e.g., "en/example-book" -> "example-book")
+  return id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+};
+
+const metadata = {
+  title: t.navigation.Books,
+  description: 'Book reviews, summaries, and reading notes.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <header class="text-center mb-12">
+      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
+        📚 {t.navigation.Books}
+      </h1>
+      <p class="text-xl text-muted dark:text-slate-400">Book reviews, summaries, and reading notes</p>
+    </header>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {filteredBooks.map(item => (
+        <a 
+          href={`/${lang}/books/${getCleanSlug(item.id)}`} 
+          class="block p-6 rounded-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition-all duration-200"
+        >
+          <h2 class="text-xl font-semibold mb-2 font-heading dark:text-gray-200">{item.data.title}</h2>
+          {item.data.subtitle && (
+            <p class="text-muted dark:text-slate-400 mb-3">{item.data.subtitle}</p>
+          )}
+          {item.data.tags && item.data.tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {item.data.tags.map(tag => (
+                <span class="inline-block bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs px-2 py-1 rounded">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </a>
+      ))}
+    </div>
+    
+    {filteredBooks.length === 0 && (
+      <div class="text-center py-12">
+        <p class="text-muted dark:text-slate-400">No content available in this language yet.</p>
+      </div>
+    )}
+  </section>
+</Layout>

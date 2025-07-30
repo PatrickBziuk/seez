@@ -1,4 +1,11 @@
 ---
+/**
+ * WidgetWrapper - Generic wrapper component for widget sections
+ * @props {children: any, class?: string} - Widget content and optional CSS classes
+ * @behavior Provides consistent styling and spacing for widget components
+ * @dependencies Tailwind CSS
+ * @usedBy Hero.astro, Features.astro, Content.astro, Contact.astro
+ */
 import type { HTMLTag } from 'astro/types';
 import type { Widget } from '~/types';
 import { twMerge } from 'tailwind-merge';

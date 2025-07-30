@@ -1,0 +1,134 @@
+---
+/**
+ * TagPage - Individual tag page showing all content with specific tag
+ * @props lang: SupportedLanguage, tag: string - Language and tag from route params
+ * @behavior Lists all content tagged with the specific tag, filtered by current language
+ * @dependencies getCollection, SUPPORTED_LANGUAGES, getTranslations
+ * @usedBy Tag badge clicks and direct navigation to /[lang]/tags/[tag]
+ */
+import Layout from '../../../layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+import { SUPPORTED_LANGUAGES, getTranslations } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+import type { CollectionEntry } from 'astro:content';
+import ContentMetadata from '../../../components/common/ContentMetadata.astro';
+
+type ContentEntry = CollectionEntry<'books'> | CollectionEntry<'projects'> | CollectionEntry<'lab'> | CollectionEntry<'life'>;
+
+export async function getStaticPaths() {
+  const paths: Array<{
+    params: { lang: SupportedLanguage; tag: string };
+    props: { content: ContentEntry[] };
+  }> = [];
+  
+  for (const lang of SUPPORTED_LANGUAGES) {
+    // Get all content from all collections
+    const [books, projects, lab, life] = await Promise.all([
+      getCollection('books'),
+      getCollection('projects'),
+      getCollection('lab'),
+      getCollection('life'),
+    ]);
+
+    // Combine all content and filter by language
+    const allContent: ContentEntry[] = [...books, ...projects, ...lab, ...life].filter(
+      item => item.data.language === lang
+    );
+
+    // Extract unique tags for this language
+    const tags = new Set<string>();
+    allContent.forEach(item => {
+      item.data.tags?.forEach(tag => tags.add(tag));
+    });
+
+    // Create paths for each tag in this language
+    tags.forEach(tag => {
+      paths.push({
+        params: { lang, tag },
+        props: { content: allContent.filter(item => item.data.tags?.includes(tag)) }
+      });
+    });
+  }
+  
+  return paths;
+}
+
+const { lang, tag } = Astro.params as { lang: SupportedLanguage; tag: string };
+const { content } = Astro.props as { content: ContentEntry[] };
+const t = await getTranslations(lang);
+
+// Sort content by date (newest first)
+const sortedContent = content.sort((a: ContentEntry, b: ContentEntry) => 
+  new Date(b.data.date || b.data.timestamp).getTime() - new Date(a.data.date || a.data.timestamp).getTime()
+);
+
+const metadata = {
+  title: `${tag} - ${t.navigation?.tags || 'Tags'}`,
+  description: lang === 'de' 
+    ? `Alle Inhalte zum Thema "${tag}". ${sortedContent.length} Einträge gefunden.`
+    : `All content tagged with "${tag}". ${sortedContent.length} entries found.`,
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <header class="mb-12">
+      <nav class="text-sm breadcrumbs mb-4">
+        <a href={`/${lang}/tags`} class="text-blue-600 dark:text-blue-400 hover:underline">
+          {lang === 'de' ? 'Alle Themen' : 'All Topics'}
+        </a>
+        <span class="mx-2">/</span>
+        <span class="text-gray-500">{tag}</span>
+      </nav>
+      
+      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
+        {lang === 'de' ? 'Thema' : 'Topic'}: {tag}
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">
+        {lang === 'de' 
+          ? `${sortedContent.length} ${sortedContent.length === 1 ? 'Eintrag' : 'Einträge'} gefunden`
+          : `${sortedContent.length} ${sortedContent.length === 1 ? 'entry' : 'entries'} found`
+        }
+      </p>
+    </header>
+    
+    <nav class="mb-6 text-sm text-gray-500 dark:text-gray-400">
+      <a href={`/${lang}/`}>{lang === 'de' ? 'Startseite' : 'Home'}</a> &gt; <a href={`/${lang}/tags`}>{lang === 'de' ? 'Alle Themen' : 'All Topics'}</a> &gt; <span>{tag}</span>
+    </nav>
+    
+    <div class="space-y-8">
+      {sortedContent.length > 0 ? (
+        sortedContent.map((item: ContentEntry) => (
+          <article class="border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0">
+            <h2 class="text-xl font-semibold mb-3">
+              <a 
+                href={`/${lang}/${item.collection}/${item.id.replace(/\.mdx?$/, '')}`}
+                class="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                {item.data.title}
+              </a>
+            </h2>
+            
+            {item.data.subtitle && (
+              <p class="text-gray-600 dark:text-gray-400 mb-3">{item.data.subtitle}</p>
+            )}
+            
+            <ContentMetadata 
+              language={item.data.language}
+              timestamp={item.data.timestamp || item.data.date}
+              status={item.data.status}
+              tags={item.data.tags}
+            />
+          </article>
+        ))
+      ) : (
+        <p class="text-center text-gray-500 dark:text-gray-400">
+          {lang === 'de' 
+            ? 'Keine Inhalte mit diesem Tag gefunden.'
+            : 'No content found with this tag.'
+          }
+        </p>
+      )}
+    </div>
+  </section>
+</Layout>

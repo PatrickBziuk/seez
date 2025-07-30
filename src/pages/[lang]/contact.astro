@@ -1,0 +1,35 @@
+---
+import Layout from '../../layouts/PageLayout.astro';
+import { SUPPORTED_LANGUAGES, getTranslations } from '../../utils/i18n';
+import type { SupportedLanguage } from '../../utils/i18n';
+
+export const getStaticPaths = () => {
+  return SUPPORTED_LANGUAGES.map(lang => ({
+    params: { lang },
+  }));
+};
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+// Load translations for the current language
+const t = await getTranslations(lang);
+
+const metadata = {
+  title: t.navigation.Contact,
+  description: 'Contact page - Get in touch.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <header class="text-center mb-12">
+      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
+        {t.navigation.Contact}
+      </h1>
+    </header>
+    
+    <div class="prose prose-lg dark:prose-invert mx-auto">
+      <p>This is the contact page. Content will be added later.</p>
+    </div>
+  </section>
+</Layout>

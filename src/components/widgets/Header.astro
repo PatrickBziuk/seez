@@ -1,4 +1,12 @@
 ---
+/**
+ * Header - Main site header/navigation bar
+ * @props id?: string; links?: MenuLink[]; actions?: CallToAction[]; isSticky?: boolean; isDark?: boolean; isFullWidth?: boolean; showToggleTheme?: boolean; showRssFeed?: boolean; position?: string; locale?: 'en' | 'de'
+ * @behavior Renders logo, navigation links, theme toggle, LanguageSwitcher, and optional actions. Responsive, accessible, visually balanced. Only one LanguageSwitcher instance rendered.
+ * @dependencies Logo, ToggleTheme, ToggleMenu, Button, LanguageSwitcher, getTranslations
+ * @usedBy PageLayout.astro, MarkdownLayout.astro
+ */
+
 import { Icon } from 'astro-icon/components';
 import Logo from '~/components/Logo.astro';
 import ToggleTheme from '~/components/common/ToggleTheme.astro';
@@ -147,7 +155,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
       class:list={[ { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' }, 'md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 md:p-0 md:justify-self-end' ]}
     >
       <div class="items-center flex justify-between w-full md:w-auto">
-        <div class="header-icons flex" style="position:relative;">
+        <div class="header-icons flex items-center gap-2 md:gap-4" style="position:relative;">
           {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
           <LanguageSwitcher currentLanguage={safeLocale} />
           {

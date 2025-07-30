@@ -19,7 +19,10 @@
     "check:prettier": "prettier --check .",
     "fix": "npm run fix:eslint && npm run fix:prettier",
     "fix:eslint": "eslint --fix .",
-    "fix:prettier": "prettier -w ."
+    "fix:prettier": "prettier -w .",
+    "test:translations": "node ./scripts/test-translations.js",
+    "test:routing": "node ./scripts/test-routing.js",
+    "test:ci": "npm run test:translations && npm run test:routing"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",

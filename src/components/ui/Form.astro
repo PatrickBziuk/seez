@@ -1,4 +1,11 @@
 ---
+/**
+ * Form - Renders contact forms and input fields with validation
+ * @props {fields: Array, action?: string, method?: string} - Form fields and submission config
+ * @behavior Handles form submission, validation, and user feedback
+ * @dependencies Tailwind CSS, form validation utilities
+ * @usedBy Contact.astro, newsletter signup, user registration
+ */
 import type { Form as Props } from '~/types';
 import Button from '~/components/ui/Button.astro';
 

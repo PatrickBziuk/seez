@@ -1,0 +1,39 @@
+---
+/**
+ * Header - Main site header, includes navigation, logo, and language switcher
+ * @props {currentLanguage: SupportedLanguage, availableLanguages?: SupportedLanguage[], currentPath?: string} - Language props for i18n switcher
+ * @behavior Renders logo, navigation links from headerData, and language switcher; responsive and accessible
+ * @dependencies Logo.astro, LanguageSwitcher.astro, headerData from navigation.ts, i18n utilities
+ * @usedBy Layout.astro, PageLayout.astro, MarkdownLayout.astro, widgets/Header.astro
+ */
+import Logo from '../Logo.astro';
+import LanguageSwitcher from '../ui/LanguageSwitcher.astro';
+import { headerData } from '../../navigation';
+import { getTranslations } from '../../utils/i18n';
+import type { SupportedLanguage } from '../../utils/i18n';
+
+export interface Props {
+  currentLanguage: SupportedLanguage;
+  availableLanguages?: SupportedLanguage[];
+  currentPath?: string;
+}
+
+const { currentLanguage, availableLanguages, currentPath } = Astro.props;
+const translations = await getTranslations(currentLanguage);
+---
+
+<header>
+  <div class="logo">
+    <Logo />
+  </div>
+  <nav>
+    <ul>
+      {headerData.links.map((item: { text: string; href: string }) => (
+        <li><a href={item.href}>{translations.navigation[item.text] || item.text}</a></li>
+      ))}
+    </ul>
+  </nav>
+  <div class="language-switcher">
+    <LanguageSwitcher currentLanguage={currentLanguage} availableLanguages={availableLanguages} currentPath={currentPath} />
+  </div>
+</header>

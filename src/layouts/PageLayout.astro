@@ -1,8 +1,16 @@
 ---
+/**
+ * PageLayout - Layout for general pages, wraps content with header, footer, and global styles
+ * @props {children: any} - Page content
+ * @behavior Provides consistent structure, navigation, and global styles for non-markdown pages
+ * @dependencies CustomStyles.astro, Favicons.astro, Header, Footer
+ * @usedBy All non-markdown pages (e.g., about, contact, services)
+ */
+
 import Layout from '~/layouts/Layout.astro';
 import Header from '~/components/widgets/Header.astro';
 import Footer from '~/components/widgets/Footer.astro';
-import { headerData, footerData } from '~/navigation';
+import { getHeaderData, getFooterData } from '~/navigation';
 import type { MetaData } from '~/types';
 import { detectLanguage } from '~/utils/i18n';
 
@@ -12,6 +20,8 @@ export interface Props {
 
 const { metadata } = Astro.props;
 const locale = detectLanguage(Astro.url.pathname);
+const headerData = getHeaderData(locale);
+const footerData = getFooterData(locale);
 ---
 
 <Layout metadata={metadata}>

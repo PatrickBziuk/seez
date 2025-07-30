@@ -1,4 +1,11 @@
 ---
+/**
+ * Pricing - Pricing table component with plans, features, and CTA buttons
+ * @props {title?: string, subtitle?: string, tagline?: string, prices?: Array, id?: string, isDark?: boolean, classes?: object, bg?: string} - Pricing content and plan configuration
+ * @behavior Renders pricing table with plan cards, feature lists, pricing, and action buttons
+ * @dependencies astro-icon/components, Button.astro, Headline.astro, WidgetWrapper.astro, Tailwind CSS
+ * @usedBy Pricing page, subscription sections, service plan comparisons
+ */
 import { Icon } from 'astro-icon/components';
 import Button from '~/components/ui/Button.astro';
 import Headline from '~/components/ui/Headline.astro';

@@ -1,6 +1,10 @@
 ---
 /**
- * Badge component for metadata display
+ * Badge - Displays small status or category badges
+ * @props {variant: 'ai' | 'human' | 'ai-human' | 'tag' | 'language' | 'timestamp', text: string, icon?: string, size?: 'sm' | 'md' | 'lg'} - Badge content and styling options
+ * @behavior Renders styled badge with customizable appearance and size variants
+ * @dependencies Tailwind CSS
+ * @usedBy ContentMetadata.astro, tags, status indicators, content categorization
  */
 export interface Props {
   variant: 'ai' | 'human' | 'ai-human' | 'tag' | 'language' | 'timestamp';

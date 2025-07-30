@@ -1,4 +1,11 @@
 ---
+/**
+ * ItemGrid - Displays items in a flexible grid layout
+ * @props {items: Array, columns?: number} - Grid items and column configuration
+ * @behavior Renders responsive grid with configurable columns and spacing
+ * @dependencies Tailwind CSS
+ * @usedBy Features.astro, portfolio grids, content showcases
+ */
 import type { ItemGrid as Props } from '~/types';
 import { twMerge } from 'tailwind-merge';
 import Button from './Button.astro';

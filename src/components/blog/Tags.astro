@@ -1,4 +1,12 @@
 ---
+/**
+ * Tags - Displays a list of tags for a blog post or content item
+ * @props {tags: string[]} - Array of tag strings
+ * @behavior Renders tags as styled badges, supports filtering and navigation
+ * @dependencies Tailwind CSS
+ * @usedBy SinglePost.astro, ListItem.astro, Blog index
+ */
+
 import { getPermalink } from '~/utils/permalinks';
 
 import { APP_BLOG } from 'astrowind:config';

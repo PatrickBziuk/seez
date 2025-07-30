@@ -1,4 +1,12 @@
 ---
+/**
+ * ListItem - Displays a single item in a list, typically a blog post preview
+ * @props {item: Object} - Content item data
+ * @behavior Shows title, excerpt, image, and metadata for a post
+ * @dependencies Tailwind CSS
+ * @usedBy List.astro, RelatedPosts.astro
+ */
+
 import type { ImageMetadata } from 'astro';
 import { Icon } from 'astro-icon/components';
 import Image from '~/components/common/Image.astro';
@@ -55,8 +63,8 @@ const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : 
               sizes="(max-width: 900px) 400px, 900px"
               alt={post.title}
               aspectRatio="16:9"
-              loading="lazy"
-              decoding="async"
+                loading="lazy"
+                decoding="async"
             />
           )}
         </div>
