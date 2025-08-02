@@ -1,0 +1,47 @@
+---
+/**
+ * Tldr - Stylish TL;DR summary box with AI badge
+ * @props {tldr: string, color?: string, icon?: string, badgeText?: string, badgeVariant?: string, info?: string} - The summary text and customization options
+ * @behavior Displays a prominent TL;DR label, summary, and a badge (AI or custom)
+ * @dependencies Badge.astro, Tailwind CSS
+ * @usedBy ContentMetadata.astro, blog posts, project/lab/life summaries
+ */
+import Badge from '../../ui/display/Badge.astro';
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  tldr: string;
+  color?: string; // Tailwind color e.g. 'blue', 'emerald', 'rose'
+  icon?: string; // e.g. 'tabler:sparkles' or emoji
+  badgeText?: string; // e.g. 'AI', 'Human', 'AI+Human'
+  badgeVariant?: 'ai' | 'human' | 'ai-human' | 'tag' | 'language' | 'timestamp';
+  info?: string; // Additional info below summary
+}
+
+const {
+  tldr = '',
+  color = 'blue',
+  icon = 'tabler:sparkles',
+  badgeText = 'AI',
+  badgeVariant = 'ai',
+  info = '',
+} = Astro.props;
+---
+
+<section class={`relative bg-gradient-to-br from-${color}-50/80 to-indigo-100/80 dark:from-slate-800 dark:to-slate-900 border border-${color}-200 dark:border-slate-700 rounded-xl shadow-lg p-6 my-8 max-w-3xl mx-auto not-prose transition-all duration-300`}>  
+  <div class="flex items-center gap-3 mb-2">
+    <span class={`inline-flex items-center text-xs font-bold uppercase tracking-widest text-${color}-700 dark:text-${color}-300`}>
+      {icon && <Icon name={icon} class="w-4 h-4 mr-1.5 align-text-bottom" />}TL;DR
+    </span>
+    <Badge variant={badgeVariant} text={badgeText} icon={badgeVariant === 'ai' ? '🤖' : undefined} size="sm" />
+  </div>
+  <div class="text-lg leading-relaxed text-blue-900 dark:text-blue-100 font-medium">
+    {tldr}
+  </div>
+  {info && (
+    <div class="mt-3 text-sm text-blue-700 dark:text-blue-300 opacity-80 italic flex items-center gap-2">
+      <Icon name="tabler:info-circle" class="w-4 h-4" />
+      {info}
+    </div>
+  )}
+</section>

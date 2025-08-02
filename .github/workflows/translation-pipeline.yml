@@ -14,8 +14,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v20
+      - uses: actions/setup-node@v4
         with:
+          node-version: '20'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -38,10 +39,15 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: AI: generate translations from main
+          commit-message: "AI: generate translations from main"
           branch: translate/ai-translations-${{ github.sha }}
-          title: AI translations for main @ ${{ github.sha_short }}
+          title: "AI translations for main @ ${{ github.run_number }}"
           body: |
             Automated translations generated for updated or missing content.
+            
+            Generated from commit: ${{ github.sha }}
+            Workflow run: ${{ github.run_number }}
           draft: true
-          labels: ai, translation
+          labels: |
+            ai
+            translation
