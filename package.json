@@ -22,7 +22,10 @@
     "fix:prettier": "prettier -w .",
     "test:translations": "node ./scripts/test-translations.js",
     "test:routing": "node ./scripts/test-routing.js",
-    "test:ci": "npm run test:translations && npm run test:routing"
+    "test:ci": "npm run test:translations && npm run test:routing",
+    "translations:check": "npx tsx scripts/check_translations.ts",
+    "translations:generate": "npx tsx scripts/generate_translations.ts",
+    "translations:conflicts": "npx tsx scripts/detect_conflicts.ts"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
@@ -40,6 +43,8 @@
     "i18next": "^23.7.6",
     "limax": "4.1.0",
     "lodash.merge": "^4.6.2",
+    "octokit": "^5.0.3",
+    "openai": "^5.11.0",
     "unpic": "^4.1.2"
   },
   "devDependencies": {

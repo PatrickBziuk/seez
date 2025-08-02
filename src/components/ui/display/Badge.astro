@@ -2,10 +2,11 @@
 /**
  * Badge - Displays small status or category badges
  * @props {variant: 'ai' | 'human' | 'ai-human' | 'tag' | 'language' | 'timestamp', text: string, icon?: string, size?: 'sm' | 'md' | 'lg'} - Badge content and styling options
- * @behavior Renders styled badge with customizable appearance and size variants
- * @dependencies Tailwind CSS
+ * @behavior Renders styled badge with customizable appearance and size variants. Supports emoji or icon set for icon prop.
+ * @dependencies Tailwind CSS, Icon.astro, astro-icon
  * @usedBy ContentMetadata.astro, tags, status indicators, content categorization
  */
+import Icon from './Icon.astro';
 export interface Props {
   variant: 'ai' | 'human' | 'ai-human' | 'tag' | 'language' | 'timestamp';
   text: string;
@@ -26,9 +27,19 @@ const sizeClasses = {
   md: 'px-2.5 py-0.5 text-sm',
   lg: 'px-3 py-1 text-base',
 };
+// Helper: check if icon is a single emoji (unicode)
+function isEmoji(str) {
+  return str && str.length <= 2 && /\p{Emoji}/u.test(str);
+}
 ---
 <span class={`inline-flex items-center rounded-full font-medium border ${variantClasses[variant]} ${sizeClasses[size]}`}
       aria-label={variant}>
-  {icon && <span class="mr-1.5 flex-shrink-0">{icon}</span>}
+  {icon && (
+    <span class="mr-1.5 flex-shrink-0">
+      {isEmoji(icon)
+        ? icon
+        : <Icon name={icon} size={size === 'sm' ? 16 : size === 'lg' ? 24 : 18} />}
+    </span>
+  )}
   <span>{text}</span>
 </span>

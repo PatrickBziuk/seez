@@ -6,11 +6,11 @@
  * @dependencies Logo.astro, LanguageSwitcher.astro, headerData from navigation.ts, i18n utilities
  * @usedBy Layout.astro, PageLayout.astro, MarkdownLayout.astro, widgets/Header.astro
  */
-import Logo from '../Logo.astro';
-import LanguageSwitcher from '../ui/LanguageSwitcher.astro';
-import { headerData } from '../../navigation';
-import { getTranslations } from '../../utils/i18n';
-import type { SupportedLanguage } from '../../utils/i18n';
+import Logo from '../brand/Logo.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { headerData } from '~/navigation';
+import { getTranslations } from '~/utils/i18n';
+import type { SupportedLanguage } from '~/utils/i18n';
 
 export interface Props {
   currentLanguage: SupportedLanguage;

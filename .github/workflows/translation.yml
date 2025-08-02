@@ -1,0 +1,196 @@
+name: Translation Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      commit-sha:
+        description: 'Commit SHA that triggered the translation'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  detect-translations:
+    name: Detect Translation Tasks
+    runs-on: ubuntu-latest
+    outputs:
+      has-tasks: ${{ steps.check-tasks.outputs.has-tasks }}
+      tasks-file: ${{ steps.check-tasks.outputs.tasks-file }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit-sha }}
+          fetch-depth: 0
+
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing dependencies with npm..."
+          npm ci
+
+      - name: 🔄 Sync Astro content types
+        run: |
+          echo "Syncing Astro content types..."
+          npm run astro sync
+
+      - name: 🔍 Run translation detection
+        run: |
+          echo "Detecting missing and stale translations..."
+          npx tsx scripts/check_translations.ts > translation-tasks.json
+          echo "Translation tasks generated:"
+          cat translation-tasks.json
+
+      - name: ✅ Check if tasks exist
+        id: check-tasks
+        run: |
+          if [ -s translation-tasks.json ] && [ "$(cat translation-tasks.json)" != "[]" ]; then
+            echo "has-tasks=true" >> $GITHUB_OUTPUT
+            echo "tasks-file=translation-tasks.json" >> $GITHUB_OUTPUT
+            echo "Translation tasks found, proceeding to generation"
+          else
+            echo "has-tasks=false" >> $GITHUB_OUTPUT
+            echo "No translation tasks found, skipping generation"
+          fi
+
+      - name: 📤 Upload tasks file
+        if: steps.check-tasks.outputs.has-tasks == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: translation-tasks
+          path: translation-tasks.json
+
+  generate-translations:
+    name: Generate Translations
+    needs: detect-translations
+    if: needs.detect-translations.outputs.has-tasks == 'true'
+    runs-on: ubuntu-latest
+    env:
+      TRANSLATION_QUALITY_THRESHOLD: 70
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit-sha }}
+          fetch-depth: 0
+
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing dependencies with npm..."
+          npm ci
+
+      - name: 📥 Download tasks file
+        uses: actions/download-artifact@v4
+        with:
+          name: translation-tasks
+
+      - name: 🤖 Generate translations
+        run: |
+          echo "Generating translations with OpenAI..."
+          npx tsx scripts/generate_translations.ts translation-tasks.json
+          echo "Translations generated successfully!"
+
+      - name: 🔍 Detect conflicts and create issues
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Detecting translation conflicts..."
+          npx tsx scripts/detect_conflicts.ts translation-tasks.json
+
+      - name: 📤 Upload generated content
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-translations
+          path: |
+            src/content/**/*.md
+            .translation-cache/
+
+  create-translation-pr:
+    name: Create Translation Pull Request
+    needs: [detect-translations, generate-translations]
+    if: needs.detect-translations.outputs.has-tasks == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit-sha }}
+          fetch-depth: 0
+
+      - name: 📥 Download generated content
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-translations
+          path: .
+
+      - name: 🔧 Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: 🌿 Create translation branch
+        id: create-branch
+        run: |
+          branch_name="translate/ai-translations-$(date +%Y%m%d-%H%M%S)-${{ inputs.commit-sha }}"
+          echo "branch-name=$branch_name" >> $GITHUB_OUTPUT
+          git checkout -b "$branch_name"
+          echo "Created branch: $branch_name"
+
+      - name: 💾 Commit translations
+        run: |
+          git add src/content/
+          git add .translation-cache/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "AI: generate translations from main @ ${{ inputs.commit-sha }}"
+          git push origin ${{ steps.create-branch.outputs.branch-name }}
+
+      - name: 📝 Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if there are actually changes committed
+          if git log origin/main..HEAD --oneline | grep -q .; then
+            gh pr create \
+              --title "AI translations for main @ ${{ github.run_number }}" \
+              --body "Automated translations generated for updated or missing content.
+
+          Generated from commit: ${{ inputs.commit-sha }}
+          Workflow run: ${{ github.run_number }}
+          Branch: ${{ steps.create-branch.outputs.branch-name }}
+
+          Review Instructions:
+          1. Review the generated translations for accuracy and quality
+          2. Check the AI quality scores in the frontmatter  
+          3. Make any necessary manual edits
+          4. Merge this PR to promote translations to the release branch" \
+              --base main \
+              --head ${{ steps.create-branch.outputs.branch-name }} \
+              --draft \
+              --label ai,translation,auto-generated
+            echo "✅ Translation PR created successfully"
+          else
+            echo "No changes to create PR for"
+            git push origin --delete ${{ steps.create-branch.outputs.branch-name }}
+          fi

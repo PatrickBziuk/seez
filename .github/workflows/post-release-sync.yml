@@ -23,5 +23,16 @@ jobs:
         run: |
           git checkout main
           git pull origin main
-          git merge --no-ff release -m "chore: sync translations from release"
+          git merge --no-ff release -m "chore: sync approved translations from release"
           git push origin main
+
+      - name: Clean up merged translation branches
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Find and delete merged translation branches
+          merged_branches=$(gh pr list --state merged --json headRefName --jq '.[].headRefName' | grep '^translate/' || true)
+          for branch in $merged_branches; do
+            echo "Deleting merged translation branch: $branch"
+            git push origin --delete "$branch" || echo "Branch $branch already deleted"
+          done

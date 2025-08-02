@@ -42,10 +42,7 @@ import FAQs from '~/components/marketing/conversion/FAQs.astro';
   <Badge variant="timestamp" text="2024-05-10" />
 </div>
 
-<Button variant="primary" size="md" onClick={() => {
-  document.documentElement.classList.toggle('dark');
-  localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-}}>
+<Button variant="primary" size="md" type="button" data-aw-toggle-color-scheme>
   Toggle Dark Mode
 </Button>
 
@@ -55,15 +52,15 @@ import FAQs from '~/components/marketing/conversion/FAQs.astro';
   actions={[{ text: "Toggle Now", href: "#", variant: "primary" }]}
 />
 
-<SocialShare text="Check out this Dark Mode Switcher experiment!" url={Astro.url.pathname} />
+<SocialShare text="Check out this Dark Mode Switcher experiment!" url={url} />
 
 <Features
   title="Component Features"
   subtitle="What makes these Astro components great?"
   items={[
-    { title: 'Accessibility', description: 'All components are keyboard and screen reader friendly.', icon: '🦾' },
-    { title: 'Customization', description: 'Easily style and configure via props.', icon: '🎨' },
-    { title: 'Performance', description: 'Optimized for fast rendering and minimal bundle size.', icon: '⚡' },
+    { title: 'Accessibility', description: 'All components are keyboard and screen reader friendly.', icon: 'tabler:accessible' },
+    { title: 'Customization', description: 'Easily style and configure via props.', icon: 'tabler:palette' },
+    { title: 'Performance', description: 'Optimized for fast rendering and minimal bundle size.', icon: 'tabler:bolt' },
   ]}
   columns={3}
 />

@@ -18,17 +18,25 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
+
+      - name: Sync Astro content types
+        run: npm run astro sync
 
       - name: Re-run translations
-        run: tsx scripts/generate_translations.ts tasks.json
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          npx tsx scripts/check_translations.ts > tasks.json
+          npx tsx scripts/generate_translations.ts tasks.json
 
       - name: Commit regeneration
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -am "chore: regenerate translations after regen-needed label"
+          git add .
+          git commit -am "chore: regenerate translations after regen-needed label" || echo "No changes to commit"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}

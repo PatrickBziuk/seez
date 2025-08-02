@@ -41,16 +41,56 @@
 - [x] **T16-008**: Add translation caching mechanism keyed by (sourceSha, targetLang)
 
 ### Phase 3: GitHub Integration & Workflows
-- [ ] **T16-009**: Create main-to-translate GitHub Action workflow with deduplication logic
-- [ ] **T16-010**: Implement draft PR creation/updating system with proper naming conventions
-- [ ] **T16-011**: Build post-release sync workflow to feed approved translations back to main
+- [x] **T16-009**: Create main-to-translate GitHub Action workflow with deduplication logic
+- [x] **T16-010**: Implement draft PR creation/updating system with proper naming conventions
+- [x] **T16-011**: Build post-release sync workflow to feed approved translations back to main
 - [x] **T16-012**: Add automated bad translation detection and GitHub issue creation
 
 ### Phase 4: Branch Management & Release Flow
-- [ ] **T16-013**: Implement branching strategy (draft → main → translate/* → release) with proper cleanup
+- [x] **T16-013**: Implement branching strategy (draft → main → translate/* → release) with proper cleanup
 - [ ] **T16-014**: Create manual override workflow for human-only translation branches
 - [ ] **T16-015**: Set up conflict resolution for stale translations and concurrent edits
 - [ ] **T16-016**: Implement comprehensive testing (unit, integration, snapshot tests) and documentation
+
+---
+
+## ✅ COMPLETED: GitHub Actions Workflow Consolidation
+
+### ✅ Phase 1: Workflow Analysis & Planning
+- [x] **T-GHACTIONS-001**: Analyze existing workflow files and identify consolidation opportunities
+- [x] **T-GHACTIONS-002**: Design new workflow structure following best practices
+- [x] **T-GHACTIONS-003**: Plan proper build → translation sequencing
+
+### ✅ Phase 2: Main CI/CD Workflow Implementation  
+- [x] **T-GHACTIONS-004**: Create consolidated ci-cd.yml workflow replacing actions.yaml
+- [x] **T-GHACTIONS-005**: Implement proper job dependencies (translation only after successful build)
+- [x] **T-GHACTIONS-006**: Switch from pnpm to npm for better reliability
+- [x] **T-GHACTIONS-007**: Add proper error handling and GitHub issue creation on build failures
+
+### ✅ Phase 3: Translation Workflow Separation
+- [x] **T-GHACTIONS-008**: Create dedicated translation.yml workflow called by main workflow
+- [x] **T-GHACTIONS-009**: Implement proper artifact handling between jobs
+- [x] **T-GHACTIONS-010**: Add translation branch creation and PR management
+
+### ✅ Phase 4: Manual & Cleanup Workflows
+- [x] **T-GHACTIONS-011**: Update manual-regen.yml to use npm and proper dependencies
+- [x] **T-GHACTIONS-012**: Enhance post-release-sync.yml with branch cleanup
+- [x] **T-GHACTIONS-013**: Maintain cleanup-translate-branches.yml for PR-based cleanup
+
+### ✅ Phase 5: Configuration & Documentation Updates
+- [x] **T-GHACTIONS-014**: Update package.json scripts to support new workflows
+- [x] **T-GHACTIONS-015**: Remove obsolete workflow files
+- [x] **T-GHACTIONS-016**: Document new workflow structure and dependencies
+
+**Status**: ✅ COMPLETED - Workflows consolidated with proper build → translation flow!
+
+**Key Improvements Implemented**:
+- Build must succeed before translation pipeline triggers
+- Consistent npm usage across all workflows  
+- Proper job dependencies and artifact handling
+- Enhanced error handling with GitHub issue creation
+- Cleaner separation of concerns between workflows
+- Better branch and PR management
 
 ---
 

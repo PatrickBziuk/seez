@@ -7,11 +7,11 @@
 
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 import matter from 'gray-matter';
 import OpenAI from 'openai';
 import {
   type TranslationTask,
-  type SupportedLanguage,
   createTranslationHistoryEntry
 } from '../src/utils/translation';
 
@@ -32,7 +32,21 @@ async function translateTask(task: TranslationTask) {
   const CACHE_DIR = '.translation-cache';
   fs.mkdirSync(CACHE_DIR, { recursive: true });
   const cachePath = path.join(CACHE_DIR, `${sourceSha}-${targetLang}.json`);
-  let result: any;
+  let result: {
+    translated_markdown: string;
+    ai_tldr: string;
+    ai_textscore: {
+      translationQuality: number;
+      originalClarity: number;
+      timestamp: string;
+      notes?: string[];
+    };
+    review_issues?: Array<{
+      section: string;
+      issue: string;
+      suggestion: string;
+    }>;
+  };
   if (fs.existsSync(cachePath)) {
     result = JSON.parse(fs.readFileSync(cachePath, 'utf-8'));
     console.log(`🔄 Using cached translation for ${sourceSha}-${targetLang}`);
@@ -80,7 +94,7 @@ async function translateTask(task: TranslationTask) {
       body += `- **${rev.section}**: ${rev.issue}\n  - Suggestion: ${rev.suggestion}\n`;
     }
     try {
-      require('child_process').execSync(
+      execSync(
         `gh issue create --title "${title.replace(/"/g, '\\"')}" --body "${body.replace(/"/g, '\\"')}"`
       );
       console.log(`🚨 Created GitHub issue for poor translation: ${title}`);

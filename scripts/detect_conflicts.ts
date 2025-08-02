@@ -6,7 +6,7 @@
  */
 
 import fs from 'fs';
-import path from 'path';
+// import path from 'path';
 import { Octokit } from 'octokit';
 import type { TranslationTask } from '../src/utils/translation';
 
