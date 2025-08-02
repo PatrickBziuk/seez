@@ -31,3 +31,4 @@ These tasks were completed as part of the LanguageSwitcher integration and acces
 - Pass locale from layout/page to header, footer, and LanguageSwitcher for consistent i18n context.
 - Use client-side event listeners for dropdown toggle and accessibility.
 - Documented all changes and rationale in design.md and technical-spec.md.
+- Housekeeping: Removed obsolete temp files from src/pages and subfolders (see plan-10009-housekeeping-temp-files.md)
