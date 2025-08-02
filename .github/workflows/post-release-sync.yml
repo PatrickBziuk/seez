@@ -1,0 +1,27 @@
+name: Post-release Sync
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  sync-to-main:
+    name: Sync Release into Main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge release into main
+        run: |
+          git checkout main
+          git pull origin main
+          git merge --no-ff release -m "chore: sync translations from release"
+          git push origin main

@@ -1,39 +1,7 @@
 ---
-import Layout from '~/layouts/PageLayout.astro';
+// Redirect to language-specific URL
+import { detectLanguage } from '~/utils/i18n';
 
-
-
-const metadata = {
-  title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
-  ignoreTitleTemplate: true,
-};
+const locale = detectLanguage(Astro.url.pathname) || 'en';
+return Astro.redirect(`/${locale}`);
 ---
-
-
-<Layout metadata={metadata}>
-  <main class="min-h-screen flex flex-col items-center justify-center py-16">
-    <h1 class="text-4xl font-bold mb-10 text-center dark:text-white">Welcome to bziuk.com</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-5xl">
-      <a href="/books" class="flex flex-col items-center p-8 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition shadow group">
-        <span class="text-5xl mb-4">📚</span>
-        <span class="text-xl font-semibold mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400">Books</span>
-        <span class="text-gray-500 dark:text-gray-400 text-center">Reading, notes, and book reviews</span>
-      </a>
-      <a href="/projects" class="flex flex-col items-center p-8 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition shadow group">
-        <span class="text-5xl mb-4">🛠️</span>
-        <span class="text-xl font-semibold mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400">Projects</span>
-        <span class="text-gray-500 dark:text-gray-400 text-center">Personal and open source projects</span>
-      </a>
-      <a href="/lab" class="flex flex-col items-center p-8 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition shadow group">
-        <span class="text-5xl mb-4">🧪</span>
-        <span class="text-xl font-semibold mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400">Lab</span>
-        <span class="text-gray-500 dark:text-gray-400 text-center">Experiments, code, and ideas</span>
-      </a>
-      <a href="/life" class="flex flex-col items-center p-8 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition shadow group">
-        <span class="text-5xl mb-4">🌱</span>
-        <span class="text-xl font-semibold mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400">Life</span>
-        <span class="text-gray-500 dark:text-gray-400 text-center">Personal notes, reflections, and more</span>
-      </a>
-    </div>
-  </main>
-</Layout>

@@ -293,6 +293,24 @@ export interface ExtendedMetaData {
   timestamp?: string;
   status?: Status;
   tags?: string[];
+  translationKey?: string;
+  original?: string;
+  translationHistory?: Array<{
+    language: string;
+    translator: string;
+    model?: string;
+    sourceSha: string;
+    timestamp: string;
+    status: 'ai-translated' | 'human-reviewed' | 'ai+human';
+    reviewer?: string;
+  }>;
+  ai_tldr?: string;
+  ai_textscore?: {
+    translationQuality?: number;
+    originalClarity?: number;
+    timestamp: string;
+    notes?: string[];
+  };
 }
 
 export interface ContentMetadataProps {

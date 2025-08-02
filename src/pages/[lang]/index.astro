@@ -1,5 +1,14 @@
 ---
-import { SUPPORTED_LANGUAGES } from '../../utils/i18n';
+/**
+ * Homepage - Multilingual homepage showing main navigation sections
+ * @props lang: SupportedLanguage - Current language from route params
+ * @behavior Shows welcome message and main navigation cards to Books, Projects, Lab, Life sections
+ * @dependencies SUPPORTED_LANGUAGES, getTranslations, Layout
+ * @usedBy Direct navigation to /[lang] (root homepage)
+ */
+import Layout from '../../layouts/PageLayout.astro';
+import { SUPPORTED_LANGUAGES, getTranslations } from '../../utils/i18n';
+import type { SupportedLanguage } from '../../utils/i18n';
 
 export const getStaticPaths = () => {
   return SUPPORTED_LANGUAGES.map(lang => ({
@@ -7,10 +16,67 @@ export const getStaticPaths = () => {
   }));
 };
 
-const { lang } = Astro.params as { lang: 'en' | 'de' };
-console.log('Current language:', lang); // Use lang for locale-specific rendering
-// Use 'lang' to filter and render content for the current locale
-// Example: const entries = await getCollection('books', lang);
-// ...existing code...
+const { lang } = Astro.params as { lang: SupportedLanguage };
+const t = await getTranslations(lang);
+
+const metadata = {
+  title: lang === 'de' ? 'Willkommen bei bziuk.com' : 'Welcome to bziuk.com',
+  description: lang === 'de' 
+    ? 'Entdecke Bücher, Projekte, Experimente und persönliche Gedanken.' 
+    : 'Discover books, projects, experiments, and personal thoughts.',
+  ignoreTitleTemplate: true,
+};
+
+// Navigation sections with translations
+const sections = [
+  {
+    href: `/${lang}/books`,
+    icon: '📚',
+    title: t.navigation?.Books || 'Books',
+    description: lang === 'de' 
+      ? 'Lektüre, Notizen und Buchrezensionen' 
+      : 'Reading, notes, and book reviews'
+  },
+  {
+    href: `/${lang}/projects`,
+    icon: '🛠️',
+    title: t.navigation?.Projects || 'Projects',
+    description: lang === 'de' 
+      ? 'Persönliche und Open-Source-Projekte' 
+      : 'Personal and open source projects'
+  },
+  {
+    href: `/${lang}/lab`,
+    icon: '🧪',
+    title: t.navigation?.Lab || 'Lab',
+    description: lang === 'de' 
+      ? 'Experimente, Code und Ideen' 
+      : 'Experiments, code, and ideas'
+  },
+  {
+    href: `/${lang}/life`,
+    icon: '🌱',
+    title: t.navigation?.Life || 'Life',
+    description: lang === 'de' 
+      ? 'Persönliche Notizen, Reflexionen und mehr' 
+      : 'Personal notes, reflections, and more'
+  }
+];
 ---
-// ...existing code...
+
+<Layout metadata={metadata}>
+  <main class="min-h-screen flex flex-col items-center justify-center py-16">
+    <h1 class="text-4xl font-bold mb-10 text-center dark:text-white">
+      {lang === 'de' ? 'Willkommen bei bziuk.com' : 'Welcome to bziuk.com'}
+    </h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-5xl">
+      {sections.map(section => (
+        <a href={section.href} class="flex flex-col items-center p-8 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition shadow group">
+          <span class="text-5xl mb-4">{section.icon}</span>
+          <span class="text-xl font-semibold mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400">{section.title}</span>
+          <span class="text-gray-500 dark:text-gray-400 text-center">{section.description}</span>
+        </a>
+      ))}
+    </div>
+  </main>
+</Layout>

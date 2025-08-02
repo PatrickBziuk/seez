@@ -25,6 +25,25 @@ const postSchema = z.object({
     authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
     translation: z.enum(['Human', 'AI', 'AI+Human']).optional(),
   }).optional(),
+  // Translation pipeline support
+  translationKey: z.string().optional(),
+  original: z.string().optional(),
+  translationHistory: z.array(z.object({
+    language: z.string(),
+    translator: z.string(),
+    model: z.string().optional(),
+    sourceSha: z.string(),
+    timestamp: z.string(),
+    status: z.enum(['ai-translated', 'human-reviewed', 'ai+human']),
+    reviewer: z.string().optional(),
+  })).optional(),
+  ai_tldr: z.string().optional(),
+  ai_textscore: z.object({
+    translationQuality: z.number().optional(),
+    originalClarity: z.number().optional(),
+    timestamp: z.string(),
+    notes: z.array(z.string()).optional(),
+  }).optional(),
 });
 
 const extendedSchema = baseSchema.extend({
@@ -33,6 +52,26 @@ const extendedSchema = baseSchema.extend({
   status: z.object({
     authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
     translation: z.enum(['Human', 'AI', 'AI+Human']).optional(),
+  }).optional(),
+  // Translation pipeline support
+  translationKey: z.string().optional(), // Unique identifier for pairing across languages
+  original: z.string().optional(), // Reference to source file for translations
+  translationHistory: z.array(z.object({
+    language: z.string(),
+    translator: z.string(),
+    model: z.string().optional(),
+    sourceSha: z.string(),
+    timestamp: z.string(),
+    status: z.enum(['ai-translated', 'human-reviewed', 'ai+human']),
+    reviewer: z.string().optional(), // GitHub username if human touched it
+  })).optional(),
+  // AI generated summary and quality metrics
+  ai_tldr: z.string().optional(),
+  ai_textscore: z.object({
+    translationQuality: z.number().optional(),
+    originalClarity: z.number().optional(),
+    timestamp: z.string(),
+    notes: z.array(z.string()).optional(),
   }).optional(),
 });
 

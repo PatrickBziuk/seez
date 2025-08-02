@@ -1,0 +1,22 @@
+# Translation Override Configuration
+# This file controls which content items should be excluded from automatic translation
+# Format: List of translation keys or file paths to skip
+
+# Global pause flag - set to true to disable all automatic translations
+global_pause: false
+
+# Specific content items to skip (by translation key)
+skip_translation_keys: []
+  # - "my-article"
+  # - "special-content"
+
+# Specific file paths to skip (relative to content directories)
+skip_file_paths: []
+  # - "lab/en/work-in-progress.md"
+  # - "projects/en/draft-project.md"
+
+# Temporary overrides with expiration (ISO 8601 date)
+temporary_overrides: []
+  # - translation_key: "article-under-review"
+  #   expires: "2025-08-10T00:00:00Z"
+  #   reason: "Manual review in progress"

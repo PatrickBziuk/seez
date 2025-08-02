@@ -36,6 +36,7 @@ const translations = await getTranslations(currentLanguage);
       {availableLanguages.map(lang => {
         const info = LANGUAGE_INFO[lang];
         const languageUrl = getLocalizedUrl(currentPath, lang);
+        console.log(`LanguageSwitcher: currentPath="${currentPath}", lang="${lang}", languageUrl="${languageUrl}"`);
         return (
           <li role="option" aria-selected={lang === currentLanguage} class={`flex items-center px-4 py-2 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-800 ${lang === currentLanguage ? 'font-bold' : ''}`}
             tabindex="0"

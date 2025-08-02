@@ -1,3 +1,35 @@
+## Automated Translation Pipeline
+
+This repository includes an automated translation pipeline using the OpenAI API.
+
+### Workflows
+
+- **translation-pipeline**: On `main` push, detects new/stale content, generates translations via AI, and opens a draft PR.
+- **manual-regen**: On PR label `regen-needed`, re-runs translation for that branch.
+- **cleanup-translate-branches**: On PR merge, deletes the corresponding `translate/*` branch.
+- **post-release-sync**: On `release` push, merges release back into `main`.
+
+### Scripts
+
+- `scripts/check_translations.ts`: Detect missing or stale translations.
+- `scripts/generate_translations.ts`: Generate translations, TLDR, quality scores, and auto-open issues for poor translations.
+- `scripts/detect_conflicts.ts`: Open issues for translation conflicts (stale translations).
+- `translation.override.yml`: Manual override config (global pause, skip lists).
+
+### Running Locally
+
+```bash
+pnpm install
+tsx scripts/check_translations.ts > tasks.json
+tsx scripts/generate_translations.ts tasks.json
+```
+
+### Tests
+
+Run built-in tests with Node.js:
+```bash
+node --test
+```
 # 🚀 Seez – Constructive Chaos
 
 Built upon the solid foundation of **AstroWind**, this repository is my personal container for constructive chaos—a place where I combine my ideas, projects, and thoughts into one evolving space.
