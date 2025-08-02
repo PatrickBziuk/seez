@@ -18,20 +18,25 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Sync Astro content types
-        run: npm run astro sync
+        run: pnpm run astro sync
 
       - name: Re-run translations
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          npx tsx scripts/check_translations.ts > tasks.json
-          npx tsx scripts/generate_translations.ts tasks.json
+          pnpm exec tsx scripts/check_translations.ts > tasks.json
+          pnpm exec tsx scripts/generate_translations.ts tasks.json
 
       - name: Commit regeneration
         run: |

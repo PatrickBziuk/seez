@@ -34,27 +34,32 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
 
       - name: 📦 Install dependencies
         run: |
-          echo "Installing dependencies with npm..."
-          npm ci
+          echo "Installing dependencies with pnpm..."
+          pnpm install --frozen-lockfile
 
       - name: 🔄 Sync Astro content types
         run: |
           echo "Syncing Astro content types..."
-          npm run astro sync
+          pnpm run astro sync
 
       - name: 🔍 Run Astro check
         run: |
           echo "Running Astro type checking..."
-          npm run check:astro
+          pnpm run check:astro
 
       - name: 🏗️ Build Astro site
         run: |
           echo "Building Astro site..."
-          npm run build
+          pnpm run build
           echo "✅ Build completed successfully!"
 
   # Code quality checks (allow to fail but still build)
@@ -71,24 +76,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
 
       - name: 📦 Install dependencies
         run: |
-          echo "Installing dependencies with npm..."
-          npm ci
+          echo "Installing dependencies with pnpm..."
+          pnpm install --frozen-lockfile
 
       - name: 🔍 Run ESLint
         continue-on-error: true
         run: |
           echo "Running ESLint check..."
-          npm run check:eslint || echo "⚠️ ESLint found issues, but continuing"
+          pnpm run check:eslint || echo "⚠️ ESLint found issues, but continuing"
 
       - name: 💅 Run Prettier check
         continue-on-error: true
         run: |
           echo "Running Prettier check..."
-          npm run check:prettier || echo "⚠️ Prettier found issues, but continuing"
+          pnpm run check:prettier || echo "⚠️ Prettier found issues, but continuing"
 
   # Build and Deploy (only on main branch pushes)
   build-and-deploy:
@@ -109,30 +119,35 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
 
       - name: 📦 Install dependencies
         run: |
-          echo "Installing dependencies with npm..."
-          npm ci
+          echo "Installing dependencies with pnpm..."
+          pnpm install --frozen-lockfile
           echo "✅ Dependencies installed successfully!"
 
       - name: 🔄 Sync Astro content types
         run: |
           echo "Syncing Astro content types..."
-          npm run astro sync
+          pnpm run astro sync
 
       - name: 🔍 Run Astro check (allow failures)
         continue-on-error: true
         run: |
           echo "Running Astro type checking..."
-          npm run check:astro || echo "⚠️ Astro check had issues, but continuing with build"
+          pnpm run check:astro || echo "⚠️ Astro check had issues, but continuing with build"
 
       - name: 🏗️ Build Astro site
         id: build-step
         run: |
           echo "Building Astro site for production..."
-          npm run build
+          pnpm run build
           echo "✅ Build completed successfully!"
           echo "Build output directory contents:"
           ls -la dist/
@@ -150,7 +165,7 @@ jobs:
           COMMIT_SHA: ${{ github.sha }}
         run: |
           echo "Build failed, extracting error..."
-          npm run build > build.log 2>&1 || true
+          pnpm run build > build.log 2>&1 || true
           
           if [ -f scripts/extract-error.js ]; then
             node scripts/extract-error.js build.log > error-summary.txt
