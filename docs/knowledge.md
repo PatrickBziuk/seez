@@ -18,3 +18,14 @@
 - CI scripts (`test:translations`, `test:routing`) validate translation key completeness and routing for all language variants.
 - Build checks ensure no missing translations or broken routes.
 - See scripts/ for test logic and package.json for integration.
+
+## Language Detection & Redirect Best Practices (2025 Update)
+
+- **Root domain handling**: Implemented elegant client-side language detection instead of ugly server redirects.
+- **Browser language detection**: Use `navigator.languages` array to detect user's preferred language from browser settings.
+- **Static deployment compatibility**: Client-side detection works perfectly with static site generation, no SSR required.
+- **Fallback mechanisms**: Always include fallback to default language (English) for unsupported languages.
+- **UX considerations**: Show professional loading screen during detection rather than blank page or ugly redirect message.
+- **Performance**: Keep detection minimal (200ms) for smooth user experience with 2-second safety fallback.
+- **Future extensibility**: Server-side detection utilities (`detectLanguageFromHeaders`) available for future SSR migration.
+- **Implementation**: Root `index.astro` contains full HTML page with inline CSS/JS for fast loading and immediate detection.

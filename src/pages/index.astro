@@ -1,7 +1,96 @@
 ---
-// Redirect to language-specific URL
-import { detectLanguage } from '../utils/i18n';
-
-const locale = detectLanguage(Astro.url.pathname) || 'en';
-return Astro.redirect(`/${locale}`);
+// Language detection and redirect page
 ---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting... | bziuk.com</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      color: white;
+    }
+    .container {
+      text-align: center;
+      padding: 2rem;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-left: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 300;
+    }
+    p {
+      margin: 0;
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="spinner"></div>
+    <h1>Welcome to bziuk.com</h1>
+    <p>Detecting your preferred language...</p>
+  </div>
+
+  <script>
+    // Language detection from browser
+    function detectLanguage() {
+      const supportedLanguages = ['en', 'de'];
+      const defaultLanguage = 'en';
+      
+      // Get browser languages from navigator
+      const browserLanguages = navigator.languages || [navigator.language];
+      
+      // Find first supported language
+      for (const lang of browserLanguages) {
+        const langCode = lang.split('-')[0].toLowerCase();
+        if (supportedLanguages.includes(langCode)) {
+          return langCode;
+        }
+      }
+      
+      return defaultLanguage;
+    }
+
+    // Redirect immediately
+    function redirect() {
+      const language = detectLanguage();
+      window.location.replace(`/${language}`);
+    }
+
+    // Execute redirect after a minimal delay for smooth experience
+    setTimeout(redirect, 200);
+    
+    // Fallback in case of any issues
+    setTimeout(() => {
+      if (window.location.pathname === '/') {
+        window.location.replace('/en');
+      }
+    }, 2000);
+  </script>
+</body>
+</html>
