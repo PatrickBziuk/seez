@@ -123,9 +123,37 @@
 
 ---
 
-## Current Task: Automate GitHub issue creation for CI build failures (see plan-10015-ci-auto-issue.md)
-- [ ] Review and update GitHub Actions workflow for error capture
-- [ ] Implement error log extraction and parsing logic
-- [ ] Add GitHub issue creation logic (API or gh CLI)
-- [ ] Test with simulated build failures
-- [ ] Document process and update plan file
+## Current Task: Translation Pipeline Robustness & Progressive State Saving (see plan-10019-translation-pipeline-robustness.md)
+
+### Phase 1: Content Filtering & Smart Translation
+- [x] **T19-001**: Implement content-only file filtering (only src/content/{books,projects,lab,life}/)
+- [x] **T19-002**: Add MDX component detection and preservation during translation
+- [x] **T19-003**: Implement tag preservation logic (don't translate tags array)
+- [x] **T19-004**: Create content extraction that separates translatable from non-translatable content
+
+### Phase 2: Progressive State Saving
+- [x] **T19-005**: Modify generation script to process translations sequentially instead of in batch
+- [x] **T19-006**: Add git commit after each successful translation
+- [x] **T19-007**: Implement resume capability - detect already translated files and skip them
+- [x] **T19-008**: Add progress tracking and logging for long-running translation jobs
+
+### Phase 3: Hallucination Detection
+- [x] **T19-009**: Implement content similarity comparison between original and translated content
+- [x] **T19-010**: Add semantic structure validation (headings, lists, links preserved)
+- [x] **T19-011**: Create hallucination scoring and automatic rejection for poor translations
+- [x] **T19-012**: Add human review flags for translations that fail hallucination checks
+
+### Phase 4: Workflow Integration
+- [ ] **T19-013**: Update GitHub Actions to handle incremental commits properly
+- [ ] **T19-014**: Add branch protection to preserve partial translation work
+- [ ] **T19-015**: Implement translation job resumption on workflow restart
+- [ ] **T19-016**: Add comprehensive error handling and recovery mechanisms
+
+---
+
+## Previous Task: Automate GitHub issue creation for CI build failures (see plan-10015-ci-auto-issue.md)
+- [x] Review and update GitHub Actions workflow for error capture
+- [x] Implement error log extraction and parsing logic
+- [x] Add GitHub issue creation logic (API or gh CLI)  
+- [x] Test with simulated build failures
+- [x] Document process and update plan file
