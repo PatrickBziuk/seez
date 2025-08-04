@@ -1,0 +1,333 @@
+{
+  "timestamp": "2025-08-04T20:00:17.105Z",
+  "summary": {
+    "totalFiles": 20,
+    "filesWithSuggestions": 16,
+    "totalSuggestedTags": 62,
+    "averageConfidence": 0.87,
+    "newTagCandidates": 2
+  },
+  "suggestions": [
+    {
+      "filePath": "src\\content\\books\\de\\licht-am-ende-der-zeilen.md",
+      "collection": "books",
+      "language": "de",
+      "existingTags": [
+        "literatur",
+        "reflexion",
+        "trauma",
+        "liebe",
+        "depression",
+        "selbstfindung"
+      ],
+      "suggestedTags": [
+        "persönlich",
+        "leben"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"reflexion\" matches content keywords; \"trauma\" matches content keywords; \"liebe\" matches content keywords; \"depression\" matches content keywords; \"selbstfindung\" matches content keywords; \"persönlich\" matches content keywords; \"leben\" matches content keywords; \"literatur\" matches content keywords; \"api\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\books\\en\\example-book-root.md",
+      "collection": "books",
+      "language": "en",
+      "existingTags": [
+        "programming",
+        "software",
+        "career"
+      ],
+      "suggestedTags": [
+        "jamstack",
+        "astro",
+        "supabase",
+        "components",
+        "accessibility"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"programming\" matches content keywords; \"software\" matches content keywords; \"jamstack\" matches content keywords; \"astro\" matches content keywords; \"supabase\" matches content keywords; \"components\" matches content keywords; \"accessibility\" matches content keywords; \"example\" matches content keywords; \"badge\" matches content keywords; \"showcase\" matches content keywords; \"career\" matches content keywords; \"personal\" matches content keywords; \"reflection\" matches content keywords; \"creative\" matches content keywords; \"fiction\" matches content keywords; \"german literature\" matches content keywords; \"consensus\" matches content keywords; \"platform\" matches content keywords; \"digital sovereignty\" matches content keywords; \"api\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\books\\en\\example-book.md",
+      "collection": "books",
+      "language": "en",
+      "existingTags": [
+        "fiction",
+        "example"
+      ],
+      "suggestedTags": [
+        "demo",
+        "german literature"
+      ],
+      "confidence": 0.8360000000000001,
+      "reasoning": "\"example\" matches content keywords; \"demo\" matches content keywords; \"german literature\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\books\\en\\licht-am-ende-der-zeilen.md",
+      "collection": "books",
+      "language": "en",
+      "existingTags": [
+        "poetry",
+        "German literature"
+      ],
+      "suggestedTags": [
+        "programming",
+        "jamstack",
+        "example"
+      ],
+      "confidence": 0.8540000000000001,
+      "reasoning": "\"programming\" matches content keywords; \"jamstack\" matches content keywords; \"example\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\projects\\de\\cosensai.mdx",
+      "collection": "projects",
+      "language": "de",
+      "existingTags": [
+        "ki",
+        "collaboration",
+        "startup"
+      ],
+      "suggestedTags": [
+        "trauma",
+        "depression",
+        "api",
+        "programming"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"trauma\" matches content keywords; \"depression\" matches content keywords; \"api\" matches content keywords; Code patterns detected",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\projects\\de\\meine-musik-root.mdx",
+      "collection": "projects",
+      "language": "de",
+      "existingTags": [
+        "music",
+        "portfolio",
+        "creative"
+      ],
+      "suggestedTags": [
+        "liebe",
+        "selbstfindung",
+        "persönlich"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"liebe\" matches content keywords; \"selbstfindung\" matches content keywords; \"persönlich\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\projects\\en\\portique.mdx",
+      "collection": "projects",
+      "language": "en",
+      "existingTags": [
+        "Portique",
+        "FOSS",
+        "Jamstack",
+        "Astro",
+        "Supabase",
+        "EU-hosting",
+        "Deployment",
+        "Digital Sovereignty"
+      ],
+      "suggestedTags": [
+        "programming",
+        "software"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"programming\" matches content keywords; \"software\" matches content keywords; \"portique\" matches content keywords; \"foss\" matches content keywords; \"jamstack\" matches content keywords; \"astro\" matches content keywords; \"supabase\" matches content keywords; \"deployment\" matches content keywords; \"components\" matches content keywords; \"accessibility\" matches content keywords; \"example\" matches content keywords; \"badge\" matches content keywords; \"showcase\" matches content keywords; \"note\" matches content keywords; \"demo\" matches content keywords; \"career\" matches content keywords; \"personal\" matches content keywords; \"reflection\" matches content keywords; \"portfolio\" matches content keywords; \"creative\" matches content keywords; \"fiction\" matches content keywords; \"german literature\" matches content keywords; \"consensus\" matches content keywords; \"platform\" matches content keywords; \"eu-hosting\" matches content keywords; \"digital sovereignty\" matches content keywords; \"experiment\" matches content keywords; \"api\" matches content keywords",
+      "newTagCandidates": [
+        "proprietary",
+        "stack"
+      ],
+      "shouldAddToRegistry": true
+    },
+    {
+      "filePath": "src\\content\\lab\\en\\badge-showcase.mdx",
+      "collection": "lab",
+      "language": "en",
+      "existingTags": [
+        "badge",
+        "components",
+        "showcase"
+      ],
+      "suggestedTags": [
+        "demo"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"components\" matches content keywords; \"badge\" matches content keywords; \"showcase\" matches content keywords; \"demo\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\lab\\en\\example-lab-root.mdx",
+      "collection": "lab",
+      "language": "en",
+      "existingTags": [
+        "ui",
+        "accessibility",
+        "astro"
+      ],
+      "suggestedTags": [
+        "programming",
+        "software",
+        "portique",
+        "jamstack",
+        "supabase",
+        "components"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"programming\" matches content keywords; \"software\" matches content keywords; \"portique\" matches content keywords; \"jamstack\" matches content keywords; \"astro\" matches content keywords; \"supabase\" matches content keywords; \"components\" matches content keywords; \"accessibility\" matches content keywords; \"example\" matches content keywords; \"badge\" matches content keywords; \"showcase\" matches content keywords; \"demo\" matches content keywords; \"career\" matches content keywords; \"personal\" matches content keywords; \"portfolio\" matches content keywords; \"creative\" matches content keywords; \"german literature\" matches content keywords; \"platform\" matches content keywords; \"eu-hosting\" matches content keywords; \"digital sovereignty\" matches content keywords; \"experiment\" matches content keywords; \"api\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\lab\\en\\example-lab.mdx",
+      "collection": "lab",
+      "language": "en",
+      "existingTags": [
+        "experiment",
+        "MDX"
+      ],
+      "suggestedTags": [
+        "programming",
+        "example",
+        "demo",
+        "german literature",
+        "eu-hosting"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"programming\" matches content keywords; \"mdx\" matches content keywords; \"example\" matches content keywords; \"demo\" matches content keywords; \"german literature\" matches content keywords; \"eu-hosting\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\lab\\en\\note-demo.mdx",
+      "collection": "lab",
+      "language": "en",
+      "existingTags": [
+        "note",
+        "components",
+        "demo"
+      ],
+      "suggestedTags": [
+        "programming",
+        "mdx",
+        "eu-hosting"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"programming\" matches content keywords; \"components\" matches content keywords; \"mdx\" matches content keywords; \"note\" matches content keywords; \"demo\" matches content keywords; \"eu-hosting\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\lab\\en\\tldr-demo.mdx",
+      "collection": "lab",
+      "language": "en",
+      "existingTags": [
+        "demo",
+        "tldr",
+        "components"
+      ],
+      "suggestedTags": [
+        "programming",
+        "software",
+        "portique",
+        "jamstack",
+        "astro",
+        "supabase"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"programming\" matches content keywords; \"software\" matches content keywords; \"portique\" matches content keywords; \"jamstack\" matches content keywords; \"astro\" matches content keywords; \"supabase\" matches content keywords; \"components\" matches content keywords; \"accessibility\" matches content keywords; \"example\" matches content keywords; \"badge\" matches content keywords; \"showcase\" matches content keywords; \"demo\" matches content keywords; \"career\" matches content keywords; \"personal\" matches content keywords; \"portfolio\" matches content keywords; \"creative\" matches content keywords; \"german literature\" matches content keywords; \"platform\" matches content keywords; \"digital sovereignty\" matches content keywords; \"api\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\life\\en\\who-am-i-root.md",
+      "collection": "life",
+      "language": "en",
+      "existingTags": [
+        "music",
+        "portfolio",
+        "creative"
+      ],
+      "suggestedTags": [
+        "programming",
+        "software",
+        "portique",
+        "jamstack",
+        "astro",
+        "supabase",
+        "deployment"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"programming\" matches content keywords; \"software\" matches content keywords; \"portique\" matches content keywords; \"jamstack\" matches content keywords; \"astro\" matches content keywords; \"supabase\" matches content keywords; \"deployment\" matches content keywords; \"components\" matches content keywords; \"accessibility\" matches content keywords; \"example\" matches content keywords; \"badge\" matches content keywords; \"showcase\" matches content keywords; \"note\" matches content keywords; \"career\" matches content keywords; \"personal\" matches content keywords; \"reflection\" matches content keywords; \"poetry\" matches content keywords; \"music\" matches content keywords; \"portfolio\" matches content keywords; \"creative\" matches content keywords; \"fiction\" matches content keywords; \"german literature\" matches content keywords; \"platform\" matches content keywords; \"eu-hosting\" matches content keywords; \"digital sovereignty\" matches content keywords; \"experiment\" matches content keywords; \"api\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\life\\en\\who-am-i.md",
+      "collection": "life",
+      "language": "en",
+      "existingTags": [
+        "personal",
+        "reflection"
+      ],
+      "suggestedTags": [
+        "programming",
+        "jamstack",
+        "example"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"programming\" matches content keywords; \"jamstack\" matches content keywords; \"example\" matches content keywords; \"personal\" matches content keywords; \"reflection\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\pages\\about\\de.md",
+      "collection": "pages",
+      "language": "de",
+      "existingTags": [],
+      "suggestedTags": [
+        "selbstfindung",
+        "persönlich",
+        "leben"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"selbstfindung\" matches content keywords; \"persönlich\" matches content keywords; \"leben\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    },
+    {
+      "filePath": "src\\content\\pages\\about\\en.md",
+      "collection": "pages",
+      "language": "en",
+      "existingTags": [],
+      "suggestedTags": [
+        "programming",
+        "software",
+        "jamstack",
+        "astro",
+        "supabase",
+        "accessibility",
+        "example"
+      ],
+      "confidence": 0.95,
+      "reasoning": "\"programming\" matches content keywords; \"software\" matches content keywords; \"jamstack\" matches content keywords; \"astro\" matches content keywords; \"supabase\" matches content keywords; \"accessibility\" matches content keywords; \"example\" matches content keywords; \"badge\" matches content keywords; \"showcase\" matches content keywords; \"career\" matches content keywords; \"personal\" matches content keywords; \"creative\" matches content keywords; \"german literature\" matches content keywords; \"platform\" matches content keywords; \"digital sovereignty\" matches content keywords; \"experiment\" matches content keywords; \"api\" matches content keywords",
+      "newTagCandidates": [],
+      "shouldAddToRegistry": false
+    }
+  ],
+  "newTagRegistry": [
+    "proprietary",
+    "stack"
+  ]
+}

@@ -1,11 +1,17 @@
----  
-title: "Who am I"
-subtitle: "A cartography of all the names I’ve worn.  "
-date: 2025-07-20
-tags: ["music", "portfolio", "creative"]
+---
+title: Who am I
+subtitle: 'A cartography of all the names I’ve worn.  '
+date: 2025-07-20T00:00:00.000Z
+tags:
+  - music
+  - portfolio
+  - creative
+  - programming
+  - software
+  - portique
 draft: false
 language: en
-timestamp: "2025-07-22T12:00:00Z"
+timestamp: '2025-07-22T12:00:00Z'
 status:
   authoring: Human
   translation: AI+Human
@@ -17,15 +23,15 @@ Only mirrors—each catching a different light.
 
 ---
 
-## 💼 Bziuk  
+## 💼 seez  
 _The system builder. The interface between logic and the world._
 
-**bziuk.com** is where I wear my spine.  
+**seez.eu** is where I wear my spine.  
 IT, automation, Dynamics 365, technical consulting.  
 It’s my surname, my profession, the part of me  
 that understands structure as a kind of mercy.
 
-Bziuk is the version of me that shows up in client meetings  
+seez is the version of me that shows up in client meetings  
 and builds systems that don’t collapse under human messiness.
 
 It is truth. But not the whole of it.

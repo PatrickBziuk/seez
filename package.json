@@ -29,7 +29,13 @@
     "extract:git-metadata": "npx tsx scripts/extract-git-metadata.ts",
     "validate:content": "npx tsx scripts/validate-content.ts",
     "lint:content": "npm run validate:content",
-    "dev:full": "npm run extract:git-metadata && astro sync && npm run dev"
+    "dev:full": "npm run extract:git-metadata && astro sync && npm run dev",
+    "tags:analyze": "npx tsx scripts/ai-tagging/analyze-existing-tags.ts",
+    "tags:build-registry": "npx tsx scripts/ai-tagging/build-master-registry.ts",
+    "tags:suggest": "npx tsx scripts/ai-tagging/suggest-tags.ts",
+    "tags:apply": "npx tsx scripts/ai-tagging/apply-tag-suggestions.ts",
+    "tags:setup": "npm run tags:analyze && npm run tags:build-registry",
+    "tags:full-workflow": "npm run tags:suggest && npm run tags:apply"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",

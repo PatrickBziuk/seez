@@ -1,6 +1,6 @@
 site:
-  name: bziuk
-  site: 'https://bziuk.com'
+  name: seez
+  site: 'https://seez.eu'
   base: '/'
   trailingSlash: false
 
@@ -9,14 +9,14 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: bziuk
+    default: seez
     template: '%s — AstroWind'
   description: "\U0001F680 A Blog about Development, Writing, Social Projects and Life itself."
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: bziuk
+    site_name: seez
     images:
       - url: '~/assets/images/default.png'
         width: 1200

@@ -2,7 +2,7 @@ import { glob } from 'glob';
 import { readFileSync } from 'fs';
 import matter from 'gray-matter';
 
-function validateUniquenesss(slugs: string[]): string[] {
+function validateUniqueness(slugs: string[]): string[] {
   const seen = new Set();
   const duplicates = [];
   
@@ -64,7 +64,7 @@ async function validateContent() {
   }
   
   // Check for duplicate slugs
-  const duplicates = validateUniquenesss(allSlugs);
+  const duplicates = validateUniqueness(allSlugs);
   if (duplicates.length > 0) {
     issues.push(`Duplicate slugs found: ${duplicates.join(', ')}`);
   }

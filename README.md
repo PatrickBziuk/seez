@@ -64,7 +64,7 @@ But the core isn’t the content. It’s the courage to feel publicly, to be see
 
 Seez is my lyrical identity. My shadow truth-teller. The part of me that still believes words can heal, or at least bleed cleanly.
 
-If bziuk.com is where I build the future, seez.eu is where I bury the past and sing over the grave.
+If seez.eu is where I build the future, seez.eu is where I bury the past and sing over the grave.
 
 And maybe, just maybe, help someone else feel a little less alone in their own chaos.
 

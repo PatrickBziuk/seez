@@ -26,7 +26,7 @@ export function generateSlug(title: string, id?: string): string {
   return id ? `${id}/${normalizedTitle}` : normalizedTitle;
 }
 
-export function validateUniquenesss(slugs: string[]): string[] {
+export function validateUniqueness(slugs: string[]): string[] {
   const seen = new Set();
   const duplicates = [];
   

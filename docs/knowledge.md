@@ -1,31 +1,82 @@
-# Astro-i18next & TypeScript Integration Knowledge
+# Seez Repository Knowledge Base (2025)
 
-- Astro-i18next does not export a `useTranslation` hook like React-i18next. Use static helpers or middleware for translations.
-- TypeScript type declarations (`.d.ts` files) do not create runtime exports. Always verify actual package exports before using them.
-- For SSR frameworks like Astro, prefer static translation loading (e.g., `getTranslations(locale)`) over runtime hooks.
-- Always check official documentation and package exports before integrating features.
-- Do not rely on React patterns in Astro projects; APIs and usage may differ.
-- Run builds and type checks after changes to catch errors early.
-- Document custom translation patterns and helpers for maintainability.
+## Current Architecture (Build 2025-01-23)
+- **Framework**: Astro 5.x with TypeScript strict mode
+- **Styling**: Tailwind CSS with custom components and dark mode
+- **Content**: Markdown-based collections (books, projects, lab, life) with type-safe schemas
+- **Internationalization**: Astro-i18next with middleware-based language detection
+- **Build Status**: ✅ Production-ready (154 pages, ~28s build time, no errors)
 
-## SEO & QA Best Practices (2025 Update)
+## Core Systems
 
-- All pages include language-specific meta tags (`hreflang`, canonical URLs) and OpenGraph tags via Metadata.astro.
-- Sitemap is dynamically generated for all language routes in `src/pages/sitemap.xml.ts`.
-- Navigation, header, and footer use translation keys from locale files for all visible text.
-- LanguageSwitcher is integrated and tested in header and footer.
-- ContentFallbackNotice displays user-friendly notices when content is unavailable in the selected language.
-- CI scripts (`test:translations`, `test:routing`) validate translation key completeness and routing for all language variants.
-- Build checks ensure no missing translations or broken routes.
-- See scripts/ for test logic and package.json for integration.
+### Content Management
+- **Collections**: Four main content types with unified schema pattern
+- **Schema**: Extended with `language`, `timestamp`, `status.authoring`, `status.translation`, `tags`
+- **Types**: Auto-generated from `src/content/config.ts` via `astro sync`
+- **Processing**: Uses Astro 5 `glob()` loader for efficient content loading
 
-## Language Detection & Redirect Best Practices (2025 Update)
+### Translation Pipeline
+- **AI Translation**: OpenAI-powered with hallucination detection and progressive saving
+- **Quality Control**: Automatic scoring, incremental git commits, MDX component preservation
+- **State Management**: Robust error handling with file-level transaction safety
+- **Validation**: 488-line implementation in `scripts/generate_translations.ts`
 
-- **Root domain handling**: Implemented elegant client-side language detection instead of ugly server redirects.
-- **Browser language detection**: Use `navigator.languages` array to detect user's preferred language from browser settings.
-- **Static deployment compatibility**: Client-side detection works perfectly with static site generation, no SSR required.
-- **Fallback mechanisms**: Always include fallback to default language (English) for unsupported languages.
-- **UX considerations**: Show professional loading screen during detection rather than blank page or ugly redirect message.
-- **Performance**: Keep detection minimal (200ms) for smooth user experience with 2-second safety fallback.
-- **Future extensibility**: Server-side detection utilities (`detectLanguageFromHeaders`) available for future SSR migration.
-- **Implementation**: Root `index.astro` contains full HTML page with inline CSS/JS for fast loading and immediate detection.
+### Language Detection & Routing
+- **Middleware**: Server-side detection with Accept-Language header parsing
+- **Cookie Persistence**: 30-day language preference storage
+- **Client Fallback**: Root domain detection with professional loading screen
+- **URL Structure**: `/lang/collection/slug` pattern with proper hreflang support
+
+### Component Architecture
+- **Core Components**: SEO, ContentMetadata, LanguageSwitcher, ContentFallbackNotice
+- **UI Components**: Button, Icon, Image with consistent styling patterns  
+- **Content Components**: ItemGrid for listings, MarkdownLayout for detail pages
+- **Marketing Components**: Hero, Features, CallToAction for landing pages
+
+### SEO & Metadata
+- **Comprehensive SEO**: hreflang, canonical URLs, OpenGraph, JSON-LD structured data
+- **Dynamic Sitemap**: Auto-generated for all language routes
+- **Meta Management**: Centralized in SEO.astro with per-page customization
+- **Social Sharing**: Complete OpenGraph and Twitter Card support
+
+### CI/CD & Automation
+- **GitHub Actions**: Multi-node testing, build validation, deployment pipeline
+- **Auto Issue Creation**: Build failure detection with error extraction
+- **Translation Triggers**: Automated workflow for content translation
+- **Quality Gates**: TypeScript checks, build validation, routing tests
+
+## Technical Integration Notes
+
+### Astro-i18next Patterns
+- No `useTranslation` hook - use static helpers and middleware
+- TypeScript declarations don't create runtime exports - verify package exports
+- Prefer static translation loading for SSR compatibility
+- Document custom patterns for maintainability
+
+### Build & Development
+- **Commands**: `pnpm dev` (port 4321), `pnpm build`, `pnpm astro sync`
+- **Type Safety**: Strict TypeScript with auto-generated content types
+- **Development Flow**: Content changes → schema updates → sync → restart
+- **Deployment**: Static build to `/dist` with Netlify/Vercel compatibility
+
+### Performance Considerations
+- **Static Generation**: All pages pre-rendered for optimal performance
+- **Image Optimization**: Astro Assets with responsive image loading
+- **Bundle Size**: Optimized with tree-shaking and component splitting
+- **Loading**: Fast language detection (200ms) with 2s safety fallback
+
+## Current Implementation Status (2025-01-23)
+All major features are implemented and working in production:
+- ✅ Multilingual content system with AI translation
+- ✅ Component restructuring and documentation  
+- ✅ Language detection with cookie persistence
+- ✅ Comprehensive SEO with hreflang support
+- ✅ CI/CD automation with error handling
+- ✅ Translation pipeline with quality controls
+
+## Maintenance Guidelines
+- Run `astro sync` after schema changes
+- Update documentation comments for new components
+- Test builds after significant changes
+- Validate translations with CI scripts
+- Archive completed plans to maintain organization
