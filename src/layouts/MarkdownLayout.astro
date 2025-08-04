@@ -25,6 +25,7 @@ export interface Props {
     modifiedDate?: Date;
     status?: Status;
     tags?: string[];
+    ai_tldr?: string;
   };
   entry?: {
     collection: string;
@@ -82,7 +83,15 @@ const metadata: MetaData = {
   
   <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
     <h1 class="font-bold font-heading text-4xl md:text-5xl leading-tighter tracking-tighter">{frontmatter.title}</h1>
-    <ContentMetadata language={frontmatter.language} timestamp={frontmatter.timestamp} status={frontmatter.status} tags={frontmatter.tags} translations={translations} locale={currentLanguage} />
+    <ContentMetadata 
+      language={frontmatter.language} 
+      timestamp={frontmatter.timestamp} 
+      status={frontmatter.status} 
+      tags={frontmatter.tags} 
+      ai_tldr={frontmatter.ai_tldr}
+      translations={translations} 
+      locale={currentLanguage} 
+    />
     {frontmatter.language && frontmatter.language !== currentLanguage && (
       <ContentFallbackNotice originalLanguage={frontmatter.language} currentLanguage={currentLanguage} />
     )}

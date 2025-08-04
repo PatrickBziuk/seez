@@ -1,15 +1,16 @@
 ---
 /**
- * ContentMetadata - Displays grouped metadata badges and details for content entries
+ * ContentMetadata - Ultra-minimalistic, aesthetically pleasing metadata display
  * @props {metadata: Object} - Content metadata (title, language, tags, status, etc.)
- * @behavior Renders grouped badges for Author, Translation, Published, and Tags; supports i18n; tags are clickable
- * @dependencies Tailwind CSS, i18n utilities
+ * @behavior Clean, subtle metadata with elegant TLDR integration; minimal visual noise
+ * @dependencies Tailwind CSS, i18n utilities, astro-icon
  * @usedBy MarkdownLayout.astro, [slug].astro, books, projects, lab, life collections
  */
 import Badge from '../../ui/display/Badge.astro';
+import { Icon } from 'astro-icon/components';
 import { getTranslations, detectLanguage } from '~/utils/i18n';
 
-const { language, timestamp, status, tags } = Astro.props;
+const { language, timestamp, status, tags, ai_tldr } = Astro.props;
 const currentLanguage = detectLanguage(Astro.url.pathname);
 const translations = await getTranslations(currentLanguage);
 
@@ -18,48 +19,186 @@ const statusLabels: Record<'Human' | 'AI' | 'AI+Human', string> = {
   AI: translations?.badges?.ai || 'AI',
   'AI+Human': translations?.badges?.aiHuman || 'AI+Human',
 };
+
 const statusIcons: Record<'Human' | 'AI' | 'AI+Human', string> = {
   Human: '👤',
   AI: '🤖',
   'AI+Human': '🤝',
 };
-function getStatusVariant(status: 'Human' | 'AI' | 'AI+Human') {
-  if (status === 'AI') return 'ai';
-  if (status === 'Human') return 'human';
-  return 'ai-human';
+
+// Format timestamp
+const formattedDate = timestamp ? new Date(timestamp).toLocaleDateString(currentLanguage || 'en', {
+  year: 'numeric',
+  month: 'short', 
+  day: 'numeric'
+}) : '';
+
+// TLDR processing for markdown and preview
+let tldrPreview = '';
+let tldrFull = '';
+
+if (ai_tldr) {
+  // Convert markdown **bold** to HTML
+  tldrFull = ai_tldr.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  // Create preview - first sentence or first 100 characters
+  const firstSentence = ai_tldr.split(/[.!?]/)[0];
+  if (firstSentence.length < 100) {
+    tldrPreview = firstSentence + '...';
+  } else {
+    tldrPreview = ai_tldr.substring(0, 100) + '...';
+  }
+  // Remove markdown formatting from preview
+  tldrPreview = tldrPreview.replace(/\*\*(.*?)\*\*/g, '$1');
 }
+
+const tldrId = `tldr-${Math.random().toString(36).substr(2, 9)}`;
 ---
-{(language || timestamp || status || tags?.length) && (
-  <div class="border-b border-gray-200 dark:border-gray-700 pb-6 mb-8 flex flex-col gap-4">
-    <div class="flex flex-col gap-2">
-      <div class="flex items-center gap-2">
-        <span class="font-semibold text-xs">{translations?.metadata?.author || 'Author'}:</span>
-        {status?.authoring && statusIcons[status.authoring as 'Human' | 'AI' | 'AI+Human'] && (
-          <Badge variant={getStatusVariant(status.authoring as 'Human' | 'AI' | 'AI+Human')} text={statusLabels[status.authoring as 'Human' | 'AI' | 'AI+Human']} icon={statusIcons[status.authoring as 'Human' | 'AI' | 'AI+Human']} size="sm" />
-        )}
+
+{(language || timestamp || status || tags?.length || ai_tldr) && (
+  <div class="mb-10 space-y-6">
+    
+    <!-- TLDR Section - Ultra minimal and elegant -->
+    {ai_tldr && (
+      <div class="group">
+        <div 
+          id={`${tldrId}-preview`} 
+          class="cursor-pointer"
+        >
+          <div class="flex items-center gap-3 p-4 bg-slate-50/70 dark:bg-slate-800/40 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 rounded-xl transition-all duration-300 border border-slate-200/50 dark:border-slate-700/50 hover:border-slate-300/70 dark:hover:border-slate-600/70 hover:shadow-sm">
+            <div class="flex items-center gap-2">
+              <Icon name="tabler:sparkles" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
+              <span class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">TL;DR</span>
+              <div class="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+              <Badge variant="ai" text="AI" size="sm" />
+            </div>
+            <p class="text-slate-700 dark:text-slate-200 flex-1 leading-relaxed">{tldrPreview}</p>
+            <Icon name="tabler:chevron-down" class="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors" />
+          </div>
+        </div>
+        
+        <div id={`${tldrId}-full`} class="hidden mt-4">
+          <div class="p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+            <div class="flex items-center gap-2 mb-4">
+              <Icon name="tabler:sparkles" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
+              <span class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">TL;DR</span>
+              <div class="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+              <Badge variant="ai" text="AI" size="sm" />
+            </div>
+            <div class="text-slate-700 dark:text-slate-200 leading-relaxed mb-4" set:html={tldrFull}></div>
+            <div class="flex items-center justify-between pt-3 border-t border-slate-200/60 dark:border-slate-700/60">
+              <p class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <Icon name="tabler:cpu" class="w-3 h-3" />
+                Generated by AI
+              </p>
+              <button 
+                id={`${tldrId}-collapse`}
+                class="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1 transition-colors px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50"
+              >
+                <Icon name="tabler:chevron-up" class="w-3 h-3" />
+                Collapse
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
+    )}
+
+    <!-- Minimal Metadata Line -->
+    <div class="flex flex-wrap items-center gap-6 py-3 text-sm">
+      
+      <!-- Author -->
+      {status?.authoring && (
+        <div class="flex items-center gap-2">
+          <span class="text-base">{statusIcons[status.authoring as 'Human' | 'AI' | 'AI+Human']}</span>
+          <span class="text-slate-700 dark:text-slate-200 font-medium">{statusLabels[status.authoring as 'Human' | 'AI' | 'AI+Human']}</span>
+        </div>
+      )}
+      
+      <!-- Translation -->
       {status?.translation && (
         <div class="flex items-center gap-2">
-          <span class="font-semibold text-xs">{translations?.metadata?.translation || 'Translation'}:</span>
-          <Badge variant={getStatusVariant(status.translation as 'Human' | 'AI' | 'AI+Human')} text={statusLabels[status.translation as 'Human' | 'AI' | 'AI+Human']} icon={statusIcons[status.translation as 'Human' | 'AI' | 'AI+Human']} size="sm" />
+          <Icon name="tabler:language" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
+          <span class="text-slate-600 dark:text-slate-300">{statusLabels[status.translation as 'Human' | 'AI' | 'AI+Human']} translation</span>
         </div>
       )}
+      
+      <!-- Date -->
       {timestamp && (
         <div class="flex items-center gap-2">
-          <span class="font-semibold text-xs">{translations?.metadata?.published || 'Published'}:</span>
-          <Badge variant="timestamp" text={new Date(timestamp).toLocaleDateString()} icon="📅" size="sm" />
+          <Icon name="tabler:calendar" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
+          <span class="text-slate-600 dark:text-slate-300">{formattedDate}</span>
         </div>
       )}
-      {tags?.length > 0 && (
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="font-semibold text-xs">{translations?.metadata?.tags || 'Tags'}:</span>
+      
+      <!-- Language Badge -->
+      {language && (
+        <div class="flex items-center gap-2">
+          <Icon name="tabler:world" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
+          <span class="text-xs font-mono font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-md uppercase tracking-wider">{language}</span>
+        </div>
+      )}
+    </div>
+
+    <!-- Clean Tags Section -->
+    {tags?.length > 0 && (
+      <div class="flex items-start gap-3 pt-3 border-t border-slate-200/40 dark:border-slate-700/40">
+        <Icon name="tabler:tags" class="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" />
+        <div class="flex flex-wrap gap-2">
           {tags.map((tag: string) => (
-            <a href={`/${currentLanguage}/tags/${encodeURIComponent(tag)}`} class="focus:outline-none">
+            <a href={`/${currentLanguage}/tags/${encodeURIComponent(tag)}`} class="focus:outline-none transition-transform hover:scale-105">
               <Badge variant="tag" text={translations?.tags?.[tag] || tag} />
             </a>
           ))}
         </div>
-      )}
-    </div>
+      </div>
+    )}
   </div>
+)}
+
+<!-- TLDR Expand/Collapse JavaScript -->
+{ai_tldr && (
+  <script define:vars={{ tldrId }}>
+    document.addEventListener('DOMContentLoaded', () => {
+      const preview = document.getElementById(`${tldrId}-preview`);
+      const full = document.getElementById(`${tldrId}-full`);
+      const collapse = document.getElementById(`${tldrId}-collapse`);
+      
+      if (preview && full && collapse) {
+        // Expand TLDR with smooth animation
+        preview.addEventListener('click', () => {
+          preview.style.display = 'none';
+          full.style.display = 'block';
+          full.style.opacity = '0';
+          full.style.transform = 'translateY(-10px)';
+          
+          // Animate in
+          requestAnimationFrame(() => {
+            full.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            full.style.opacity = '1';
+            full.style.transform = 'translateY(0)';
+          });
+          
+          // Smooth scroll to keep TLDR in view
+          setTimeout(() => {
+            full.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 100);
+        });
+        
+        // Collapse TLDR with smooth animation
+        collapse.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          full.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+          full.style.opacity = '0';
+          full.style.transform = 'translateY(-5px)';
+          
+          setTimeout(() => {
+            full.style.display = 'none';
+            preview.style.display = 'block';
+          }, 200);
+        });
+      }
+    });
+  </script>
 )}

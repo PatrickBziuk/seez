@@ -35,7 +35,10 @@
     "tags:suggest": "npx tsx scripts/ai-tagging/suggest-tags.ts",
     "tags:apply": "npx tsx scripts/ai-tagging/apply-tag-suggestions.ts",
     "tags:setup": "npm run tags:analyze && npm run tags:build-registry",
-    "tags:full-workflow": "npm run tags:suggest && npm run tags:apply"
+    "tags:full-workflow": "npm run tags:suggest && npm run tags:apply",
+    "tldr:generate": "npx tsx scripts/generate_tldr.ts",
+    "tldr:force": "npx tsx scripts/generate_tldr.ts --force",
+    "tldr:collection": "npx tsx scripts/generate_tldr.ts --collection="
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
