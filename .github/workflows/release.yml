@@ -1,0 +1,44 @@
+name: Release Build & Deploy
+
+on:
+  push:
+    branches: [release]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for git metadata
+      
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Extract Git metadata
+        run: pnpm run extract:git-metadata
+      
+      - name: Validate content
+        run: pnpm run validate:content
+      
+      - name: Sync Astro content
+        run: pnpm astro sync
+      
+      - name: Build site
+        run: pnpm build
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages

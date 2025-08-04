@@ -25,7 +25,11 @@
     "test:ci": "npm run test:translations && npm run test:routing",
     "translations:check": "npx tsx scripts/check_translations.ts",
     "translations:generate": "npx tsx scripts/generate_translations.ts",
-    "translations:conflicts": "npx tsx scripts/detect_conflicts.ts"
+    "translations:conflicts": "npx tsx scripts/detect_conflicts.ts",
+    "extract:git-metadata": "npx tsx scripts/extract-git-metadata.ts",
+    "validate:content": "npx tsx scripts/validate-content.ts",
+    "lint:content": "npm run validate:content",
+    "dev:full": "npm run extract:git-metadata && astro sync && npm run dev"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",

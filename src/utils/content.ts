@@ -1,5 +1,5 @@
 /**
- * Content utilities for language-aware content management
+ * Content utilities for language-aware content management and slug generation
  */
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
@@ -7,6 +7,46 @@ import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from './i18n';
 
 export type ContentCollection = 'books' | 'projects' | 'lab' | 'life';
 export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number];
+
+/**
+ * Slug normalization and generation utilities
+ */
+export function normalizeSlug(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/\p{Diacritic}/gu, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-{2,}/g, '-');
+}
+
+export function generateSlug(title: string, id?: string): string {
+  const normalizedTitle = normalizeSlug(title);
+  return id ? `${id}/${normalizedTitle}` : normalizedTitle;
+}
+
+export function validateUniquenesss(slugs: string[]): string[] {
+  const seen = new Set();
+  const duplicates = [];
+  
+  for (const slug of slugs) {
+    if (seen.has(slug)) {
+      duplicates.push(slug);
+    } else {
+      seen.add(slug);
+    }
+  }
+  
+  return duplicates;
+}
+
+export function calculateRelatedness(tags1: string[], tags2: string[]): number {
+  const set1 = new Set(tags1);
+  const set2 = new Set(tags2);
+  const intersection = new Set([...set1].filter(x => set2.has(x)));
+  return intersection.size;
+}
 
 /**
  * Get content filtered by language
