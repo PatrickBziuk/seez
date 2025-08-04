@@ -1,12 +1,17 @@
 ---
-title: "Licht am Ende der Zeilen"
-subtitle: "A book about hope and writing"
-tags: ["poetry", "German literature"]
-date: 2024-01-02
+title: Licht am Ende der Zeilen
+subtitle: A book about hope and writing
+tags:
+  - poetry
+  - German literature
+  - programming
+  - jamstack
+  - example
+date: 2024-01-02T00:00:00.000Z
 draft: false
-language: "en"
+language: en
 status:
-  authoring: "Human"
+  authoring: Human
 ---
 
 This is content about "Licht am Ende der Zeilen".

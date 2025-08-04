@@ -1,7 +1,97 @@
 ---
-// Redirect to language-specific URL
-import { detectLanguage } from '~/utils/i18n';
+// Language selection page for ambiguous cases
+import Layout from '../layouts/Layout.astro';
 
-const locale = detectLanguage(Astro.url.pathname) || 'en';
-return Astro.redirect(`/${locale}`);
+const title = 'Choose Language / Sprache wählen';
 ---
+
+<Layout metadata={{ title }}>
+  <main class="language-selector">
+    <div class="container">
+      <h1>Welcome to Seez / Willkommen bei Seez</h1>
+      <p>Please choose your preferred language / Bitte wählen Sie Ihre bevorzugte Sprache:</p>
+      
+      <div class="language-options">
+        <a href="/de/" class="language-link" data-lang="de">
+          <span class="flag">🇩🇪</span>
+          <span class="text">Deutsch</span>
+        </a>
+        <a href="/en/" class="language-link" data-lang="en">
+          <span class="flag">🇬🇧</span>
+          <span class="text">English</span>
+        </a>
+      </div>
+      
+      <label class="remember-choice">
+        <input type="checkbox" id="remember" checked>
+        Remember my choice / Auswahl merken
+      </label>
+    </div>
+  </main>
+
+  <script>
+    document.querySelectorAll('.language-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const rememberCheckbox = document.getElementById('remember') as HTMLInputElement;
+        if (rememberCheckbox?.checked) {
+          const lang = (e.currentTarget as HTMLAnchorElement)?.getAttribute('data-lang');
+          if (lang) {
+            document.cookie = `preferred_lang=${lang}; max-age=${30*24*60*60}; path=/; samesite=lax`;
+          }
+        }
+      });
+    });
+  </script>
+
+  <style>
+    .language-selector {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    
+    .language-options {
+      display: flex;
+      gap: 2rem;
+      margin: 2rem 0;
+      justify-content: center;
+    }
+    
+    .language-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+    }
+    
+    .language-link:hover {
+      border-color: #007acc;
+      transform: translateY(-2px);
+    }
+    
+    .flag {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .text {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .remember-choice {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      justify-content: center;
+    }
+  </style>
+</Layout>

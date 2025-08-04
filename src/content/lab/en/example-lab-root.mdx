@@ -1,24 +1,30 @@
 ---
-title: "Dark Mode Switcher Demo"
-subtitle: "Accessible color mode toggle with Astro components"
-tags: ["ui", "accessibility", "astro"]
-date: 2024-05-10
+title: Dark Mode Switcher Demo
+subtitle: Accessible color mode toggle with Astro components
+tags:
+  - ui
+  - accessibility
+  - astro
+  - programming
+  - software
+  - portique
+date: 2024-05-10T00:00:00.000Z
 draft: false
 ---
 
-import Headline from '~/components/ui/Headline.astro';
-import Badge from '~/components/ui/Badge.astro';
-import ContentMetadata from '~/components/common/ContentMetadata.astro';
-import Button from '~/components/ui/Button.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
-import SocialShare from '~/components/common/SocialShare.astro';
-import Features from '~/components/widgets/Features.astro';
-import Stats from '~/components/widgets/Stats.astro';
-import Pricing from '~/components/widgets/Pricing.astro';
-import Testimonials from '~/components/widgets/Testimonials.astro';
-import Note from '~/components/widgets/Note.astro';
-import MediaPlayer from '~/components/ui/MediaPlayer.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
+import Headline from '~/components/ui/display/Headline.astro';
+import Badge from '~/components/ui/display/Badge.astro';
+import ContentMetadata from '~/components/content/metadata/ContentMetadata.astro';
+import Button from '~/components/ui/forms/Button.astro';
+import CallToAction from '~/components/marketing/conversion/CallToAction.astro';
+import SocialShare from '~/components/content/metadata/SocialShare.astro';
+import Features from '~/components/marketing/features/Features.astro';
+import Stats from '~/components/marketing/social-proof/Stats.astro';
+import Pricing from '~/components/marketing/conversion/Pricing.astro';
+import Testimonials from '~/components/marketing/social-proof/Testimonials.astro';
+import Note from '~/components/marketing/content/Note.astro';
+import MediaPlayer from '~/components/content/media/MediaPlayer.astro';
+import FAQs from '~/components/marketing/conversion/FAQs.astro';
 
 <Headline 
   title="Dark Mode Switcher"
@@ -42,10 +48,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
   <Badge variant="timestamp" text="2024-05-10" />
 </div>
 
-<Button variant="primary" size="md" onClick={() => {
-  document.documentElement.classList.toggle('dark');
-  localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-}}>
+<Button variant="primary" size="md" type="button" data-aw-toggle-color-scheme>
   Toggle Dark Mode
 </Button>
 
@@ -55,15 +58,15 @@ import FAQs from '~/components/widgets/FAQs.astro';
   actions={[{ text: "Toggle Now", href: "#", variant: "primary" }]}
 />
 
-<SocialShare text="Check out this Dark Mode Switcher experiment!" url={Astro.url.pathname} />
+<SocialShare text="Check out this Dark Mode Switcher experiment!" url={url} />
 
 <Features
   title="Component Features"
   subtitle="What makes these Astro components great?"
   items={[
-    { title: 'Accessibility', description: 'All components are keyboard and screen reader friendly.', icon: '🦾' },
-    { title: 'Customization', description: 'Easily style and configure via props.', icon: '🎨' },
-    { title: 'Performance', description: 'Optimized for fast rendering and minimal bundle size.', icon: '⚡' },
+    { title: 'Accessibility', description: 'All components are keyboard and screen reader friendly.', icon: 'tabler:accessible' },
+    { title: 'Customization', description: 'Easily style and configure via props.', icon: 'tabler:palette' },
+    { title: 'Performance', description: 'Optimized for fast rendering and minimal bundle size.', icon: 'tabler:bolt' },
   ]}
   columns={3}
 />

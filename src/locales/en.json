@@ -45,7 +45,8 @@
   },
   "footer": {
     "legal": "Legal",
-    "blog": "Blog"
+    "blog": "Blog",
+    "about": "About"
   },
   "button": {
     "submit": "Submit",

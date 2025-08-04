@@ -157,7 +157,7 @@ function detectTranslationTasks(pair: TranslationPair): TranslationTask[] {
       // Check if translation should be skipped
       if (shouldSkipTranslation(pair.translationKey, sourceFile.relativePath)) {
         const reason = getSkipReason(pair.translationKey, sourceFile.relativePath);
-        console.log(`Skipping translation ${pair.translationKey} ${sourceLang}->${targetLang}: ${reason}`);
+        console.error(`Skipping translation ${pair.translationKey} ${sourceLang}->${targetLang}: ${reason}`);
         continue;
       }
       
@@ -203,16 +203,14 @@ function detectTranslationTasks(pair: TranslationPair): TranslationTask[] {
 async function detectTranslations(): Promise<TranslationTask[]> {
   const allTasks: TranslationTask[] = [];
   
-  console.log('🔍 Scanning content collections for translation tasks...');
-  
+  console.error('🔍 Scanning content collections for translation tasks...');
+
   for (const collection of CONTENT_COLLECTIONS) {
-    console.log(`📁 Processing collection: ${collection}`);
-    
-    const files = getContentFiles(collection);
-    console.log(`   Found ${files.length} content files`);
+    console.error(`📁 Processing collection: ${collection}`);    const files = getContentFiles(collection);
+    console.error(`   Found ${files.length} content files`);
     
     const pairs = groupByTranslationKey(files);
-    console.log(`   Found ${pairs.size} translation groups`);
+    console.error(`   Found ${pairs.size} translation groups`);
     
     let collectionTasks = 0;
     for (const pair of pairs.values()) {
@@ -221,7 +219,7 @@ async function detectTranslations(): Promise<TranslationTask[]> {
       collectionTasks += tasks.length;
     }
     
-    console.log(`   Generated ${collectionTasks} translation tasks`);
+    console.error(`   Generated ${collectionTasks} translation tasks`);
   }
   
   return allTasks;
@@ -234,13 +232,13 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   try {
     const tasks = await detectTranslations();
     
-    console.log(`\\n📋 Translation Detection Summary:`);
-    console.log(`   Total tasks: ${tasks.length}`);
-    console.log(`   Missing translations: ${tasks.filter(t => t.reason === 'missing').length}`);
-    console.log(`   Stale translations: ${tasks.filter(t => t.reason === 'stale').length}`);
+    console.error(`\\n📋 Translation Detection Summary:`);
+    console.error(`   Total tasks: ${tasks.length}`);
+    console.error(`   Missing translations: ${tasks.filter(t => t.reason === 'missing').length}`);
+    console.error(`   Stale translations: ${tasks.filter(t => t.reason === 'stale').length}`);
     
     // Output as JSON for consumption by GitHub Actions
-    console.log('\\n' + JSON.stringify(tasks, null, 2));
+    console.log(JSON.stringify(tasks, null, 2));
     
   } catch (error) {
     console.error('❌ Error detecting translations:', error);

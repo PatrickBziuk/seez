@@ -1,0 +1,293 @@
+name: Translation Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      commit-sha:
+        description: 'Commit SHA that triggered the translation'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  detect-translations:
+    name: Detect Translation Tasks
+    runs-on: ubuntu-latest
+    outputs:
+      has-tasks: ${{ steps.check-tasks.outputs.has-tasks }}
+      tasks-file: ${{ steps.check-tasks.outputs.tasks-file }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit-sha }}
+          fetch-depth: 0
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing dependencies with pnpm..."
+          pnpm install --frozen-lockfile
+
+      - name: 🔄 Sync Astro content types
+        run: |
+          echo "Syncing Astro content types..."
+          pnpm run astro sync
+
+      - name: 🔍 Run translation detection
+        run: |
+          echo "Detecting missing and stale translations..."
+          npx tsx scripts/check_translations.ts > translation-tasks.json
+          echo "Translation tasks generated:"
+          cat translation-tasks.json
+
+      - name: ✅ Check if tasks exist
+        id: check-tasks
+        run: |
+          if [ -s translation-tasks.json ] && [ "$(cat translation-tasks.json)" != "[]" ]; then
+            echo "has-tasks=true" >> $GITHUB_OUTPUT
+            echo "tasks-file=translation-tasks.json" >> $GITHUB_OUTPUT
+            echo "Translation tasks found, proceeding to generation"
+          else
+            echo "has-tasks=false" >> $GITHUB_OUTPUT
+            echo "No translation tasks found, skipping generation"
+          fi
+
+      - name: 📤 Upload tasks file
+        if: steps.check-tasks.outputs.has-tasks == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: translation-tasks
+          path: translation-tasks.json
+
+  generate-translations:
+    name: Generate Translations with Progressive Commits
+    needs: detect-translations
+    if: needs.detect-translations.outputs.has-tasks == 'true'
+    runs-on: ubuntu-latest
+    env:
+      TRANSLATION_QUALITY_THRESHOLD: 70
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    outputs:
+      branch-name: ${{ steps.setup-branch.outputs.branch-name }}
+      has-commits: ${{ steps.check-commits.outputs.has-commits }}
+      pr-created: ${{ steps.create-pr.outputs.pr-created }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit-sha }}
+          fetch-depth: 0
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing dependencies with pnpm..."
+          pnpm install --frozen-lockfile
+
+      - name: 📥 Download tasks file
+        uses: actions/download-artifact@v4
+        with:
+          name: translation-tasks
+
+      - name: 🔧 Configure Git for incremental commits
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: 🌿 Setup or resume translation branch
+        id: setup-branch
+        run: |
+          # Generate deterministic branch name for resumption support
+          short_sha="${{ inputs.commit-sha }}"
+          short_sha="${short_sha:0:7}"
+          branch_name="translate/ai-translations-${short_sha}"
+          echo "branch-name=$branch_name" >> $GITHUB_OUTPUT
+          
+          # Check if translation branch already exists (for resumption)
+          if git ls-remote --heads origin "$branch_name" | grep -q "$branch_name"; then
+            echo "🔄 Found existing translation branch, resuming work..."
+            git fetch origin "$branch_name"
+            git checkout "$branch_name"
+            
+            # Reset to latest remote state in case of conflicts
+            git reset --hard "origin/$branch_name"
+            echo "✅ Resumed from existing branch: $branch_name"
+            echo "resuming=true" >> $GITHUB_OUTPUT
+          else
+            echo "🌱 Creating new translation branch..."
+            git checkout -b "$branch_name"
+            echo "✅ Created new branch: $branch_name"
+            echo "resuming=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🤖 Generate translations with progressive commits
+        id: generate
+        run: |
+          echo "Starting translation generation with incremental commits..."
+          echo "Branch: ${{ steps.setup-branch.outputs.branch-name }}"
+          echo "Resuming: ${{ steps.setup-branch.outputs.resuming }}"
+          echo "Progress will be saved after each successful translation."
+          
+          # The script handles incremental commits internally
+          npx tsx scripts/generate_translations.ts translation-tasks.json
+          echo "translation-completed=true" >> $GITHUB_OUTPUT
+          echo "✅ Translation generation completed!"
+
+      - name: 🔍 Check if commits were made
+        id: check-commits
+        run: |
+          # Check for commits since the branch diverged from main
+          if git log origin/main..HEAD --oneline | grep -q .; then
+            commit_count=$(git log origin/main..HEAD --oneline | wc -l)
+            echo "has-commits=true" >> $GITHUB_OUTPUT
+            echo "commit-count=$commit_count" >> $GITHUB_OUTPUT
+            echo "✅ Found $commit_count new commits on translation branch"
+          else
+            echo "has-commits=false" >> $GITHUB_OUTPUT
+            echo "commit-count=0" >> $GITHUB_OUTPUT
+            echo "ℹ️ No new commits - all translations may have been up to date"
+          fi
+
+      - name: 📤 Push incremental commits
+        if: steps.check-commits.outputs.has-commits == 'true'
+        run: |
+          echo "Pushing ${{ steps.check-commits.outputs.commit-count }} incremental commits to remote branch..."
+          git push origin ${{ steps.setup-branch.outputs.branch-name }}
+          echo "✅ All incremental commits pushed successfully"
+
+      - name: 🔍 Detect conflicts and create issues
+        if: steps.check-commits.outputs.has-commits == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Detecting translation conflicts..."
+          npx tsx scripts/detect_conflicts.ts translation-tasks.json || true
+
+      - name: � Create or update Pull Request
+        if: steps.check-commits.outputs.has-commits == 'true'
+        id: create-pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch_name="${{ steps.setup-branch.outputs.branch-name }}"
+          short_sha="${{ inputs.commit-sha }}"
+          short_sha="${short_sha:0:7}"
+          
+          # Check if PR already exists for this branch
+          existing_pr=$(gh pr list --head "$branch_name" --json number --jq '.[0].number' 2>/dev/null || echo "")
+          
+          if [ -n "$existing_pr" ]; then
+            echo "🔄 Updating existing PR #$existing_pr for branch: $branch_name"
+            
+            # Update PR description with latest run info
+            gh pr edit "$existing_pr" --body "Automated translations generated for updated or missing content.
+
+          Generated from commit: ${{ inputs.commit-sha }}
+          Latest workflow run: ${{ github.run_number }}
+          Branch: $branch_name
+          Total commits: ${{ steps.check-commits.outputs.commit-count }}
+
+          **Latest Update**: $(date -u '+%Y-%m-%d %H:%M:%S') UTC
+
+          Review Instructions:
+          1. Review the generated translations for accuracy and quality
+          2. Check the AI quality scores in the frontmatter  
+          3. Make any necessary manual edits
+          4. Merge this PR to promote translations to the release branch"
+            
+            echo "pr-created=updated" >> $GITHUB_OUTPUT
+            echo "pr-number=$existing_pr" >> $GITHUB_OUTPUT
+            echo "✅ Updated existing PR #$existing_pr"
+          else
+            echo "🆕 Creating new PR for branch: $branch_name"
+            
+            pr_number=$(gh pr create \
+              --title "AI translations for main @ ${short_sha}" \
+              --body "Automated translations generated for updated or missing content.
+
+          Generated from commit: ${{ inputs.commit-sha }}
+          Workflow run: ${{ github.run_number }}
+          Branch: $branch_name
+          Total commits: ${{ steps.check-commits.outputs.commit-count }}
+
+          Review Instructions:
+          1. Review the generated translations for accuracy and quality
+          2. Check the AI quality scores in the frontmatter  
+          3. Make any necessary manual edits
+          4. Merge this PR to promote translations to the release branch" \
+              --base main \
+              --head "$branch_name" \
+              --draft \
+              --label ai,translation,auto-generated \
+              --json number --jq '.number')
+            
+            echo "pr-created=new" >> $GITHUB_OUTPUT
+            echo "pr-number=$pr_number" >> $GITHUB_OUTPUT
+            echo "✅ Created new PR #$pr_number"
+          fi
+
+      - name: 🛡️ Preserve branch on failure
+        if: failure()
+        run: |
+          echo "⚠️ Job failed, preserving translation branch for manual recovery"
+          branch_name="${{ steps.setup-branch.outputs.branch-name }}"
+          
+          if [ -n "$branch_name" ]; then
+            # Try to push any local commits
+            git push origin "$branch_name" 2>/dev/null || true
+            
+            echo "🔄 Translation progress preserved in branch: $branch_name"
+            echo "🔧 To resume manually:"
+            echo "   git fetch origin $branch_name"
+            echo "   git checkout $branch_name"
+            echo "   npx tsx scripts/generate_translations.ts translation-tasks.json"
+            
+            # Create an issue about the failed job
+            if [ -n "${{ secrets.GITHUB_TOKEN }}" ]; then
+              gh issue create \
+                --title "Translation Pipeline Failed - Manual Recovery Needed" \
+                --body "The translation pipeline job failed, but progress has been preserved.
+
+          **Failed Workflow**: ${{ github.run_number }}
+          **Branch**: $branch_name
+          **Commit**: ${{ inputs.commit-sha }}
+
+          **Recovery Instructions**:
+          1. Check out the preserved branch: \`git checkout $branch_name\`
+          2. Review any partial translations in the branch
+          3. Resume the translation job: \`npx tsx scripts/generate_translations.ts translation-tasks.json\`
+          4. Create a PR manually if needed
+
+          The branch has been preserved with any completed translations." \
+                --label bug,translation,manual-action-required || true
+            fi
+          fi
+

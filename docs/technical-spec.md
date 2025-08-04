@@ -446,9 +446,9 @@ interface Props {
 **Meta Tags Generation**:
 ```html
 <!-- For each available language -->
-<link rel="alternate" hreflang="en" href="https://bziuk.com/en/books/example" />
-<link rel="alternate" hreflang="de" href="https://bziuk.com/de/books/example" />
-<link rel="alternate" hreflang="x-default" href="https://bziuk.com/books/example" />
+<link rel="alternate" hreflang="en" href="https://seez.eu/en/books/example" />
+<link rel="alternate" hreflang="de" href="https://seez.eu/de/books/example" />
+<link rel="alternate" hreflang="x-default" href="https://seez.eu/books/example" />
 ```
 
 **Canonical URL Handling**:

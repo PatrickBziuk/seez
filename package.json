@@ -22,7 +22,23 @@
     "fix:prettier": "prettier -w .",
     "test:translations": "node ./scripts/test-translations.js",
     "test:routing": "node ./scripts/test-routing.js",
-    "test:ci": "npm run test:translations && npm run test:routing"
+    "test:ci": "npm run test:translations && npm run test:routing",
+    "translations:check": "npx tsx scripts/check_translations.ts",
+    "translations:generate": "npx tsx scripts/generate_translations.ts",
+    "translations:conflicts": "npx tsx scripts/detect_conflicts.ts",
+    "extract:git-metadata": "npx tsx scripts/extract-git-metadata.ts",
+    "validate:content": "npx tsx scripts/validate-content.ts",
+    "lint:content": "npm run validate:content",
+    "dev:full": "npm run extract:git-metadata && astro sync && npm run dev",
+    "tags:analyze": "npx tsx scripts/ai-tagging/analyze-existing-tags.ts",
+    "tags:build-registry": "npx tsx scripts/ai-tagging/build-master-registry.ts",
+    "tags:suggest": "npx tsx scripts/ai-tagging/suggest-tags.ts",
+    "tags:apply": "npx tsx scripts/ai-tagging/apply-tag-suggestions.ts",
+    "tags:setup": "npm run tags:analyze && npm run tags:build-registry",
+    "tags:full-workflow": "npm run tags:suggest && npm run tags:apply",
+    "tldr:generate": "npx tsx scripts/generate_tldr.ts",
+    "tldr:force": "npx tsx scripts/generate_tldr.ts --force",
+    "tldr:collection": "npx tsx scripts/generate_tldr.ts --collection="
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
@@ -40,6 +56,8 @@
     "i18next": "^23.7.6",
     "limax": "4.1.0",
     "lodash.merge": "^4.6.2",
+    "octokit": "^5.0.3",
+    "openai": "^5.11.0",
     "unpic": "^4.1.2"
   },
   "devDependencies": {

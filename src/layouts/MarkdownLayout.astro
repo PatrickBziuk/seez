@@ -1,15 +1,16 @@
 ---
 /**
  * MarkdownLayout - Layout for rendering Markdown content with metadata and responsive design
- * @props {content: Object, metadata: Object} - Markdown content and metadata
- * @behavior Displays Markdown content, injects metadata, supports badges and i18n
- * @dependencies ContentMetadata, CustomStyles.astro, Favicons.astro
+ * @props {frontmatter: Object, entry: Object} - Markdown frontmatter and entry data
+ * @behavior Displays Markdown content, injects metadata, supports badges and i18n, includes SEO
+ * @dependencies ContentMetadata, SEO, CustomStyles.astro, Favicons.astro
  * @usedBy [slug].astro, books, projects, lab, life collections
  */
 
 import Layout from '~/layouts/PageLayout.astro';
-import ContentMetadata from '~/components/common/ContentMetadata.astro';
-import ContentFallbackNotice from '~/components/common/ContentFallbackNotice.astro';
+import SEO from '~/components/core/SEO.astro';
+import ContentMetadata from '~/components/content/metadata/ContentMetadata.astro';
+import ContentFallbackNotice from '~/components/content/metadata/ContentFallbackNotice.astro';
 import { getTranslations, detectLanguage } from '~/utils/i18n';
 
 import type { MetaData, Status } from '~/types';
@@ -17,26 +18,80 @@ import type { MetaData, Status } from '~/types';
 export interface Props {
   frontmatter: {
     title?: string;
+    description?: string;
     language?: 'en' | 'de';
     timestamp?: string;
+    publishDate?: Date;
+    modifiedDate?: Date;
     status?: Status;
     tags?: string[];
+    ai_tldr?: string;
+  };
+  entry?: {
+    collection: string;
+    slug: string;
+    id: string;
   };
 }
 
-const { frontmatter } = Astro.props;
+const { frontmatter, entry } = Astro.props;
 const currentLanguage = detectLanguage(Astro.url.pathname);
 const translations = await getTranslations(currentLanguage);
 
+// Try to import git metadata, fallback to empty object if file doesn't exist
+let gitMetadata: Record<string, { publishDate?: string; modifiedDate?: string }> = {};
+try {
+  const gitModule = await import('../generated/git-metadata.json');
+  gitMetadata = gitModule.default || gitModule;
+} catch {
+  console.warn('Git metadata not found, using frontmatter dates only');
+}
+
+const filePath = entry ? `src/content/${entry.collection}/${entry.id}` : '';
+const gitData = gitMetadata[filePath];
+
+// Combine frontmatter dates with git dates
+const publishDate = frontmatter.publishDate || (gitData?.publishDate ? new Date(gitData.publishDate) : undefined);
+const modifiedDate = frontmatter.modifiedDate || (gitData?.modifiedDate ? new Date(gitData.modifiedDate) : undefined);
+
+// Generate alternate language URLs
+const alternateLocales = [];
+if (entry) {
+  if (frontmatter.language === 'de') {
+    alternateLocales.push({ locale: 'en', url: `https://seez.eu/en/${entry.collection}/${entry.slug}/` });
+  } else {
+    alternateLocales.push({ locale: 'de', url: `https://seez.eu/de/${entry.collection}/${entry.slug}/` });
+  }
+}
+
 const metadata: MetaData = {
   title: frontmatter?.title,
+  description: frontmatter?.description,
 };
 ---
 
 <Layout metadata={metadata}>
+  <SEO
+    title={frontmatter.title || 'Untitled'}
+    description={frontmatter.description}
+    locale={frontmatter.language}
+    alternateLocales={alternateLocales}
+    publishDate={publishDate}
+    modifiedDate={modifiedDate}
+    type="article"
+  />
+  
   <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
     <h1 class="font-bold font-heading text-4xl md:text-5xl leading-tighter tracking-tighter">{frontmatter.title}</h1>
-    <ContentMetadata language={frontmatter.language} timestamp={frontmatter.timestamp} status={frontmatter.status} tags={frontmatter.tags} translations={translations} locale={currentLanguage} />
+    <ContentMetadata 
+      language={frontmatter.language} 
+      timestamp={frontmatter.timestamp} 
+      status={frontmatter.status} 
+      tags={frontmatter.tags} 
+      ai_tldr={frontmatter.ai_tldr}
+      translations={translations} 
+      locale={currentLanguage} 
+    />
     {frontmatter.language && frontmatter.language !== currentLanguage && (
       <ContentFallbackNotice originalLanguage={frontmatter.language} currentLanguage={currentLanguage} />
     )}

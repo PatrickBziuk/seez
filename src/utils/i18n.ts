@@ -58,3 +58,26 @@ export function getLanguageFromLocale(locale: string): SupportedLanguage {
   }
   return DEFAULT_LANGUAGE;
 }
+
+/**
+ * Detect language from Accept-Language header
+ */
+export function detectLanguageFromHeaders(acceptLanguage: string | null): SupportedLanguage {
+  if (!acceptLanguage) {
+    return DEFAULT_LANGUAGE;
+  }
+
+  // Parse Accept-Language header (e.g., "en-US,en;q=0.9,de;q=0.8")
+  const languages = acceptLanguage
+    .split(',')
+    .map(lang => {
+      // Remove quality values (;q=0.9) and trim
+      const langCode = lang.split(';')[0].trim();
+      // Extract language code before region (en-US -> en)
+      return langCode.split('-')[0].toLowerCase();
+    })
+    .filter(lang => SUPPORTED_LANGUAGES.includes(lang as SupportedLanguage));
+
+  // Return first supported language found, or default
+  return languages.length > 0 ? (languages[0] as SupportedLanguage) : DEFAULT_LANGUAGE;
+}

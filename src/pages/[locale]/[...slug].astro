@@ -1,0 +1,50 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/MarkdownLayout.astro';
+
+export async function getStaticPaths() {
+  const allContent = await Promise.all([
+    getCollection('books'),
+    getCollection('projects'),
+    getCollection('lab'),
+    getCollection('life'),
+    getCollection('pages')
+  ]);
+  
+  const paths = [];
+  
+  for (const collection of allContent) {
+    for (const entry of collection) {
+      // Skip drafts if the field exists and is true
+      if (entry.data.draft === true) continue;
+      
+      // Extract slug from entry id (filename without extension)
+      const entrySlug = entry.id.replace(/\.(md|mdx)$/, '');
+      
+      paths.push({
+        params: {
+          locale: entry.data.language,
+          slug: `${entry.collection}/${entrySlug}`
+        },
+        props: { 
+          entry,
+          entryData: {
+            collection: entry.collection,
+            slug: entrySlug,
+            id: entry.id
+          }
+        }
+      });
+    }
+  }
+  
+  return paths;
+}
+
+const { entry, entryData } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Layout frontmatter={entry.data} entry={entryData}>
+  <Content />
+</Layout>

@@ -1,11 +1,19 @@
 ---
-title: "Licht am Ende der Zeilen"
-subtitle: "Eine literarisch-emotionale Reise"
-tags: ["literatur", "reflexion", "trauma", "liebe", "depression", "selbstfindung"]
-date: 2025-07-01
+title: Licht am Ende der Zeilen
+subtitle: Eine literarisch-emotionale Reise
+tags:
+  - literatur
+  - reflexion
+  - trauma
+  - liebe
+  - depression
+  - selbstfindung
+  - persönlich
+  - leben
+date: 2025-07-01T00:00:00.000Z
 draft: false
 language: de
-timestamp: "2025-07-01T10:00:00Z"
+timestamp: '2025-07-01T10:00:00Z'
 status:
   authoring: Human
   translation: AI+Human

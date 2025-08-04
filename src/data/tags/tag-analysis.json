@@ -1,0 +1,737 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-08-04T19:56:01.894Z",
+  "analysis": {
+    "totalFiles": 20,
+    "totalTags": 50,
+    "byLanguage": {
+      "en": 33,
+      "de": 17
+    },
+    "byCollection": {
+      "books": 4,
+      "projects": 5,
+      "lab": 6,
+      "life": 3,
+      "pages": 2
+    }
+  },
+  "tags": {
+    "en": {
+      "programming": {
+        "tag": "programming",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\en\\example-book-root.md"
+        ]
+      },
+      "software": {
+        "tag": "software",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\en\\example-book-root.md"
+        ]
+      },
+      "career": {
+        "tag": "career",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\en\\example-book-root.md"
+        ]
+      },
+      "fiction": {
+        "tag": "fiction",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\en\\example-book.md"
+        ]
+      },
+      "example": {
+        "tag": "example",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\en\\example-book.md"
+        ]
+      },
+      "poetry": {
+        "tag": "poetry",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\en\\licht-am-ende-der-zeilen.md"
+        ]
+      },
+      "german literature": {
+        "tag": "german literature",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\en\\licht-am-ende-der-zeilen.md"
+        ]
+      },
+      "ai": {
+        "tag": "ai",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\en\\cosensai.mdx"
+        ]
+      },
+      "consensus": {
+        "tag": "consensus",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\en\\cosensai.mdx"
+        ]
+      },
+      "platform": {
+        "tag": "platform",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\en\\cosensai.mdx"
+        ]
+      },
+      "music": {
+        "tag": "music",
+        "language": "en",
+        "count": 2,
+        "collections": [
+          "projects",
+          "life"
+        ],
+        "files": [
+          "projects\\en\\meine-musik.mdx",
+          "life\\en\\who-am-i-root.md"
+        ]
+      },
+      "personal": {
+        "tag": "personal",
+        "language": "en",
+        "count": 2,
+        "collections": [
+          "projects",
+          "life"
+        ],
+        "files": [
+          "projects\\en\\meine-musik.mdx",
+          "life\\en\\who-am-i.md"
+        ]
+      },
+      "portique": {
+        "tag": "portique",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\en\\portique.mdx"
+        ]
+      },
+      "foss": {
+        "tag": "foss",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\en\\portique.mdx"
+        ]
+      },
+      "jamstack": {
+        "tag": "jamstack",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\en\\portique.mdx"
+        ]
+      },
+      "astro": {
+        "tag": "astro",
+        "language": "en",
+        "count": 2,
+        "collections": [
+          "projects",
+          "lab"
+        ],
+        "files": [
+          "projects\\en\\portique.mdx",
+          "lab\\en\\example-lab-root.mdx"
+        ]
+      },
+      "supabase": {
+        "tag": "supabase",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\en\\portique.mdx"
+        ]
+      },
+      "eu-hosting": {
+        "tag": "eu-hosting",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\en\\portique.mdx"
+        ]
+      },
+      "deployment": {
+        "tag": "deployment",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\en\\portique.mdx"
+        ]
+      },
+      "digital sovereignty": {
+        "tag": "digital sovereignty",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\en\\portique.mdx"
+        ]
+      },
+      "badge": {
+        "tag": "badge",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\en\\badge-showcase.mdx"
+        ]
+      },
+      "components": {
+        "tag": "components",
+        "language": "en",
+        "count": 3,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\en\\badge-showcase.mdx",
+          "lab\\en\\note-demo.mdx",
+          "lab\\en\\tldr-demo.mdx"
+        ]
+      },
+      "showcase": {
+        "tag": "showcase",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\en\\badge-showcase.mdx"
+        ]
+      },
+      "ui": {
+        "tag": "ui",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\en\\example-lab-root.mdx"
+        ]
+      },
+      "accessibility": {
+        "tag": "accessibility",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\en\\example-lab-root.mdx"
+        ]
+      },
+      "experiment": {
+        "tag": "experiment",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\en\\example-lab.mdx"
+        ]
+      },
+      "mdx": {
+        "tag": "mdx",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\en\\example-lab.mdx"
+        ]
+      },
+      "note": {
+        "tag": "note",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\en\\note-demo.mdx"
+        ]
+      },
+      "demo": {
+        "tag": "demo",
+        "language": "en",
+        "count": 2,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\en\\note-demo.mdx",
+          "lab\\en\\tldr-demo.mdx"
+        ]
+      },
+      "tldr": {
+        "tag": "tldr",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\en\\tldr-demo.mdx"
+        ]
+      },
+      "portfolio": {
+        "tag": "portfolio",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "life"
+        ],
+        "files": [
+          "life\\en\\who-am-i-root.md"
+        ]
+      },
+      "creative": {
+        "tag": "creative",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "life"
+        ],
+        "files": [
+          "life\\en\\who-am-i-root.md"
+        ]
+      },
+      "reflection": {
+        "tag": "reflection",
+        "language": "en",
+        "count": 1,
+        "collections": [
+          "life"
+        ],
+        "files": [
+          "life\\en\\who-am-i.md"
+        ]
+      }
+    },
+    "de": {
+      "literatur": {
+        "tag": "literatur",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\de\\licht-am-ende-der-zeilen.md"
+        ]
+      },
+      "reflexion": {
+        "tag": "reflexion",
+        "language": "de",
+        "count": 2,
+        "collections": [
+          "books",
+          "life"
+        ],
+        "files": [
+          "books\\de\\licht-am-ende-der-zeilen.md",
+          "life\\de\\who-am-i.md"
+        ]
+      },
+      "trauma": {
+        "tag": "trauma",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\de\\licht-am-ende-der-zeilen.md"
+        ]
+      },
+      "liebe": {
+        "tag": "liebe",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\de\\licht-am-ende-der-zeilen.md"
+        ]
+      },
+      "depression": {
+        "tag": "depression",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\de\\licht-am-ende-der-zeilen.md"
+        ]
+      },
+      "selbstfindung": {
+        "tag": "selbstfindung",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "books"
+        ],
+        "files": [
+          "books\\de\\licht-am-ende-der-zeilen.md"
+        ]
+      },
+      "ki": {
+        "tag": "ki",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\de\\cosensai.mdx"
+        ]
+      },
+      "collaboration": {
+        "tag": "collaboration",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\de\\cosensai.mdx"
+        ]
+      },
+      "startup": {
+        "tag": "startup",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\de\\cosensai.mdx"
+        ]
+      },
+      "music": {
+        "tag": "music",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\de\\meine-musik-root.mdx"
+        ]
+      },
+      "portfolio": {
+        "tag": "portfolio",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\de\\meine-musik-root.mdx"
+        ]
+      },
+      "creative": {
+        "tag": "creative",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "projects"
+        ],
+        "files": [
+          "projects\\de\\meine-musik-root.mdx"
+        ]
+      },
+      "demo": {
+        "tag": "demo",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\de\\tldr-demo.mdx"
+        ]
+      },
+      "tldr": {
+        "tag": "tldr",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\de\\tldr-demo.mdx"
+        ]
+      },
+      "komponenten": {
+        "tag": "komponenten",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "lab"
+        ],
+        "files": [
+          "lab\\de\\tldr-demo.mdx"
+        ]
+      },
+      "persönlich": {
+        "tag": "persönlich",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "life"
+        ],
+        "files": [
+          "life\\de\\who-am-i.md"
+        ]
+      },
+      "leben": {
+        "tag": "leben",
+        "language": "de",
+        "count": 1,
+        "collections": [
+          "life"
+        ],
+        "files": [
+          "life\\de\\who-am-i.md"
+        ]
+      }
+    }
+  },
+  "suggestions": {
+    "multilingual_pairs": [
+      {
+        "en": "ai",
+        "de": "ki",
+        "confidence": "high"
+      },
+      {
+        "en": "personal",
+        "de": "persönlich",
+        "confidence": "high"
+      },
+      {
+        "en": "programming",
+        "de": "literatur",
+        "confidence": "low"
+      },
+      {
+        "en": "software",
+        "de": "reflexion",
+        "confidence": "low"
+      },
+      {
+        "en": "career",
+        "de": "trauma",
+        "confidence": "low"
+      },
+      {
+        "en": "fiction",
+        "de": "liebe",
+        "confidence": "low"
+      },
+      {
+        "en": "example",
+        "de": "depression",
+        "confidence": "low"
+      },
+      {
+        "en": "poetry",
+        "de": "selbstfindung",
+        "confidence": "low"
+      },
+      {
+        "en": "consensus",
+        "de": "collaboration",
+        "confidence": "low"
+      },
+      {
+        "en": "platform",
+        "de": "startup",
+        "confidence": "low"
+      },
+      {
+        "en": "music",
+        "de": "music",
+        "confidence": "low"
+      },
+      {
+        "en": "portique",
+        "de": "portfolio",
+        "confidence": "low"
+      },
+      {
+        "en": "foss",
+        "de": "creative",
+        "confidence": "low"
+      },
+      {
+        "en": "astro",
+        "de": "demo",
+        "confidence": "low"
+      },
+      {
+        "en": "badge",
+        "de": "tldr",
+        "confidence": "low"
+      },
+      {
+        "en": "components",
+        "de": "komponenten",
+        "confidence": "low"
+      },
+      {
+        "en": "portfolio",
+        "de": "leben",
+        "confidence": "low"
+      }
+    ],
+    "categories": {
+      "technology": [
+        "programming",
+        "software",
+        "ai",
+        "astro",
+        "ki"
+      ],
+      "content": [
+        "badge",
+        "components",
+        "showcase",
+        "ui",
+        "demo",
+        "tldr",
+        "demo",
+        "tldr"
+      ],
+      "personal": [
+        "personal",
+        "reflection",
+        "reflexion",
+        "persönlich"
+      ],
+      "creative": [
+        "music",
+        "creative",
+        "startup",
+        "music",
+        "creative"
+      ],
+      "other": [
+        "career",
+        "fiction",
+        "example",
+        "poetry",
+        "german literature",
+        "consensus",
+        "platform",
+        "portique",
+        "foss",
+        "jamstack",
+        "supabase",
+        "eu-hosting",
+        "deployment",
+        "digital sovereignty",
+        "accessibility",
+        "experiment",
+        "mdx",
+        "note",
+        "portfolio",
+        "literatur",
+        "trauma",
+        "liebe",
+        "depression",
+        "selbstfindung",
+        "collaboration",
+        "portfolio",
+        "komponenten",
+        "leben"
+      ]
+    }
+  }
+}

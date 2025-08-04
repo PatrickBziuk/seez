@@ -25,6 +25,14 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 export default defineConfig({
   output: 'static',
   trailingSlash: 'ignore',
+  site: 'https://seez.eu',
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'de'],
+    routing: {
+      prefixDefaultLocale: true
+    }
+  },
 
   integrations: [
     tailwind({

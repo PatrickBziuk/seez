@@ -1,0 +1,51 @@
+---
+import MediaPlayer from '~/components/content/media/MediaPlayer.astro';
+type Song = {
+  src: string;
+  title: string;
+  artist: string;
+  description?: string;
+  lyrics?: string;
+  links?: Array<{ label: string; href: string }>;
+};
+const { children, songs = [] } = Astro.props as { children?: unknown; songs?: Song[] };
+---
+<div id="chroma-grid" class="relative w-full flex flex-wrap justify-center items-start gap-6">
+  {Array.isArray(songs) && songs.length > 0
+    ? songs.map((song: Song, idx: number) => (
+        <MediaPlayer {...song} key={song.src || idx} />
+      ))
+    : (children ? children : <slot />)}
+  <div id="chroma-spotlight" class="absolute inset-0 pointer-events-none z-30"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.getElementById('chroma-grid');
+    const spotlight = document.getElementById('chroma-spotlight');
+    if (!grid || !spotlight) return;
+    grid.addEventListener('pointermove', (e) => {
+      const r = grid.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      spotlight.style.background = `radial-gradient(circle 300px at ${x}px ${y}px, rgba(255,255,255,0.15), transparent 70%)`;
+      // @ts-expect-error GSAP is loaded globally and not typed
+      if (window['gsap']) {
+        // @ts-expect-error GSAP is loaded globally and not typed
+        window['gsap'].to(spotlight, { opacity: String(1), duration: 0.2, overwrite: true });
+      } else {
+        spotlight.style.opacity = '1';
+      }
+    });
+    grid.addEventListener('pointerleave', () => {
+      // @ts-expect-error GSAP is loaded globally and not typed
+      if (window['gsap']) {
+        // @ts-expect-error GSAP is loaded globally and not typed
+        window['gsap'].to(spotlight, { opacity: String(0), duration: 0.6, overwrite: true });
+      } else {
+        spotlight.style.opacity = '0';
+      }
+    });
+  });
+</script>

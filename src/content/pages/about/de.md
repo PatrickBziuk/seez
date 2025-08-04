@@ -1,6 +1,10 @@
 ---
-title: "Über"
-language: "de"
+title: Über
+language: de
+tags:
+  - selbstfindung
+  - persönlich
+  - leben
 ---
 
 Willkommen auf der Über-Seite! Hier erfährst du mehr über dieses Projekt und den Autor.

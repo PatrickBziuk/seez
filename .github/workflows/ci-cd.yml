@@ -1,0 +1,221 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Set permissions for GitHub token
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  issues: write
+  pull-requests: write
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  # Test build across multiple Node.js versions (only on PRs)        
+  test-build:
+    name: Test Build (Node.js ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing dependencies with pnpm..."
+          pnpm install --frozen-lockfile
+
+      - name: 🔄 Sync Astro content types
+        run: |
+          echo "Syncing Astro content types..."
+          pnpm run astro sync
+
+      - name: 🔍 Run Astro check
+        run: |
+          echo "Running Astro type checking..."
+          pnpm run check:astro
+
+      - name: 🏗️ Build Astro site
+        run: |
+          echo "Building Astro site..."
+          pnpm run build
+          echo "✅ Build completed successfully!"
+
+  # Code quality checks (allow to fail but still build)
+  quality-check:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    continue-on-error: true
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing dependencies with pnpm..."
+          pnpm install --frozen-lockfile
+
+      - name: 🔍 Run ESLint
+        continue-on-error: true
+        run: |
+          echo "Running ESLint check..."
+          pnpm run check:eslint || echo "⚠️ ESLint found issues, but continuing"
+
+      - name: 💅 Run Prettier check
+        continue-on-error: true
+        run: |
+          echo "Running Prettier check..."
+          pnpm run check:prettier || echo "⚠️ Prettier found issues, but continuing"
+
+  # Build and Deploy (only on main branch pushes)
+  build-and-deploy:
+    name: Build & Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    outputs:
+      build-success: ${{ steps.build-status.outputs.success }}
+      commit-sha: ${{ github.sha }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing dependencies with pnpm..."
+          pnpm install --frozen-lockfile
+          echo "✅ Dependencies installed successfully!"
+
+      - name: 🔄 Sync Astro content types
+        run: |
+          echo "Syncing Astro content types..."
+          pnpm run astro sync
+
+      - name: 🔍 Run Astro check (allow failures)
+        continue-on-error: true
+        run: |
+          echo "Running Astro type checking..."
+          pnpm run check:astro || echo "⚠️ Astro check had issues, but continuing with build"
+
+      - name: 🏗️ Build Astro site
+        id: build-step
+        run: |
+          echo "Building Astro site for production..."
+          pnpm run build
+          echo "✅ Build completed successfully!"
+          echo "Build output directory contents:"
+          ls -la dist/
+
+      - name: ✅ Set build success status
+        id: build-status
+        if: success()
+        run: echo "success=true" >> $GITHUB_OUTPUT
+
+      - name: ❌ On Build Failure – Create GitHub Issue
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          echo "Build failed, extracting error..."
+          pnpm run build > build.log 2>&1 || true
+          
+          if [ -f scripts/extract-error.js ]; then
+            node scripts/extract-error.js build.log > error-summary.txt
+            head -n 20 error-summary.txt
+            ERROR_TITLE=$(head -n1 error-summary.txt)
+            
+            echo "$(cat error-summary.txt)" > issue-body.txt
+            echo "" >> issue-body.txt
+            echo "See run: ${RUN_URL}" >> issue-body.txt
+            
+            gh issue create \
+              --title "Build Failure: $ERROR_TITLE" \
+              --body-file issue-body.txt \
+              --label build-failure,automated
+          else
+            echo "Error extraction script not found, creating basic issue"
+            gh issue create \
+              --title "Build Failure on main branch" \
+              --body "Build failed on main branch at commit ${COMMIT_SHA}. See run: ${RUN_URL}" \
+              --label build-failure,automated
+          fi
+
+      - name: 📄 Setup Pages
+        if: success()
+        uses: actions/configure-pages@v4
+
+      - name: 📤 Upload artifact
+        if: success()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        if: success()
+        uses: actions/deploy-pages@v4
+
+      - name: ✅ Deployment complete
+        if: success()
+        run: |
+          echo "🎉 Site successfully deployed to GitHub Pages!"      
+          echo "📦 Deployment SHA: ${{ github.sha }}"
+          echo "🌐 Site URL: ${{ steps.deployment.outputs.page_url }}"
+
+  # Trigger translation workflow only after successful build
+  trigger-translation:
+    name: Trigger Translation Pipeline
+    needs: build-and-deploy
+    if: needs.build-and-deploy.outputs.build-success == 'true'
+    uses: ./.github/workflows/translation.yml
+    with:
+      commit-sha: ${{ needs.build-and-deploy.outputs.commit-sha }}
+    secrets: inherit

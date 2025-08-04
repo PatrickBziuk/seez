@@ -1,0 +1,21 @@
+---
+import { getEntry, getCollection, render } from 'astro:content';
+import MarkdownLayout from '../../layouts/MarkdownLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('books');
+  return entries.filter(e => !e.data.draft).map(entry => {
+    const slug = entry.id.replace(/\.mdx?$/, '');
+    return { params: { slug } };
+  });
+}
+
+const { slug } = Astro.params;
+const entry = await getEntry('books', slug as string);
+if (!entry) throw new Error(`Book not found: ${slug}`);
+
+const { Content } = await render(entry);
+---
+<MarkdownLayout frontmatter={entry.data}>
+  <Content />
+</MarkdownLayout>

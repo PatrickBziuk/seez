@@ -1,0 +1,16 @@
+---
+/**
+ * Icon - Wrapper for astro-icon
+ * @props {name: string, size?: string | number, class?: string}
+ * @behavior Renders an icon from the icon set using astro-icon
+ * @dependencies astro-icon
+ */
+import { Icon as AstroIcon } from 'astro-icon/components';
+export interface Props {
+  name: string;
+  size?: string | number;
+  class?: string;
+}
+const { name, size = 18, class: className = '' } = Astro.props;
+---
+<AstroIcon name={name} width={size} height={size} class={className} />

@@ -1,6 +1,10 @@
 ---
-title: "About"
-language: "en"
+title: About
+language: en
+tags:
+  - programming
+  - software
+  - jamstack
 ---
 
 Welcome to the About page! Here you can learn more about this project and its author.

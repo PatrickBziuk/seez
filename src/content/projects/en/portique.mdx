@@ -1,0 +1,189 @@
+---
+title: 'Portique: European FOSS Jamstack Platform'
+subtitle: 'Self-hosted or Managed Static Hosting – same stack, full sovereignty'
+tags:
+  - Portique
+  - FOSS
+  - Jamstack
+  - Astro
+  - Supabase
+  - EU-hosting
+  - Deployment
+  - Digital Sovereignty
+  - programming
+  - software
+date: 2025-08-04T00:00:00.000Z
+draft: false
+language: en
+status:
+  authoring: Human
+ai_tldr: "Portique is an open, European alternative to proprietary Jamstack hosts (e.g. Netlify, Vercel): **Either managed by a European operator** (Deployment-as-a-Service) **Or self-hosted** using exactly the same FOSS-based stack (Astro, Gitea, Woodpecker, Caddy, Bunny.net; optionally Supabase) Goal: **Performance, GDPR-compliant data ownership, and usability** for SMEs/NGOs/freelancers without lock-in."
+---
+
+import Note from '../../../components/marketing/content/Note.astro';
+import Badge from '../../../components/ui/display/Badge.astro';
+
+## Why Portique Exists
+
+Small and medium-sized European businesses, NGOs, and independent creators are caught between:
+
+- US-based proprietary platforms with data sovereignty risks,
+- DIY complexity of maintaining a modern deployment stack,
+- Expensive agency lock-ins that trade control for superficial convenience.
+
+Portique offers a third path:  
+**The same technological foundation** as modern Jamstack platforms, but **fully transparent, self-hostable, or managed by a trusted European operator**. The architecture is auditable, reproducible, and built for long-term independence.
+
+> **Note:** Self-hosting provides maximum control at the cost of operational overhead. Managed mode offers the exact same stack as a service — nothing hidden, nothing gated.
+
+## Core Value Propositions
+
+1. **Data Sovereignty & GDPR First.** All infrastructure is EU-based, with no hidden data exposure or US-Cloud dependencies (CLOUD Act aware).
+2. **Jamstack DX, but FOSS.** Astro + Vite for builds, CI/CD with Woodpecker, Git-backed content via Gitea — fully transparent and vendor-neutral.
+3. **Dual Operation Modes:**  
+     - *Managed*: A European provider handles build, deployment, updates, and monitoring.  
+     - *Self-hosted*: Same stack, self-operated, fully reproducible with IaC or containers.
+4. **Progressive Onboarding:** Start with static hosting; expand into visual editors, Supabase-backed backends, and AI support assistants.
+
+## Architecture Overview
+
+Portique is a **CI/CD-powered static site hosting platform** with optional "backend-light" features and a dashboard/editor for non-technical users.
+
+### Components
+
+- **Astro + Vite**: Lightning-fast builds with modular architecture.
+- **Gitea**: Git-forge for repo control and content editing — full ownership.
+- **Woodpecker CI**: Runs `astro build`, deploys to Caddy or Bunny.net, handles cache invalidation.
+- **Caddy**: Origin server with auto-HTTPS, reverse proxying.
+- **Bunny.net**: CDN/edge storage for global static delivery.
+- **Supabase (optional)**: Auth, database, file storage, functions — ideal for extending static sites with dynamic features.
+- **Visual Editor & Dashboard**: Markdown-first with live preview, WYSIWYG planned.
+- **AI Assistant (optional)**: Support, diagnostics, user onboarding (privacy-aware).
+
+### Deployment Modes
+
+#### 1. Managed European Deployment
+
+A trusted provider offers:
+
+- Full setup of Portique components
+- CI/CD, TLS, backups, and monitoring
+- Visual editor access and migration support
+
+Clients receive the same Git-based workflow as self-hosting — without the sysadmin duties.
+
+#### 2. Self-Hosted (DIY)
+
+For tech-savvy teams:
+
+- Fully reproducible via Proxmox, Docker, or Ansible/Terraform
+- Control over secrets, scaling, user roles, integrations
+- Optionally contribute improvements or maintain forks
+
+## Example Minimal Pipeline
+
+### `.woodpecker.yml`
+
+```yaml
+pipeline:
+    build:
+        image: node:20
+        commands:
+            - npm ci
+            - npx astro build
+    deploy:
+        image: curlimages/curl
+        commands:
+            - ./scripts/deploy.sh
+```
+
+### Caddyfile (Origin + Proxy)
+
+```json
+example.com {
+    root * /var/www/example.com
+    file_server
+    encode zstd gzip
+    tls you@example.com
+}
+```
+
+### Supabase Client (Astro Integration)
+
+```ts
+// src/lib/supabaseClient.ts
+import { createClient } from '@supabase/supabase-js';
+
+export const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+);
+```
+
+### Multi-Tenancy & Isolation
+
+- Isolated CI builds per tenant (containerized)
+- Separate domain zones and asset storage (Bunny.net zones or directory-based)
+- Resource limits enforced via cgroups or virtualization
+- Per-customer dashboards and domain routing via Caddy
+
+### UX, Editor & Observability
+
+A central dashboard offers:
+
+- Build logs, SSL status, domain management
+- Support interface with AI assistance
+- Content editing, deployment triggers, rollback controls
+
+Markdown-based editing is the first step — future iterations will offer rich block editors and custom component previews.
+
+### Security Principles
+
+- Secrets stored via Woodpecker’s secret store
+- 2FA and RBAC matching Gitea org/team roles
+- Audit logs for all user actions (deployments, logins, domain changes)
+- Sanitization of user-generated content in editor inputs
+
+### Positioning & Market Strategy
+
+Portique = Netlify-level developer experience + GDPR + ownership.
+
+It targets:
+
+- Freelancers (visual editor + easy deploys)
+- NGOs (free or discounted plans)
+- SMEs (managed deployment + sovereignty)
+- Developers (self-hosted, auditable, modifiable)
+
+Business models include:
+
+- Managed Hosting Tiered Plans (based on users/projects/storage)
+- Custom Onboarding/Migration packages
+- Community Marketplace (themes, templates, components)
+
+### Quickstart (Self-hosted)
+
+- Provision a Linux VM (or container) with Gitea, Caddy, and Woodpecker CI
+- Push an Astro repo to Gitea
+- Configure `.woodpecker.yml` and deployment scripts
+- Set up Bunny.net or Caddy as static host
+- Configure TLS via Caddy (auto)
+- Add Supabase if needed
+- Optionally install the dashboard UI and visual editor frontend
+
+### Contribution & Extension
+
+Portique is open to contributions:
+
+- Fork and self-host
+- Submit plugins (editor blocks, deploy integrations)
+- Share use cases and templates
+- Build a managed offering for your region
+
+### Roadmap
+
+- **MVP:** Static hosting, CI/CD, custom domains
+- **Phase 2:** Markdown editor + dashboard
+- **Phase 3:** Supabase integrations, AI assistant
+- **Phase 4:** Multi-tenant SaaS, community template marketplace
+

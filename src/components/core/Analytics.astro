@@ -1,0 +1,26 @@
+---
+/**
+ * Analytics - Track language detection and selection events
+ * @props event, language, source
+ * @behavior Sends analytics events for language detection
+ * @dependencies gtag (Google Analytics)
+ * @usedBy Language selection and detection flows
+ */
+interface Props {
+  language?: string;
+  source?: string;
+}
+
+const { language, source } = Astro.props;
+---
+
+<script define:vars={{ language, source }}>
+  // Track language detection events
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'language_selection', {
+      method: source, // 'auto_detected', 'manual_selection', 'cookie'
+      language: language,
+      page_path: window.location.pathname
+    });
+  }
+</script>
