@@ -1,10 +1,35 @@
 ---
-title: 'TL;DR Komponente Demo'
-language: 'de'
-tags: ['demo', 'tldr', 'komponenten']
-date: 2025-08-02
+title: TL;DR Komponente Demo
+language: de
+tags:
+  - demo
+  - tldr
+  - komponenten
 status:
-  authoring: 'AI+Human'
+  authoring: AI+Human
+translationHistory:
+  - language: de
+    translator: AI (gpt-4o-mini)
+    model: gpt-4o-mini
+    sourceSha: 7f7cda3df5640e5d659db3b01773c01719b998070493a37ca77b309900639000
+    timestamp: '2025-08-05T12:37:15.271Z'
+    status: ai-translated
+  - language: en
+    translator: AI (gpt-4o-mini)
+    model: gpt-4o-mini
+    sourceSha: 32689f3937dd33e00445063149216e19567b653740caf714781c5fbb02996df5
+    timestamp: '2025-08-05T12:37:03.583Z'
+    status: ai-translated
+ai_tldr: >-
+  Dieses Dokument ist eine Demo für eine TL;DR-Komponente, die Inhalte
+  zusammenfasst. Es erklärt den Zweck der Verwendung von TL;DR und bietet
+  Beispiele für Abzeichen. Die Komponente ist dafür konzipiert, am Anfang von
+  Artikeln oder Projektseiten platziert zu werden, um Klarheit zu schaffen.
+ai_textscore:
+  translationQuality: 95
+  originalClarity: 90
+  timestamp: '2025-08-05T12:36:57.418Z'
+  notes: []
 ---
 
 import Tldr from '../../../components/marketing/content/Tldr.astro';
@@ -15,7 +40,7 @@ import Badge from '../../../components/ui/display/Badge.astro';
 
 <Tldr tldr="Diese Seite demonstriert die neue TL;DR-Komponente. Sie bietet eine schnelle, KI-generierte Zusammenfassung, damit Leser sofort den Kern erfassen können." />
 
-## Warum TL;DR nutzen?
+## Warum TL;DR verwenden?
 
 <Note
   title="Schnelle Zusammenfassungen"
@@ -23,7 +48,7 @@ import Badge from '../../../components/ui/display/Badge.astro';
   icon="tabler:info-square"
 />
 
-## Beispiel-Badges
+## Beispiel-Abzeichen
 
 <Badge variant="ai" text="KI" icon="🤖" size="sm" />
 <Badge variant="human" text="Mensch" icon="🧑" size="sm" />
