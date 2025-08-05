@@ -1,0 +1,11 @@
+#!/bin/sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run content validation and registry update
+npx tsx scripts/validate-content-precommit-simple.ts
+
+# If registry was updated, stage the changes
+if [ -f "data/content-registry.json.updated" ]; then
+  git add data/content-registry.json
+  rm data/content-registry.json.updated
+fi

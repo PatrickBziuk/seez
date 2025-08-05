@@ -186,16 +186,16 @@ jobs:
       - name: 🔍 Detect conflicts and create issues
         if: steps.check-commits.outputs.has-commits == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Detecting translation conflicts..."
           npx tsx scripts/detect_conflicts.ts translation-tasks.json || true
 
-      - name: � Create or update Pull Request
+      - name: 🔍 Create or update Pull Request
         if: steps.check-commits.outputs.has-commits == 'true'
         id: create-pr
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           branch_name="${{ steps.setup-branch.outputs.branch-name }}"
           short_sha="${{ inputs.commit-sha }}"
@@ -229,7 +229,7 @@ jobs:
           else
             echo "🆕 Creating new PR for branch: $branch_name"
             
-            pr_number=$(gh pr create \
+            pr_url=$(gh pr create \
               --title "AI translations for main @ ${short_sha}" \
               --body "Automated translations generated for updated or missing content.
 
@@ -246,16 +246,20 @@ jobs:
               --base main \
               --head "$branch_name" \
               --draft \
-              --label ai,translation,auto-generated \
-              --json number --jq '.number')
+              --label ai,translation,auto-generated)
+            
+            # Extract PR number from URL  
+            pr_number=$(echo "$pr_url" | sed 's/.*\/pull\/\([0-9]*\).*/\1/')
             
             echo "pr-created=new" >> $GITHUB_OUTPUT
             echo "pr-number=$pr_number" >> $GITHUB_OUTPUT
-            echo "✅ Created new PR #$pr_number"
+            echo "✅ Created new PR #$pr_number at $pr_url"
           fi
 
       - name: 🛡️ Preserve branch on failure
         if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "⚠️ Job failed, preserving translation branch for manual recovery"
           branch_name="${{ steps.setup-branch.outputs.branch-name }}"
@@ -271,7 +275,7 @@ jobs:
             echo "   npx tsx scripts/generate_translations.ts translation-tasks.json"
             
             # Create an issue about the failed job
-            if [ -n "${{ secrets.GITHUB_TOKEN }}" ]; then
+            if [ -n "$GH_TOKEN" ]; then
               gh issue create \
                 --title "Translation Pipeline Failed - Manual Recovery Needed" \
                 --body "The translation pipeline job failed, but progress has been preserved.

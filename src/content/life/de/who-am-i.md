@@ -1,14 +1,18 @@
 ---
-title: 'Wer bin ich?'
-subtitle: 'Persönliche Reflexionen und Gedanken'
-tags: ['persönlich', 'reflexion', 'leben']
-date: 2024-01-15
+title: Wer bin ich?
+subtitle: Persönliche Reflexionen und Gedanken
+tags:
+  - persönlich
+  - reflexion
+  - leben
+date: 2024-01-15T00:00:00.000Z
 draft: false
 language: de
-translationKey: 'who-am-i'
+translationKey: who-am-i
 status:
-  authoring: 'Human'
-  translation: 'AI'
+  authoring: Human
+  translation: AI
+canonicalId: slug-20250805-547dab20
 ---
 
 # Wer bin ich?

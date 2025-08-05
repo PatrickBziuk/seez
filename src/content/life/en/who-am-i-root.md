@@ -15,6 +15,7 @@ timestamp: '2025-07-22T12:00:00Z'
 status:
   authoring: Human
   translation: AI+Human
+canonicalId: slug-20250805-2e3f9452
 ---
 
 I’ve gone by many names.  

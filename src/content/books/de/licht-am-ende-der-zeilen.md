@@ -17,6 +17,7 @@ timestamp: '2025-07-01T10:00:00Z'
 status:
   authoring: Human
   translation: AI+Human
+canonicalId: slug-20250805-d90c95e9
 ---
 
 📖 **TL;DR – Buchkonzept:**

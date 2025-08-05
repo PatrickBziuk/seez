@@ -42,7 +42,11 @@
     "tokens:summary": "npx tsx scripts/token-tracking/cli.ts summary",
     "tokens:usage": "npx tsx scripts/token-tracking/cli.ts usage",
     "tokens:export": "npx tsx scripts/token-tracking/cli.ts export",
-    "tokens:add-test": "npx tsx scripts/token-tracking/cli.ts add"
+    "tokens:add-test": "npx tsx scripts/token-tracking/cli.ts add",
+    "content:scan": "npx tsx scripts/content-canonical-system.ts scan",
+    "content:validate": "npx tsx scripts/content-canonical-system.ts validate",
+    "content:precommit": "npx tsx scripts/validate-content-precommit.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
@@ -83,6 +87,7 @@
     "eslint": "^9.24.0",
     "eslint-plugin-astro": "^1.3.1",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
     "i18next-scanner": "^4.4.0",
     "js-yaml": "^4.1.0",
     "mdast-util-to-string": "^4.0.0",

@@ -11,6 +11,7 @@ draft: false
 language: en
 status:
   authoring: Human
+canonicalId: slug-20250805-2107ab0c
 ---
 
 This is an example book content.

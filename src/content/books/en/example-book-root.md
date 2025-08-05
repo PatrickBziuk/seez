@@ -15,6 +15,7 @@ timestamp: '2022-01-01T09:00:00Z'
 status:
   authoring: Human
   translation: Human
+canonicalId: slug-20250805-da640107
 ---
 
 A classic book on software craftsmanship and pragmatic thinking for developers.
