@@ -1,0 +1,167 @@
+---
+title: Dark Mode Switcher Demo
+subtitle: Accessible color mode toggle with Astro components
+tags:
+  - ui
+  - accessibility
+  - astro
+  - programming
+  - software
+  - portique
+draft: false
+canonicalId: slug-20250805-af41b814
+language: de
+translationHistory:
+  - language: de
+    translator: AI (gpt-4o-mini)
+    model: gpt-4o-mini
+    sourceSha: 6061fb8cab973bcffc1288f71e71c9e8c965f6fa1ae5c10e7cb7c6fd842bce91
+    timestamp: '2025-08-05T19:08:13.913Z'
+    status: ai-translated
+ai_tldr: >-
+  Diese Demo zeigt, wie man den Dunkel- und Hellmodus in Astro mit Tailwind und
+  localStorage umschaltet. Sie verwendet verschiedene dokumentierte Komponenten
+  wie Überschrift, Badge und Button, um interaktive Inhalte zu erstellen.
+  Benutzer können die Demo erweitern, indem sie zusätzliche Komponenten oder
+  benutzerdefinierte Logik hinzufügen.
+ai_textscore:
+  translationQuality: 95
+  originalClarity: 90
+  timestamp: '2025-08-05T19:07:55.703Z'
+  notes: []
+---
+
+import Headline from '~/components/ui/display/Headline.astro';
+import Badge from '~/components/ui/display/Badge.astro';
+import ContentMetadata from '~/components/content/metadata/ContentMetadata.astro';
+import Button from '~/components/ui/forms/Button.astro';
+import CallToAction from '~/components/marketing/conversion/CallToAction.astro';
+import SocialShare from '~/components/content/metadata/SocialShare.astro';
+import Features from '~/components/marketing/features/Features.astro';
+import Stats from '~/components/marketing/social-proof/Stats.astro';
+import Pricing from '~/components/marketing/conversion/Pricing.astro';
+import Testimonials from '~/components/marketing/social-proof/Testimonials.astro';
+import Note from '~/components/marketing/content/Note.astro';
+import MediaPlayer from '~/components/content/media/MediaPlayer.astro';
+import FAQs from '~/components/marketing/conversion/FAQs.astro';
+
+<Headline title="Dark Mode Switcher" subtitle="Accessible color mode toggle" tagline="Experiment Lab Demo" />
+
+<ContentMetadata
+  metadata={{
+    title: 'Dark Mode Switcher Demo',
+    language: 'en',
+    timestamp: '2024-05-10',
+    status: { authoring: 'Human' },
+    tags: ['ui', 'accessibility', 'astro'],
+  }}
+/>
+
+<div style={{ display: 'flex', gap: '1rem', margin: '1.5rem 0' }}>
+  <Badge variant="ai" text="AI" />
+  <Badge variant="human" text="Human" />
+  <Badge variant="tag" text="UI" />
+  <Badge variant="language" text="EN" />
+  <Badge variant="timestamp" text="2024-05-10" />
+</div>
+
+<Button variant="primary" size="md" type="button" data-aw-toggle-color-scheme>
+  Dunkelmodus umschalten
+</Button>
+
+<CallToAction
+  title="Try the Dark Mode Switcher!"
+  subtitle="Accessible, fast, and easy to use."
+  actions={[{ text: 'Toggle Now', href: '#', variant: 'primary' }]}
+/>
+
+<SocialShare text="Check out this Dark Mode Switcher experiment!" url={url} />
+
+<Features
+  title="Component Features"
+  subtitle="What makes these Astro components great?"
+  items={[
+    {
+      title: 'Accessibility',
+      description: 'All components are keyboard and screen reader friendly.',
+      icon: 'tabler:accessible',
+    },
+    { title: 'Customization', description: 'Easily style and configure via props.', icon: 'tabler:palette' },
+    { title: 'Performance', description: 'Optimized for fast rendering and minimal bundle size.', icon: 'tabler:bolt' },
+  ]}
+  columns={3}
+/>
+
+<Stats
+  title="Lab Stats"
+  subtitle="Component usage in this demo"
+  stats={[
+    { title: 'UI Components', value: 6, description: 'Headline, Badge, Button, etc.' },
+    { title: 'Widgets', value: 8, description: 'Features, Stats, Pricing, etc.' },
+    { title: 'Total', value: 14, description: 'Components in action' },
+  ]}
+/>
+
+<Pricing
+  title="Demo Pricing"
+  subtitle="Example pricing table for your SaaS"
+  prices={[
+    {
+      name: 'Starter',
+      price: 'Free',
+      features: ['Basic components', 'Community support'],
+      cta: { text: 'Get Started', href: '#' },
+    },
+    { name: 'Pro', price: '$9/mo', features: ['All widgets', 'Priority support'], cta: { text: 'Upgrade', href: '#' } },
+    {
+      name: 'Enterprise',
+      price: 'Contact',
+      features: ['Custom integrations', 'Dedicated support'],
+      cta: { text: 'Contact Us', href: '#' },
+    },
+  ]}
+/>
+
+<Testimonials
+  title="What users say"
+  testimonials={[
+    {
+      name: 'Alex',
+      quote: 'These Astro components made my site beautiful and fast!',
+      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    },
+    {
+      name: 'Samira',
+      quote: 'Widget system is so flexible and easy to use.',
+      avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+    },
+  ]}
+/>
+
+<Note variant="info">Sie können Widgets und UI-Komponenten kombinieren, um reichhaltige, interaktive Inhaltsabschnitte zu erstellen.</Note>
+
+<MediaPlayer src="/sounds/glueck-am-ende.mp3" title="Demo Sound" />
+
+<FAQs
+  title="Frequently Asked Questions"
+  faqs={[
+    {
+      question: 'Can I use these components in any Astro project?',
+      answer: 'Yes, they are designed for reusability and easy integration.',
+    },
+    { question: 'Are all widgets responsive?', answer: 'Absolutely! Tailwind CSS ensures mobile-friendly layouts.' },
+  ]}
+/>
+
+---
+
+Ein einfaches Experiment, um den Dunkel-/Hellen Modus in Astro mit Tailwind und localStorage umzuschalten. Diese Demo zeigt, wie man dokumentierte Komponenten im Kontext verwendet:
+
+- **Überschrift** für Abschnittsüberschriften
+- **Badge** für Metadaten und Status
+- **ContentMetadata** für Eintragsdetails
+- **Button** für interaktive Aktionen
+- **CallToAction** für Engagement
+- **SocialShare** zum Teilen Ihrer Arbeit
+
+Fühlen Sie sich frei, diese Demo mit weiteren Komponenten oder benutzerdefinierter Logik zu erweitern!
