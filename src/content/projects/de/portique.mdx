@@ -1,0 +1,206 @@
+---
+title: 'Portique: European FOSS Jamstack Platform'
+subtitle: 'Self-hosted or Managed Static Hosting – same stack, full sovereignty'
+tags:
+  - Portique
+  - FOSS
+  - Jamstack
+  - Astro
+  - Supabase
+  - EU-hosting
+  - Deployment
+  - Digital Sovereignty
+  - programming
+  - software
+draft: false
+language: de
+status:
+  authoring: Human
+ai_tldr: >-
+  Portique ist eine offene, europäische Alternative zu proprietären
+  Jamstack-Hosts (z.B. Netlify, Vercel): Entweder verwaltet von einem
+  europäischen Anbieter oder selbstgehostet mit demselben FOSS-basierten Stack.
+  Ziel ist es, Leistung, GDPR-konforme Datenbesitz und Benutzerfreundlichkeit
+  für KMUs, NGOs und Freiberufler zu bieten, ohne Lock-in. Die Plattform bietet
+  eine transparente und reproduzierbare Architektur für langfristige
+  Unabhängigkeit.
+translationHistory:
+  - language: de
+    translator: AI (gpt-4o-mini)
+    model: gpt-4o-mini
+    sourceSha: 2d94d7d1640304d091da33c7347d5eedccd41e5eaac9832d2911129b2f4db1ce
+    timestamp: '2025-08-05T12:36:56.402Z'
+    status: ai-translated
+ai_textscore:
+  translationQuality: 95
+  originalClarity: 90
+  timestamp: '2025-08-05T12:36:20.028Z'
+  notes: []
+---
+
+import Note from '../../../components/marketing/content/Note.astro';
+import Badge from '../../../components/ui/display/Badge.astro';
+
+## Warum Portique Existiert
+
+Kleine und mittelständische europäische Unternehmen, NGOs und unabhängige Kreative stehen zwischen:
+
+- US-basierten proprietären Plattformen mit Risiken für die Datensouveränität,
+- DIY-Komplexität bei der Wartung eines modernen Bereitstellungsstacks,
+- Teuren Agentur-Lock-ins, die Kontrolle gegen oberflächlichen Komfort eintauschen.
+
+Portique bietet einen dritten Weg:  
+**Die gleiche technologische Grundlage** wie moderne Jamstack-Plattformen, aber **vollständig transparent, selbstgehostet oder verwaltet von einem vertrauenswürdigen europäischen Anbieter**. Die Architektur ist prüfbar, reproduzierbar und für langfristige Unabhängigkeit ausgelegt.
+
+> **Hinweis:** Selbsthosting bietet maximale Kontrolle auf Kosten des operativen Aufwands. Der verwaltete Modus bietet denselben Stack als Dienstleistung — nichts verborgen, nichts eingeschränkt.
+
+## Kernwertangebote
+
+1. **Datensouveränität & GDPR zuerst.** Alle Infrastrukturen sind EU-basiert, ohne versteckte Datenexposition oder Abhängigkeiten von US-Clouds (CLOUD Act bewusst).
+2. **Jamstack DX, aber FOSS.** Astro + Vite für Builds, CI/CD mit Woodpecker, Git-unterstützter Inhalt über Gitea — vollständig transparent und anbieterneutral.
+3. **Zwei Betriebsmodi:**  
+     - *Verwaltet*: Ein europäischer Anbieter kümmert sich um Build, Bereitstellung, Updates und Überwachung.  
+     - *Selbstgehostet*: Gleicher Stack, selbst betrieben, vollständig reproduzierbar mit IaC oder Containern.
+4. **Progressives Onboarding:** Beginnen Sie mit statischem Hosting; erweitern Sie sich in visuelle Editoren, Supabase-unterstützte Backends und KI-unterstützte Assistenten.
+
+## Architekturübersicht
+
+Portique ist eine **CI/CD-gestützte Plattform für statisches Site-Hosting** mit optionalen „Backend-light“-Funktionen und einem Dashboard/Editor für nicht-technische Benutzer.
+
+### Komponenten
+
+- **Astro + Vite**: Blitzschnelle Builds mit modularer Architektur.
+- **Gitea**: Git-Schmiede für Repo-Kontrolle und Inhaltsbearbeitung — volles Eigentum.
+- **Woodpecker CI**: Führt `astro build` aus, deployt zu Caddy oder Bunny.net, verwaltet Cache-Invalidierung.
+- **Caddy**: Ursprungsserver mit Auto-HTTPS, Reverse-Proxying.
+- **Bunny.net**: CDN/Edge-Speicher für globale statische Bereitstellung.
+- **Supabase (optional)**: Authentifizierung, Datenbank, Dateispeicher, Funktionen — ideal zur Erweiterung statischer Seiten mit dynamischen Funktionen.
+- **Visueller Editor & Dashboard**: Markdown-zuerst mit Live-Vorschau, WYSIWYG geplant.
+- **KI-Assistent (optional)**: Unterstützung, Diagnosen, Benutzer-Onboarding (datenschutzbewusst).
+
+### Bereitstellungsmodi
+
+#### 1. Verwaltete europäische Bereitstellung
+
+Ein vertrauenswürdiger Anbieter bietet:
+
+- Vollständige Einrichtung der Portique-Komponenten
+- CI/CD, TLS, Backups und Überwachung
+- Zugriff auf den visuellen Editor und Unterstützung bei der Migration
+
+Kunden erhalten denselben Git-basierten Workflow wie beim Selbsthosting — ohne die Sysadmin-Pflichten.
+
+#### 2. Selbstgehostet (DIY)
+
+Für technisch versierte Teams:
+
+- Vollständig reproduzierbar über Proxmox, Docker oder Ansible/Terraform
+- Kontrolle über Geheimnisse, Skalierung, Benutzerrollen, Integrationen
+- Optional Verbesserungen beitragen oder Forks pflegen
+
+## Beispiel Minimal Pipeline
+
+### `.woodpecker.yml`
+
+```yaml
+pipeline:
+    build:
+        image: node:20
+        commands:
+            - npm ci
+            - npx astro build
+    deploy:
+        image: curlimages/curl
+        commands:
+            - ./scripts/deploy.sh
+```
+
+### Caddyfile (Ursprung + Proxy)
+
+```json
+example.com {
+    root * /var/www/example.com
+    file_server
+    encode zstd gzip
+    tls you@example.com
+}
+```
+
+### Supabase-Client (Astro-Integration)
+
+```ts
+// src/lib/supabaseClient.ts
+__PRESERVED_2__
+
+export const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+);
+```
+
+### Multi-Tenancy & Isolation
+
+- Isolierte CI-Bauten pro Mandant (containerisiert)
+- Separate Domainzonen und Asset-Speicher (Bunny.net-Zonen oder verzeichnisbasiert)
+- Ressourcenlimits, die über cgroups oder Virtualisierung durchgesetzt werden
+- Pro-Kunden-Dashboards und Domain-Routing über Caddy
+
+### UX, Editor & Beobachtbarkeit
+
+Ein zentrales Dashboard bietet:
+
+- Build-Protokolle, SSL-Status, Domainverwaltung
+- Unterstützungsoberfläche mit KI-Hilfe
+- Inhaltsbearbeitung, Bereitstellungsauslöser, Rollback-Kontrollen
+
+Die Bearbeitung auf Markdown-Basis ist der erste Schritt — zukünftige Iterationen werden reichhaltige Block-Editoren und benutzerdefinierte Komponenten-Vorschauen bieten.
+
+### Sicherheitsprinzipien
+
+- Geheimnisse werden über Woodpeckers Geheimnis-Speicher gespeichert
+- 2FA und RBAC entsprechen Gitea-Org-/Teamrollen
+- Audit-Protokolle für alle Benutzeraktionen (Bereitstellungen, Anmeldungen, Domainänderungen)
+- Sanitärmaßnahmen für nutzergenerierte Inhalte in Editor-Eingaben
+
+### Positionierung & Marktstrategie
+
+Portique = Netlify-niveau Entwicklererfahrung + GDPR + Eigentum.
+
+Es zielt auf:
+
+- Freiberufler (visueller Editor + einfache Bereitstellungen)
+- NGOs (kostenlose oder vergünstigte Pläne)
+- KMUs (verwaltete Bereitstellung + Souveränität)
+- Entwickler (selbstgehostet, prüfbar, modifizierbar)
+
+Geschäftsmodelle umfassen:
+
+- Verwaltete Hosting-Tarife (basierend auf Benutzern/Projekten/Speicher)
+- Individuelle Onboarding-/Migrationspakete
+- Community-Marktplatz (Themen, Vorlagen, Komponenten)
+
+### Schnellstart (Selbstgehostet)
+
+- Stellen Sie eine Linux-VM (oder Container) mit Gitea, Caddy und Woodpecker CI bereit
+- Pushen Sie ein Astro-Repo zu Gitea
+- Konfigurieren Sie `.woodpecker.yml` und Bereitstellungsskripte
+- Richten Sie Bunny.net oder Caddy als statischen Host ein
+- Konfigurieren Sie TLS über Caddy (automatisch)
+- Fügen Sie Supabase hinzu, falls erforderlich
+- Optional das Dashboard-UI und die visuelle Editor-Frontend installieren
+
+### Beitrag & Erweiterung
+
+Portique ist offen für Beiträge:
+
+- Fork und selbstgehostet
+- Plugins einreichen (Editor-Blöcke, Bereitstellungsintegrationen)
+- Anwendungsfälle und Vorlagen teilen
+- Ein verwaltetes Angebot für Ihre Region aufbauen
+
+### Roadmap
+
+- **MVP:** Statisches Hosting, CI/CD, benutzerdefinierte Domains
+- **Phase 2:** Markdown-Editor + Dashboard
+- **Phase 3:** Supabase-Integrationen, KI-Assistent
+- **Phase 4:** Multi-Tenant-SaaS, Community-Vorlagen-Marktplatz
