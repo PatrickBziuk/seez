@@ -17,7 +17,7 @@ async function main() {
     process.exit(1);
   }
   const tasks: TranslationTask[] = JSON.parse(fs.readFileSync(file, 'utf-8'));
-  const stale = tasks.filter(t => t.reason === 'stale');
+  const stale = tasks.filter((t) => t.reason === 'stale');
   if (!stale.length) {
     console.log('No stale translations/conflicts detected.');
     return;
@@ -26,14 +26,15 @@ async function main() {
   const [owner, repo] = process.env.GITHUB_REPOSITORY!.split('/');
   for (const t of stale) {
     const title = `Translation conflict: ${t.translationKey} → ${t.targetLang}`;
-    const body = `Detected stale translation for **${t.translationKey}** (lang=${t.targetLang}).\n\n` +
+    const body =
+      `Detected stale translation for **${t.translationKey}** (lang=${t.targetLang}).\n\n` +
       `Source SHA has changed to \`${t.sourceSha}\`. Please review and resolve.\n`;
     await octokit.rest.issues.create({
       owner,
       repo,
       title,
       body,
-      labels: ['translation', 'conflict']
+      labels: ['translation', 'conflict'],
     });
     console.log('Opened issue:', title);
   }

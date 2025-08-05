@@ -26,22 +26,30 @@ const footerData = getFooterData(currentLanguage);
   <div class="footer-content">
     <nav>
       <ul>
-        {footerData.links.map((section: { title: string; links: { text: string; href: string }[] }) => (
-          <li>
-            <span>{translations.footer[section.title] || section.title}</span>
-            <ul>
-              {section.links.map((item: { text: string; href: string }) => (
-                <li><a href={item.href}>{translations.navigation[item.text] || item.text}</a></li>
-              ))}
-            </ul>
-          </li>
-        ))}
+        {
+          footerData.links.map((section: { title: string; links: { text: string; href: string }[] }) => (
+            <li>
+              <span>{translations.footer[section.title] || section.title}</span>
+              <ul>
+                {section.links.map((item: { text: string; href: string }) => (
+                  <li>
+                    <a href={item.href}>{translations.navigation[item.text] || item.text}</a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
       </ul>
     </nav>
     <div class="legal-links">
       <!-- Legal links here -->
     </div>
-    <LanguageSwitcher currentLanguage={currentLanguage} availableLanguages={availableLanguages} currentPath={currentPath} />
+    <LanguageSwitcher
+      currentLanguage={currentLanguage}
+      availableLanguages={availableLanguages}
+      currentPath={currentPath}
+    />
   </div>
 </footer>
 

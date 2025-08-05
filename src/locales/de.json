@@ -46,6 +46,31 @@
   "footer": {
     "legal": "Rechtliches",
     "blog": "Blog",
-    "about": "Über"
+    "about": "Über",
+    "footNote": "Mit Leidenschaft und Neugier erstellt"
+  },
+  "legal": {
+    "legal": "Rechtliches",
+    "privacy": "Datenschutzerklärung",
+    "impressum": "Impressum",
+    "terms": "Nutzungsbedingungen"
+  },
+  "social": {
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "youtube": "YouTube",
+    "instagram": "Instagram",
+    "facebook": "Facebook"
+  },
+  "button": {
+    "submit": "Absenden",
+    "cancel": "Abbrechen",
+    "ok": "OK",
+    "close": "Schließen",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "view_source": "Quellcode anzeigen",
+    "edit_on_github": "Auf GitHub bearbeiten"
   }
 }

@@ -1,0 +1,83 @@
+---
+/**
+ * GitHubSourceButton - GitHub source code link button for content pages
+ * @props filePath - The source file path relative to the repository root
+ * @props locale - Current language for proper translation
+ * @behavior - Displays a button linking to the GitHub source of the current content
+ * @dependencies - Icon component, i18n utilities
+ * @usedBy - MarkdownLayout and other content layouts
+ */
+
+import { Icon } from 'astro-icon/components';
+import { getTranslations } from '~/utils/i18n';
+
+export interface Props {
+  filePath?: string;
+  locale?: 'en' | 'de';
+  className?: string;
+}
+
+const { filePath, locale = 'en', className = '' } = Astro.props;
+
+// Get translations
+const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
+const translations = await getTranslations(safeLocale);
+const t = (key: string) => {
+  const keys = key.split('.');
+  let value: unknown = translations;
+  for (const k of keys) {
+    value = (value as Record<string, unknown>)?.[k];
+    if (value === undefined) break;
+  }
+  return (value as string) || key;
+};
+
+// Build GitHub URL
+const GITHUB_REPO = 'https://github.com/PatrickBziuk/seez';
+const GITHUB_BRANCH = 'main';
+
+function buildGitHubUrl(filePath?: string): string {
+  if (!filePath) {
+    return GITHUB_REPO;
+  }
+
+  // Clean up the file path
+  const cleanPath = filePath.startsWith('/') ? filePath.slice(1) : filePath;
+
+  // Build the complete GitHub URL
+  return `${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${cleanPath}`;
+}
+
+const githubUrl = buildGitHubUrl(filePath);
+const buttonText = t('button.view_source');
+---
+
+<a
+  href={githubUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  class={`
+    github-source-button inline-flex items-center gap-2 px-3 py-2 text-sm
+    bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700
+    border border-gray-200 dark:border-gray-700 rounded-md
+    text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100
+    transition-colors duration-200 no-underline
+    ${className}
+  `}
+  title={buttonText}
+  aria-label={`${buttonText} - ${githubUrl}`}
+>
+  <Icon name="tabler:brand-github" class="w-4 h-4" />
+  <span>{buttonText}</span>
+</a>
+
+<style>
+  .github-source-button:focus {
+    outline: 2px solid rgb(59 130 246);
+    outline-offset: 2px;
+  }
+
+  .github-source-button:focus:not(:focus-visible) {
+    outline: none;
+  }
+</style>

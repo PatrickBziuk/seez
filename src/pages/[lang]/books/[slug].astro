@@ -9,27 +9,26 @@ export async function getStaticPaths() {
     params: { lang: SupportedLanguage; slug: string };
     props: { entry: CollectionEntry<'books'> };
   }> = [];
-  
+
   for (const lang of SUPPORTED_LANGUAGES) {
-    const allBooks = await getCollection('books') as CollectionEntry<'books'>[];
-    const langBooks = allBooks.filter(item => 
-      !item.data.draft && 
-      (item.data.language === lang || (!item.data.language && lang === 'en'))
+    const allBooks = (await getCollection('books')) as CollectionEntry<'books'>[];
+    const langBooks = allBooks.filter(
+      (item) => !item.data.draft && (item.data.language === lang || (!item.data.language && lang === 'en'))
     );
-    
+
     for (const item of langBooks) {
       // Clean slug: remove language prefix and file extension
       const cleanSlug = item.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
       paths.push({
-        params: { 
-          lang, 
-          slug: cleanSlug
+        params: {
+          lang,
+          slug: cleanSlug,
         },
-        props: { entry: item }
+        props: { entry: item },
       });
     }
   }
-  
+
   return paths;
 }
 

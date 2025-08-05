@@ -3,6 +3,7 @@ import { Icon } from 'astro-icon/components';
 import { SITE } from 'astrowind:config';
 import { getHomePermalink } from '~/utils/permalinks';
 import { getTranslations } from '~/utils/i18n';
+import VersionIndicator from '../../common/VersionIndicator.astro';
 
 interface Link {
   text?: string;
@@ -49,7 +50,7 @@ const t = (key: string) => {
         <div class="mb-2">
           <a class="inline-block font-bold text-xl" href={getHomePermalink()}>{SITE?.name}</a>
         </div>
-        <div class="text-sm text-muted flex gap-1">
+        <div class="text-sm text-muted flex gap-1 mb-4">
           {
             secondaryLinks.map(({ text, href }: Link, index: number) => (
               <>
@@ -59,6 +60,7 @@ const t = (key: string) => {
             ))
           }
         </div>
+        <VersionIndicator locale={safeLocale} position="footer" />
       </div>
       {
         links.map(({ title, links }: Links) => (

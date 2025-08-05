@@ -1,0 +1,177 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../../layouts/Layout.astro';
+import { getTranslations, SUPPORTED_LANGUAGES, type SupportedLanguage } from '../../../utils/i18n';
+
+export const getStaticPaths = (() => {
+  return SUPPORTED_LANGUAGES.map((lang) => ({
+    params: { lang },
+  }));
+}) satisfies GetStaticPaths;
+
+const { lang } = Astro.params;
+const locale = lang as SupportedLanguage;
+
+// Get translations
+const translations = await getTranslations(locale);
+const t = (key: string) => {
+  const keys = key.split('.');
+  let value: unknown = translations;
+  for (const k of keys) {
+    value = (value as Record<string, unknown>)?.[k];
+    if (value === undefined) break;
+  }
+  return (value as string) || key;
+};
+
+const title = t('legal.impressum');
+const description =
+  locale === 'de'
+    ? 'Impressum für seez.eu - Rechtliche Informationen und Kontaktdaten.'
+    : 'Impressum for seez.eu - Legal information and contact details.';
+---
+
+<Layout
+  metadata={{
+    title,
+    description,
+    canonical: `/${locale}/legal/impressum`,
+  }}
+>
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="prose prose-lg dark:prose-invert max-w-none">
+      <h1>{title}</h1>
+
+      {
+        locale === 'de' ? (
+          <>
+            <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">Angaben gemäß § 5 TMG und § 55 Abs. 2 RStV</p>
+
+            <h2>Verantwortlich für den Inhalt</h2>
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <p>
+                <>
+                  <strong>Patrick Bziuk</strong>
+                  <br />
+                </>
+                Entwickler & Content Creator
+                <br />
+                E-Mail: patrick@seez.eu
+                <br />
+                Website: <a href="https://seez.eu">seez.eu</a>
+              </p>
+            </div>
+
+            <h2>Haftungsausschluss</h2>
+
+            <h3>Haftung für Inhalte</h3>
+            <p>
+              Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und
+              Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7
+              Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.
+            </p>
+
+            <h3>Haftung für Links</h3>
+            <p>
+              Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben.
+              Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten
+              Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
+            </p>
+
+            <h3>Urheberrecht</h3>
+            <p>
+              Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen
+              Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der
+              Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+            </p>
+
+            <h2>Hosting & Technische Umsetzung</h2>
+            <p>
+              Diese Website wird über GitHub Pages gehostet und nutzt moderne Web-Technologien für optimale Performance
+              und Sicherheit. Der Quellcode ist öffentlich verfügbar auf
+              <a href="https://github.com/PatrickBziuk/seez" target="_blank" rel="noopener">
+                GitHub
+              </a>
+              .
+            </p>
+
+            <h2>Open Source</h2>
+            <p>
+              Große Teile dieser Website basieren auf Open-Source-Software. Wir bedanken uns bei der
+              Open-Source-Community für ihre wertvollen Beiträge zur Softwareentwicklung.
+            </p>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
+              Letzte Aktualisierung: {new Date().toLocaleDateString('de-DE')}
+            </p>
+          </>
+        ) : (
+          <>
+            <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+              Legal information and contact details for seez.eu
+            </p>
+
+            <h2>Responsible for Content</h2>
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+              <p>
+                <>
+                  <strong>Patrick Bziuk</strong>
+                  <br />
+                </>
+                Developer & Content Creator
+                <br />
+                Email: patrick@seez.eu
+                <br />
+                Website: <a href="https://seez.eu">seez.eu</a>
+              </p>
+            </div>
+
+            <h2>Disclaimer</h2>
+
+            <h3>Liability for Content</h3>
+            <p>
+              The contents of our pages have been created with the greatest care. However, we cannot guarantee the
+              accuracy, completeness, and timeliness of the content. As a service provider, we are responsible for our
+              own content on these pages according to general laws pursuant to Section 7, Paragraph 1 of the German
+              Telemedia Act (TMG).
+            </p>
+
+            <h3>Liability for Links</h3>
+            <p>
+              Our website contains links to external third-party websites over whose content we have no influence.
+              Therefore, we cannot assume any liability for this external content. The respective provider or operator
+              of the pages is always responsible for the content of the linked pages.
+            </p>
+
+            <h3>Copyright</h3>
+            <p>
+              The content and works created by the site operators on these pages are subject to German copyright law.
+              Duplication, processing, distribution, and any form of commercialization beyond the scope of copyright
+              require the written consent of the respective author or creator.
+            </p>
+
+            <h2>Hosting & Technical Implementation</h2>
+            <p>
+              This website is hosted via GitHub Pages and uses modern web technologies for optimal performance and
+              security. The source code is publicly available on
+              <a href="https://github.com/PatrickBziuk/seez" target="_blank" rel="noopener">
+                GitHub
+              </a>
+              .
+            </p>
+
+            <h2>Open Source</h2>
+            <p>
+              Large parts of this website are based on open-source software. We thank the open-source community for
+              their valuable contributions to software development.
+            </p>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
+              Last updated: {new Date().toLocaleDateString('en-US')}
+            </p>
+          </>
+        )
+      }
+    </div>
+  </main>
+</Layout>

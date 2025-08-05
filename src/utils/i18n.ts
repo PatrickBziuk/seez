@@ -1,11 +1,11 @@
 export const SUPPORTED_LANGUAGES = ['en', 'de'] as const;
 export const DEFAULT_LANGUAGE = 'en';
 
-export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number];
+export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
 export const LANGUAGE_INFO = {
   en: { label: 'English', flag: '🇺🇸', dir: 'ltr' },
-  de: { label: 'Deutsch', flag: '🇩🇪', dir: 'ltr' }
+  de: { label: 'Deutsch', flag: '🇩🇪', dir: 'ltr' },
 } as const;
 
 /**
@@ -28,11 +28,11 @@ export async function getTranslations(language: SupportedLanguage) {
 export function detectLanguage(url: string): SupportedLanguage {
   const pathSegments = url.split('/').filter(Boolean);
   const firstSegment = pathSegments[0];
-  
+
   if (firstSegment && SUPPORTED_LANGUAGES.includes(firstSegment as SupportedLanguage)) {
     return firstSegment as SupportedLanguage;
   }
-  
+
   return DEFAULT_LANGUAGE;
 }
 
@@ -42,7 +42,7 @@ export function detectLanguage(url: string): SupportedLanguage {
 export function getLocalizedUrl(path: string, language: SupportedLanguage): string {
   // Remove existing language prefix
   const cleanPath = path.replace(/^\/[a-z]{2}(?=\/|$)/, '');
-  
+
   // Add new language prefix for all languages (including default)
   // since the routing structure uses /[lang]/ for all routes
   return `/${language}${cleanPath || ''}`;
@@ -70,13 +70,13 @@ export function detectLanguageFromHeaders(acceptLanguage: string | null): Suppor
   // Parse Accept-Language header (e.g., "en-US,en;q=0.9,de;q=0.8")
   const languages = acceptLanguage
     .split(',')
-    .map(lang => {
+    .map((lang) => {
       // Remove quality values (;q=0.9) and trim
       const langCode = lang.split(';')[0].trim();
       // Extract language code before region (en-US -> en)
       return langCode.split('-')[0].toLowerCase();
     })
-    .filter(lang => SUPPORTED_LANGUAGES.includes(lang as SupportedLanguage));
+    .filter((lang) => SUPPORTED_LANGUAGES.includes(lang as SupportedLanguage));
 
   // Return first supported language found, or default
   return languages.length > 0 ? (languages[0] as SupportedLanguage) : DEFAULT_LANGUAGE;

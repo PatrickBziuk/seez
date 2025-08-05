@@ -1,15 +1,18 @@
 # Plan 10006: SEO & Quality Assurance Enhancements
 
 ## Goal
+
 Polish multilingual SEO, fallback logic, and add CI/test coverage for translation and routing features.
 
 ## Problem Analysis
+
 - Current SEO setup may not properly handle multilingual content
 - Missing automated validation for translation completeness
 - No CI/CD checks for routing and i18n functionality
 - Fallback logic needs testing and refinement
 
 ## Detailed Steps
+
 1. **SEO Enhancement**
    - Add language-specific meta tags (`hreflang`, canonical URLs)
    - Implement proper OpenGraph tags for multilingual content
@@ -38,6 +41,7 @@ Polish multilingual SEO, fallback logic, and add CI/test coverage for translatio
    - Record lessons learned and troubleshooting guides
 
 ## Edge Cases
+
 - Incomplete translation coverage for new content
 - SEO tags for missing languages or draft content
 - CI workflow failures due to missing translation keys
@@ -45,18 +49,21 @@ Polish multilingual SEO, fallback logic, and add CI/test coverage for translatio
 - Search engine indexing of language variants
 
 ## Impact
+
 - Improved search engine visibility across all languages
 - Reliable multilingual user experience
 - Automated quality checks prevent translation gaps
 - Better developer confidence in multilingual features
 
 ## Implementation Priority
+
 1. High: LanguageSwitcher integration and navigation fixes
 2. Medium: SEO meta tags and structured data
 3. Medium: Fallback logic refinement
 4. Low: CI/automated testing setup
 
 ## Checklist
+
 - [ ] Language-specific meta tags implemented
 - [ ] OpenGraph tags for multilingual content
 - [ ] Sitemap updated for all language routes
@@ -71,11 +78,13 @@ Polish multilingual SEO, fallback logic, and add CI/test coverage for translatio
 - [ ] Knowledge base updated with lessons learned
 
 ## Dependencies
+
 - Completed LanguageSwitcher implementation (Plan 10005)
 - Functional multilingual routing (Plans 10010, 10011)
 - Content collections with proper language metadata
 
 ## References
+
 - See `docs/technical-spec.md`, `docs/knowledge.md`, `docs/archived/archive-todo.md`
 - Related tasks in `docs/todo.md`
 - SEO guidelines: [Google's multilingual SEO best practices]

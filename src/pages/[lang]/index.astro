@@ -11,7 +11,7 @@ import { SUPPORTED_LANGUAGES, getTranslations } from '../../utils/i18n';
 import type { SupportedLanguage } from '../../utils/i18n';
 
 export const getStaticPaths = () => {
-  return SUPPORTED_LANGUAGES.map(lang => ({
+  return SUPPORTED_LANGUAGES.map((lang) => ({
     params: { lang },
   }));
 };
@@ -21,9 +21,10 @@ const t = await getTranslations(lang);
 
 const metadata = {
   title: lang === 'de' ? 'Willkommen bei seez.eu' : 'Welcome to seez.eu',
-  description: lang === 'de' 
-    ? 'Entdecke Bücher, Projekte, Experimente und persönliche Gedanken.' 
-    : 'Discover books, projects, experiments, and personal thoughts.',
+  description:
+    lang === 'de'
+      ? 'Entdecke Bücher, Projekte, Experimente und persönliche Gedanken.'
+      : 'Discover books, projects, experiments, and personal thoughts.',
   ignoreTitleTemplate: true,
 };
 
@@ -33,34 +34,26 @@ const sections = [
     href: `/${lang}/books`,
     icon: '📚',
     title: t.navigation?.Books || 'Books',
-    description: lang === 'de' 
-      ? 'Lektüre, Notizen und Buchrezensionen' 
-      : 'Reading, notes, and book reviews'
+    description: lang === 'de' ? 'Lektüre, Notizen und Buchrezensionen' : 'Reading, notes, and book reviews',
   },
   {
     href: `/${lang}/projects`,
     icon: '🛠️',
     title: t.navigation?.Projects || 'Projects',
-    description: lang === 'de' 
-      ? 'Persönliche und Open-Source-Projekte' 
-      : 'Personal and open source projects'
+    description: lang === 'de' ? 'Persönliche und Open-Source-Projekte' : 'Personal and open source projects',
   },
   {
     href: `/${lang}/lab`,
     icon: '🧪',
     title: t.navigation?.Lab || 'Lab',
-    description: lang === 'de' 
-      ? 'Experimente, Code und Ideen' 
-      : 'Experiments, code, and ideas'
+    description: lang === 'de' ? 'Experimente, Code und Ideen' : 'Experiments, code, and ideas',
   },
   {
     href: `/${lang}/life`,
     icon: '🌱',
     title: t.navigation?.Life || 'Life',
-    description: lang === 'de' 
-      ? 'Persönliche Notizen, Reflexionen und mehr' 
-      : 'Personal notes, reflections, and more'
-  }
+    description: lang === 'de' ? 'Persönliche Notizen, Reflexionen und mehr' : 'Personal notes, reflections, and more',
+  },
 ];
 ---
 
@@ -70,13 +63,20 @@ const sections = [
       {lang === 'de' ? 'Willkommen bei seez.eu' : 'Welcome to seez.eu'}
     </h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-5xl">
-      {sections.map(section => (
-        <a href={section.href} class="flex flex-col items-center p-8 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition shadow group">
-          <span class="text-5xl mb-4">{section.icon}</span>
-          <span class="text-xl font-semibold mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400">{section.title}</span>
-          <span class="text-gray-500 dark:text-gray-400 text-center">{section.description}</span>
-        </a>
-      ))}
+      {
+        sections.map((section) => (
+          <a
+            href={section.href}
+            class="flex flex-col items-center p-8 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition shadow group"
+          >
+            <span class="text-5xl mb-4">{section.icon}</span>
+            <span class="text-xl font-semibold mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400">
+              {section.title}
+            </span>
+            <span class="text-gray-500 dark:text-gray-400 text-center">{section.description}</span>
+          </a>
+        ))
+      }
     </div>
   </main>
 </Layout>

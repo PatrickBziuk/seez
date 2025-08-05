@@ -18,8 +18,10 @@ export interface Props {
 const { currentLanguage, availableLanguages = SUPPORTED_LANGUAGES, currentPath = Astro.url.pathname } = Astro.props;
 const translations = await getTranslations(currentLanguage);
 ---
+
 <div class="language-switcher relative inline-block text-left">
-  <button type="button"
+  <button
+    type="button"
     class="inline-flex items-center px-3 py-2 rounded-md border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
     aria-haspopup="listbox"
     aria-expanded="false"
@@ -29,31 +31,48 @@ const translations = await getTranslations(currentLanguage);
   >
     <span class="mr-2">{LANGUAGE_INFO[currentLanguage]?.flag}</span>
     <span>{LANGUAGE_INFO[currentLanguage]?.label}</span>
-    <svg class="ml-2 h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.293l3.71-4.063a.75.75 0 1 1 1.08 1.04l-4.25 4.667a.75.75 0 0 1-1.08 0l-4.25-4.667a.75.75 0 0 1 .02-1.06z"/></svg>
+    <svg class="ml-2 h-4 w-4" viewBox="0 0 20 20" fill="currentColor"
+      ><path
+        d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.293l3.71-4.063a.75.75 0 1 1 1.08 1.04l-4.25 4.667a.75.75 0 0 1-1.08 0l-4.25-4.667a.75.75 0 0 1 .02-1.06z"
+      ></path></svg
+    >
   </button>
-  <div id="language-switcher-dropdown" class="absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white dark:bg-gray-900 ring-1 ring-black ring-opacity-5 z-10" style="display:none; transition: opacity 0.2s, transform 0.2s;">
+  <div
+    id="language-switcher-dropdown"
+    class="absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white dark:bg-gray-900 ring-1 ring-black ring-opacity-5 z-10"
+    style="display:none; transition: opacity 0.2s, transform 0.2s;"
+  >
     <ul tabindex="-1" role="listbox" aria-activedescendant="lang-option" class="py-1">
-      {availableLanguages.map(lang => {
-        const info = LANGUAGE_INFO[lang];
-        const languageUrl = getLocalizedUrl(currentPath, lang);
-        console.log(`LanguageSwitcher: currentPath="${currentPath}", lang="${lang}", languageUrl="${languageUrl}"`);
-        return (
-          <li role="option" aria-selected={lang === currentLanguage} class={`flex items-center px-4 py-2 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-800 ${lang === currentLanguage ? 'font-bold' : ''}`}
-            tabindex="0"
-            aria-disabled={false}
-          >
-            <a href={languageUrl} class="flex items-center w-full">
-              <span class="mr-2">{info?.flag}</span>
-              <span>{info?.label}</span>
-              {lang === currentLanguage && <span class="ml-auto text-xs text-indigo-600">{translations?.navigation?.current || 'Current'}</span>}
-            </a>
-          </li>
-        );
-      })}
+      {
+        availableLanguages.map((lang) => {
+          const info = LANGUAGE_INFO[lang];
+          const languageUrl = getLocalizedUrl(currentPath, lang);
+          console.log(`LanguageSwitcher: currentPath="${currentPath}", lang="${lang}", languageUrl="${languageUrl}"`);
+          return (
+            <li
+              role="option"
+              aria-selected={lang === currentLanguage}
+              class={`flex items-center px-4 py-2 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-800 ${lang === currentLanguage ? 'font-bold' : ''}`}
+              tabindex="0"
+              aria-disabled={false}
+            >
+              <a href={languageUrl} class="flex items-center w-full">
+                <span class="mr-2">{info?.flag}</span>
+                <span>{info?.label}</span>
+                {lang === currentLanguage && (
+                  <span class="ml-auto text-xs text-indigo-600">{translations?.navigation?.current || 'Current'}</span>
+                )}
+              </a>
+            </li>
+          );
+        })
+      }
     </ul>
   </div>
 </div>
 
 <style>
-.language-switcher { position: relative; }
+  .language-switcher {
+    position: relative;
+  }
 </style>

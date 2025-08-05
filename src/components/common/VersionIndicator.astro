@@ -1,0 +1,83 @@
+---
+/**
+ * VersionIndicator - Displays the current version and deployment information
+ * @props showDetails - Whether to show detailed version information
+ * @props position - Where to position the indicator (footer, header, etc.)
+ * @behavior - Shows current version, build time, and commit info
+ * @dependencies - Git metadata, build information
+ * @usedBy - Footer, Header, or any layout component
+ */
+
+export interface Props {
+  locale?: 'en' | 'de';
+  showDetails?: boolean;
+  position?: 'footer' | 'header' | 'inline';
+  className?: string;
+}
+
+const { locale = 'en', showDetails = false, position = 'footer', className = '' } = Astro.props;
+
+// Get version information
+const buildDate = new Date().toISOString();
+const commitSha = process.env.GITHUB_SHA?.slice(0, 7) || 'dev';
+const version = process.env.npm_package_version || '1.0.0';
+const isProduction = import.meta.env.PROD;
+
+// Format build time
+const formatBuildTime = (date: string) => {
+  const buildTime = new Date(date);
+  return buildTime.toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+const positionClasses = {
+  footer: 'text-xs text-gray-500 dark:text-gray-400',
+  header: 'text-sm text-gray-600 dark:text-gray-300',
+  inline: 'text-sm',
+};
+---
+
+<div
+  class={`version-indicator ${positionClasses[position]} ${className}`}
+  title={`Version ${version} - ${commitSha} - Built: ${formatBuildTime(buildDate)}`}
+>
+  {
+    showDetails ? (
+      <div class="version-details">
+        <span class="version-badge inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+          v{version}
+        </span>
+        {isProduction && <span class="commit-info text-xs ml-2">{commitSha}</span>}
+        <span class="build-time text-xs ml-2">{formatBuildTime(buildDate)}</span>
+      </div>
+    ) : (
+      <span class="version-simple">
+        v{version}
+        {isProduction && <span class="commit-short ml-1 opacity-75">{commitSha}</span>}
+      </span>
+    )
+  }
+</div>
+
+<style>
+  .version-indicator {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  }
+
+  .version-details {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .version-simple {
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

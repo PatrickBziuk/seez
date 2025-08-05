@@ -70,9 +70,5 @@ const seoProps: AstroSeoProps = merge(
 <AstroSeo {...{ ...seoProps, openGraph: await adaptOpenGraphImages(seoProps?.openGraph, Astro.site) }} />
 
 <!-- Hreflang alternate language tags for SEO -->
-{alternateLanguages.map(({ href, hreflang }) => (
-  <link rel="alternate" hreflang={hreflang} href={href} />
-))}
-{alternateLanguages.length > 0 && (
-  <link rel="alternate" hreflang="x-default" href={canonical} />
-)}
+{alternateLanguages.map(({ href, hreflang }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
+{alternateLanguages.length > 0 && <link rel="alternate" hreflang="x-default" href={canonical} />}

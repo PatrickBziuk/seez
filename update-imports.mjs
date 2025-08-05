@@ -13,9 +13,9 @@ const IMPORT_MAPPINGS = {
   '~/components/common/ToggleMenu.astro': '~/components/core/layout/ToggleMenu.astro',
   '~/components/common/ToggleTheme.astro': '~/components/core/layout/ToggleTheme.astro',
   '~/components/ui/LanguageSwitcher.astro': '~/components/core/layout/LanguageSwitcher.astro',
-  
+
   '~/components/Logo.astro': '~/components/core/brand/Logo.astro',
-  
+
   '~/components/Favicons.astro': '~/components/core/meta/Favicons.astro',
   '~/components/CustomStyles.astro': '~/components/core/meta/CustomStyles.astro',
   '~/components/common/CommonMeta.astro': '~/components/core/meta/CommonMeta.astro',
@@ -49,14 +49,14 @@ const IMPORT_MAPPINGS = {
   '~/components/ui/Button.astro': '~/components/ui/forms/Button.astro',
   '~/components/ui/Form.astro': '~/components/ui/forms/Form.astro',
   '~/components/widgets/Contact.astro': '~/components/ui/forms/Contact.astro',
-  
+
   '~/components/ui/Badge.astro': '~/components/ui/display/Badge.astro',
   '~/components/ui/Note.astro': '~/components/ui/display/Note.astro',
   '~/components/ui/Timeline.astro': '~/components/ui/display/Timeline.astro',
   '~/components/ui/Background.astro': '~/components/ui/display/Background.astro',
   '~/components/ui/Headline.astro': '~/components/ui/display/Headline.astro',
   '~/components/ui/DListItem.astro': '~/components/ui/display/DListItem.astro',
-  
+
   '~/components/ui/ItemGrid.astro': '~/components/ui/layout/ItemGrid.astro',
   '~/components/ui/ItemGrid2.astro': '~/components/ui/layout/ItemGrid2.astro',
   '~/components/ui/WidgetWrapper.astro': '~/components/ui/layout/WidgetWrapper.astro',
@@ -65,21 +65,21 @@ const IMPORT_MAPPINGS = {
   '~/components/widgets/Hero.astro': '~/components/marketing/hero/Hero.astro',
   '~/components/widgets/Hero2.astro': '~/components/marketing/hero/Hero2.astro',
   '~/components/widgets/HeroText.astro': '~/components/marketing/hero/HeroText.astro',
-  
+
   '~/components/widgets/Features.astro': '~/components/marketing/features/Features.astro',
   '~/components/widgets/Features2.astro': '~/components/marketing/features/Features2.astro',
   '~/components/widgets/Features3.astro': '~/components/marketing/features/Features3.astro',
   '~/components/widgets/Steps.astro': '~/components/marketing/features/Steps.astro',
   '~/components/widgets/Steps2.astro': '~/components/marketing/features/Steps2.astro',
-  
+
   '~/components/widgets/Testimonials.astro': '~/components/marketing/social-proof/Testimonials.astro',
   '~/components/widgets/Stats.astro': '~/components/marketing/social-proof/Stats.astro',
   '~/components/widgets/Brands.astro': '~/components/marketing/social-proof/Brands.astro',
-  
+
   '~/components/widgets/CallToAction.astro': '~/components/marketing/conversion/CallToAction.astro',
   '~/components/widgets/Pricing.astro': '~/components/marketing/conversion/Pricing.astro',
   '~/components/widgets/FAQs.astro': '~/components/marketing/conversion/FAQs.astro',
-  
+
   '~/components/widgets/Content.astro': '~/components/marketing/content/Content.astro',
   '~/components/widgets/Announcement.astro': '~/components/marketing/content/Announcement.astro',
   '~/components/widgets/BlogHighlightedPosts.astro': '~/components/marketing/content/BlogHighlightedPosts.astro',
@@ -129,18 +129,13 @@ async function updateImportsInFile(filePath) {
 
 async function updateAllImports() {
   console.log('Starting component import path updates...');
-  
-  const patterns = [
-    'src/**/*.astro',
-    'src/**/*.mdx',
-    'src/**/*.tsx',
-    'src/**/*.ts'
-  ];
+
+  const patterns = ['src/**/*.astro', 'src/**/*.mdx', 'src/**/*.tsx', 'src/**/*.ts'];
 
   for (const pattern of patterns) {
     const files = await glob(pattern, { cwd: process.cwd() });
     console.log(`Processing ${files.length} files matching ${pattern}...`);
-    
+
     for (const file of files) {
       await updateImportsInFile(file);
     }

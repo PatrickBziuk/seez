@@ -75,14 +75,17 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 <style>
   #language-menu-dropdown {
     min-width: 10rem;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     border-radius: 0.75rem;
     padding: 0.5rem 0;
   }
 </style>
 
 <header
-  class:list={[{ sticky: isSticky, relative: !isSticky, dark: isDark }, 'top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out']}
+  class:list={[
+    { sticky: isSticky, relative: !isSticky, dark: isDark },
+    'top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out',
+  ]}
   {...isSticky ? { 'data-aw-sticky-header': true } : {}}
   {...id ? { id } : {}}
 >
@@ -128,7 +131,10 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                       <li>
                         <a
                           aria-label={t(`navigation.${text2}`)}
-                          class:list={[ 'first:rounded-t last:rounded-b md:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5.5 block whitespace-no-wrap', { 'aw-link-active': href2 === currentPath } ]}
+                          class:list={[
+                            'first:rounded-t last:rounded-b md:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5.5 block whitespace-no-wrap',
+                            { 'aw-link-active': href2 === currentPath },
+                          ]}
                           href={href2}
                         >
                           {t(`navigation.${text2}`)}
@@ -140,7 +146,10 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
               ) : (
                 <a
                   aria-label={t(`navigation.${text}`)}
-                  class:list={[ 'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap', { 'aw-link-active': href === currentPath } ]}
+                  class:list={[
+                    'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap',
+                    { 'aw-link-active': href === currentPath },
+                  ]}
                   href={href}
                 >
                   {t(`navigation.${text}`)}
@@ -152,7 +161,10 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
       </ul>
     </nav>
     <div
-      class:list={[ { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' }, 'md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 md:p-0 md:justify-self-end' ]}
+      class:list={[
+        { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
+        'md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 md:p-0 md:justify-self-end',
+      ]}
     >
       <div class="items-center flex justify-between w-full md:w-auto">
         <div class="header-icons flex items-center gap-2 md:gap-4" style="position:relative;">

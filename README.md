@@ -27,9 +27,11 @@ tsx scripts/generate_translations.ts tasks.json
 ### Tests
 
 Run built-in tests with Node.js:
+
 ```bash
 node --test
 ```
+
 # 🚀 Seez – Constructive Chaos
 
 Built upon the solid foundation of **AstroWind**, this repository is my personal container for constructive chaos—a place where I combine my ideas, projects, and thoughts into one evolving space.

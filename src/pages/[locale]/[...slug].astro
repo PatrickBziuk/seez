@@ -8,36 +8,36 @@ export async function getStaticPaths() {
     getCollection('projects'),
     getCollection('lab'),
     getCollection('life'),
-    getCollection('pages')
+    getCollection('pages'),
   ]);
-  
+
   const paths = [];
-  
+
   for (const collection of allContent) {
     for (const entry of collection) {
       // Skip drafts if the field exists and is true
       if (entry.data.draft === true) continue;
-      
+
       // Extract slug from entry id (filename without extension)
       const entrySlug = entry.id.replace(/\.(md|mdx)$/, '');
-      
+
       paths.push({
         params: {
           locale: entry.data.language,
-          slug: `${entry.collection}/${entrySlug}`
+          slug: `${entry.collection}/${entrySlug}`,
         },
-        props: { 
+        props: {
           entry,
           entryData: {
             collection: entry.collection,
             slug: entrySlug,
-            id: entry.id
-          }
-        }
+            id: entry.id,
+          },
+        },
       });
     }
   }
-  
+
   return paths;
 }
 

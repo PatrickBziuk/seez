@@ -1,0 +1,15 @@
+[
+  {
+    "id": "e9248dda-930a-4e8f-b42b-492353279c87",
+    "timestamp": "2025-08-05T11:02:08.769Z",
+    "operation": "translation",
+    "model": "gpt-4o-mini",
+    "promptTokens": 1000,
+    "completionTokens": 500,
+    "totalTokens": 1500,
+    "fileProcessed": "test-file.md",
+    "language": "de",
+    "estimatedCost": 0.00045,
+    "co2Equivalent": 0.75
+  }
+]

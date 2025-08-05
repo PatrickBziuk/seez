@@ -31,7 +31,7 @@ export function isGlobalTranslationPaused(): boolean {
   if (existsSync('TRANSLATION_PAUSE')) {
     return true;
   }
-  
+
   // Check override configuration
   const config = loadOverrideConfig();
   return config?.global_pause || false;
@@ -47,29 +47,30 @@ export function shouldSkipTranslation(translationKey: string, filePath?: string)
   if (isGlobalTranslationPaused()) {
     return true;
   }
-  
+
   const config = loadOverrideConfig();
   if (!config) return false;
-  
+
   // Check specific translation keys
   if (config.skip_translation_keys.includes(translationKey)) {
     return true;
   }
-  
+
   // Check specific file paths
-  if (filePath && config.skip_file_paths.some(skipPath => 
-    filePath.includes(skipPath) || filePath.endsWith(skipPath)
-  )) {
+  if (
+    filePath &&
+    config.skip_file_paths.some((skipPath) => filePath.includes(skipPath) || filePath.endsWith(skipPath))
+  ) {
     return true;
   }
-  
+
   // Check temporary overrides
   const now = new Date();
-  const activeOverride = config.temporary_overrides.find(override => {
+  const activeOverride = config.temporary_overrides.find((override) => {
     const expires = new Date(override.expires);
     return override.translation_key === translationKey && expires > now;
   });
-  
+
   return !!activeOverride;
 }
 
@@ -79,11 +80,11 @@ export function shouldSkipTranslation(translationKey: string, filePath?: string)
  */
 function loadOverrideConfig(): TranslationOverrideConfig | null {
   const configPath = 'translation.override.yml';
-  
+
   if (!existsSync(configPath)) {
     return null;
   }
-  
+
   try {
     const content = readFileSync(configPath, 'utf-8');
     return parseYaml(content) as TranslationOverrideConfig;
@@ -103,29 +104,30 @@ export function getSkipReason(translationKey: string, filePath?: string): string
   if (isGlobalTranslationPaused()) {
     return 'Global translation pause is active';
   }
-  
+
   const config = loadOverrideConfig();
   if (!config) return null;
-  
+
   if (config.skip_translation_keys.includes(translationKey)) {
     return `Translation key '${translationKey}' is in skip list`;
   }
-  
-  if (filePath && config.skip_file_paths.some(skipPath => 
-    filePath.includes(skipPath) || filePath.endsWith(skipPath)
-  )) {
+
+  if (
+    filePath &&
+    config.skip_file_paths.some((skipPath) => filePath.includes(skipPath) || filePath.endsWith(skipPath))
+  ) {
     return `File path '${filePath}' is in skip list`;
   }
-  
+
   const now = new Date();
-  const activeOverride = config.temporary_overrides.find(override => {
+  const activeOverride = config.temporary_overrides.find((override) => {
     const expires = new Date(override.expires);
     return override.translation_key === translationKey && expires > now;
   });
-  
+
   if (activeOverride) {
     return activeOverride.reason || `Temporary override until ${activeOverride.expires}`;
   }
-  
+
   return null;
 }

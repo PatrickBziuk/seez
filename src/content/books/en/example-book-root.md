@@ -16,4 +16,5 @@ status:
   authoring: Human
   translation: Human
 ---
+
 A classic book on software craftsmanship and pragmatic thinking for developers.

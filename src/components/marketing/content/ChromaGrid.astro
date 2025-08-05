@@ -10,12 +10,17 @@ type Song = {
 };
 const { children, songs = [] } = Astro.props as { children?: unknown; songs?: Song[] };
 ---
+
 <div id="chroma-grid" class="relative w-full flex flex-wrap justify-center items-start gap-6">
-  {Array.isArray(songs) && songs.length > 0
-    ? songs.map((song: Song, idx: number) => (
-        <MediaPlayer {...song} key={song.src || idx} />
-      ))
-    : (children ? children : <slot />)}
+  {
+    Array.isArray(songs) && songs.length > 0 ? (
+      songs.map((song: Song, idx: number) => <MediaPlayer {...song} key={song.src || idx} />)
+    ) : children ? (
+      children
+    ) : (
+      <slot />
+    )
+  }
   <div id="chroma-spotlight" class="absolute inset-0 pointer-events-none z-30"></div>
 </div>
 

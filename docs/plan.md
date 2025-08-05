@@ -1,6 +1,7 @@
 # Plan: Content Metadata & UI Badges
 
 ## Goals
+
 - Extend content metadata for language, timestamp, and AI/Human status
 - Display metadata at top of content pages with badges
 - Reuse existing components where possible
@@ -9,6 +10,7 @@
 - Integrate multilanguage routing, locale-aware frontmatter, dynamic translation loading, UI string replacement, and fallback handling
 
 ## Steps
+
 1. Analyze repo for reusable components/layouts
 2. Design metadata schema and badge UI
 3. Document design and implementation

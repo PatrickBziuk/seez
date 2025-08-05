@@ -28,12 +28,20 @@ const translations = await getTranslations(currentLanguage);
   </div>
   <nav>
     <ul>
-      {headerData.links.map((item: { text: string; href: string }) => (
-        <li><a href={item.href}>{translations.navigation[item.text] || item.text}</a></li>
-      ))}
+      {
+        headerData.links.map((item: { text: string; href: string }) => (
+          <li>
+            <a href={item.href}>{translations.navigation[item.text] || item.text}</a>
+          </li>
+        ))
+      }
     </ul>
   </nav>
   <div class="language-switcher">
-    <LanguageSwitcher currentLanguage={currentLanguage} availableLanguages={availableLanguages} currentPath={currentPath} />
+    <LanguageSwitcher
+      currentLanguage={currentLanguage}
+      availableLanguages={availableLanguages}
+      currentPath={currentPath}
+    />
   </div>
 </header>

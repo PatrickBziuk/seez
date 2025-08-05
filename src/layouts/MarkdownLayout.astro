@@ -11,6 +11,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import SEO from '~/components/core/SEO.astro';
 import ContentMetadata from '~/components/content/metadata/ContentMetadata.astro';
 import ContentFallbackNotice from '~/components/content/metadata/ContentFallbackNotice.astro';
+import GitHubSourceButton from '~/components/common/GitHubSourceButton.astro';
 import { getTranslations, detectLanguage } from '~/utils/i18n';
 
 import type { MetaData, Status } from '~/types';
@@ -80,21 +81,30 @@ const metadata: MetaData = {
     modifiedDate={modifiedDate}
     type="article"
   />
-  
+
   <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
-    <h1 class="font-bold font-heading text-4xl md:text-5xl leading-tighter tracking-tighter">{frontmatter.title}</h1>
-    <ContentMetadata 
-      language={frontmatter.language} 
-      timestamp={frontmatter.timestamp} 
-      status={frontmatter.status} 
-      tags={frontmatter.tags} 
+    <div class="flex justify-between items-start mb-6">
+      <h1 class="font-bold font-heading text-4xl md:text-5xl leading-tighter tracking-tighter flex-1">
+        {frontmatter.title}
+      </h1>
+      <div class="ml-4 mt-2">
+        <GitHubSourceButton filePath={filePath} locale={currentLanguage} />
+      </div>
+    </div>
+    <ContentMetadata
+      language={frontmatter.language}
+      timestamp={frontmatter.timestamp}
+      status={frontmatter.status}
+      tags={frontmatter.tags}
       ai_tldr={frontmatter.ai_tldr}
-      translations={translations} 
-      locale={currentLanguage} 
+      translations={translations}
+      locale={currentLanguage}
     />
-    {frontmatter.language && frontmatter.language !== currentLanguage && (
-      <ContentFallbackNotice originalLanguage={frontmatter.language} currentLanguage={currentLanguage} />
-    )}
+    {
+      frontmatter.language && frontmatter.language !== currentLanguage && (
+        <ContentFallbackNotice originalLanguage={frontmatter.language} currentLanguage={currentLanguage} />
+      )
+    }
     <div
       class="mx-auto prose prose-lg max-w-4xl dark:prose-invert dark:prose-headings:text-slate-300 prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8"
     >

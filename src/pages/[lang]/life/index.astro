@@ -5,7 +5,7 @@ import { SUPPORTED_LANGUAGES, getTranslations } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 
 export const getStaticPaths = () => {
-  return SUPPORTED_LANGUAGES.map(lang => ({
+  return SUPPORTED_LANGUAGES.map((lang) => ({
     params: { lang },
   }));
 };
@@ -16,10 +16,9 @@ const { lang } = Astro.params as { lang: SupportedLanguage };
 const t = await getTranslations(lang);
 
 // Get all life content and filter by language
-const allLife = await getCollection('life') as CollectionEntry<'life'>[];
-const filteredLife = allLife.filter(item => 
-  !item.data.draft && 
-  (item.data.language === lang || (!item.data.language && lang === 'en'))
+const allLife = (await getCollection('life')) as CollectionEntry<'life'>[];
+const filteredLife = allLife.filter(
+  (item) => !item.data.draft && (item.data.language === lang || (!item.data.language && lang === 'en'))
 );
 
 // Helper function to extract clean slug from content ID
@@ -42,34 +41,36 @@ const metadata = {
       </h1>
       <p class="text-xl text-muted dark:text-slate-400">Personal thoughts and life experiences</p>
     </header>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {filteredLife.map(item => (
-        <a 
-          href={`/${lang}/life/${getCleanSlug(item.id)}`} 
-          class="block p-6 rounded-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition-all duration-200"
-        >
-          <h2 class="text-xl font-semibold mb-2 font-heading dark:text-gray-200">{item.data.title}</h2>
-          {item.data.subtitle && (
-            <p class="text-muted dark:text-slate-400 mb-3">{item.data.subtitle}</p>
-          )}
-          {item.data.tags && item.data.tags.length > 0 && (
-            <div class="flex flex-wrap gap-2">
-              {item.data.tags.map(tag => (
-                <span class="inline-block bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs px-2 py-1 rounded">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </a>
-      ))}
+      {
+        filteredLife.map((item) => (
+          <a
+            href={`/${lang}/life/${getCleanSlug(item.id)}`}
+            class="block p-6 rounded-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition-all duration-200"
+          >
+            <h2 class="text-xl font-semibold mb-2 font-heading dark:text-gray-200">{item.data.title}</h2>
+            {item.data.subtitle && <p class="text-muted dark:text-slate-400 mb-3">{item.data.subtitle}</p>}
+            {item.data.tags && item.data.tags.length > 0 && (
+              <div class="flex flex-wrap gap-2">
+                {item.data.tags.map((tag) => (
+                  <span class="inline-block bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs px-2 py-1 rounded">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </a>
+        ))
+      }
     </div>
-    
-    {filteredLife.length === 0 && (
-      <div class="text-center py-12">
-        <p class="text-muted dark:text-slate-400">No content available in this language yet.</p>
-      </div>
-    )}
+
+    {
+      filteredLife.length === 0 && (
+        <div class="text-center py-12">
+          <p class="text-muted dark:text-slate-400">No content available in this language yet.</p>
+        </div>
+      )
+    }
   </section>
 </Layout>

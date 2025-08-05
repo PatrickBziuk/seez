@@ -13,6 +13,7 @@ This plan transforms the current client-side language detection approach into a 
 ## Phase 1: Foundation - Server-Side Language Detection
 
 ### Objectives
+
 - Implement server-side language negotiation
 - Replace client-side redirects with proper routing
 - Establish basic language preference persistence
@@ -20,6 +21,7 @@ This plan transforms the current client-side language detection approach into a 
 ### Deliverables
 
 #### 1.1 Astro Middleware Implementation
+
 **File:** `src/middleware/language-detection.ts`
 
 ```typescript
@@ -30,24 +32,24 @@ const DEFAULT_LANGUAGE = 'en';
 
 export const onRequest: MiddlewareResponseHandler = async (context, next) => {
   const { url, request, redirect, cookies } = context;
-  
+
   // Skip for API routes and assets
   if (url.pathname.startsWith('/api/') || url.pathname.includes('.')) {
     return next();
   }
-  
+
   // Root path language detection
   if (url.pathname === '/') {
     const preferredLang = determineLanguage(
       request.headers.get('accept-language'),
       cookies.get('preferred_lang')?.value
     );
-    
+
     if (preferredLang) {
       cookies.set('preferred_lang', preferredLang, {
         maxAge: 30 * 24 * 60 * 60, // 30 days
         sameSite: 'lax',
-        path: '/'
+        path: '/',
       });
       return redirect(`/${preferredLang}/`, 302);
     } else {
@@ -55,7 +57,7 @@ export const onRequest: MiddlewareResponseHandler = async (context, next) => {
       return next();
     }
   }
-  
+
   return next();
 };
 
@@ -64,7 +66,7 @@ function determineLanguage(acceptLanguage: string | null, cookiePreference?: str
   if (cookiePreference && SUPPORTED_LANGUAGES.includes(cookiePreference as any)) {
     return cookiePreference;
   }
-  
+
   // Parse Accept-Language header
   if (acceptLanguage) {
     const languages = parseAcceptLanguage(acceptLanguage);
@@ -75,14 +77,14 @@ function determineLanguage(acceptLanguage: string | null, cookiePreference?: str
       }
     }
   }
-  
+
   return null; // Show language selection page
 }
 
 function parseAcceptLanguage(header: string): string[] {
   return header
     .split(',')
-    .map(lang => lang.split(';')[0].trim())
+    .map((lang) => lang.split(';')[0].trim())
     .sort((a, b) => {
       const qA = parseFloat(header.match(new RegExp(`${a};q=([0-9.]+)`))?.[1] || '1');
       const qB = parseFloat(header.match(new RegExp(`${b};q=([0-9.]+)`))?.[1] || '1');
@@ -92,6 +94,7 @@ function parseAcceptLanguage(header: string): string[] {
 ```
 
 #### 1.2 Language Selection Page
+
 **File:** `src/pages/index.astro`
 
 ```astro
@@ -107,7 +110,7 @@ const title = 'Choose Language / Sprache wählen';
     <div class="container">
       <h1>Welcome to Seez / Willkommen bei Seez</h1>
       <p>Please choose your preferred language / Bitte wählen Sie Ihre bevorzugte Sprache:</p>
-      
+
       <div class="language-options">
         <a href="/de/" class="language-link" data-lang="de">
           <span class="flag">🇩🇪</span>
@@ -118,20 +121,20 @@ const title = 'Choose Language / Sprache wählen';
           <span class="text">English</span>
         </a>
       </div>
-      
+
       <label class="remember-choice">
-        <input type="checkbox" id="remember" checked>
+        <input type="checkbox" id="remember" checked />
         Remember my choice / Auswahl merken
       </label>
     </div>
   </main>
 
   <script>
-    document.querySelectorAll('.language-link').forEach(link => {
+    document.querySelectorAll('.language-link').forEach((link) => {
       link.addEventListener('click', (e) => {
         if (document.getElementById('remember')?.checked) {
           const lang = e.currentTarget.getAttribute('data-lang');
-          document.cookie = `preferred_lang=${lang}; max-age=${30*24*60*60}; path=/; samesite=lax`;
+          document.cookie = `preferred_lang=${lang}; max-age=${30 * 24 * 60 * 60}; path=/; samesite=lax`;
         }
       });
     });
@@ -145,14 +148,14 @@ const title = 'Choose Language / Sprache wählen';
       justify-content: center;
       text-align: center;
     }
-    
+
     .language-options {
       display: flex;
       gap: 2rem;
       margin: 2rem 0;
       justify-content: center;
     }
-    
+
     .language-link {
       display: flex;
       flex-direction: column;
@@ -164,22 +167,22 @@ const title = 'Choose Language / Sprache wählen';
       color: inherit;
       transition: all 0.2s ease;
     }
-    
+
     .language-link:hover {
       border-color: #007acc;
       transform: translateY(-2px);
     }
-    
+
     .flag {
       font-size: 3rem;
       margin-bottom: 0.5rem;
     }
-    
+
     .text {
       font-size: 1.2rem;
       font-weight: 600;
     }
-    
+
     .remember-choice {
       display: flex;
       align-items: center;
@@ -192,6 +195,7 @@ const title = 'Choose Language / Sprache wählen';
 ```
 
 #### 1.3 Configuration Updates
+
 **File:** `astro.config.ts`
 
 ```typescript
@@ -201,13 +205,14 @@ export default defineConfig({
     defaultLocale: 'en',
     locales: ['en', 'de'],
     routing: {
-      prefixDefaultLocale: true
-    }
-  }
+      prefixDefaultLocale: true,
+    },
+  },
 });
 ```
 
 ### Acceptance Criteria
+
 - [ ] Requests with `Accept-Language: de` redirect to `/de/`
 - [ ] Requests with `Accept-Language: en` redirect to `/en/`
 - [ ] Ambiguous language headers show selection page
@@ -220,6 +225,7 @@ export default defineConfig({
 ## Phase 2: Content Structure & Routing
 
 ### Objectives
+
 - Establish proper multilingual routing
 - Implement content collection schema
 - Create language-aware navigation
@@ -227,6 +233,7 @@ export default defineConfig({
 ### Deliverables
 
 #### 2.1 Content Collections Schema
+
 **File:** `src/content/config.ts`
 
 ```typescript
@@ -236,14 +243,22 @@ const sharedSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   slug: z.string().optional(),
-  publishDate: z.string().transform(s => new Date(s)).optional(),
-  modifiedDate: z.string().transform(s => new Date(s)).optional(),
+  publishDate: z
+    .string()
+    .transform((s) => new Date(s))
+    .optional(),
+  modifiedDate: z
+    .string()
+    .transform((s) => new Date(s))
+    .optional(),
   tags: z.array(z.string()).default([]),
   language: z.enum(['en', 'de']).default('en'),
-  status: z.object({
-    authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
-    translation: z.enum(['Human', 'AI', 'AI+Human']).optional()
-  }).optional()
+  status: z
+    .object({
+      authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
+      translation: z.enum(['Human', 'AI', 'AI+Human']).optional(),
+    })
+    .optional(),
 });
 
 export const collections = {
@@ -251,11 +266,12 @@ export const collections = {
   projects: defineCollection({ schema: sharedSchema }),
   lab: defineCollection({ schema: sharedSchema }),
   life: defineCollection({ schema: sharedSchema }),
-  pages: defineCollection({ schema: sharedSchema })
+  pages: defineCollection({ schema: sharedSchema }),
 };
 ```
 
 #### 2.2 Dynamic Routing Setup
+
 **File:** `src/pages/[locale]/[...slug].astro`
 
 ```astro
@@ -269,23 +285,23 @@ export async function getStaticPaths() {
     getCollection('projects'),
     getCollection('lab'),
     getCollection('life'),
-    getCollection('pages')
+    getCollection('pages'),
   ]);
-  
+
   const paths = [];
-  
+
   for (const collection of allContent) {
     for (const entry of collection) {
       paths.push({
         params: {
           locale: entry.data.language,
-          slug: `${entry.collection}/${entry.slug}`
+          slug: `${entry.collection}/${entry.slug}`,
         },
-        props: { entry }
+        props: { entry },
       });
     }
   }
-  
+
   return paths;
 }
 
@@ -299,6 +315,7 @@ const { Content } = await entry.render();
 ```
 
 ### Acceptance Criteria
+
 - [ ] All content accessible via `/[locale]/[collection]/[slug]` pattern
 - [ ] Content collections properly typed and validated
 - [ ] Language-specific content correctly routed
@@ -309,6 +326,7 @@ const { Content } = await entry.render();
 ## Phase 3: SEO Optimization & Metadata
 
 ### Objectives
+
 - Implement comprehensive SEO metadata
 - Add hreflang support
 - Create automated canonical URL generation
@@ -317,6 +335,7 @@ const { Content } = await entry.render();
 ### Deliverables
 
 #### 3.1 Central SEO Component
+
 **File:** `src/components/core/SEO.astro`
 
 ```astro
@@ -340,7 +359,7 @@ const {
   alternateLocales = [],
   publishDate,
   modifiedDate,
-  type = 'website'
+  type = 'website',
 } = Astro.props;
 
 const site = Astro.site?.href || 'https://seez.eu';
@@ -354,9 +373,7 @@ const fullTitle = title.includes('Seez') ? title : `${title} | Seez`;
 <link rel="canonical" href={canonicalUrl} />
 
 <!-- Language alternates -->
-{alternateLocales.map(({ locale: altLocale, url }) => (
-  <link rel="alternate" hreflang={altLocale} href={url} />
-))}
+{alternateLocales.map(({ locale: altLocale, url }) => <link rel="alternate" hreflang={altLocale} href={url} />)}
 <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
 
 <!-- Open Graph -->
@@ -367,30 +384,30 @@ const fullTitle = title.includes('Seez') ? title : `${title} | Seez`;
 <meta property="og:locale" content={locale} />
 
 <!-- Article-specific metadata -->
-{publishDate && (
-  <meta property="article:published_time" content={publishDate.toISOString()} />
-)}
-{modifiedDate && (
-  <meta property="article:modified_time" content={modifiedDate.toISOString()} />
-)}
+{publishDate && <meta property="article:published_time" content={publishDate.toISOString()} />}
+{modifiedDate && <meta property="article:modified_time" content={modifiedDate.toISOString()} />}
 
 <!-- JSON-LD Structured Data -->
-<script type="application/ld+json" set:html={JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": type === 'article' ? 'Article' : 'WebSite',
-  headline: title,
-  description,
-  url: canonicalUrl,
-  datePublished: publishDate?.toISOString(),
-  dateModified: modifiedDate?.toISOString() || publishDate?.toISOString(),
-  author: {
-    "@type": "Person",
-    name: "Patrick seez"
-  }
-})} />
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': type === 'article' ? 'Article' : 'WebSite',
+    headline: title,
+    description,
+    url: canonicalUrl,
+    datePublished: publishDate?.toISOString(),
+    dateModified: modifiedDate?.toISOString() || publishDate?.toISOString(),
+    author: {
+      '@type': 'Person',
+      name: 'Patrick seez',
+    },
+  })}
+/>
 ```
 
 #### 3.2 Git Metadata Extraction Script
+
 **File:** `scripts/extract-git-metadata.ts`
 
 ```typescript
@@ -409,36 +426,32 @@ interface GitMetadata {
 async function extractGitMetadata() {
   const contentFiles = glob.sync('src/content/**/*.{md,mdx}');
   const metadata: GitMetadata = {};
-  
+
   for (const file of contentFiles) {
     try {
       // Get first commit date (publish date)
-      const firstCommit = execSync(
-        `git log --reverse --format=%cI --follow -- "${file}" | head -n1`,
-        { encoding: 'utf8' }
-      ).trim();
-      
+      const firstCommit = execSync(`git log --reverse --format=%cI --follow -- "${file}" | head -n1`, {
+        encoding: 'utf8',
+      }).trim();
+
       // Get last commit date (modified date)
-      const lastCommit = execSync(
-        `git log -1 --format=%cI -- "${file}"`,
-        { encoding: 'utf8' }
-      ).trim();
-      
+      const lastCommit = execSync(`git log -1 --format=%cI -- "${file}"`, { encoding: 'utf8' }).trim();
+
       if (firstCommit && lastCommit) {
         metadata[file] = {
           publishDate: firstCommit,
-          modifiedDate: lastCommit
+          modifiedDate: lastCommit,
         };
       }
     } catch (error) {
       console.warn(`Could not extract git metadata for ${file}:`, error);
     }
   }
-  
+
   // Ensure the directory exists
   const outputPath = 'src/generated/git-metadata.json';
   mkdirSync(dirname(outputPath), { recursive: true });
-  
+
   writeFileSync(outputPath, JSON.stringify(metadata, null, 2));
   console.log(`Extracted metadata for ${Object.keys(metadata).length} files`);
 }
@@ -447,6 +460,7 @@ extractGitMetadata().catch(console.error);
 ```
 
 #### 3.3 Layout Enhancement
+
 **File:** `src/layouts/MarkdownLayout.astro`
 
 ```astro
@@ -490,12 +504,13 @@ if (frontmatter.language === 'de') {
     modifiedDate={modifiedDate}
     type="article"
   />
-  
+
   <slot />
 </BaseLayout>
 ```
 
 ### Acceptance Criteria
+
 - [ ] All pages have proper canonical URLs
 - [ ] hreflang tags correctly reference language variants
 - [ ] Git-based publish/modified dates are extracted and used
@@ -507,6 +522,7 @@ if (frontmatter.language === 'de') {
 ## Phase 4: Content Management & Internal Linking
 
 ### Objectives
+
 - Implement automated slug generation and validation
 - Create robust internal linking system
 - Establish evergreen content structure
@@ -515,6 +531,7 @@ if (frontmatter.language === 'de') {
 ### Deliverables
 
 #### 4.1 Slug Utility Functions
+
 **File:** `src/utils/content.ts`
 
 ```typescript
@@ -536,7 +553,7 @@ export function generateSlug(title: string, id?: string): string {
 export function validateUniquenesss(slugs: string[]): string[] {
   const seen = new Set();
   const duplicates = [];
-  
+
   for (const slug of slugs) {
     if (seen.has(slug)) {
       duplicates.push(slug);
@@ -544,12 +561,13 @@ export function validateUniquenesss(slugs: string[]): string[] {
       seen.add(slug);
     }
   }
-  
+
   return duplicates;
 }
 ```
 
 #### 4.2 Content Validation Script
+
 **File:** `scripts/validate-content.ts`
 
 ```typescript
@@ -560,45 +578,45 @@ async function validateContent() {
   const collections = ['books', 'projects', 'lab', 'life', 'pages'];
   const allSlugs: string[] = [];
   const issues: string[] = [];
-  
+
   for (const collectionName of collections) {
     try {
       const entries = await getCollection(collectionName);
-      
+
       for (const entry of entries) {
         const { data, slug, id } = entry;
-        
+
         // Check for required fields
         if (!data.title) {
           issues.push(`${collectionName}/${id}: Missing title`);
         }
-        
+
         if (!data.description) {
           issues.push(`${collectionName}/${id}: Missing description`);
         }
-        
+
         // Validate slug format
         const expectedSlug = normalizeSlug(data.slug || data.title);
         if (slug !== expectedSlug) {
           issues.push(`${collectionName}/${id}: Slug mismatch. Expected: ${expectedSlug}, Got: ${slug}`);
         }
-        
+
         allSlugs.push(`${data.language}/${collectionName}/${slug}`);
       }
     } catch (error) {
       console.warn(`Could not validate collection ${collectionName}:`, error);
     }
   }
-  
+
   // Check for duplicate slugs
   const duplicates = validateUniquenesss(allSlugs);
   if (duplicates.length > 0) {
     issues.push(`Duplicate slugs found: ${duplicates.join(', ')}`);
   }
-  
+
   if (issues.length > 0) {
     console.error('Content validation failed:');
-    issues.forEach(issue => console.error(`  - ${issue}`));
+    issues.forEach((issue) => console.error(`  - ${issue}`));
     process.exit(1);
   } else {
     console.log('✅ Content validation passed');
@@ -609,6 +627,7 @@ validateContent().catch(console.error);
 ```
 
 #### 4.3 Related Content Component
+
 **File:** `src/components/content/RelatedContent.astro`
 
 ```astro
@@ -625,38 +644,38 @@ const { currentEntry, maxItems = 3 } = Astro.props;
 // Find related content based on tags and collection
 const allContent = await getCollection(currentEntry.collection);
 const related = allContent
-  .filter(entry => entry.id !== currentEntry.id && entry.data.language === currentEntry.data.language)
-  .map(entry => ({
+  .filter((entry) => entry.id !== currentEntry.id && entry.data.language === currentEntry.data.language)
+  .map((entry) => ({
     entry,
-    score: calculateRelatedness(currentEntry.data.tags, entry.data.tags)
+    score: calculateRelatedness(currentEntry.data.tags, entry.data.tags),
   }))
-  .filter(item => item.score > 0)
+  .filter((item) => item.score > 0)
   .sort((a, b) => b.score - a.score)
   .slice(0, maxItems);
 
 function calculateRelatedness(tags1: string[], tags2: string[]): number {
   const set1 = new Set(tags1);
   const set2 = new Set(tags2);
-  const intersection = new Set([...set1].filter(x => set2.has(x)));
+  const intersection = new Set([...set1].filter((x) => set2.has(x)));
   return intersection.size;
 }
 ---
 
-{related.length > 0 && (
-  <aside class="related-content">
-    <h3>Related Content</h3>
-    <ul>
-      {related.map(({ entry }) => (
-        <li>
-          <a href={`/${entry.data.language}/${entry.collection}/${entry.slug}/`}>
-            {entry.data.title}
-          </a>
-          <p class="related-description">{entry.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  </aside>
-)}
+{
+  related.length > 0 && (
+    <aside class="related-content">
+      <h3>Related Content</h3>
+      <ul>
+        {related.map(({ entry }) => (
+          <li>
+            <a href={`/${entry.data.language}/${entry.collection}/${entry.slug}/`}>{entry.data.title}</a>
+            <p class="related-description">{entry.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
 
 <style>
   .related-content {
@@ -666,32 +685,32 @@ function calculateRelatedness(tags1: string[], tags2: string[]): number {
     border-radius: 8px;
     background-color: #f9f9f9;
   }
-  
+
   .related-content h3 {
     margin-top: 0;
     margin-bottom: 1rem;
   }
-  
+
   .related-content ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  
+
   .related-content li {
     margin-bottom: 1rem;
   }
-  
+
   .related-content a {
     font-weight: 600;
     text-decoration: none;
     color: #007acc;
   }
-  
+
   .related-content a:hover {
     text-decoration: underline;
   }
-  
+
   .related-description {
     margin: 0.25rem 0 0 0;
     font-size: 0.9rem;
@@ -701,6 +720,7 @@ function calculateRelatedness(tags1: string[], tags2: string[]): number {
 ```
 
 ### Acceptance Criteria
+
 - [ ] All content has normalized, validated slugs
 - [ ] Related content suggestions work based on tags
 - [ ] Content validation runs in CI/CD pipeline
@@ -711,6 +731,7 @@ function calculateRelatedness(tags1: string[], tags2: string[]): number {
 ## Phase 5: Deployment & Monitoring
 
 ### Objectives
+
 - Remove legacy client-side redirect code
 - Implement feature flags for gradual rollout
 - Set up monitoring and analytics
@@ -719,6 +740,7 @@ function calculateRelatedness(tags1: string[], tags2: string[]): number {
 ### Deliverables
 
 #### 5.1 GitHub Actions Workflow
+
 **File:** `.github/workflows/release.yml`
 
 ```yaml
@@ -734,32 +756,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Need full history for git metadata
-      
+          fetch-depth: 0 # Need full history for git metadata
+
       - uses: pnpm/action-setup@v2
         with:
           version: latest
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'
-      
+
       - name: Install dependencies
         run: pnpm install
-      
+
       - name: Extract Git metadata
         run: pnpm run extract:git-metadata
-      
+
       - name: Validate content
         run: pnpm run validate:content
-      
+
       - name: Sync Astro content
         run: pnpm astro sync
-      
+
       - name: Build site
         run: pnpm build
-      
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -769,6 +791,7 @@ jobs:
 ```
 
 #### 5.2 Feature Flag Implementation
+
 **File:** `src/utils/features.ts`
 
 ```typescript
@@ -776,7 +799,7 @@ export const FEATURE_FLAGS = {
   SERVER_SIDE_LANGUAGE_DETECTION: true,
   LEGACY_CLIENT_REDIRECT: false,
   ENHANCED_SEO: true,
-  GIT_METADATA: true
+  GIT_METADATA: true,
 } as const;
 
 export function isFeatureEnabled(flag: keyof typeof FEATURE_FLAGS): boolean {
@@ -785,6 +808,7 @@ export function isFeatureEnabled(flag: keyof typeof FEATURE_FLAGS): boolean {
 ```
 
 #### 5.3 Analytics Integration
+
 **File:** `src/components/core/Analytics.astro`
 
 ```astro
@@ -798,13 +822,14 @@ const { event, language, source } = Astro.props;
     gtag('event', 'language_selection', {
       method: source, // 'auto_detected', 'manual_selection', 'cookie'
       language: language,
-      page_path: window.location.pathname
+      page_path: window.location.pathname,
     });
   }
 </script>
 ```
 
 #### 5.4 Package.json Scripts
+
 **File:** `package.json` (additions)
 
 ```json
@@ -819,6 +844,7 @@ const { event, language, source } = Astro.props;
 ```
 
 ### Acceptance Criteria
+
 - [ ] Legacy client-side redirect code is removed
 - [ ] Feature flags allow controlled rollout
 - [ ] Analytics track language detection events
@@ -849,6 +875,7 @@ const { event, language, source } = Astro.props;
 ### Testing Checklist
 
 #### Automated Tests
+
 - [ ] Unit tests for language detection logic
 - [ ] Integration tests for routing behavior
 - [ ] SEO metadata validation
@@ -856,6 +883,7 @@ const { event, language, source } = Astro.props;
 - [ ] Slug uniqueness verification
 
 #### Manual Testing Scenarios
+
 - [ ] Different Accept-Language headers
 - [ ] Cookie preference persistence
 - [ ] No-JavaScript functionality
@@ -864,6 +892,7 @@ const { event, language, source } = Astro.props;
 - [ ] Mobile device compatibility
 
 #### Performance Monitoring
+
 - [ ] Core Web Vitals tracking
 - [ ] Language detection timing
 - [ ] Redirect performance impact
@@ -874,16 +903,19 @@ const { event, language, source } = Astro.props;
 ## Success Metrics
 
 ### User Experience
+
 - Reduction in language-related bounce rate
 - Increased engagement on correct language content
 - Decreased time to meaningful content
 
 ### Technical
+
 - Elimination of client-side redirect delays
 - Improved Core Web Vitals scores
 - Reduced server response time for language detection
 
 ### SEO
+
 - Proper indexing of both language variants
 - No duplicate content warnings
 - Improved search visibility for non-English content

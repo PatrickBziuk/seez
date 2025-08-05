@@ -27,8 +27,18 @@ export const getFooterData = (locale: SupportedLanguage = 'en') => ({
       ],
     },
   ],
-  secondaryLinks: [],
-  socialLinks: [],
+  secondaryLinks: [
+    { text: 'privacy', href: getLocalizedUrl('/legal/privacy', locale) }, // legal.privacy
+    { text: 'impressum', href: getLocalizedUrl('/legal/impressum', locale) }, // legal.impressum
+  ],
+  socialLinks: [
+    {
+      text: 'github',
+      href: 'https://github.com/PatrickBziuk/seez',
+      icon: 'tabler:brand-github',
+      ariaLabel: 'github',
+    },
+  ],
   footNote: '',
   locale,
 });

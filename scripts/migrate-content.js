@@ -52,8 +52,10 @@ function validateFrontmatter(data) {
   if (!data.title) errors.push('Missing title');
   if (!data.tags || !Array.isArray(data.tags)) errors.push('Missing or invalid tags');
   if (!data.language || !['en', 'de'].includes(data.language)) errors.push('Invalid language');
-  if (data.status && data.status.authoring && !['Human', 'AI', 'AI+Human'].includes(data.status.authoring)) errors.push('Invalid authoring status');
-  if (data.status && data.status.translation && !['Human', 'AI', 'AI+Human'].includes(data.status.translation)) errors.push('Invalid translation status');
+  if (data.status && data.status.authoring && !['Human', 'AI', 'AI+Human'].includes(data.status.authoring))
+    errors.push('Invalid authoring status');
+  if (data.status && data.status.translation && !['Human', 'AI', 'AI+Human'].includes(data.status.translation))
+    errors.push('Invalid translation status');
   return errors;
 }
 
@@ -85,8 +87,10 @@ function migrateFile(filePath, dryRun = false) {
 
 function migrateCollection(collection, dryRun = false) {
   const dir = path.join(CONTENT_DIR, collection);
-  const files = fs.readdirSync(dir).filter(f => f.endsWith('.md') || f.endsWith('.mdx'));
-  let processed = 0, updated = 0, errors = [];
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md') || f.endsWith('.mdx'));
+  let processed = 0,
+    updated = 0,
+    errors = [];
   for (const file of files) {
     processed++;
     const result = migrateFile(path.join(dir, file), dryRun);
@@ -96,7 +100,7 @@ function migrateCollection(collection, dryRun = false) {
   log(`Collection ${collection}: ${updated}/${processed} files processed.`, 'green');
   if (errors.length) {
     log(`Errors in ${collection}:`, 'red');
-    errors.forEach(e => log(`${e.file}: ${e.errors.join(', ')}`, 'red'));
+    errors.forEach((e) => log(`${e.file}: ${e.errors.join(', ')}`, 'red'));
   }
   return { processed, updated, errors };
 }
@@ -104,7 +108,9 @@ function migrateCollection(collection, dryRun = false) {
 function migrateContent(dryRun = false) {
   log('🚀 Starting content migration...', 'blue');
   if (!dryRun) backupContent();
-  let totalProcessed = 0, totalUpdated = 0, allErrors = [];
+  let totalProcessed = 0,
+    totalUpdated = 0,
+    allErrors = [];
   for (const collection of COLLECTIONS) {
     const { processed, updated, errors } = migrateCollection(collection, dryRun);
     totalProcessed += processed;
@@ -114,7 +120,7 @@ function migrateContent(dryRun = false) {
   log(`Migration complete. ${totalUpdated}/${totalProcessed} files updated.`, 'blue');
   if (allErrors.length) {
     log('Summary of errors:', 'red');
-    allErrors.forEach(e => log(`${e.file}: ${e.errors.join(', ')}`, 'red'));
+    allErrors.forEach((e) => log(`${e.file}: ${e.errors.join(', ')}`, 'red'));
   }
 }
 

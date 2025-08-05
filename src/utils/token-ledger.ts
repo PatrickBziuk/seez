@@ -69,17 +69,17 @@ function getCurrentDate(): string {
 export function loadDailyTokenUsage(date?: string): DailyTokenUsage {
   const targetDate = date || getCurrentDate();
   const ledgerPath = getTokenLedgerPath(targetDate);
-  
+
   if (!existsSync(ledgerPath)) {
     return {
       date: targetDate,
       totalTokens: 0,
       totalTranslations: 0,
       entries: [],
-      capReached: false
+      capReached: false,
     };
   }
-  
+
   try {
     const content = readFileSync(ledgerPath, 'utf-8');
     return JSON.parse(content) as DailyTokenUsage;
@@ -90,7 +90,7 @@ export function loadDailyTokenUsage(date?: string): DailyTokenUsage {
       totalTokens: 0,
       totalTranslations: 0,
       entries: [],
-      capReached: false
+      capReached: false,
     };
   }
 }
@@ -101,13 +101,13 @@ export function loadDailyTokenUsage(date?: string): DailyTokenUsage {
  */
 function saveDailyTokenUsage(usage: DailyTokenUsage): void {
   const ledgerPath = getTokenLedgerPath(usage.date);
-  
+
   // Ensure directory exists
   const dir = dirname(ledgerPath);
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
   }
-  
+
   writeFileSync(ledgerPath, JSON.stringify(usage, null, 2));
 }
 
@@ -143,7 +143,7 @@ export function recordTokenUsage({
   inputTokens,
   outputTokens,
   model,
-  operation = 'translation'
+  operation = 'translation',
 }: {
   translationKey: string;
   sourceLang: string;
@@ -155,7 +155,7 @@ export function recordTokenUsage({
 }): DailyTokenUsage {
   const date = getCurrentDate();
   const usage = loadDailyTokenUsage(date);
-  
+
   const totalTokens = inputTokens + outputTokens;
   const entry: TokenUsageEntry = {
     timestamp: new Date().toISOString(),
@@ -166,23 +166,23 @@ export function recordTokenUsage({
     inputTokens,
     outputTokens,
     totalTokens,
-    model
+    model,
   };
-  
+
   // Update usage data
   usage.entries.push(entry);
   usage.totalTokens += totalTokens;
   usage.totalTranslations += 1;
-  
+
   // Check if cap is reached
   if (!usage.capReached && usage.totalTokens >= DAILY_TOKEN_CAP) {
     usage.capReached = true;
     usage.capReachedAt = entry.timestamp;
   }
-  
+
   // Save updated usage
   saveDailyTokenUsage(usage);
-  
+
   return usage;
 }
 
@@ -207,12 +207,12 @@ export function getTokenUsageSummary(startDate: string, endDate: string): DailyT
   const summaries: DailyTokenUsage[] = [];
   const start = new Date(startDate);
   const end = new Date(endDate);
-  
+
   for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
     const dateStr = date.toISOString().split('T')[0];
     summaries.push(loadDailyTokenUsage(dateStr));
   }
-  
+
   return summaries;
 }
 
@@ -224,21 +224,21 @@ export function getTokenUsageSummary(startDate: string, endDate: string): DailyT
 export function createTokenUsageReport(usage: DailyTokenUsage): string {
   const remainingTokens = DAILY_TOKEN_CAP - usage.totalTokens;
   const usagePercentage = ((usage.totalTokens / DAILY_TOKEN_CAP) * 100).toFixed(1);
-  
+
   let report = `## Token Usage Report - ${usage.date}\n\n`;
   report += `- **Total Tokens Used**: ${usage.totalTokens.toLocaleString()} / ${DAILY_TOKEN_CAP.toLocaleString()} (${usagePercentage}%)\n`;
   report += `- **Remaining Tokens**: ${remainingTokens.toLocaleString()}\n`;
   report += `- **Translations Processed**: ${usage.totalTranslations}\n`;
-  
+
   if (usage.capReached) {
     report += `- **⚠️ Daily Cap Reached**: ${usage.capReachedAt}\n`;
   }
-  
+
   if (usage.entries.length > 0) {
     report += `\n### Recent Operations\n\n`;
     report += `| Time | Operation | Key | Tokens |\n`;
     report += `|------|-----------|-----|--------|\n`;
-    
+
     // Show last 10 operations
     const recentEntries = usage.entries.slice(-10);
     for (const entry of recentEntries) {
@@ -246,6 +246,6 @@ export function createTokenUsageReport(usage: DailyTokenUsage): string {
       report += `| ${time} | ${entry.operation} | ${entry.translationKey} | ${entry.totalTokens} |\n`;
     }
   }
-  
+
   return report;
 }

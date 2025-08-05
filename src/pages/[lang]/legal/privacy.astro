@@ -1,0 +1,201 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../../layouts/Layout.astro';
+import { getTranslations, SUPPORTED_LANGUAGES, type SupportedLanguage } from '../../../utils/i18n';
+
+export const getStaticPaths = (() => {
+  return SUPPORTED_LANGUAGES.map((lang) => ({
+    params: { lang },
+  }));
+}) satisfies GetStaticPaths;
+
+const { lang } = Astro.params;
+const locale = lang as SupportedLanguage;
+
+// Get translations
+const translations = await getTranslations(locale);
+const t = (key: string) => {
+  const keys = key.split('.');
+  let value: unknown = translations;
+  for (const k of keys) {
+    value = (value as Record<string, unknown>)?.[k];
+    if (value === undefined) break;
+  }
+  return (value as string) || key;
+};
+
+const title = t('legal.privacy');
+const description =
+  locale === 'de'
+    ? 'Datenschutzerklärung für seez.eu - Informationen zum Umgang mit Ihren Daten.'
+    : 'Privacy Notice for seez.eu - Information about how we handle your data.';
+---
+
+<Layout
+  metadata={{
+    title,
+    description,
+    canonical: `/${locale}/legal/privacy`,
+  }}
+>
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="prose prose-lg dark:prose-invert max-w-none">
+      <h1>{title}</h1>
+
+      {
+        locale === 'de' ? (
+          <>
+            <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+              Diese Datenschutzerklärung erklärt, wie seez.eu Ihre Daten sammelt, verwendet und schützt.
+            </p>
+
+            <h2>1. Verantwortlicher</h2>
+            <p>
+              Verantwortlich für die Datenverarbeitung auf dieser Website ist:
+              <br />
+              Patrick Bziuk
+              <br />
+              E-Mail: patrick@seez.eu
+            </p>
+
+            <h2>2. Art der Datenerfassung</h2>
+            <p>Diese Website sammelt hauptsächlich technische Daten für den ordnungsgemäßen Betrieb:</p>
+            <ul>
+              <li>Server-Logs (IP-Adresse, Browser, Betriebssystem, Referrer)</li>
+              <li>Spracheinstellungen (zur Verbesserung der Benutzererfahrung)</li>
+              <li>Technische Cookies für die Website-Funktionalität</li>
+            </ul>
+
+            <h2>3. Zweck der Datenverarbeitung</h2>
+            <p>Ihre Daten werden verarbeitet für:</p>
+            <ul>
+              <li>Bereitstellung und Betrieb der Website</li>
+              <li>Sicherheit und Schutz vor Missbrauch</li>
+              <li>Analyse der Website-Performance</li>
+              <li>Verbesserung der Benutzererfahrung</li>
+            </ul>
+
+            <h2>4. Rechtsgrundlage</h2>
+            <p>
+              Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse) sowie Art.
+              6 Abs. 1 lit. a DSGVO (Einwilligung) bei optionalen Funktionen.
+            </p>
+
+            <h2>5. Speicherdauer</h2>
+            <p>
+              Daten werden nur so lange gespeichert, wie es für den jeweiligen Zweck erforderlich ist. Server-Logs
+              werden nach maximal 30 Tagen gelöscht.
+            </p>
+
+            <h2>6. Ihre Rechte</h2>
+            <p>Sie haben das Recht auf:</p>
+            <ul>
+              <li>Auskunft über Ihre gespeicherten Daten</li>
+              <li>Berichtigung unrichtiger Daten</li>
+              <li>Löschung Ihrer Daten</li>
+              <li>Einschränkung der Verarbeitung</li>
+              <li>Datenübertragbarkeit</li>
+              <li>Widerspruch gegen die Verarbeitung</li>
+            </ul>
+
+            <h2>7. Externe Dienste</h2>
+            <p>
+              Diese Website wird über GitHub Pages gehostet. Informationen zur Datenverarbeitung durch GitHub finden Sie
+              in der{' '}
+              <a
+                href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
+                target="_blank"
+                rel="noopener"
+              >
+                GitHub Datenschutzerklärung
+              </a>
+              .
+            </p>
+
+            <h2>8. Kontakt</h2>
+            <p>Bei Fragen zum Datenschutz kontaktieren Sie uns unter: patrick@seez.eu</p>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
+              Letzte Aktualisierung: {new Date().toLocaleDateString('de-DE')}
+            </p>
+          </>
+        ) : (
+          <>
+            <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+              This privacy notice explains how seez.eu collects, uses, and protects your data.
+            </p>
+
+            <h2>1. Data Controller</h2>
+            <p>
+              The data controller for this website is:
+              <br />
+              Patrick Bziuk
+              <br />
+              Email: patrick@seez.eu
+            </p>
+
+            <h2>2. Data Collection</h2>
+            <p>This website primarily collects technical data necessary for proper operation:</p>
+            <ul>
+              <li>Server logs (IP address, browser, operating system, referrer)</li>
+              <li>Language preferences (to improve user experience)</li>
+              <li>Technical cookies for website functionality</li>
+            </ul>
+
+            <h2>3. Purpose of Data Processing</h2>
+            <p>Your data is processed for:</p>
+            <ul>
+              <li>Providing and operating the website</li>
+              <li>Security and protection against abuse</li>
+              <li>Website performance analysis</li>
+              <li>Improving user experience</li>
+            </ul>
+
+            <h2>4. Legal Basis</h2>
+            <p>
+              Processing is based on Art. 6 para. 1 lit. f GDPR (legitimate interest) and Art. 6 para. 1 lit. a GDPR
+              (consent) for optional features.
+            </p>
+
+            <h2>5. Retention Period</h2>
+            <p>
+              Data is only stored as long as necessary for the respective purpose. Server logs are deleted after a
+              maximum of 30 days.
+            </p>
+
+            <h2>6. Your Rights</h2>
+            <p>You have the right to:</p>
+            <ul>
+              <li>Access your stored data</li>
+              <li>Rectification of incorrect data</li>
+              <li>Deletion of your data</li>
+              <li>Restriction of processing</li>
+              <li>Data portability</li>
+              <li>Object to processing</li>
+            </ul>
+
+            <h2>7. External Services</h2>
+            <p>
+              This website is hosted via GitHub Pages. Information about data processing by GitHub can be found in the{' '}
+              <a
+                href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
+                target="_blank"
+                rel="noopener"
+              >
+                GitHub Privacy Statement
+              </a>
+              .
+            </p>
+
+            <h2>8. Contact</h2>
+            <p>For privacy-related questions, contact us at: patrick@seez.eu</p>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
+              Last updated: {new Date().toLocaleDateString('en-US')}
+            </p>
+          </>
+        )
+      }
+    </div>
+  </main>
+</Layout>

@@ -20,33 +20,33 @@ const { currentEntry, maxItems = 3 } = Astro.props;
 // Find related content based on tags and collection
 const allContent = await getCollection(currentEntry.collection);
 const related = allContent
-  .filter(entry => entry.id !== currentEntry.id && entry.data.language === currentEntry.data.language)
-  .map(entry => ({
+  .filter((entry) => entry.id !== currentEntry.id && entry.data.language === currentEntry.data.language)
+  .map((entry) => ({
     entry,
-    score: calculateRelatedness(currentEntry.data.tags || [], entry.data.tags || [])
+    score: calculateRelatedness(currentEntry.data.tags || [], entry.data.tags || []),
   }))
-  .filter(item => item.score > 0)
+  .filter((item) => item.score > 0)
   .sort((a, b) => b.score - a.score)
   .slice(0, maxItems);
 ---
 
-{related.length > 0 && (
-  <aside class="related-content">
-    <h3>Related Content</h3>
-    <ul>
-      {related.map(({ entry }) => (
-        <li>
-          <a href={`/${entry.data.language}/${entry.collection}/${entry.id.replace(/\.mdx?$/, '')}/`}>
-            {entry.data.title}
-          </a>
-          {entry.data.description && (
-            <p class="related-description">{entry.data.description}</p>
-          )}
-        </li>
-      ))}
-    </ul>
-  </aside>
-)}
+{
+  related.length > 0 && (
+    <aside class="related-content">
+      <h3>Related Content</h3>
+      <ul>
+        {related.map(({ entry }) => (
+          <li>
+            <a href={`/${entry.data.language}/${entry.collection}/${entry.id.replace(/\.mdx?$/, '')}/`}>
+              {entry.data.title}
+            </a>
+            {entry.data.description && <p class="related-description">{entry.data.description}</p>}
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
 
 <style>
   .related-content {
@@ -56,32 +56,32 @@ const related = allContent
     border-radius: 8px;
     background-color: #f9f9f9;
   }
-  
+
   .related-content h3 {
     margin-top: 0;
     margin-bottom: 1rem;
   }
-  
+
   .related-content ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  
+
   .related-content li {
     margin-bottom: 1rem;
   }
-  
+
   .related-content a {
     font-weight: 600;
     text-decoration: none;
     color: #007acc;
   }
-  
+
   .related-content a:hover {
     text-decoration: underline;
   }
-  
+
   .related-description {
     margin: 0.25rem 0 0 0;
     font-size: 0.9rem;

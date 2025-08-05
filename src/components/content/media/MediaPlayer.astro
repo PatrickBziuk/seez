@@ -3,31 +3,56 @@
 // Props: src (String), title (String), artist (String), description? (String), lyrics? (String), links? (Array)
 const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.props;
 ---
-<div class="media-card minimal-card w-full max-w-md mx-auto p-0 rounded-xl space-y-0 relative overflow-hidden" tabindex="0">
+
+<div
+  class="media-card minimal-card w-full max-w-md mx-auto p-0 rounded-xl space-y-0 relative overflow-hidden"
+  tabindex="0"
+>
   <div class="flex items-center justify-between px-4 pt-4 pb-2">
     <div>
       <div class="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</div>
       <div class="text-xs text-gray-500 dark:text-gray-400">{artist}</div>
       {description && <div class="text-xs text-gray-400 mt-1">{description}</div>}
     </div>
-    <button aria-label="Play/Pause"
-      class="w-10 h-10 flex items-center justify-center rounded-full bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-      <svg xmlns="http://www.w3.org/2000/svg" class="play-icon w-10 h-10 text-gray-700 dark:text-gray-200" fill="none"
-           viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M14.752 11.168l-5.197-3.03A1 1 0 008 8.97v6.059a1 1 0 001.555.832l5.197-3.03a1 1 0 000-1.664z" />
+    <button
+      aria-label="Play/Pause"
+      class="w-10 h-10 flex items-center justify-center rounded-full bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="play-icon w-10 h-10 text-gray-700 dark:text-gray-200"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M14.752 11.168l-5.197-3.03A1 1 0 008 8.97v6.059a1 1 0 001.555.832l5.197-3.03a1 1 0 000-1.664z"></path>
       </svg>
     </button>
   </div>
 
   <div class="waveform-container w-full h-32 relative" style="background: none;">
     <canvas class="waveform absolute top-0 left-0 w-full h-full" style="border-radius: 0; background: none;"></canvas>
-    <canvas class="waveform-mirror absolute top-0 left-0 w-full h-full pointer-events-none" style="border-radius: 0; background: none;"></canvas>
-    <div class="waveform-indicator absolute top-0 left-0 h-full w-0.5 bg-indigo-500 pointer-events-none" style="transition: left 0.1s;"></div>
+    <canvas
+      class="waveform-mirror absolute top-0 left-0 w-full h-full pointer-events-none"
+      style="border-radius: 0; background: none;"></canvas>
+    <div
+      class="waveform-indicator absolute top-0 left-0 h-full w-0.5 bg-indigo-500 pointer-events-none"
+      style="transition: left 0.1s;"
+    >
+    </div>
   </div>
 
-  <input type="range" min="0" max="100" value="0"
-         class="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer mt-2"/>
+  <input
+    type="range"
+    min="0"
+    max="100"
+    value="0"
+    class="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer mt-2"
+  />
 
   <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 px-4 pb-2">
     <span class="current-time">00:00</span>
@@ -36,29 +61,45 @@ const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.
 
   <audio src={src} preload="metadata" class="hidden"></audio>
 
-  {Array.isArray(links) && links.length > 0 && (
-    <div class="flex flex-wrap gap-2 px-4 pb-2">
-      {links.map((link) => (
-        <a href={link.href} class="px-2 py-1 rounded bg-blue-500 text-white text-xs font-medium hover:bg-blue-600 transition" target="_blank" rel="noopener noreferrer">{link.label}</a>
-      ))}
-    </div>
-  )}
+  {
+    Array.isArray(links) && links.length > 0 && (
+      <div class="flex flex-wrap gap-2 px-4 pb-2">
+        {links.map((link) => (
+          <a
+            href={link.href}
+            class="px-2 py-1 rounded bg-blue-500 text-white text-xs font-medium hover:bg-blue-600 transition"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+    )
+  }
 
-  {lyrics && (
-    <details class="px-4 pb-4 lyrics-details">
-      <summary class="cursor-pointer text-xs font-semibold text-purple-600 dark:text-purple-400">Songtext anzeigen</summary>
-      <div class="mt-2 whitespace-pre-line text-xs text-gray-700 dark:text-gray-200">{lyrics}</div>
-    </details>
-  )}
+  {
+    lyrics && (
+      <details class="px-4 pb-4 lyrics-details">
+        <summary class="cursor-pointer text-xs font-semibold text-purple-600 dark:text-purple-400">
+          Songtext anzeigen
+        </summary>
+        <div class="mt-2 whitespace-pre-line text-xs text-gray-700 dark:text-gray-200">{lyrics}</div>
+      </details>
+    )
+  }
 
   <style>
     .minimal-card {
       background: #181a20;
       border-radius: 1rem;
       border: 1px solid #23263a;
-      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10);
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       padding: 1.5rem 1.5rem 1rem 1.5rem;
-      transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+      transition:
+        box-shadow 0.2s,
+        transform 0.2s,
+        background 0.2s;
       color: #e5e7eb;
       margin-bottom: 0.5rem;
     }
@@ -99,7 +140,8 @@ const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.
       height: 6rem;
       margin: 1rem 0 0.5rem 0;
     }
-    .waveform, .waveform-mirror {
+    .waveform,
+    .waveform-mirror {
       background: none;
       display: block;
     }
@@ -109,7 +151,7 @@ const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.
       z-index: 10;
       pointer-events: none;
     }
-    input[type="range"] {
+    input[type='range'] {
       margin-top: 0.5rem;
       accent-color: #6366f1;
     }
@@ -124,7 +166,9 @@ const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.
       padding: 0.25rem 0.75rem;
       font-weight: 500;
       font-size: 0.95rem;
-      transition: background 0.2s, color 0.2s;
+      transition:
+        background 0.2s,
+        color 0.2s;
     }
     .media-card a:hover {
       background: #6366f1;
@@ -158,7 +202,7 @@ const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.
       const audio = root.querySelector('audio');
       const progress = root.querySelector('input[type="range"]');
       const timeCurrent = root.querySelector('.current-time');
-      const timeTotal   = root.querySelector('.duration');
+      const timeTotal = root.querySelector('.duration');
       const canvas = root.querySelector('.waveform');
       const canvasMirror = root.querySelector('.waveform-mirror');
       const indicator = root.querySelector('.waveform-indicator');
@@ -193,14 +237,17 @@ const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.
       const icons = {
         play: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
                      d="M14.752 11.168l-5.197-3.03A1 1 0 008 8.97v6.059a1 1 0 001.555.832l5.197-3.03a1 1 0 000-1.664z"/>`,
-        pause:`<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M10 9v6m4-6v6"/>`
+        pause: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M10 9v6m4-6v6"/>`,
       };
       const setIcon = (type) => {
         const svg = btn.querySelector('svg');
         svg.innerHTML = icons[type];
       };
       const fmt = (t) => {
-        const m = Math.floor(t/60), s = Math.floor(t%60).toString().padStart(2,'0');
+        const m = Math.floor(t / 60),
+          s = Math.floor(t % 60)
+            .toString()
+            .padStart(2, '0');
         return `${m}:${s}`;
       };
       btn.addEventListener('click', () => {
@@ -210,7 +257,7 @@ const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.
           audio.pause();
         }
       });
-      audio.addEventListener('play',  () => setIcon('pause'));
+      audio.addEventListener('play', () => setIcon('pause'));
       audio.addEventListener('pause', () => setIcon('play'));
       audio.addEventListener('loadedmetadata', () => {
         timeTotal.textContent = fmt(audio.duration);
@@ -241,28 +288,29 @@ const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.
       function drawWaveform(peaks) {
         const ctx = canvas.getContext('2d');
         const ctxMirror = canvasMirror.getContext('2d');
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctxMirror.clearRect(0,0,canvasMirror.width,canvasMirror.height);
-        const w = canvas.width, h = canvas.height;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctxMirror.clearRect(0, 0, canvasMirror.width, canvasMirror.height);
+        const w = canvas.width,
+          h = canvas.height;
         ctx.strokeStyle = '#6366f1';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        for(let i=0;i<peaks.length;i++){
-          const x = (i/w)*w;
-          const y = h/2 - peaks[i]*h/2;
-          if(i===0) ctx.moveTo(x,y);
-          else ctx.lineTo(x,y);
+        for (let i = 0; i < peaks.length; i++) {
+          const x = (i / w) * w;
+          const y = h / 2 - (peaks[i] * h) / 2;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         }
         ctx.stroke();
         // Mirror waveform
         ctxMirror.strokeStyle = '#6366f1';
         ctxMirror.lineWidth = 2;
         ctxMirror.beginPath();
-        for(let i=0;i<peaks.length;i++){
-          const x = (i/w)*w;
-          const y = h/2 + peaks[i]*h/2;
-          if(i===0) ctxMirror.moveTo(x,y);
-          else ctxMirror.lineTo(x,y);
+        for (let i = 0; i < peaks.length; i++) {
+          const x = (i / w) * w;
+          const y = h / 2 + (peaks[i] * h) / 2;
+          if (i === 0) ctxMirror.moveTo(x, y);
+          else ctxMirror.lineTo(x, y);
         }
         ctxMirror.stroke();
       }
@@ -271,15 +319,15 @@ const { src, title, artist, description = '', lyrics = '', links = [] } = Astro.
         const AudioCtx = window.AudioContext || window['webkitAudioContext'];
         const context = new AudioCtx();
         fetch(audio.src)
-          .then(r => r.arrayBuffer())
-          .then(b => context.decodeAudioData(b))
-          .then(data => {
+          .then((r) => r.arrayBuffer())
+          .then((b) => context.decodeAudioData(b))
+          .then((data) => {
             const raw = data.getChannelData(0);
             const step = Math.floor(raw.length / canvas.width);
-            const peaks = Array.from({length:canvas.width}, (_,i) => {
+            const peaks = Array.from({ length: canvas.width }, (_, i) => {
               let sum = 0;
-              for(let j=0;j<step;j++) sum += Math.abs(raw[i*step+j]||0);
-              return sum/step;
+              for (let j = 0; j < step; j++) sum += Math.abs(raw[i * step + j] || 0);
+              return sum / step;
             });
             drawWaveform(peaks);
           });

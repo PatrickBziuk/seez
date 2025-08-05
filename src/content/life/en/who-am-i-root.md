@@ -23,7 +23,8 @@ Only mirrors—each catching a different light.
 
 ---
 
-## 💼 seez  
+## 💼 seez
+
 _The system builder. The interface between logic and the world._
 
 **seez.eu** is where I wear my spine.  
@@ -38,7 +39,8 @@ It is truth. But not the whole of it.
 
 ---
 
-## 🎤 Seez  
+## 🎤 Seez
+
 _The voice I raised when I couldn’t scream under my own name._
 
 **seez.eu** is where I bleed.  
@@ -56,7 +58,8 @@ And, if you’re careful, your reflection.
 
 ---
 
-## 🪶 zeilenliebe  
+## 🪶 zeilenliebe
+
 _“The love of lines.” A future-facing past._
 
 Born from a Tumblr blog with 15,000 followers—  
@@ -67,11 +70,12 @@ A platform for lyrical survival.
 One day, it might be more than me.  
 A small press. A collective. A movement.
 
-But for now, it’s the heartbeat beneath my book *Seelenstriptease*.
+But for now, it’s the heartbeat beneath my book _Seelenstriptease_.
 
 ---
 
-## 🌤 deinanker  
+## 🌤 deinanker
+
 _The public hand I offer._
 
 Instagram & Threads. Zitatkacheln, sanfte Worte,  
@@ -83,7 +87,8 @@ but want to feel held while searching.
 
 ---
 
-## 🕳 keinanker  
+## 🕳 keinanker
+
 _The abyss that speaks._
 
 This is my shadow archive.  
@@ -92,19 +97,20 @@ quotes that bruised me enough to save.
 
 Anonymous in feel.  
 A place not meant for the masses.  
-But for the ones who *know*—  
+But for the ones who _know_—  
 that healing begins in darkness.
 
 ---
 
-## 🧪 Cosensai, marken., circles.  
+## 🧪 Cosensai, marken., circles.
+
 _Not startups. Not yet products.  
 But rituals in the making._
 
 Each of these projects is a thought experiment I gave a name:
 
-- **Cosensai** – a self-hosted AI memory assistant.  
-- **marken.** – transparent fashion.  
+- **Cosensai** – a self-hosted AI memory assistant.
+- **marken.** – transparent fashion.
 - **circles.** – social networks rebuilt around reality.
 
 They live in the **lab space** of seez.eu.  
@@ -112,7 +118,8 @@ Not yet ready. But growing.
 
 ---
 
-## 🌀 Constructive Chaos  
+## 🌀 Constructive Chaos
+
 _The name I haven’t built yet—  
 but already live inside._
 
@@ -145,4 +152,3 @@ Welcome to the center.
 _“I am not one, I am many.  
 But all of them are true.
 And maybe, you and I never get to know the full picture.”_
-

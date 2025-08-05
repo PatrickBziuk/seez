@@ -46,7 +46,22 @@
   "footer": {
     "legal": "Legal",
     "blog": "Blog",
-    "about": "About"
+    "about": "About",
+    "footNote": "Built with passion and curiosity"
+  },
+  "legal": {
+    "legal": "Legal",
+    "privacy": "Privacy Notice",
+    "impressum": "Impressum",
+    "terms": "Terms of Service"
+  },
+  "social": {
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "youtube": "YouTube",
+    "instagram": "Instagram",
+    "facebook": "Facebook"
   },
   "button": {
     "submit": "Submit",
@@ -54,6 +69,8 @@
     "ok": "OK",
     "close": "Close",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "view_source": "View Source",
+    "edit_on_github": "Edit on GitHub"
   }
 }

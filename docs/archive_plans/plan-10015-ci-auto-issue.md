@@ -8,6 +8,7 @@ Automatically create a GitHub issue with detailed error information whenever the
 ---
 
 ## Steps
+
 1. **Research**: Review current GitHub Actions workflow and error reporting best practices.
 2. **Error Capture**: Add a step to the workflow to capture build logs on failure.
 3. **Error Extraction**: Implement logic (e.g., Node.js script or shell) to parse logs and extract error type, message, file, and line number.
@@ -19,6 +20,7 @@ Automatically create a GitHub issue with detailed error information whenever the
 ---
 
 ## Edge Cases
+
 - Multiple errors: Only the first/most relevant error is reported.
 - Log size: Truncate or summarize if too large.
 - API rate limits: Handle gracefully.
@@ -27,6 +29,7 @@ Automatically create a GitHub issue with detailed error information whenever the
 ---
 
 ## Impact
+
 - Faster awareness and triage of build issues.
 - Centralized error tracking and discussion.
 - Improved team workflow and transparency.
@@ -34,6 +37,7 @@ Automatically create a GitHub issue with detailed error information whenever the
 ---
 
 ## Checklist
+
 - [x] Review and update GitHub Actions workflow
 - [x] Implement error log capture and extraction
 - [x] Add GitHub issue creation logic
@@ -44,6 +48,7 @@ Automatically create a GitHub issue with detailed error information whenever the
 ---
 
 ## Links
+
 - [GitHub Actions docs](https://docs.github.com/en/actions)
 - [GitHub REST API: Issues](https://docs.github.com/en/rest/issues/issues)
 - [gh CLI](https://cli.github.com/manual/gh_issue_create)
@@ -51,12 +56,13 @@ Automatically create a GitHub issue with detailed error information whenever the
 ---
 
 ## Task Reference
-- Add to `docs/todo.md` as a new task: "Automate GitHub issue creation for CI build failures (see plan-10015-ci-auto-issue.md)"
 
+- Add to `docs/todo.md` as a new task: "Automate GitHub issue creation for CI build failures (see plan-10015-ci-auto-issue.md)"
 
 # Automated GitHub Issue Creation for Build Failures – Documentation
 
 ## Overview
+
 This document describes the process and implementation for automatically creating a GitHub issue when a build fails in the CI pipeline. The goal is to ensure all build errors are tracked and actionable, with detailed error context for rapid triage.
 
 ---
@@ -71,17 +77,20 @@ This project automatically creates a GitHub issue when the CI build fails on the
 4. **Security**: The workflow uses the built-in `GITHUB_TOKEN` and only posts a truncated, sanitized error summary.
 
 ## References
+
 - See `.github/workflows/actions.yaml` for implementation.
 - See `scripts/extract-error.js` for error parsing logic.
 - Plan: `docs/plan-10015-ci-auto-issue.md`
 
 ## Testing
+
 - Simulate a build failure (e.g., break a build step) and push to `main` to verify issue creation.
 - Review the created issue for error detail and sensitive data.
 
 ---
 
 ## Workflow Summary
+
 - The GitHub Actions workflow is updated to include a post-build step that runs on failure.
 - If the build fails, the workflow captures the error log.
 - A script parses the log to extract the error type, message, file, and line number (if available).
@@ -90,6 +99,7 @@ This project automatically creates a GitHub issue when the CI build fails on the
 ---
 
 ## Implementation Details
+
 1. **Workflow Update**
    - Add a `post` or `failure` step to the main build job in `.github/workflows/ci.yml`.
    - Use `if: failure()` to trigger only on build failure.
@@ -107,6 +117,7 @@ This project automatically creates a GitHub issue when the CI build fails on the
 ---
 
 ## Example Workflow Snippet
+
 ```yaml
 jobs:
   build:
@@ -128,6 +139,7 @@ jobs:
 ---
 
 ## Error Extraction Script Example (Node.js)
+
 ```js
 // scripts/extract-error.js
 const fs = require('fs');
@@ -136,8 +148,7 @@ const match = log.match(/Error: ([^\n]+)/);
 if (match) {
   console.log(match[1]);
   // Optionally extract file/line info
-}
-else {
+} else {
   console.log('Unknown error');
 }
 ```
@@ -145,6 +156,7 @@ else {
 ---
 
 ## Security & Edge Cases
+
 - Only the first error is reported to avoid noise.
 - Truncate logs if too large.
 - Sanitize output for secrets.
@@ -153,12 +165,14 @@ else {
 ---
 
 ## Maintenance
+
 - Update the script and workflow as error patterns or CI tools change.
 - Review issues for false positives or missed errors.
 
 ---
 
 ## References
+
 - [Plan 10015](./plan-10015-ci-auto-issue.md)
 - [GitHub Actions docs](https://docs.github.com/en/actions)
 - [gh CLI](https://cli.github.com/manual/gh_issue_create)

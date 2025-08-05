@@ -20,8 +20,8 @@ function flatten(obj, prefix = '') {
 const enFlat = flatten(en);
 const deFlat = flatten(de);
 
-const missingInDe = Object.keys(enFlat).filter(key => !(key in deFlat));
-const missingInEn = Object.keys(deFlat).filter(key => !(key in enFlat));
+const missingInDe = Object.keys(enFlat).filter((key) => !(key in deFlat));
+const missingInEn = Object.keys(deFlat).filter((key) => !(key in enFlat));
 
 if (missingInDe.length || missingInEn.length) {
   console.error('Missing translation keys:');

@@ -4,11 +4,13 @@ import MarkdownLayout from '../../layouts/MarkdownLayout.astro';
 
 export async function getStaticPaths() {
   const entries = await getCollection('books');
-  const paths = entries.filter(e => !e.data.draft).map(entry => {
-    const slug = entry.id.replace(/\.mdx?$/, '');
-    console.log(`Generating path for entry.id: ${entry.id} -> slug: ${slug}`);
-    return { params: { slug } };
-  });
+  const paths = entries
+    .filter((e) => !e.data.draft)
+    .map((entry) => {
+      const slug = entry.id.replace(/\.mdx?$/, '');
+      console.log(`Generating path for entry.id: ${entry.id} -> slug: ${slug}`);
+      return { params: { slug } };
+    });
   console.log('Generated paths:', paths);
   return paths;
 }
@@ -20,6 +22,7 @@ if (!entry) throw new Error(`Book not found: ${slug}`);
 
 const { Content } = await render(entry);
 ---
+
 <MarkdownLayout frontmatter={entry.data}>
   <Content />
 </MarkdownLayout>

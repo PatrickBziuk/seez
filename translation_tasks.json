@@ -1,0 +1,107 @@
+﻿[
+  {
+    "sourcePath": "books\\de\\licht-am-ende-der-zeilen.md",
+    "targetLang": "en",
+    "translationKey": "licht-am-ende-der-zeilen",
+    "reason": "stale",
+    "sourceSha": "2ec2d847aafc9e259a5fa222601ad65df1c4115fbc522414cc95299575be70d6"
+  },
+  {
+    "sourcePath": "books\\en\\licht-am-ende-der-zeilen.md",
+    "targetLang": "de",
+    "translationKey": "licht-am-ende-der-zeilen",
+    "reason": "stale",
+    "sourceSha": "aca0cc4f26bc15f3c5ab10a136a991bc8f6f7880e1950481b90c08bc78d52d26"
+  },
+  {
+    "sourcePath": "books\\en\\example-book-root.md",
+    "targetLang": "de",
+    "translationKey": "example-book-root",
+    "reason": "missing",
+    "sourceSha": "4efd51b8f386bbf83e3ceae455f491d589991e576e9988f1c77555ad59d75bb2"
+  },
+  {
+    "sourcePath": "books\\en\\example-book.md",
+    "targetLang": "de",
+    "translationKey": "example-book",
+    "reason": "missing",
+    "sourceSha": "0f1620d5a1a81e68bfb36a67bdcc242e5fdf60ee17595697e6c4dc6c1105fea6"
+  },
+  {
+    "sourcePath": "projects\\de\\cosensai.mdx",
+    "targetLang": "en",
+    "translationKey": "cosensai",
+    "reason": "missing",
+    "sourceSha": "74f866dbecd09b35ba8cc7b480eefecd1a20d1d5c9074a0c612de92aeeee4f16"
+  },
+  {
+    "sourcePath": "projects\\de\\meine-musik-root.mdx",
+    "targetLang": "en",
+    "translationKey": "meine-musik-root",
+    "reason": "missing",
+    "sourceSha": "69a974f5c2ba4307145e53380f08354ff7f0c3a3a5cf4e9cf84e39018d469379"
+  },
+  {
+    "sourcePath": "projects\\en\\portique.mdx",
+    "targetLang": "de",
+    "translationKey": "portique",
+    "reason": "missing",
+    "sourceSha": "0515fa989185392dbae8e7c35017582f34caa1f25180b8451adacf2ea44d99fa"
+  },
+  {
+    "sourcePath": "lab\\de\\tldr-demo.mdx",
+    "targetLang": "en",
+    "translationKey": "tldr-demo",
+    "reason": "stale",
+    "sourceSha": "d71f061c4f7e368ff275088660b615ce2852adcadb0786ac0ff07549ba10d29a"
+  },
+  {
+    "sourcePath": "lab\\en\\tldr-demo.mdx",
+    "targetLang": "de",
+    "translationKey": "tldr-demo",
+    "reason": "stale",
+    "sourceSha": "c9eb4c221b0fd652a15b6db6b0f4308a010d0273aef131712c54459ebd866963"
+  },
+  {
+    "sourcePath": "lab\\en\\badge-showcase.mdx",
+    "targetLang": "de",
+    "translationKey": "badge-showcase",
+    "reason": "missing",
+    "sourceSha": "f124e20d6e354ab759b90c7ef18c4e84fe189eb511528ced6ba2a83d8e30e357"
+  },
+  {
+    "sourcePath": "lab\\en\\example-lab-root.mdx",
+    "targetLang": "de",
+    "translationKey": "example-lab-root",
+    "reason": "missing",
+    "sourceSha": "3baf2f5767072c28995d451f695c8acd2bd16dd33db1576001a0f58539935a14"
+  },
+  {
+    "sourcePath": "lab\\en\\example-lab.mdx",
+    "targetLang": "de",
+    "translationKey": "example-lab",
+    "reason": "missing",
+    "sourceSha": "575909e814fa9a2732dd4294ff77fea9951385ef5964379fb73093da26b22bfc"
+  },
+  {
+    "sourcePath": "lab\\en\\note-demo.mdx",
+    "targetLang": "de",
+    "translationKey": "note-demo",
+    "reason": "missing",
+    "sourceSha": "e31cd1cbd8925c38839691d7c25aec75b7d00c53f9f2d7305e88e230c57b9913"
+  },
+  {
+    "sourcePath": "life\\de\\who-am-i.md",
+    "targetLang": "en",
+    "translationKey": "who-am-i",
+    "reason": "missing",
+    "sourceSha": "d25dd6b71d6a376fe0e52316dd1a2e3ce54a1ad7f61d9ad5914aaea520e8fae2"
+  },
+  {
+    "sourcePath": "life\\en\\who-am-i-root.md",
+    "targetLang": "de",
+    "translationKey": "who-am-i-root",
+    "reason": "missing",
+    "sourceSha": "8c157e06fcc95a6ae22065a626b637df243e5c8d6d8ca0ec5e71dee15724138a"
+  }
+]

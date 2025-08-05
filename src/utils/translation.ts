@@ -12,7 +12,7 @@ import matter from 'gray-matter';
  * Supported languages in the translation pipeline
  */
 export const SUPPORTED_LANGUAGES = ['en', 'de'] as const;
-export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number];
+export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
 /**
  * Translation task representing work to be done
@@ -55,7 +55,7 @@ export interface AITextScore {
  */
 export function computeContentSha(content: string): string {
   const parsed = matter(content);
-  
+
   // Create normalized content excluding mutable fields
   const normalizedFrontmatter = { ...parsed.data };
   delete normalizedFrontmatter.timestamp;
@@ -63,9 +63,9 @@ export function computeContentSha(content: string): string {
   delete normalizedFrontmatter.ai_tldr;
   delete normalizedFrontmatter.ai_textscore;
   delete normalizedFrontmatter.status?.translation;
-  
+
   const normalizedContent = matter.stringify(parsed.content, normalizedFrontmatter);
-  
+
   return crypto.createHash('sha256').update(normalizedContent).digest('hex');
 }
 
@@ -75,7 +75,7 @@ export function computeContentSha(content: string): string {
  * @returns Array of target languages to translate to
  */
 export function getLanguagePairs(sourceLang: SupportedLanguage): SupportedLanguage[] {
-  return SUPPORTED_LANGUAGES.filter(lang => lang !== sourceLang);
+  return SUPPORTED_LANGUAGES.filter((lang) => lang !== sourceLang);
 }
 
 /**
@@ -87,10 +87,10 @@ export function generateTranslationKey(filePath: string): string {
   const pathParts = filePath.split(/[/\\]/);
   const fileName = pathParts[pathParts.length - 1];
   const nameWithoutExt = fileName.replace(/\.(md|mdx)$/, '');
-  
+
   // Remove language prefix if present (e.g., "en/article" -> "article")
   const cleanName = nameWithoutExt.replace(/^(en|de)\//, '');
-  
+
   return cleanName;
 }
 
@@ -99,18 +99,18 @@ export function generateTranslationKey(filePath: string): string {
  * @param frontmatter - Parsed frontmatter object
  * @returns Validation result with errors if any
  */
-export function validateTranslationFrontmatter(frontmatter: Record<string, unknown>): { 
-  valid: boolean; 
-  errors: string[] 
+export function validateTranslationFrontmatter(frontmatter: Record<string, unknown>): {
+  valid: boolean;
+  errors: string[];
 } {
   const errors: string[] = [];
-  
+
   // Required fields
   if (!frontmatter.title) errors.push('Missing required field: title');
   if (!frontmatter.language || !SUPPORTED_LANGUAGES.includes(frontmatter.language as SupportedLanguage)) {
     errors.push('Invalid or missing language field');
   }
-  
+
   // Translation-specific validation
   if (frontmatter.translationHistory) {
     if (!Array.isArray(frontmatter.translationHistory)) {
@@ -123,17 +123,17 @@ export function validateTranslationFrontmatter(frontmatter: Record<string, unkno
       });
     }
   }
-  
+
   if (frontmatter.ai_textscore) {
     const textScore = frontmatter.ai_textscore as Record<string, unknown>;
     if (!textScore.timestamp) {
       errors.push('ai_textscore: missing timestamp');
     }
   }
-  
+
   return {
     valid: errors.length === 0,
-    errors
+    errors,
   };
 }
 
@@ -145,23 +145,29 @@ export function validateTranslationFrontmatter(frontmatter: Record<string, unkno
 export function createTranslationHistoryEntry({
   targetLang,
   sourceSha,
-  model = 'gpt-4.1-nano',
-  reviewer
+  model = 'gpt-4o-mini',
+  reviewer,
 }: {
   targetLang: SupportedLanguage;
   sourceSha: string;
   model?: string;
   reviewer?: string;
 }): TranslationHistoryEntry {
-  return {
+  const entry: TranslationHistoryEntry = {
     language: targetLang,
     translator: reviewer ? `AI+Human (${model})` : `AI (${model})`,
     model,
     sourceSha,
     timestamp: new Date().toISOString(),
     status: reviewer ? 'ai+human' : 'ai-translated',
-    reviewer
   };
+
+  // Only add reviewer if it exists
+  if (reviewer) {
+    entry.reviewer = reviewer;
+  }
+
+  return entry;
 }
 
 /**
@@ -181,8 +187,8 @@ export function getShortSha(fullSha: string): string {
  * @returns Branch name following convention
  */
 export function generateTranslationBranchName(
-  translationKey: string, 
-  sourceSha: string, 
+  translationKey: string,
+  sourceSha: string,
   targetLang: SupportedLanguage
 ): string {
   const shortSha = getShortSha(sourceSha);

@@ -20,7 +20,7 @@ const { language, source } = Astro.props;
     gtag('event', 'language_selection', {
       method: source, // 'auto_detected', 'manual_selection', 'cookie'
       language: language,
-      page_path: window.location.pathname
+      page_path: window.location.pathname,
     });
   }
 </script>

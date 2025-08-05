@@ -1,9 +1,11 @@
 # Plan 10012: Type Safety & ESLint Cleanup
 
 ## Goal
+
 Fix all TypeScript and ESLint errors for type safety and maintainability.
 
 ## Steps
+
 1. Refactor all `any` types to explicit interfaces.
 2. Fix type mismatches for language props (`string` → `'en' | 'de'`).
 3. Remove unused variables and imports.
@@ -13,4 +15,5 @@ Fix all TypeScript and ESLint errors for type safety and maintainability.
 7. Validate all changes with `pnpm run check` and `pnpm run fix`.
 
 ## Impact
+
 Cleaner codebase, fewer runtime errors, improved developer experience.

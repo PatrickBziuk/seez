@@ -38,7 +38,11 @@
     "tags:full-workflow": "npm run tags:suggest && npm run tags:apply",
     "tldr:generate": "npx tsx scripts/generate_tldr.ts",
     "tldr:force": "npx tsx scripts/generate_tldr.ts --force",
-    "tldr:collection": "npx tsx scripts/generate_tldr.ts --collection="
+    "tldr:collection": "npx tsx scripts/generate_tldr.ts --collection=",
+    "tokens:summary": "npx tsx scripts/token-tracking/cli.ts summary",
+    "tokens:usage": "npx tsx scripts/token-tracking/cli.ts usage",
+    "tokens:export": "npx tsx scripts/token-tracking/cli.ts export",
+    "tokens:add-test": "npx tsx scripts/token-tracking/cli.ts add"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",

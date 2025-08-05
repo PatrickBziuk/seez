@@ -43,7 +43,7 @@ const {
               <div class="flex items-center justify-center">
                 {(icon || defaultIcon) && (
                   <Icon
-                    name={(icon ?? defaultIcon) ?? ""}
+                    name={icon ?? defaultIcon ?? ''}
                     class={twMerge('w-10 h-10 p-2 rounded-full border-2', defaultIconClass, itemClasses?.icon)}
                   />
                 )}

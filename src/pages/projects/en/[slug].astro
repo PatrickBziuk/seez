@@ -5,9 +5,9 @@ import MarkdownLayout from '../../../layouts/MarkdownLayout.astro';
 export async function getStaticPaths() {
   const entries = await getCollection('projects');
   return entries
-    .filter(e => !e.data.draft && e.data.language === 'en')
-    .map(entry => ({
-      params: { slug: entry.id.replace('en/', '').replace(/\.mdx?$/, '') }
+    .filter((e) => !e.data.draft && e.data.language === 'en')
+    .map((entry) => ({
+      params: { slug: entry.id.replace('en/', '').replace(/\.mdx?$/, '') },
     }));
 }
 
@@ -17,6 +17,7 @@ if (!entry) throw new Error(`Project not found: en/${slug}`);
 
 const { Content } = await render(entry);
 ---
+
 <MarkdownLayout frontmatter={entry.data}>
   <Content />
 </MarkdownLayout>

@@ -67,23 +67,23 @@ Das Buch ist gleichzeitig Produkt und Prozess – es zeigt, wie Schreiben frühe
 
 ✒️ **Abgrenzung zu anderen Büchern im Genre:**
 
-| Typisches Young Adult | Dein Buch |
-|-----------------------|-----------|
-| Fiktionale Figuren    | Authentische Ich-Perspektive |
-| Lineare Handlung (Liebesdrama, Coming-of-Age) | Fragmentarische Erinnerungsreise |
-| Glatt polierter Stil  | Rohe, echte Originaltexte & heutige Reflexion |
-| Vorhersehbare Spannungsbögen | Unvorhersehbare innere Entwicklung |
+| Typisches Young Adult                           | Dein Buch                                     |
+| ----------------------------------------------- | --------------------------------------------- |
+| Fiktionale Figuren                              | Authentische Ich-Perspektive                  |
+| Lineare Handlung (Liebesdrama, Coming-of-Age)   | Fragmentarische Erinnerungsreise              |
+| Glatt polierter Stil                            | Rohe, echte Originaltexte & heutige Reflexion |
+| Vorhersehbare Spannungsbögen                    | Unvorhersehbare innere Entwicklung            |
 | Identitätsfragen durch andere Figuren ausgelöst | Identitätsfragen durch eigene Texte ausgelöst |
 
 🧩 **Beispielhafte Struktur:**
 
-| Kapitel   | Inhalt |
-|-----------|--------|
+| Kapitel   | Inhalt                                                        |
+| --------- | ------------------------------------------------------------- |
 | Prolog    | Der 27-Jährige beginnt, sich durch seine alten Texte zu lesen |
-| Kapitel 1 | Gewalt, Sprachlosigkeit, innere Wut (z. B. „hau zurück“) |
-| Kapitel 2 | Depression, Suizidgedanken („Und er“) |
-| Kapitel 3 | Liebe, Verlust, zarte Momente („Schmetterlingsmomente“) |
-| Kapitel 4 | Traumatisierte Bindung („Alaska“) |
-| Kapitel 5 | Schreiben als letzter Halt („Zeilenliebe“, „Follower“) |
-| Kapitel 6 | Der heutige Leser in mir (Retrospektive mit 27) |
-| Epilog    | Was bleibt – und was ich euch mitgeben möchte |
+| Kapitel 1 | Gewalt, Sprachlosigkeit, innere Wut (z. B. „hau zurück“)      |
+| Kapitel 2 | Depression, Suizidgedanken („Und er“)                         |
+| Kapitel 3 | Liebe, Verlust, zarte Momente („Schmetterlingsmomente“)       |
+| Kapitel 4 | Traumatisierte Bindung („Alaska“)                             |
+| Kapitel 5 | Schreiben als letzter Halt („Zeilenliebe“, „Follower“)        |
+| Kapitel 6 | Der heutige Leser in mir (Retrospektive mit 27)               |
+| Epilog    | Was bleibt – und was ich euch mitgeben möchte                 |

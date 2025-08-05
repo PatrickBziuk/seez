@@ -37,9 +37,9 @@ const availableLanguages = ['en', 'de'];
 const pathname = String(Astro.url.pathname);
 const slugMatch = pathname.match(/(?:en|de)\/(.*)/);
 const slug = slugMatch ? slugMatch[1] : pathname.replace(/^\//, '');
-const alternateLanguages = availableLanguages.map(lang => ({
+const alternateLanguages = availableLanguages.map((lang) => ({
   hreflang: lang,
-  href: `/${lang}/${slug}`
+  href: `/${lang}/${slug}`,
 }));
 ---
 

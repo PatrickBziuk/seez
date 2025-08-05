@@ -31,14 +31,14 @@ if (fs.existsSync(testFile)) {
 console.log('\\nContent subdirectories:');
 try {
   const dirs = fs.readdirSync(contentDir);
-  dirs.forEach(dir => {
+  dirs.forEach((dir) => {
     const dirPath = path.join(contentDir, dir);
     if (fs.statSync(dirPath).isDirectory()) {
       console.log(`  📁 ${dir}`);
-      
+
       // List files in each directory
       const files = fs.readdirSync(dirPath, { recursive: true });
-      files.forEach(file => {
+      files.forEach((file) => {
         if (file.toString().endsWith('.md') || file.toString().endsWith('.mdx')) {
           console.log(`    📄 ${file}`);
         }
