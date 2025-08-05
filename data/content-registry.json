@@ -1,19 +1,26 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-05T13:12:52.067Z",
+  "lastUpdated": "2025-08-05T14:10:12.393Z",
   "entries": {
     "slug-20250805-d90c95e9": {
       "canonicalId": "slug-20250805-d90c95e9",
-      "originalPath": "books/de/licht-am-ende-der-zeilen.md",
+      "originalPath": "src/content/books/de/licht-am-ende-der-zeilen.md",
       "originalLanguage": "de",
       "title": "Licht am Ende der Zeilen",
-      "lastModified": "2025-08-05T13:12:52.019Z",
-      "contentHash": "4b7af2843fae560f9061d0c202525bf881c2dbcb163a7f97eac7655666fbe77c",
-      "translations": {}
+      "lastModified": "2025-08-05T14:04:41.823Z",
+      "contentHash": "eb23126a41ddad6e79b4f5e6a5d8b4708cd69df4764a7eb4facc2f74373927cd",
+      "translations": {
+        "en": {
+          "path": "src/content/books/en/licht-am-ende-der-zeilen.md",
+          "status": "missing",
+          "lastTranslated": "2025-08-05T14:04:41.827Z",
+          "translationHash": "02ee51c77b4b9830c676e6da8aa8bcf603b540d6be3c47e9489135e6fe54515a"
+        }
+      }
     },
     "slug-20250805-da640107": {
       "canonicalId": "slug-20250805-da640107",
-      "originalPath": "books/en/example-book-root.md",
+      "originalPath": "src/content/books/en/example-book-root.md",
       "originalLanguage": "en",
       "title": "The Pragmatic Programmer",
       "lastModified": "2025-08-05T13:12:52.022Z",
@@ -22,7 +29,7 @@
     },
     "slug-20250805-2107ab0c": {
       "canonicalId": "slug-20250805-2107ab0c",
-      "originalPath": "books/en/example-book.md",
+      "originalPath": "src/content/books/en/example-book.md",
       "originalLanguage": "en",
       "title": "Example Book",
       "lastModified": "2025-08-05T13:12:52.025Z",
@@ -31,7 +38,7 @@
     },
     "slug-20250805-8b154d9c": {
       "canonicalId": "slug-20250805-8b154d9c",
-      "originalPath": "books/en/licht-am-ende-der-zeilen.md",
+      "originalPath": "src/content/books/en/licht-am-ende-der-zeilen.md",
       "originalLanguage": "en",
       "title": "Licht am Ende der Zeilen",
       "lastModified": "2025-08-05T13:12:52.028Z",
@@ -40,7 +47,7 @@
     },
     "slug-20250805-e84d4526": {
       "canonicalId": "slug-20250805-e84d4526",
-      "originalPath": "projects/de/cosensai.mdx",
+      "originalPath": "src/content/projects/de/cosensai.mdx",
       "originalLanguage": "de",
       "title": "CoSensAI",
       "lastModified": "2025-08-05T13:12:52.030Z",
@@ -49,7 +56,7 @@
     },
     "slug-20250805-bf655b06": {
       "canonicalId": "slug-20250805-bf655b06",
-      "originalPath": "projects/de/meine-musik-root.mdx",
+      "originalPath": "src/content/projects/de/meine-musik-root.mdx",
       "originalLanguage": "de",
       "title": "Musik",
       "lastModified": "2025-08-05T13:12:52.033Z",
@@ -58,25 +65,16 @@
     },
     "slug-20250805-05e93b2e": {
       "canonicalId": "slug-20250805-05e93b2e",
-      "originalPath": "projects/en/portique.mdx",
+      "originalPath": "src/content/projects/en/portique.mdx",
       "originalLanguage": "en",
       "title": "Portique: European FOSS Jamstack Platform",
       "lastModified": "2025-08-05T13:12:52.037Z",
       "contentHash": "3f5933a31291d6c9ab6ce792b9d7bad583cf622c84a2aeaf31c6c571b3efc68f",
       "translations": {}
     },
-    "slug-20250805-390f2bca": {
-      "canonicalId": "slug-20250805-390f2bca",
-      "originalPath": "lab/de/tldr-demo.mdx",
-      "originalLanguage": "de",
-      "title": "TL;DR Komponente Demo",
-      "lastModified": "2025-08-05T13:12:52.041Z",
-      "contentHash": "b8383966efa54bc5231ded993df1f1ea5eb837ff0ef5126343420678078258f1",
-      "translations": {}
-    },
     "slug-20250805-90442f46": {
       "canonicalId": "slug-20250805-90442f46",
-      "originalPath": "lab/en/badge-showcase.mdx",
+      "originalPath": "src/content/lab/en/badge-showcase.mdx",
       "originalLanguage": "en",
       "title": "Badge Component Showcase",
       "lastModified": "2025-08-05T13:12:52.045Z",
@@ -85,7 +83,7 @@
     },
     "slug-20250805-af41b814": {
       "canonicalId": "slug-20250805-af41b814",
-      "originalPath": "lab/en/example-lab-root.mdx",
+      "originalPath": "src/content/lab/en/example-lab-root.mdx",
       "originalLanguage": "en",
       "title": "Dark Mode Switcher Demo",
       "lastModified": "2025-08-05T13:12:52.049Z",
@@ -94,7 +92,7 @@
     },
     "slug-20250805-0d0a37d8": {
       "canonicalId": "slug-20250805-0d0a37d8",
-      "originalPath": "lab/en/example-lab.mdx",
+      "originalPath": "src/content/lab/en/example-lab.mdx",
       "originalLanguage": "en",
       "title": "Example Lab MDX",
       "lastModified": "2025-08-05T13:12:52.053Z",
@@ -103,7 +101,7 @@
     },
     "slug-20250805-c82e57ef": {
       "canonicalId": "slug-20250805-c82e57ef",
-      "originalPath": "lab/en/note-demo.mdx",
+      "originalPath": "src/content/lab/en/note-demo.mdx",
       "originalLanguage": "en",
       "title": "Note Component Demo",
       "lastModified": "2025-08-05T13:12:52.057Z",
@@ -112,16 +110,23 @@
     },
     "slug-20250805-b9485a11": {
       "canonicalId": "slug-20250805-b9485a11",
-      "originalPath": "lab/en/tldr-demo.mdx",
+      "originalPath": "src/content/lab/en/tldr-demo.mdx",
       "originalLanguage": "en",
       "title": "TL;DR Component Demo",
       "lastModified": "2025-08-05T13:12:52.062Z",
       "contentHash": "9c205fa20ea561a45c0b5779e2896da22de2f8978e375d646bd998576fd6a766",
-      "translations": {}
+      "translations": {
+        "de": {
+          "path": "src/content/lab/de/tldr-demo.mdx",
+          "status": "current",
+          "lastTranslated": "2025-08-05T14:06:00.759Z",
+          "translationHash": "209dcaaed0ac4c9d28f14816e91f3093459725456c31661bb352442476305dbb"
+        }
+      }
     },
     "slug-20250805-547dab20": {
       "canonicalId": "slug-20250805-547dab20",
-      "originalPath": "life/de/who-am-i.md",
+      "originalPath": "src/content/life/de/who-am-i.md",
       "originalLanguage": "de",
       "title": "Wer bin ich?",
       "lastModified": "2025-08-05T13:12:52.064Z",
@@ -130,7 +135,7 @@
     },
     "slug-20250805-2e3f9452": {
       "canonicalId": "slug-20250805-2e3f9452",
-      "originalPath": "life/en/who-am-i-root.md",
+      "originalPath": "src/content/life/en/who-am-i-root.md",
       "originalLanguage": "en",
       "title": "Who am I",
       "lastModified": "2025-08-05T13:12:52.066Z",

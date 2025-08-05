@@ -1,0 +1,155 @@
+---
+/**
+ * CanonicalSEO - Enhanced SEO component with canonical ID system integration
+ * @props canonicalId, title, description, content metadata
+ * @behavior Generates complete SEO metadata using canonical relationships from registry
+ * @dependencies canonical-urls.ts, content registry
+ * @usedBy Content pages, MarkdownLayout.astro
+ */
+
+import { getCanonicalUrl, getHreflangData, getContentLineage } from '~/utils/canonical-urls';
+
+interface Props {
+  canonicalId?: string;
+  title: string;
+  description?: string;
+  language?: 'en' | 'de';
+  type?: 'website' | 'article';
+  publishDate?: Date;
+  modifiedDate?: Date;
+  // Fallback props for content without canonical IDs
+  fallbackCanonical?: string;
+  fallbackAlternates?: { locale: string; url: string }[];
+}
+
+const {
+  canonicalId,
+  title,
+  description,
+  language = 'en',
+  type = 'article',
+  publishDate,
+  modifiedDate,
+  fallbackCanonical,
+  fallbackAlternates = [],
+} = Astro.props;
+
+const site = Astro.site?.href || 'https://seez.eu';
+
+// Generate canonical and hreflang data using canonical ID system
+let canonicalUrl: string;
+let hreflangData: { hreflang: string; href: string }[] = [];
+let contentLineage: { canonicalId: string; originalLanguage: string; isTranslation: boolean } | null = null;
+
+if (canonicalId) {
+  // Use canonical ID system
+  const generatedCanonical = getCanonicalUrl(canonicalId, language);
+  canonicalUrl = generatedCanonical ? new URL(generatedCanonical, site).href : new URL(Astro.url.pathname, site).href;
+  
+  // Get hreflang relationships from registry
+  hreflangData = getHreflangData(canonicalId).map(item => ({
+    hreflang: item.hreflang,
+    href: new URL(item.href, site).href
+  }));
+  
+  // Get content lineage for metadata
+  contentLineage = getContentLineage(canonicalId);
+} else {
+  // Fallback to traditional approach
+  canonicalUrl = fallbackCanonical || new URL(Astro.url.pathname, site).href;
+  hreflangData = fallbackAlternates.map(alt => ({
+    hreflang: alt.locale,
+    href: new URL(alt.url, site).href
+  }));
+}
+
+const fullTitle = title.includes('Seez') ? title : `${title} | Seez`;
+
+// Determine if this is a translation
+const isTranslation = contentLineage?.isTranslation || false;
+const originalLanguage = contentLineage?.originalLanguage || language;
+---
+
+<!-- Primary Meta Tags -->
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- Language alternates with canonical ID relationships -->
+{hreflangData.map(({ hreflang, href }) => (
+  <link rel="alternate" hreflang={hreflang} href={href} />
+))}
+
+<!-- Default language fallback -->
+<link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+
+<!-- Content lineage metadata -->
+{canonicalId && (
+  <>
+    <meta name="content:canonical-id" content={canonicalId} />
+    <meta name="content:original-language" content={originalLanguage} />
+    {isTranslation && <meta name="content:translation" content="true" />}
+  </>
+)}
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:type" content={type} />
+<meta property="og:locale" content={language === 'de' ? 'de_DE' : 'en_US'} />
+
+<!-- Open Graph locale alternates -->
+{hreflangData
+  .filter(({ hreflang }) => hreflang !== language)
+  .map(({ hreflang }) => (
+    <meta property="og:locale:alternate" content={hreflang === 'de' ? 'de_DE' : 'en_US'} />
+  ))
+}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+
+<!-- Timestamps -->
+{publishDate && <meta property="article:published_time" content={publishDate.toISOString()} />}
+{modifiedDate && <meta property="article:modified_time" content={modifiedDate.toISOString()} />}
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json" is:inline>
+  {
+    "@context": "https://schema.org",
+    "@type": type === "article" ? "Article" : "WebPage",
+    "headline": {JSON.stringify(title)},
+    "description": {JSON.stringify(description || '')},
+    "url": {JSON.stringify(canonicalUrl)},
+    "inLanguage": {JSON.stringify(language)},
+    {publishDate && `"datePublished": ${JSON.stringify(publishDate.toISOString())},`}
+    {modifiedDate && `"dateModified": ${JSON.stringify(modifiedDate.toISOString())},`}
+    {canonicalId && `"identifier": ${JSON.stringify(canonicalId)},`}
+    {isTranslation && `"isBasedOn": ${JSON.stringify(canonicalUrl)},`}
+    "author": {
+      "@type": "Person",
+      "name": "Seez"
+    },
+    "publisher": {
+      "@type": "Organization", 
+      "name": "Seez",
+      "url": {JSON.stringify(site)}
+    }
+  }
+</script>
+
+<!-- Debug information (development only) -->
+{import.meta.env.DEV && canonicalId && (
+  <script is:inline define:vars={{ canonicalId, canonicalUrl, hreflangData, contentLineage, language }}>
+    console.log('Canonical SEO Debug:', {
+      canonicalId,
+      canonicalUrl, 
+      hreflangData,
+      contentLineage,
+      language
+    });
+  </script>
+)}

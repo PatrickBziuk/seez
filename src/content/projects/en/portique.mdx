@@ -47,9 +47,9 @@ Portique offers a third path:
 
 1. **Data Sovereignty & GDPR First.** All infrastructure is EU-based, with no hidden data exposure or US-Cloud dependencies (CLOUD Act aware).
 2. **Jamstack DX, but FOSS.** Astro + Vite for builds, CI/CD with Woodpecker, Git-backed content via Gitea — fully transparent and vendor-neutral.
-3. **Dual Operation Modes:**  
-     - *Managed*: A European provider handles build, deployment, updates, and monitoring.  
-     - *Self-hosted*: Same stack, self-operated, fully reproducible with IaC or containers.
+3. **Dual Operation Modes:**
+   - _Managed_: A European provider handles build, deployment, updates, and monitoring.
+   - _Self-hosted_: Same stack, self-operated, fully reproducible with IaC or containers.
 4. **Progressive Onboarding:** Start with static hosting; expand into visual editors, Supabase-backed backends, and AI support assistants.
 
 ## Architecture Overview
@@ -93,20 +93,20 @@ For tech-savvy teams:
 
 ```yaml
 pipeline:
-    build:
-        image: node:20
-        commands:
-            - npm ci
-            - npx astro build
-    deploy:
-        image: curlimages/curl
-        commands:
-            - ./scripts/deploy.sh
+  build:
+    image: node:20
+    commands:
+      - npm ci
+      - npx astro build
+  deploy:
+    image: curlimages/curl
+    commands:
+      - ./scripts/deploy.sh
 ```
 
 ### Caddyfile (Origin + Proxy)
 
-```json
+```caddyfile
 example.com {
     root * /var/www/example.com
     file_server
@@ -121,10 +121,7 @@ example.com {
 // src/lib/supabaseClient.ts
 import { createClient } from '@supabase/supabase-js';
 
-export const supabase = createClient(
-    import.meta.env.PUBLIC_SUPABASE_URL,
-    import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-);
+export const supabase = createClient(import.meta.env.PUBLIC_SUPABASE_URL, import.meta.env.PUBLIC_SUPABASE_ANON_KEY);
 ```
 
 ### Multi-Tenancy & Isolation
@@ -193,4 +190,3 @@ Portique is open to contributions:
 - **Phase 2:** Markdown editor + dashboard
 - **Phase 3:** Supabase integrations, AI assistant
 - **Phase 4:** Multi-tenant SaaS, community template marketplace
-

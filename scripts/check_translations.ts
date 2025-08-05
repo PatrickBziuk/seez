@@ -24,12 +24,12 @@ import { shouldSkipTranslation, getSkipReason } from '../src/utils/translation-o
 /**
  * Simple content language detection based on heuristics
  * @param content - Content to analyze
- * @param title - Title to analyze  
+ * @param title - Title to analyze
  * @returns Detected language or null if uncertain
  */
 function detectContentLanguage(content: string, title: string = ''): SupportedLanguage | null {
   const textToAnalyze = (title + ' ' + content).toLowerCase();
-  
+
   // German indicators (more specific patterns first)
   const germanIndicators = [
     // Common German words
@@ -39,47 +39,47 @@ function detectContentLanguage(content: string, title: string = ''): SupportedLa
     // Common German phrases
     /\b(ich bin|du bist|er ist|sie ist|es ist|wir sind|ihr seid|sie sind|das ist|dies ist|hier ist|dort ist|es gibt|gibt es|zum beispiel|beispielsweise|das heißt|das bedeutet|im gegensatz|im vergleich|auf diese weise|auf jeden fall|meiner meinung nach)\b/gi,
   ];
-  
+
   // English indicators
   const englishIndicators = [
     // Common English words
     /\b(the|and|or|of|to|in|for|with|on|at|by|from|about|into|through|during|before|after|above|below|between|among|within|without|against|under|over|upon|across|around|behind|beside|beyond|toward|towards|inside|outside|inside|outside|this|that|these|those|what|which|who|whom|whose|when|where|why|how|can|could|will|would|shall|should|may|might|must|ought|need|dare|used|going|been|being|have|has|had|do|does|did|done|am|is|are|was|were|being|been|get|got|gotten|give|gave|given|take|took|taken|make|made|come|came|go|went|gone|know|knew|known|think|thought|see|saw|seen|say|said|tell|told|find|found|feel|felt|seem|seemed|look|looked|appear|appeared|become|became|turn|turned|grow|grew|grown|keep|kept|leave|left|move|moved|live|lived|work|worked|play|played|run|ran|walk|walked|talk|talked|speak|spoke|spoken|write|wrote|written|read|hear|heard|listen|listened|watch|watched|learn|learned|teach|taught|study|studied|understand|understood|believe|believed|remember|remembered|forget|forgot|forgotten|hope|hoped|want|wanted|like|liked|love|loved|hate|hated|enjoy|enjoyed|help|helped|try|tried|start|started|begin|began|begun|stop|stopped|end|ended|finish|finished|continue|continued|change|changed|stay|stayed|remain|remained|follow|followed|lead|led|meet|met|join|joined|include|included|contain|contained|hold|held|carry|carried|bring|brought|send|sent|receive|received|open|opened|close|closed|show|showed|shown|hide|hid|hidden|put|placed|set|cut|built|break|broke|broken|fix|fixed|use|used|wear|wore|worn|buy|bought|sell|sold|pay|paid|cost|spend|spent|save|saved|win|won|lose|lost|choose|chose|chosen|decide|decided|plan|planned|expect|expected|happen|happened|occur|occurred|exist|existed|appear|appeared|disappear|disappeared|arrive|arrived|return|returned|visit|visited|travel|traveled|drive|drove|driven|ride|rode|ridden|fly|flew|flown|fall|fell|fallen|rise|rose|risen|climb|climbed|jump|jumped|sit|sat|stand|stood|lie|lay|lain|sleep|slept|wake|woke|woken|eat|ate|eaten|drink|drank|drunk|cook|cooked|clean|cleaned|wash|washed|dress|dressed)\b/g,
     // English-specific contractions
     /\b(don't|doesn't|didn't|won't|wouldn't|can't|couldn't|shouldn't|mustn't|haven't|hasn't|hadn't|aren't|isn't|wasn't|weren't|i'm|you're|he's|she's|it's|we're|they're|i've|you've|we've|they've|i'd|you'd|he'd|she'd|we'd|they'd|i'll|you'll|he'll|she'll|we'll|they'll|that's|what's|who's|where's|when's|how's|why's|there's|here's)\b/gi,
-    // Common English phrases  
+    // Common English phrases
     /\b(in order to|in addition to|as well as|such as|for example|for instance|that is|in other words|on the other hand|in contrast|in comparison|in this way|in any case|in my opinion|it seems that|it appears that|it is important|it is necessary|it is possible|it is likely|there is|there are|this is|that is)\b/gi,
   ];
-  
+
   let germanScore = 0;
   let englishScore = 0;
-  
+
   // Count German indicators
-  germanIndicators.forEach(pattern => {
+  germanIndicators.forEach((pattern) => {
     const matches = textToAnalyze.match(pattern);
     if (matches) {
       germanScore += matches.length;
     }
   });
-  
+
   // Count English indicators
-  englishIndicators.forEach(pattern => {
+  englishIndicators.forEach((pattern) => {
     const matches = textToAnalyze.match(pattern);
     if (matches) {
       englishScore += matches.length;
     }
   });
-  
+
   // Need clear majority to make a decision
   const total = germanScore + englishScore;
   if (total < 5) return null; // Not enough text to determine
-  
+
   const germanRatio = germanScore / total;
   const englishRatio = englishScore / total;
-  
+
   // Need at least 60% confidence
   if (germanRatio >= 0.6) return 'de';
   if (englishRatio >= 0.6) return 'en';
-  
+
   return null; // Unclear
 }
 
@@ -89,25 +89,28 @@ function detectContentLanguage(content: string, title: string = ''): SupportedLa
  * @param frontmatter - Parsed frontmatter
  * @returns Validation result
  */
-function validateLanguageConsistency(content: string, frontmatter: Record<string, unknown>): {
+function validateLanguageConsistency(
+  content: string,
+  frontmatter: Record<string, unknown>
+): {
   valid: boolean;
   detectedLang: SupportedLanguage | null;
   frontmatterLang: SupportedLanguage;
   warnings: string[];
 } {
-  const frontmatterLang = frontmatter.language as SupportedLanguage || 'en';
+  const frontmatterLang = (frontmatter.language as SupportedLanguage) || 'en';
   const detectedLang = detectContentLanguage(content, frontmatter.title as string);
   const warnings: string[] = [];
-  
+
   if (detectedLang && detectedLang !== frontmatterLang) {
     warnings.push(`Content appears to be in ${detectedLang} but frontmatter says ${frontmatterLang}`);
   }
-  
+
   return {
     valid: !detectedLang || detectedLang === frontmatterLang,
     detectedLang,
     frontmatterLang,
-    warnings
+    warnings,
   };
 }
 
@@ -180,10 +183,12 @@ function getContentFiles(collection: string): ContentFile[] {
           const languageValidation = validateLanguageConsistency(parsed.content, parsed.data);
           if (!languageValidation.valid && languageValidation.warnings.length > 0) {
             console.warn(`Language mismatch in ${relativePath}:`, languageValidation.warnings);
-            
+
             // If we have high confidence in detected language, use it instead
             if (languageValidation.detectedLang && languageValidation.detectedLang !== language) {
-              console.warn(`  Using detected language ${languageValidation.detectedLang} instead of frontmatter ${language}`);
+              console.warn(
+                `  Using detected language ${languageValidation.detectedLang} instead of frontmatter ${language}`
+              );
               language = languageValidation.detectedLang;
             }
           }

@@ -52,7 +52,7 @@ if (ai_tldr) {
   tldrPreview = tldrPreview.replace(/\*\*(.*?)\*\*/g, '$1');
 }
 
-const tldrId = `tldr-${Math.random().toString(36).substr(2, 9)}`;
+const tldrId = `tldr-${Math.random().toString(36).substring(2, 11)}`;
 ---
 
 {(language || timestamp || status || tags?.length || ai_tldr) && (
@@ -146,7 +146,10 @@ const tldrId = `tldr-${Math.random().toString(36).substr(2, 9)}`;
         <Icon name="tabler:tags" class="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" />
         <div class="flex flex-wrap gap-2">
           {tags.map((tag: string) => (
-            <a href={`/${currentLanguage}/tags/${encodeURIComponent(tag)}`} class="focus:outline-none transition-transform hover:scale-105">
+            <a 
+              href={`/${currentLanguage}/tags/${encodeURIComponent(tag)}`} 
+              class="focus:outline-none transition-transform hover:scale-105"
+            >
               <Badge variant="tag" text={translations?.tags?.[tag] || tag} />
             </a>
           ))}

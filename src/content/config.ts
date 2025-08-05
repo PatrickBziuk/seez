@@ -31,6 +31,13 @@ const extendedSchema = sharedSchema.extend({
   timestamp: z.string().optional(), // ISO 8601
   translationKey: z.string().optional(), // Unique identifier for pairing across languages
   original: z.string().optional(), // Reference to source file for translations
+  
+  // Canonical ID system for content integrity
+  canonicalId: z.string().optional(), // Format: slug-YYYYMMDD-hash8
+  originalLanguage: z.enum(['en', 'de']).optional(), // Language of original content
+  translationOf: z.string().optional(), // Canonical ID of source content
+  sourceLanguage: z.enum(['en', 'de']).optional(), // Language this was translated from
+  
   translationHistory: z
     .array(
       z.object({
@@ -52,6 +59,38 @@ const extendedSchema = sharedSchema.extend({
       originalClarity: z.number().optional(),
       timestamp: z.string(),
       notes: z.array(z.string()).optional(),
+    })
+    .optional(),
+  // AI metadata with token usage tracking
+  ai_metadata: z
+    .object({
+      canonicalId: z.string().optional(),
+      translationOf: z.string().optional(),
+      tokenUsage: z
+        .object({
+          translation: z
+            .object({
+              tokens: z.number(),
+              cost: z.number(),
+              co2: z.number(),
+            })
+            .optional(),
+          tldr: z
+            .object({
+              tokens: z.number(),
+              cost: z.number(),
+              co2: z.number(),
+            })
+            .optional(),
+          total: z
+            .object({
+              tokens: z.number(),
+              cost: z.number(),
+              co2: z.number(),
+            })
+            .optional(),
+        })
+        .optional(),
     })
     .optional(),
 });
@@ -77,6 +116,13 @@ const postSchema = z.object({
   // Translation pipeline support
   translationKey: z.string().optional(),
   original: z.string().optional(),
+  
+  // Canonical ID system for content integrity
+  canonicalId: z.string().optional(),
+  originalLanguage: z.enum(['en', 'de']).optional(),
+  translationOf: z.string().optional(),
+  sourceLanguage: z.enum(['en', 'de']).optional(),
+  
   translationHistory: z
     .array(
       z.object({
@@ -97,6 +143,38 @@ const postSchema = z.object({
       originalClarity: z.number().optional(),
       timestamp: z.string(),
       notes: z.array(z.string()).optional(),
+    })
+    .optional(),
+  // AI metadata with token usage tracking
+  ai_metadata: z
+    .object({
+      canonicalId: z.string().optional(),
+      translationOf: z.string().optional(),
+      tokenUsage: z
+        .object({
+          translation: z
+            .object({
+              tokens: z.number(),
+              cost: z.number(),
+              co2: z.number(),
+            })
+            .optional(),
+          tldr: z
+            .object({
+              tokens: z.number(),
+              cost: z.number(),
+              co2: z.number(),
+            })
+            .optional(),
+          total: z
+            .object({
+              tokens: z.number(),
+              cost: z.number(),
+              co2: z.number(),
+            })
+            .optional(),
+        })
+        .optional(),
     })
     .optional(),
 });

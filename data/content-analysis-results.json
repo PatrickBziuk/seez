@@ -1,0 +1,110 @@
+[
+  {
+    "slug": "books/licht-am-ende-der-zeilen",
+    "collections": ["books"],
+    "files": [
+      {
+        "path": "src\\content\\books\\en\\licht-am-ende-der-zeilen.md",
+        "slug": "licht-am-ende-der-zeilen",
+        "collection": "books",
+        "language": "en",
+        "title": "Licht am Ende der Zeilen",
+        "canonicalId": "slug-20250805-d90c95e9",
+        "content": "\nThis is content about \"Licht am Ende der Zeilen\".\n",
+        "wordCount": 9,
+        "hasRichContent": false
+      },
+      {
+        "path": "src\\content\\books\\de\\licht-am-ende-der-zeilen.md",
+        "slug": "licht-am-ende-der-zeilen",
+        "collection": "books",
+        "language": "de",
+        "title": "Licht am Ende der Zeilen",
+        "canonicalId": "slug-20250805-d90c95e9",
+        "content": "\n📖 **TL;DR – Buchkonzept:**\nTitelvorschlag: „Licht am Ende der Zeilen“\n\n🧭 **Inhaltliches Grundkonzept:**\nEin mittlerweile 27-jähriger Autor blickt auf Texte zurück, die er zwischen 14 und 21 geschrieben hat – Gedichte, Fragmente, emotionale Monologe.\nEr schreibt heute ein Buch über den Versuch, damals ein Buch zu schreiben, und nimmt die Leser:innen mit auf eine literarisch-emotionale Reise durch seine eigene Vergangenheit.\n\nJedes Kapitel enthält:\n\n- alte Originaltexte (ungefiltert)\n- Kommentare, Rückblicke, emotionale Essays aus heutiger Sicht\n- Reflexionen über Trauma, Liebe, Schreiben, Depression und Selbstfindung\n\nDas Buch ist gleichzeitig Produkt und Prozess – es zeigt, wie Schreiben früher Rettung war und heute Erkenntnis bedeutet.\n\n🎯 **Zielgruppe:**\n\n- Young Adult (16–21): Menschen, die sich selbst noch in der Findung befinden, oft kämpfen, sich unverstanden fühlen\n- New Adult (21–29): Menschen, die rückblickend verstehen wollen, was mit ihnen passiert ist\n- Junge Männer mit emotionaler Tiefe, die sich in Mainstream-Literatur selten gesehen fühlen\n\n💎 **USP – Was macht das Buch einzigartig?**\n\n1. **Authentizität durch Originaltexte**\n   Keine nachgestellte Fiktion, keine geglättete Nacherzählung:\n   Man liest die echten Worte eines Jugendlichen – roh, ehrlich, verletzlich.\n   Diese Texte tragen eine Zeitkapsel in sich, wie sie kein erfundener Charakter je exakt so hätte schreiben können.\n\n2. **Doppelte Perspektive – jung & erwachsen**\n   Das Werk ist Reflexion und Rückblick in einem –\n   Die „damalige Stimme“ spricht direkt. Die „heutige Stimme“ antwortet – nicht besserwisserisch, sondern verstehend.\n\n3. **Metaebene: Das Buch als Prozess**\n   Der Leser begleitet nicht nur eine Geschichte, sondern den Entstehungsprozess des Buches selbst.\n   Das sorgt für:\n   - emotionale Nähe\n   - literarische Tiefe\n   - strukturellen Wiedererkennungswert\n\n4. **Emotionales Empowerment**\n   Es zeigt:\n   - dass Dunkelheit benennbar ist\n   - dass Schreiben ein Überlebensinstrument sein kann\n   - dass Selbstverständnis oft Jahre später erst reift\n   - und dass Literatur nicht aus Lösungen, sondern aus Über-Leben besteht\n\n✒️ **Abgrenzung zu anderen Büchern im Genre:**\n\n| Typisches Young Adult                           | Dein Buch                                     |\n| ----------------------------------------------- | --------------------------------------------- |\n| Fiktionale Figuren                              | Authentische Ich-Perspektive                  |\n| Lineare Handlung (Liebesdrama, Coming-of-Age)   | Fragmentarische Erinnerungsreise              |\n| Glatt polierter Stil                            | Rohe, echte Originaltexte & heutige Reflexion |\n| Vorhersehbare Spannungsbögen                    | Unvorhersehbare innere Entwicklung            |\n| Identitätsfragen durch andere Figuren ausgelöst | Identitätsfragen durch eigene Texte ausgelöst |\n\n🧩 **Beispielhafte Struktur:**\n\n| Kapitel   | Inhalt                                                        |\n| --------- | ------------------------------------------------------------- |\n| Prolog    | Der 27-Jährige beginnt, sich durch seine alten Texte zu lesen |\n| Kapitel 1 | Gewalt, Sprachlosigkeit, innere Wut (z. B. „hau zurück“)      |\n| Kapitel 2 | Depression, Suizidgedanken („Und er“)                         |\n| Kapitel 3 | Liebe, Verlust, zarte Momente („Schmetterlingsmomente“)       |\n| Kapitel 4 | Traumatisierte Bindung („Alaska“)                             |\n| Kapitel 5 | Schreiben als letzter Halt („Zeilenliebe“, „Follower“)        |\n| Kapitel 6 | Der heutige Leser in mir (Retrospektive mit 27)               |\n| Epilog    | Was bleibt – und was ich euch mitgeben möchte                 |\n",
+        "wordCount": 467,
+        "hasRichContent": true
+      }
+    ],
+    "suggestedOriginal": {
+      "path": "src\\content\\books\\de\\licht-am-ende-der-zeilen.md",
+      "slug": "licht-am-ende-der-zeilen",
+      "collection": "books",
+      "language": "de",
+      "title": "Licht am Ende der Zeilen",
+      "canonicalId": "slug-20250805-d90c95e9",
+      "content": "\n📖 **TL;DR – Buchkonzept:**\nTitelvorschlag: „Licht am Ende der Zeilen“\n\n🧭 **Inhaltliches Grundkonzept:**\nEin mittlerweile 27-jähriger Autor blickt auf Texte zurück, die er zwischen 14 und 21 geschrieben hat – Gedichte, Fragmente, emotionale Monologe.\nEr schreibt heute ein Buch über den Versuch, damals ein Buch zu schreiben, und nimmt die Leser:innen mit auf eine literarisch-emotionale Reise durch seine eigene Vergangenheit.\n\nJedes Kapitel enthält:\n\n- alte Originaltexte (ungefiltert)\n- Kommentare, Rückblicke, emotionale Essays aus heutiger Sicht\n- Reflexionen über Trauma, Liebe, Schreiben, Depression und Selbstfindung\n\nDas Buch ist gleichzeitig Produkt und Prozess – es zeigt, wie Schreiben früher Rettung war und heute Erkenntnis bedeutet.\n\n🎯 **Zielgruppe:**\n\n- Young Adult (16–21): Menschen, die sich selbst noch in der Findung befinden, oft kämpfen, sich unverstanden fühlen\n- New Adult (21–29): Menschen, die rückblickend verstehen wollen, was mit ihnen passiert ist\n- Junge Männer mit emotionaler Tiefe, die sich in Mainstream-Literatur selten gesehen fühlen\n\n💎 **USP – Was macht das Buch einzigartig?**\n\n1. **Authentizität durch Originaltexte**\n   Keine nachgestellte Fiktion, keine geglättete Nacherzählung:\n   Man liest die echten Worte eines Jugendlichen – roh, ehrlich, verletzlich.\n   Diese Texte tragen eine Zeitkapsel in sich, wie sie kein erfundener Charakter je exakt so hätte schreiben können.\n\n2. **Doppelte Perspektive – jung & erwachsen**\n   Das Werk ist Reflexion und Rückblick in einem –\n   Die „damalige Stimme“ spricht direkt. Die „heutige Stimme“ antwortet – nicht besserwisserisch, sondern verstehend.\n\n3. **Metaebene: Das Buch als Prozess**\n   Der Leser begleitet nicht nur eine Geschichte, sondern den Entstehungsprozess des Buches selbst.\n   Das sorgt für:\n   - emotionale Nähe\n   - literarische Tiefe\n   - strukturellen Wiedererkennungswert\n\n4. **Emotionales Empowerment**\n   Es zeigt:\n   - dass Dunkelheit benennbar ist\n   - dass Schreiben ein Überlebensinstrument sein kann\n   - dass Selbstverständnis oft Jahre später erst reift\n   - und dass Literatur nicht aus Lösungen, sondern aus Über-Leben besteht\n\n✒️ **Abgrenzung zu anderen Büchern im Genre:**\n\n| Typisches Young Adult                           | Dein Buch                                     |\n| ----------------------------------------------- | --------------------------------------------- |\n| Fiktionale Figuren                              | Authentische Ich-Perspektive                  |\n| Lineare Handlung (Liebesdrama, Coming-of-Age)   | Fragmentarische Erinnerungsreise              |\n| Glatt polierter Stil                            | Rohe, echte Originaltexte & heutige Reflexion |\n| Vorhersehbare Spannungsbögen                    | Unvorhersehbare innere Entwicklung            |\n| Identitätsfragen durch andere Figuren ausgelöst | Identitätsfragen durch eigene Texte ausgelöst |\n\n🧩 **Beispielhafte Struktur:**\n\n| Kapitel   | Inhalt                                                        |\n| --------- | ------------------------------------------------------------- |\n| Prolog    | Der 27-Jährige beginnt, sich durch seine alten Texte zu lesen |\n| Kapitel 1 | Gewalt, Sprachlosigkeit, innere Wut (z. B. „hau zurück“)      |\n| Kapitel 2 | Depression, Suizidgedanken („Und er“)                         |\n| Kapitel 3 | Liebe, Verlust, zarte Momente („Schmetterlingsmomente“)       |\n| Kapitel 4 | Traumatisierte Bindung („Alaska“)                             |\n| Kapitel 5 | Schreiben als letzter Halt („Zeilenliebe“, „Follower“)        |\n| Kapitel 6 | Der heutige Leser in mir (Retrospektive mit 27)               |\n| Epilog    | Was bleibt – und was ich euch mitgeben möchte                 |\n",
+      "wordCount": 467,
+      "hasRichContent": true
+    },
+    "suggestedTranslations": [
+      {
+        "path": "src\\content\\books\\en\\licht-am-ende-der-zeilen.md",
+        "slug": "licht-am-ende-der-zeilen",
+        "collection": "books",
+        "language": "en",
+        "title": "Licht am Ende der Zeilen",
+        "canonicalId": "slug-20250805-d90c95e9",
+        "content": "\nThis is content about \"Licht am Ende der Zeilen\".\n",
+        "wordCount": 9,
+        "hasRichContent": false
+      }
+    ],
+    "needsManualReview": false,
+    "reason": "Clear original-translation relationship: de has 467 words, others are placeholders"
+  },
+  {
+    "slug": "lab/tldr-demo",
+    "collections": ["lab"],
+    "files": [
+      {
+        "path": "src\\content\\lab\\en\\tldr-demo.mdx",
+        "slug": "tldr-demo",
+        "collection": "lab",
+        "language": "en",
+        "title": "TL;DR Component Demo",
+        "canonicalId": "slug-20250805-b9485a11",
+        "content": "\nimport Tldr from '../../../components/marketing/content/Tldr.astro';\nimport Note from '../../../components/marketing/content/Note.astro';\nimport Badge from '../../../components/ui/display/Badge.astro';\n\n# TL;DR Component Demo\n\n<Tldr\n  tldr=\"This page demonstrates the new TL;DR component. It provides a quick AI-generated summary for your content, making it easy for readers to get the gist in seconds.\"\n  color=\"blue\"\n  icon=\"tabler:sparkles\"\n  badgeText=\"AI\"\n  badgeVariant=\"ai\"\n  info=\"This summary was generated by AI using OpenAI GPT-4.\"\n/>\n\n## Custom Colors & Icons\n\n<Tldr\n  tldr=\"You can customize the TL;DR box with different colors and icons to match your content or mood.\"\n  color=\"emerald\"\n  icon=\"tabler:bulb\"\n  badgeText=\"Human\"\n  badgeVariant=\"human\"\n  info=\"This summary was written by a human editor.\"\n/>\n\n<Tldr\n  tldr=\"Mix and match! Use emojis, change the badge, or add extra info for full flexibility.\"\n  color=\"rose\"\n  icon=\"tabler:star\"\n  badgeText=\"AI+Human\"\n  badgeVariant=\"ai-human\"\n  info=\"Reviewed and improved by both AI and a human.\"\n/>\n\n## Why use TL;DR?\n\n<Note\n  title=\"Quick Summaries\"\n  description=\"TL;DR sections help readers quickly understand the main points of your content. Perfect for busy users!\"\n  icon=\"tabler:bulb\"\n/>\n\n## Example Badges\n\n<Badge variant=\"ai\" text=\"AI\" icon=\"🤖\" size=\"sm\" />\n<Badge variant=\"human\" text=\"Human\" icon=\"🧑\" size=\"sm\" />\n<Badge variant=\"tag\" text=\"Demo\" size=\"md\" />\n\n---\n\nYou can use the TL;DR component at the top of articles, project pages, or anywhere a summary is helpful.\n",
+        "wordCount": 189,
+        "hasRichContent": true
+      },
+      {
+        "path": "src\\content\\lab\\de\\tldr-demo.mdx",
+        "slug": "tldr-demo",
+        "collection": "lab",
+        "language": "de",
+        "title": "TL;DR Komponente Demo",
+        "canonicalId": "slug-20250805-b9485a11",
+        "content": "\nimport Tldr from '../../../components/marketing/content/Tldr.astro';\nimport Note from '../../../components/marketing/content/Note.astro';\nimport Badge from '../../../components/ui/display/Badge.astro';\n\n# TL;DR Komponente Demo\n\n<Tldr tldr=\"Diese Seite demonstriert die neue TL;DR-Komponente. Sie bietet eine schnelle, KI-generierte Zusammenfassung, damit Leser sofort den Kern erfassen können.\" />\n\n## Warum TL;DR nutzen?\n\n<Note\n  title=\"Schnelle Zusammenfassungen\"\n  description=\"TL;DR-Abschnitte helfen Lesern, die Hauptpunkte eines Inhalts schnell zu erfassen. Perfekt für Vielbeschäftigte!\"\n  icon=\"tabler:info-square\"\n/>\n\n## Beispiel-Badges\n\n<Badge variant=\"ai\" text=\"KI\" icon=\"🤖\" size=\"sm\" />\n<Badge variant=\"human\" text=\"Mensch\" icon=\"🧑\" size=\"sm\" />\n<Badge variant=\"tag\" text=\"Demo\" size=\"md\" />\n\n---\n\nDie TL;DR-Komponente kann am Anfang von Artikeln, Projektseiten oder überall dort verwendet werden, wo eine Zusammenfassung hilfreich ist.\n",
+        "wordCount": 97,
+        "hasRichContent": true
+      }
+    ],
+    "suggestedOriginal": {
+      "path": "src\\content\\lab\\en\\tldr-demo.mdx",
+      "slug": "tldr-demo",
+      "collection": "lab",
+      "language": "en",
+      "title": "TL;DR Component Demo",
+      "canonicalId": "slug-20250805-b9485a11",
+      "content": "\nimport Tldr from '../../../components/marketing/content/Tldr.astro';\nimport Note from '../../../components/marketing/content/Note.astro';\nimport Badge from '../../../components/ui/display/Badge.astro';\n\n# TL;DR Component Demo\n\n<Tldr\n  tldr=\"This page demonstrates the new TL;DR component. It provides a quick AI-generated summary for your content, making it easy for readers to get the gist in seconds.\"\n  color=\"blue\"\n  icon=\"tabler:sparkles\"\n  badgeText=\"AI\"\n  badgeVariant=\"ai\"\n  info=\"This summary was generated by AI using OpenAI GPT-4.\"\n/>\n\n## Custom Colors & Icons\n\n<Tldr\n  tldr=\"You can customize the TL;DR box with different colors and icons to match your content or mood.\"\n  color=\"emerald\"\n  icon=\"tabler:bulb\"\n  badgeText=\"Human\"\n  badgeVariant=\"human\"\n  info=\"This summary was written by a human editor.\"\n/>\n\n<Tldr\n  tldr=\"Mix and match! Use emojis, change the badge, or add extra info for full flexibility.\"\n  color=\"rose\"\n  icon=\"tabler:star\"\n  badgeText=\"AI+Human\"\n  badgeVariant=\"ai-human\"\n  info=\"Reviewed and improved by both AI and a human.\"\n/>\n\n## Why use TL;DR?\n\n<Note\n  title=\"Quick Summaries\"\n  description=\"TL;DR sections help readers quickly understand the main points of your content. Perfect for busy users!\"\n  icon=\"tabler:bulb\"\n/>\n\n## Example Badges\n\n<Badge variant=\"ai\" text=\"AI\" icon=\"🤖\" size=\"sm\" />\n<Badge variant=\"human\" text=\"Human\" icon=\"🧑\" size=\"sm\" />\n<Badge variant=\"tag\" text=\"Demo\" size=\"md\" />\n\n---\n\nYou can use the TL;DR component at the top of articles, project pages, or anywhere a summary is helpful.\n",
+      "wordCount": 189,
+      "hasRichContent": true
+    },
+    "suggestedTranslations": [
+      {
+        "path": "src\\content\\lab\\de\\tldr-demo.mdx",
+        "slug": "tldr-demo",
+        "collection": "lab",
+        "language": "de",
+        "title": "TL;DR Komponente Demo",
+        "canonicalId": "slug-20250805-b9485a11",
+        "content": "\nimport Tldr from '../../../components/marketing/content/Tldr.astro';\nimport Note from '../../../components/marketing/content/Note.astro';\nimport Badge from '../../../components/ui/display/Badge.astro';\n\n# TL;DR Komponente Demo\n\n<Tldr tldr=\"Diese Seite demonstriert die neue TL;DR-Komponente. Sie bietet eine schnelle, KI-generierte Zusammenfassung, damit Leser sofort den Kern erfassen können.\" />\n\n## Warum TL;DR nutzen?\n\n<Note\n  title=\"Schnelle Zusammenfassungen\"\n  description=\"TL;DR-Abschnitte helfen Lesern, die Hauptpunkte eines Inhalts schnell zu erfassen. Perfekt für Vielbeschäftigte!\"\n  icon=\"tabler:info-square\"\n/>\n\n## Beispiel-Badges\n\n<Badge variant=\"ai\" text=\"KI\" icon=\"🤖\" size=\"sm\" />\n<Badge variant=\"human\" text=\"Mensch\" icon=\"🧑\" size=\"sm\" />\n<Badge variant=\"tag\" text=\"Demo\" size=\"md\" />\n\n---\n\nDie TL;DR-Komponente kann am Anfang von Artikeln, Projektseiten oder überall dort verwendet werden, wo eine Zusammenfassung hilfreich ist.\n",
+        "wordCount": 97,
+        "hasRichContent": true
+      }
+    ],
+    "needsManualReview": true,
+    "reason": "Multiple rich files found - potential content divergence needs manual review"
+  }
+]

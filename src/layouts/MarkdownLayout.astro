@@ -9,6 +9,7 @@
 
 import Layout from '~/layouts/PageLayout.astro';
 import SEO from '~/components/core/SEO.astro';
+import CanonicalSEO from '~/components/core/CanonicalSEO.astro';
 import ContentMetadata from '~/components/content/metadata/ContentMetadata.astro';
 import ContentFallbackNotice from '~/components/content/metadata/ContentFallbackNotice.astro';
 import GitHubSourceButton from '~/components/common/GitHubSourceButton.astro';
@@ -27,6 +28,11 @@ export interface Props {
     status?: Status;
     tags?: string[];
     ai_tldr?: string;
+    // Canonical ID system fields
+    canonicalId?: string;
+    originalLanguage?: 'en' | 'de';
+    translationOf?: string;
+    sourceLanguage?: 'en' | 'de';
   };
   entry?: {
     collection: string;
@@ -72,15 +78,27 @@ const metadata: MetaData = {
 ---
 
 <Layout metadata={metadata}>
-  <SEO
-    title={frontmatter.title || 'Untitled'}
-    description={frontmatter.description}
-    locale={frontmatter.language}
-    alternateLocales={alternateLocales}
-    publishDate={publishDate}
-    modifiedDate={modifiedDate}
-    type="article"
-  />
+  {frontmatter.canonicalId ? (
+    <CanonicalSEO
+      canonicalId={frontmatter.canonicalId}
+      title={frontmatter.title || 'Untitled'}
+      description={frontmatter.description}
+      language={frontmatter.language}
+      publishDate={publishDate}
+      modifiedDate={modifiedDate}
+      type="article"
+    />
+  ) : (
+    <SEO
+      title={frontmatter.title || 'Untitled'}
+      description={frontmatter.description}
+      locale={frontmatter.language}
+      alternateLocales={alternateLocales}
+      publishDate={publishDate}
+      modifiedDate={modifiedDate}
+      type="article"
+    />
+  )}
 
   <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
     <div class="flex justify-between items-start mb-6">

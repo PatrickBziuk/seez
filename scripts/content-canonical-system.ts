@@ -23,16 +23,6 @@ const CONTENT_REGISTRY_PATH = 'data/content-registry.json';
 const CONTENT_COLLECTIONS = ['books', 'projects', 'lab', 'life'] as const;
 
 /**
- * Canonical ID format: slug-YYYYMMDD-hash8
- */
-interface CanonicalId {
-  id: string;
-  generated: string;  // ISO timestamp
-  filePath: string;
-  contentHash: string;
-}
-
-/**
  * Content registry entry
  */
 interface ContentRegistryEntry {
@@ -79,7 +69,7 @@ function generateCanonicalId(filePath: string, content: string): string {
  */
 function computeContentHash(content: string): string {
   const parsed = matter(content);
-  
+
   // Normalize content excluding mutable fields
   const normalizedFrontmatter = { ...parsed.data };
   delete normalizedFrontmatter.timestamp;
@@ -90,7 +80,7 @@ function computeContentHash(content: string): string {
   delete normalizedFrontmatter.lastModified;
   delete normalizedFrontmatter.canonicalId;
   delete normalizedFrontmatter.translationOf;
-  
+
   const normalizedContent = matter.stringify(parsed.content, normalizedFrontmatter);
   return crypto.createHash('sha256').update(normalizedContent).digest('hex');
 }
@@ -106,7 +96,7 @@ function loadContentRegistry(): ContentRegistry {
       entries: {},
     };
   }
-  
+
   try {
     return JSON.parse(fs.readFileSync(CONTENT_REGISTRY_PATH, 'utf-8'));
   } catch (error) {
@@ -124,16 +114,16 @@ function loadContentRegistry(): ContentRegistry {
  */
 function saveContentRegistry(registry: ContentRegistry): void {
   registry.lastUpdated = new Date().toISOString();
-  
+
   // Ensure data directory exists
   fs.mkdirSync(path.dirname(CONTENT_REGISTRY_PATH), { recursive: true });
-  
+
   // Create backup of existing registry
   if (fs.existsSync(CONTENT_REGISTRY_PATH)) {
     const backupPath = `${CONTENT_REGISTRY_PATH}.backup.${Date.now()}`;
     fs.copyFileSync(CONTENT_REGISTRY_PATH, backupPath);
   }
-  
+
   fs.writeFileSync(CONTENT_REGISTRY_PATH, JSON.stringify(registry, null, 2));
 }
 
@@ -142,18 +132,18 @@ function saveContentRegistry(registry: ContentRegistry): void {
  */
 function getAllContentFiles(): string[] {
   const files: string[] = [];
-  
+
   for (const collection of CONTENT_COLLECTIONS) {
     const collectionPath = path.join(CONTENT_BASE_PATH, collection);
     if (!fs.existsSync(collectionPath)) continue;
-    
+
     function scanDirectory(dirPath: string) {
       const entries = fs.readdirSync(dirPath);
-      
+
       for (const entry of entries) {
         const entryPath = path.join(dirPath, entry);
         const stat = fs.statSync(entryPath);
-        
+
         if (stat.isDirectory()) {
           scanDirectory(entryPath);
         } else if (entry.match(/\.(md|mdx)$/)) {
@@ -161,24 +151,27 @@ function getAllContentFiles(): string[] {
         }
       }
     }
-    
+
     scanDirectory(collectionPath);
   }
-  
+
   return files;
 }
 
 /**
  * Detect if content is original or translation
  */
-function detectContentType(filePath: string, frontmatter: Record<string, unknown>): {
+function detectContentType(
+  filePath: string,
+  frontmatter: Record<string, unknown>
+): {
   isOriginal: boolean;
   language: SupportedLanguage;
   originalLanguage?: SupportedLanguage;
   translationOf?: string;
 } {
   const language = (frontmatter.language as SupportedLanguage) || 'en';
-  
+
   // Check if it's explicitly marked as a translation
   if (frontmatter.translationOf) {
     return {
@@ -188,7 +181,7 @@ function detectContentType(filePath: string, frontmatter: Record<string, unknown
       translationOf: frontmatter.translationOf as string,
     };
   }
-  
+
   // Check if it's explicitly marked as original
   if (frontmatter.originalLanguage) {
     return {
@@ -197,11 +190,11 @@ function detectContentType(filePath: string, frontmatter: Record<string, unknown
       originalLanguage: language,
     };
   }
-  
+
   // Heuristic: if in root language folder and no translation markers, assume original
   const pathLang = filePath.match(/[/\\](en|de)[/\\]/)?.[1] as SupportedLanguage;
   const isInLanguageFolder = pathLang === language;
-  
+
   return {
     isOriginal: isInLanguageFolder, // Assume files in language folders are originals
     language,
@@ -212,7 +205,10 @@ function detectContentType(filePath: string, frontmatter: Record<string, unknown
 /**
  * Process a single content file
  */
-function processContentFile(filePath: string, registry: ContentRegistry): {
+function processContentFile(
+  filePath: string,
+  registry: ContentRegistry
+): {
   updated: boolean;
   canonicalId: string;
   needsFrontmatterUpdate: boolean;
@@ -221,24 +217,24 @@ function processContentFile(filePath: string, registry: ContentRegistry): {
   const parsed = matter(content);
   const contentHash = computeContentHash(content);
   const relativePath = path.relative(CONTENT_BASE_PATH, filePath).replace(/\\/g, '/');
-  
+
   // Check if file already has canonical ID
   let canonicalId = parsed.data.canonicalId as string;
   let needsFrontmatterUpdate = false;
-  
+
   if (!canonicalId) {
     // Generate new canonical ID
     canonicalId = generateCanonicalId(relativePath, content);
     needsFrontmatterUpdate = true;
     console.log(`Generated canonical ID ${canonicalId} for ${relativePath}`);
   }
-  
+
   const contentType = detectContentType(filePath, parsed.data);
-  const title = parsed.data.title as string || path.basename(filePath, path.extname(filePath));
-  
+  const title = (parsed.data.title as string) || path.basename(filePath, path.extname(filePath));
+
   // Check if registry entry exists
   const existingEntry = registry.entries[canonicalId];
-  
+
   if (!existingEntry) {
     // Create new registry entry
     if (contentType.isOriginal) {
@@ -263,24 +259,26 @@ function processContentFile(filePath: string, registry: ContentRegistry): {
             lastTranslated: new Date().toISOString(),
             translationHash: contentHash,
           };
-          console.log(`Registered translation: ${canonicalId} (${contentType.language} of ${contentType.translationOf})`);
+          console.log(
+            `Registered translation: ${canonicalId} (${contentType.language} of ${contentType.translationOf})`
+          );
         } else {
           console.warn(`Translation references non-existent original: ${contentType.translationOf}`);
         }
       }
     }
-    
+
     return { updated: true, canonicalId, needsFrontmatterUpdate };
   }
-  
+
   // Update existing entry if content changed
   if (existingEntry.contentHash !== contentHash) {
     existingEntry.lastModified = new Date().toISOString();
     existingEntry.contentHash = contentHash;
-    
+
     // Mark translations as stale if this is the original
     if (contentType.isOriginal) {
-      Object.keys(existingEntry.translations).forEach(lang => {
+      Object.keys(existingEntry.translations).forEach((lang) => {
         const translation = existingEntry.translations[lang as SupportedLanguage];
         if (translation) {
           translation.status = 'stale';
@@ -288,10 +286,10 @@ function processContentFile(filePath: string, registry: ContentRegistry): {
       });
       console.log(`Original content updated, marked translations as stale: ${canonicalId}`);
     }
-    
+
     return { updated: true, canonicalId, needsFrontmatterUpdate };
   }
-  
+
   return { updated: false, canonicalId, needsFrontmatterUpdate };
 }
 
@@ -301,11 +299,11 @@ function processContentFile(filePath: string, registry: ContentRegistry): {
 function updateFileFrontmatter(filePath: string, canonicalId: string): void {
   const content = fs.readFileSync(filePath, 'utf-8');
   const parsed = matter(content);
-  
+
   // Add canonical ID if missing
   if (!parsed.data.canonicalId) {
     parsed.data.canonicalId = canonicalId;
-    
+
     const updated = matter.stringify(parsed.content, parsed.data);
     fs.writeFileSync(filePath, updated);
     console.log(`Updated frontmatter for ${filePath} with canonical ID ${canonicalId}`);
@@ -320,20 +318,20 @@ export function scanAndUpdateContent(): {
   filesUpdated: string[];
 } {
   console.log('🔍 Scanning content files for canonical ID updates...');
-  
+
   const registry = loadContentRegistry();
   const files = getAllContentFiles();
   let registryUpdated = false;
   const filesUpdated: string[] = [];
-  
+
   for (const filePath of files) {
     try {
       const result = processContentFile(filePath, registry);
-      
+
       if (result.updated) {
         registryUpdated = true;
       }
-      
+
       if (result.needsFrontmatterUpdate) {
         updateFileFrontmatter(filePath, result.canonicalId);
         filesUpdated.push(filePath);
@@ -342,12 +340,12 @@ export function scanAndUpdateContent(): {
       console.error(`Error processing ${filePath}:`, error);
     }
   }
-  
+
   if (registryUpdated) {
     saveContentRegistry(registry);
     console.log(`✅ Updated content registry with ${Object.keys(registry.entries).length} entries`);
   }
-  
+
   return { registryUpdated, filesUpdated };
 }
 
@@ -362,7 +360,7 @@ export function validateRegistry(): {
   const registry = loadContentRegistry();
   const errors: string[] = [];
   const warnings: string[] = [];
-  
+
   for (const [canonicalId, entry] of Object.entries(registry.entries)) {
     // Check if original file exists
     const originalPath = path.join(CONTENT_BASE_PATH, entry.originalPath);
@@ -370,18 +368,18 @@ export function validateRegistry(): {
       errors.push(`Original file missing: ${entry.originalPath} (${canonicalId})`);
       continue;
     }
-    
+
     // Check translations
     for (const [lang, translation] of Object.entries(entry.translations)) {
       if (!translation) continue;
-      
+
       const translationPath = path.join(CONTENT_BASE_PATH, translation.path);
       if (!fs.existsSync(translationPath)) {
         warnings.push(`Translation file missing: ${translation.path} (${lang} of ${canonicalId})`);
       }
     }
   }
-  
+
   return {
     valid: errors.length === 0,
     errors,
@@ -394,7 +392,7 @@ export function validateRegistry(): {
  */
 async function main() {
   const command = process.argv[2];
-  
+
   switch (command) {
     case 'scan': {
       const result = scanAndUpdateContent();
@@ -403,26 +401,26 @@ async function main() {
       console.log(`   Files updated: ${result.filesUpdated.length}`);
       if (result.filesUpdated.length > 0) {
         console.log(`   Updated files:`);
-        result.filesUpdated.forEach(file => console.log(`     - ${file}`));
+        result.filesUpdated.forEach((file) => console.log(`     - ${file}`));
       }
       break;
     }
-      
+
     case 'validate': {
       const validation = validateRegistry();
       console.log(`\n🔍 Registry Validation:`);
       console.log(`   Valid: ${validation.valid}`);
       if (validation.errors.length > 0) {
         console.log(`   Errors:`);
-        validation.errors.forEach(error => console.log(`     ❌ ${error}`));
+        validation.errors.forEach((error) => console.log(`     ❌ ${error}`));
       }
       if (validation.warnings.length > 0) {
         console.log(`   Warnings:`);
-        validation.warnings.forEach(warning => console.log(`     ⚠️ ${warning}`));
+        validation.warnings.forEach((warning) => console.log(`     ⚠️ ${warning}`));
       }
       break;
     }
-      
+
     default:
       console.log('Usage: content-canonical-system.ts <scan|validate>');
       console.log('  scan     - Scan content and update registry');
@@ -432,7 +430,7 @@ async function main() {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch(error => {
+  main().catch((error) => {
     console.error('❌ Error:', error);
     process.exit(1);
   });

@@ -129,10 +129,11 @@ function showHelp() {
 🤖 Token Usage Tracker
 
 Usage:
-  npm run tokens:summary [period]     Show usage summary
-  npm run tokens:usage [operation]    Show recent usage
-  npm run tokens:export [format]      Export usage data
-  npm run tokens:add                  Add test usage
+  Commands:
+  pnpm run tokens:summary [period]     Show usage summary
+  pnpm run tokens:usage [operation]    Show recent usage
+  pnpm run tokens:export [format]      Export usage data
+  pnpm run tokens:add                  Add test usage
 
 Arguments:
   period: today, week, month (default: all time)
@@ -140,9 +141,9 @@ Arguments:
   format: json, csv (default: json)
 
 Examples:
-  npm run tokens:summary today
-  npm run tokens:usage translation
-  npm run tokens:export csv
+  pnpm run tokens:summary today
+  pnpm run tokens:usage translation
+  pnpm run tokens:export csv
 `);
 }
 

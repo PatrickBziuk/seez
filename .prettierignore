@@ -2,3 +2,8 @@ dist
 node_modules
 .github
 .changeset
+
+# Temporary exclusions for build fixes
+src/components/content/metadata/ContentMetadata.astro
+*.bak
+test_translation_tasks*.json

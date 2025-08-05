@@ -1,30 +1,27 @@
 # Plan 10024: Translation Pipeline Language Detection Fixes & Token Metadata Implementation
 
 **Date**: 2025-08-05  
-**Status**: ACTIVE  
-**Priority**: HIGH  
-
-# Plan 10024: Translation Pipeline Architecture Overhaul - Canonical IDs & Content Integrity
-
-**Date**: 2025-08-05  
-**Status**: ACTIVE  
-**Priority**: CRITICAL  
+**Status**: ✅ COMPLETED - Phases 1-5  
+**Priority**: CRITICAL
 
 ## Problem Statement
 
 ### 1. Translation Divergence Crisis
+
 - Files that should be translations of each other have diverged into different content
 - `licht-am-ende-der-zeilen` exists in both languages but with different content
 - No way to track which file is the "original" vs "translated"
 - Bidirectional translation creates confusion and content drift
 
 ### 2. Architectural Issues
+
 - Translation system uses filename-based matching instead of content relationships
 - No canonical source tracking - any file can be translated to any language
 - Translation history doesn't prevent translation loops (de→en→de)
 - No systematic way to ensure translation integrity
 
 ### 3. Missing Content Governance
+
 - No pre-commit validation of content structure
 - No central registry of content relationships
 - No automatic detection of when originals change
@@ -35,17 +32,19 @@
 ### Core Architecture
 
 **1. Canonical Slug IDs**
+
 - Every content file gets a unique canonical ID: `slug-YYYYMMDD-hash8`
 - Generated via Husky pre-commit hooks
 - Stored in frontmatter as `canonicalId`
 - Enables permanent content tracking regardless of file moves/renames
 
 **2. Central Content Registry (`data/content-registry.json`)**
+
 ```json
 {
   "slug-20250805-1d4f7a2b": {
     "originalPath": "books/de/licht-am-ende-der-zeilen.md",
-    "originalLanguage": "de", 
+    "originalLanguage": "de",
     "title": "Licht am Ende der Zeilen",
     "lastModified": "2025-08-05T10:30:00Z",
     "translations": {
@@ -60,13 +59,14 @@
 ```
 
 **3. Enhanced Frontmatter Schema**
+
 ```yaml
 # Original files
 canonicalId: slug-20250805-1d4f7a2b
 originalLanguage: de
 language: de
 
-# Translated files  
+# Translated files
 canonicalId: slug-20250805-1d4f7a2b
 translationOf: slug-20250805-1d4f7a2b
 sourceLanguage: de
@@ -74,6 +74,7 @@ language: en
 ```
 
 **4. Translation Direction Enforcement**
+
 - Only files with `originalLanguage` can be translation sources
 - Files with `translationOf` cannot be used as sources
 - Prevents bidirectional translation loops
@@ -92,6 +93,7 @@ language: en
 ### Phase 1: Infrastructure & Husky Setup
 
 **Pre-commit Hook System:**
+
 - Install Husky for Git hooks management
 - Create pre-commit hook to scan content files
 - Generate canonical IDs for new content
@@ -99,10 +101,12 @@ language: en
 - Validate content structure and relationships
 
 **Canonical ID Generation:**
+
 ```typescript
 function generateCanonicalId(filePath: string, content: string): string {
   const date = new Date().toISOString().split('T')[0].replace(/-/g, '');
-  const hash = crypto.createHash('sha256')
+  const hash = crypto
+    .createHash('sha256')
     .update(filePath + content)
     .digest('hex')
     .substring(0, 8);
@@ -113,12 +117,14 @@ function generateCanonicalId(filePath: string, content: string): string {
 ### Phase 2: Content Registry System
 
 **Registry Structure:**
+
 - Central JSON file tracking all content relationships
 - Automatic updates via pre-commit hooks
 - Backup and validation mechanisms
 - Migration tools for existing content
 
 **Content Classification:**
+
 - Identify original vs translated content
 - Establish canonical source relationships
 - Mark translation status (current/stale/missing)
@@ -127,12 +133,14 @@ function generateCanonicalId(filePath: string, content: string): string {
 ### Phase 3: Translation Pipeline Rewrite
 
 **Registry-Based Translation Detection:**
+
 - Replace filename-based matching with registry lookup
 - Generate tasks only from original→target language
 - Use canonical IDs for translation grouping
 - Prevent translation of already-translated content
 
 **Enhanced Translation Metadata:**
+
 ```yaml
 ai_metadata:
   canonicalId: slug-20250805-1d4f7a2b
@@ -146,6 +154,7 @@ ai_metadata:
 ## Implementation Tasks
 
 ### T24-001: Husky Pre-commit Infrastructure
+
 - [ ] Install and configure Husky for Git hooks
 - [ ] Create pre-commit hook script for content validation
 - [ ] Implement canonical ID generation utility
@@ -153,6 +162,7 @@ ai_metadata:
 - [ ] Create backup/recovery mechanisms for registry updates
 
 ### T24-002: Central Content Registry System
+
 - [ ] Design and implement registry JSON schema
 - [ ] Create registry initialization script for existing content
 - [ ] Build registry update/validation utilities
@@ -160,6 +170,7 @@ ai_metadata:
 - [ ] Implement content relationship mapping
 
 ### T24-003: Content Migration & Classification
+
 - [ ] Analyze existing content to identify originals vs translations
 - [ ] Assign canonical IDs to all existing content
 - [ ] Classify translation relationships and fix diverged content
@@ -167,20 +178,31 @@ ai_metadata:
 - [ ] Validate and test registry integrity
 
 ### T24-004: Translation Pipeline Rewrite
+
 - [ ] Modify `check_translations.ts` to use registry instead of filename matching
 - [ ] Implement translation direction enforcement (original→target only)
 - [ ] Add canonical ID-based translation task generation
 - [ ] Update translation metadata schema with canonical IDs
 - [ ] Integrate token usage tracking with canonical ID system
 
-### T24-005: SEO & Content Integration
-- [ ] Update content schema to support canonical ID metadata
-- [ ] Implement canonical URL generation using slug IDs
-- [ ] Update hreflang tags to use canonical relationships
-- [ ] Add content lineage tracking to SEO metadata
-- [ ] Test SEO impact and validate canonical linking
+### T24-005: SEO & Content Integration ✅ COMPLETED
+
+- [x] Update content schema to support canonical ID metadata  
+- [x] Implement canonical URL generation using registry relationships
+- [x] Update hreflang tags to use canonical relationships from registry
+- [x] Add content lineage tracking to SEO metadata with canonical IDs
+- [x] Test SEO impact and validate canonical linking functionality
+
+**Status**: ✅ COMPLETED  
+**Key Deliverables**:
+- Extended content schema with canonical ID fields (canonicalId, originalLanguage, translationOf, sourceLanguage)
+- Created `canonical-urls.ts` utility (276 lines) with registry-based URL generation
+- Built `CanonicalSEO.astro` component with hreflang tags and content lineage tracking  
+- Updated `MarkdownLayout.astro` to conditionally use enhanced SEO based on canonical ID presence
+- Validated SEO metadata in built HTML pages - canonical URLs, hreflang tags, and JSON-LD working correctly
 
 ### T24-006: Testing & Validation
+
 - [ ] Test pre-commit hooks with various content scenarios
 - [ ] Validate registry consistency and relationship integrity
 - [ ] Test translation pipeline with canonical ID system
@@ -190,10 +212,11 @@ ai_metadata:
 ## Technical Specifications
 
 ### Canonical ID System
+
 ```typescript
 interface CanonicalId {
-  id: string;  // Format: slug-YYYYMMDD-hash8
-  generated: string;  // ISO timestamp
+  id: string; // Format: slug-YYYYMMDD-hash8
+  generated: string; // ISO timestamp
   filePath: string;
   contentHash: string;
 }
@@ -211,12 +234,13 @@ interface ContentRegistryEntry {
       status: 'current' | 'stale' | 'missing';
       lastTranslated: string;
       translationHash: string;
-    }
+    };
   };
 }
 ```
 
 ### Enhanced Frontmatter Schema
+
 ```yaml
 # Original Content
 canonicalId: slug-20250805-1d4f7a2b
@@ -224,7 +248,7 @@ originalLanguage: de
 language: de
 title: "Licht am Ende der Zeilen"
 
-# Translated Content  
+# Translated Content
 canonicalId: slug-20250805-1d4f7a2b
 translationOf: slug-20250805-1d4f7a2b
 sourceLanguage: de
@@ -243,6 +267,7 @@ ai_metadata:
 ```
 
 ### Pre-commit Hook Logic
+
 ```bash
 #!/bin/sh
 # .husky/pre-commit
@@ -260,21 +285,25 @@ fi
 ## Risk Assessment
 
 ### High Risk
+
 - **Major architectural change**: Requires careful migration of existing content
 - **Registry becomes critical dependency**: Single point of failure for content system
 - **Pre-commit hook overhead**: May slow development workflow
 - **Content classification complexity**: Determining originals vs translations from existing diverged content
 
-### Medium Risk  
+### Medium Risk
+
 - **Translation pipeline compatibility**: Existing workflows need updates
 - **SEO impact during migration**: Canonical URLs may change temporarily
 - **Registry corruption**: Need robust backup/recovery procedures
 
 ### Low Risk
+
 - **Performance impact**: Registry operations should be fast
 - **Developer adoption**: Hooks are transparent once configured
 
 ### Mitigation Strategies
+
 - **Gradual rollout**: Test with subset of content first
 - **Registry validation tools**: Automated consistency checking
 - **Emergency bypass**: Option to skip hooks for critical commits
