@@ -17,7 +17,7 @@ translationHistory:
     translator: AI (gpt-4o-mini)
     model: gpt-4o-mini
     sourceSha: bc89e08f87caa8a21b2bb166201fe9e23e06027a784215225e9cc4c8af229094
-    timestamp: '2025-08-07T12:51:27.451Z'
+    timestamp: '2025-08-07T12:58:02.054Z'
     status: ai-translated
   - language: en
     translator: AI (gpt-4o-mini)
@@ -26,8 +26,8 @@ translationHistory:
     timestamp: '2025-08-05T19:08:41.143Z'
     status: ai-translated
 ai_tldr: >-
-  Dieses Dokument untersucht die Frage der Identität und persönlichen
-  Entwicklung. Es hebt die Bedeutung der kontinuierlichen Entdeckung hervor und
+  Dieses Dokument untersucht die Frage der Identität und des persönlichen
+  Wachstums. Es hebt die Bedeutung der kontinuierlichen Entdeckung hervor und
   listet Leidenschaften wie Technologie, Kreativität und persönliche Entwicklung
   auf. Der Autor betont das Ziel, jeden Tag etwas Neues zu lernen und einen
   positiven Einfluss zu haben.
