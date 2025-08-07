@@ -20,7 +20,7 @@ translationHistory:
     translator: AI (gpt-4o-mini)
     model: gpt-4o-mini
     sourceSha: 73c4e176e24b3e32def9b7144a560663f1a49c7ce2badd3706f59e38d38c879c
-    timestamp: '2025-08-07T12:46:48.634Z'
+    timestamp: '2025-08-07T12:52:58.721Z'
     status: ai-translated
   - language: de
     translator: AI (gpt-4o-mini)
@@ -29,7 +29,7 @@ translationHistory:
     timestamp: '2025-08-05T19:06:03.963Z'
     status: ai-translated
 ai_tldr: >-
-  The book 'The Pragmatic Programmer' discusses the art of software
+  The book 'The Pragmatic Programmer' addresses the art of software
   craftsmanship and promotes pragmatic thinking among developers. It serves as a
   guide for mastery in programming. The content is designed to enhance the
   skills and careers of software developers.
