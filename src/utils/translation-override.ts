@@ -1,12 +1,12 @@
 /**
  * Translation Override Utilities
  * @purpose Handle translation pause and override mechanisms
- * @dependencies yaml, fs
+ * @dependencies js-yaml, fs
  * @usedBy Translation detection scripts
  */
 
 import { readFileSync, existsSync } from 'fs';
-import { parse as parseYaml } from 'yaml';
+import { load as parseYaml } from 'js-yaml';
 
 /**
  * Override configuration structure

@@ -1,4 +1,4 @@
-import { tokenTracker } from './tracker.js';
+import { tokenTracker } from './tracker';
 
 async function test() {
   console.log('Testing token tracker...');

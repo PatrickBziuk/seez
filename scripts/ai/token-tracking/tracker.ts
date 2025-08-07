@@ -2,8 +2,8 @@ import { writeFile, readFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
-import type { TokenUsage, TokenSummary, UsageTracker } from './types.js';
-import { calculateCost, calculateCO2 } from './types.js';
+import type { TokenUsage, TokenSummary, UsageTracker } from './types';
+import { calculateCost, calculateCO2 } from './types';
 
 const DATA_DIR = join(process.cwd(), 'data');
 const USAGE_FILE = join(DATA_DIR, 'token-usage.json');

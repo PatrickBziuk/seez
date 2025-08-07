@@ -6,7 +6,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { ContentAnalyzer, type ContentAnalysis } from './content-analyzer.js';
+import { ContentAnalyzer, type ContentAnalysis } from './content-analyzer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

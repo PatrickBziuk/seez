@@ -9,7 +9,7 @@
 
 import { execSync } from 'child_process';
 import fs from 'fs';
-import { scanAndUpdateContent, validateRegistry } from '../content/content-canonical-system.js';
+import { scanAndUpdateContent, validateRegistry } from '../content/content-canonical-system';
 
 /**
  * Main pre-commit validation

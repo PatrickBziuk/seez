@@ -7,7 +7,7 @@
 console.log('🚀 Testing canonical system...');
 
 try {
-  import('../content/content-canonical-system.js')
+  import('../content/content-canonical-system')
     .then((module) => {
       console.log('✅ Module loaded successfully');
       console.log('Running scan...');

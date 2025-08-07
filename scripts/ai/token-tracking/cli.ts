@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { tokenTracker } from './tracker.js';
-import { formatCost, formatCO2 } from './types.js';
+import { tokenTracker } from './tracker';
+import { formatCost, formatCO2 } from './types';
 
 async function main() {
   const args = process.argv.slice(2);
