@@ -22,7 +22,7 @@ translationHistory:
     translator: AI (gpt-4o-mini)
     model: gpt-4o-mini
     sourceSha: 7275d318d599c0b702b0e1903bfd43382fbc7a9e91f866abcf83aad6d237f6a3
-    timestamp: '2025-08-07T12:47:26.369Z'
+    timestamp: '2025-08-07T12:53:36.449Z'
     status: ai-translated
   - language: de
     translator: AI (gpt-4o-mini)
@@ -51,7 +51,7 @@ ai_textscore:
 ---
 
 📖 **TL;DR – Book Concept:**
-Title suggestion: “Light at the End of the Lines”
+Title Suggestion: “Light at the End of the Lines”
 
 🧭 **Core Concept:**
 A now 27-year-old author looks back at texts he wrote between the ages of 14 and 21 – poems, fragments, emotional monologues. He is writing a book about the attempt to write a book back then, taking readers on a literary-emotional journey through his own past.
@@ -62,12 +62,12 @@ Each chapter contains:
 - comments, reflections, emotional essays from today’s perspective
 - reflections on trauma, love, writing, depression, and self-discovery
 
-The book is both a product and a process – it shows how writing was once a salvation and now means insight.
+The book is both a product and a process – it shows how writing was once a rescue and today means insight.
 
 🎯 **Target Audience:**
 
-- Young adults (16–21): People who are still in the self-discovery phase, often struggling and feeling misunderstood
-- New adults (21–29): People who want to understand what happened to them in hindsight
+- Young adults (16–21): People still in the self-discovery phase, often struggling and feeling misunderstood
+- New adults (21–29): People wanting to understand what happened to them in retrospect
 - Young men with emotional depth, who are rarely seen in mainstream literature
 
 💎 **USP – What Makes the Book Unique?**
@@ -75,11 +75,11 @@ The book is both a product and a process – it shows how writing was once a sal
 1. **Authenticity through Original Texts**  
    No staged fiction, no smoothed retelling:  
    You read the real words of a teenager – raw, honest, vulnerable.  
-   These texts carry a time capsule within them, as no invented character could have written exactly like this.
+   These texts carry a time capsule within them, as no invented character could write exactly like this.
 
 2. **Dual Perspective – Young & Adult**  
-   The work is reflection and retrospective in one –  
-   The “then voice” speaks directly. The “now voice” responds – not condescendingly, but understandingly.
+   The work is reflection and retrospection in one –  
+   The “then voice” speaks directly. The “now voice” responds – not condescending, but understanding.
 
 3. **Meta-Level: The Book as a Process**  
    The reader accompanies not just a story, but the creation process of the book itself.  
@@ -93,15 +93,15 @@ The book is both a product and a process – it shows how writing was once a sal
    - that darkness can be named  
    - that writing can be a survival tool  
    - that self-understanding often matures years later  
-   - and that literature consists not of solutions, but of survival
+   - and that literature consists not of solutions, but of survival.
 
 ✒️ **Distinction from Other Books in the Genre:**
 
 | Typical Young Adults                           | Your Book                                     |
 | --------------------------------------------- | --------------------------------------------- |
 | Fictional characters                           | Authentic first-person perspective             |
-| Linear plot (love drama, coming-of-age)      | Fragmentary journey of memories               |
-| Smooth polished style                         | Raw, real original texts & contemporary reflections |
+| Linear plot (love drama, coming-of-age)      | Fragmented journey of memories                |
+| Smooth polished style                         | Raw, real original texts & today's reflections |
 | Predictable tension arcs                       | Unpredictable inner development                |
 | Identity questions triggered by other characters | Identity questions triggered by one’s own texts |
 
@@ -109,11 +109,11 @@ The book is both a product and a process – it shows how writing was once a sal
 
 | Chapter   | Content                                                        |
 | --------- | ------------------------------------------------------------- |
-| Prologue  | The 27-year-old begins to reread his old texts                |
-| Chapter 1 | Violence, speechlessness, inner rage (e.g. “to fight back”)      |
+| Prologue  | The 27-year-old begins to reread his old texts               |
+| Chapter 1 | Violence, speechlessness, inner rage (e.g., “to strike back”) |
 | Chapter 2 | Depression, suicidal thoughts (“And he”)                      |
 | Chapter 3 | Love, loss, tender moments (“Butterfly moments”)              |
 | Chapter 4 | Traumatized attachment (“Alaska”)                             |
-| Chapter 5 | Writing as a last refuge (“Lines of Love”, “Follower”)     |
-| Chapter 6 | The reader in me today (reflection at 27)                 |
+| Chapter 5 | Writing as the last refuge (“Lines of Love”, “Follower”)     |
+| Chapter 6 | The reader in me today (retrospective at 27)                 |
 | Epilogue  | What remains – and what I want to pass on to you             
