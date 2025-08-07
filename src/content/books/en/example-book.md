@@ -16,7 +16,7 @@ translationHistory:
     translator: AI (gpt-4o-mini)
     model: gpt-4o-mini
     sourceSha: 32b83b3603339fcd6059f865791072b170d70f0ec9f79e28305e2fca1dc7a924
-    timestamp: '2025-08-07T12:46:57.887Z'
+    timestamp: '2025-08-07T12:53:08.296Z'
     status: ai-translated
   - language: de
     translator: AI (gpt-4o-mini)
@@ -27,7 +27,7 @@ translationHistory:
 ai_tldr: >-
   This is a sample book with a book entry. It belongs to the category fiction
   and deals with German literature. The content is a simple example of book
-  content.
+  contents.
 ai_textscore:
   translationQuality: 95
   originalClarity: 90
