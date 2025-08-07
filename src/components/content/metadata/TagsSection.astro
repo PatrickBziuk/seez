@@ -1,0 +1,34 @@
+---
+/**
+ * TagsSection - Clean tags display section for article bottom
+ * @props {tags: string[]} - Array of tag strings
+ * @behavior Displays tags at the bottom of articles with clean styling
+ * @dependencies Badge component, i18n utilities, astro-icon
+ * @usedBy MarkdownLayout.astro, [slug].astro
+ */
+import Badge from '../../ui/display/Badge.astro';
+import { Icon } from 'astro-icon/components';
+import { getTranslations, detectLanguage } from '~/utils/i18n';
+
+const { tags = [] } = Astro.props;
+const currentLanguage = detectLanguage(Astro.url.pathname);
+const translations = await getTranslations(currentLanguage);
+---
+
+{
+  tags?.length > 0 && (
+    <div class="flex items-start gap-3 pt-6 mt-8 border-t border-slate-200/40 dark:border-slate-700/40">
+      <Icon name="tabler:tags" class="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" />
+      <div class="flex flex-wrap gap-2">
+        {tags.map((tag: string) => (
+          <a
+            href={`/${currentLanguage}/tags/${encodeURIComponent(tag)}`}
+            class="focus:outline-none transition-transform hover:scale-105"
+          >
+            <Badge variant="tag" text={translations?.tags?.[tag] || tag} />
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+}

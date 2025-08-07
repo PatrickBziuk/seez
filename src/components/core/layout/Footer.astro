@@ -1,9 +1,17 @@
 ---
+/**
+ * Footer - Site footer with navigation links and social media
+ * @props links, secondaryLinks, socialLinks, theme, locale, footNote
+ * @behavior Renders responsive footer with version indicator and site branding
+ * @dependencies Icon (astro-icon), seez.config for site info, VersionIndicator
+ * @usedBy Layout.astro, MarkdownLayout.astro, PageLayout.astro
+ */
 import { Icon } from 'astro-icon/components';
-import { SITE } from 'astrowind:config';
-import { getHomePermalink } from '~/utils/permalinks';
-import { getTranslations } from '~/utils/i18n';
+import { getSiteInfo } from '~/config/seez.config';
+import { getLocalizedUrl } from '~/utils/i18n';
 import VersionIndicator from '../../common/VersionIndicator.astro';
+
+const siteInfo = getSiteInfo();
 
 interface Link {
   text?: string;
@@ -23,21 +31,19 @@ export interface Props {
   socialLinks: Array<Link>;
   theme?: string;
   locale?: 'en' | 'de';
+  footNote?: string;
 }
 
-const { socialLinks = [], secondaryLinks = [], links = [], theme = 'light', locale = 'en' } = Astro.props;
-// Use static translation loading instead of runtime t function
+const {
+  socialLinks = [],
+  secondaryLinks = [],
+  links = [],
+  theme = 'light',
+  locale = 'en',
+  footNote = '',
+} = Astro.props;
+// Ensure locale is 'en' or 'de'
 const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
-const translations = await getTranslations(safeLocale);
-const t = (key: string) => {
-  const keys = key.split('.');
-  let value: unknown = translations;
-  for (const k of keys) {
-    value = (value as Record<string, unknown>)?.[k];
-    if (value === undefined) break;
-  }
-  return (value as string) || key;
-};
 ---
 
 <footer class:list={[{ dark: theme === 'dark' }, 'relative border-t border-gray-200 dark:border-slate-800 not-prose']}>
@@ -48,14 +54,14 @@ const t = (key: string) => {
     <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
       <div class="col-span-12 lg:col-span-4">
         <div class="mb-2">
-          <a class="inline-block font-bold text-xl" href={getHomePermalink()}>{SITE?.name}</a>
+          <a class="inline-block font-bold text-xl" href={getLocalizedUrl('/', safeLocale)}>{siteInfo.name}</a>
         </div>
         <div class="text-sm text-muted flex gap-1 mb-4">
           {
             secondaryLinks.map(({ text, href }: Link, index: number) => (
               <>
                 {index !== 0 ? ' · ' : ''}
-                <a href={href}>{t(`legal.${text}`)}</a>
+                <a href={href}>{text}</a>
               </>
             ))
           }
@@ -65,13 +71,13 @@ const t = (key: string) => {
       {
         links.map(({ title, links }: Links) => (
           <div>
-            <div class="dark:text-gray-300 font-medium mb-2">{t(`footer.${title}`)}</div>
+            <div class="dark:text-gray-300 font-medium mb-2">{title}</div>
             {links && Array.isArray(links) && links.length > 0 && (
               <ul>
                 {links.map(({ text, href, ariaLabel }) => (
                   <li>
-                    <a href={href} aria-label={t(`footer.${ariaLabel || text}`)}>
-                      {t(`footer.${text}`)}
+                    <a href={href} aria-label={ariaLabel || text}>
+                      {text}
                     </a>
                   </li>
                 ))}
@@ -87,9 +93,9 @@ const t = (key: string) => {
           <ul>
             {socialLinks.map(({ ariaLabel, href, text, icon }: Link) => (
               <li>
-                <a href={href} aria-label={t(`social.${ariaLabel || text}`)}>
+                <a href={href} aria-label={ariaLabel || text}>
                   {icon && <Icon name={icon} class="w-5 h-5" />}
-                  {t(`social.${text}`)}
+                  {text}
                 </a>
               </li>
             ))}
@@ -100,7 +106,7 @@ const t = (key: string) => {
       }
 
       <div class="text-sm mr-4 dark:text-muted">
-        {t('footer.footNote')}
+        {footNote}
       </div>
     </div>
   </div>

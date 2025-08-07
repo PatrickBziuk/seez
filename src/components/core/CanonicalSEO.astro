@@ -45,21 +45,21 @@ if (canonicalId) {
   // Use canonical ID system
   const generatedCanonical = getCanonicalUrl(canonicalId, language);
   canonicalUrl = generatedCanonical ? new URL(generatedCanonical, site).href : new URL(Astro.url.pathname, site).href;
-  
+
   // Get hreflang relationships from registry
-  hreflangData = getHreflangData(canonicalId).map(item => ({
+  hreflangData = getHreflangData(canonicalId).map((item) => ({
     hreflang: item.hreflang,
-    href: new URL(item.href, site).href
+    href: new URL(item.href, site).href,
   }));
-  
+
   // Get content lineage for metadata
   contentLineage = getContentLineage(canonicalId);
 } else {
   // Fallback to traditional approach
   canonicalUrl = fallbackCanonical || new URL(Astro.url.pathname, site).href;
-  hreflangData = fallbackAlternates.map(alt => ({
+  hreflangData = fallbackAlternates.map((alt) => ({
     hreflang: alt.locale,
-    href: new URL(alt.url, site).href
+    href: new URL(alt.url, site).href,
   }));
 }
 
@@ -76,21 +76,21 @@ const originalLanguage = contentLineage?.originalLanguage || language;
 <link rel="canonical" href={canonicalUrl} />
 
 <!-- Language alternates with canonical ID relationships -->
-{hreflangData.map(({ hreflang, href }) => (
-  <link rel="alternate" hreflang={hreflang} href={href} />
-))}
+{hreflangData.map(({ hreflang, href }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
 
 <!-- Default language fallback -->
 <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
 
 <!-- Content lineage metadata -->
-{canonicalId && (
-  <>
-    <meta name="content:canonical-id" content={canonicalId} />
-    <meta name="content:original-language" content={originalLanguage} />
-    {isTranslation && <meta name="content:translation" content="true" />}
-  </>
-)}
+{
+  canonicalId && (
+    <>
+      <meta name="content:canonical-id" content={canonicalId} />
+      <meta name="content:original-language" content={originalLanguage} />
+      {isTranslation && <meta name="content:translation" content="true" />}
+    </>
+  )
+}
 
 <!-- Open Graph -->
 <meta property="og:title" content={title} />
@@ -100,11 +100,10 @@ const originalLanguage = contentLineage?.originalLanguage || language;
 <meta property="og:locale" content={language === 'de' ? 'de_DE' : 'en_US'} />
 
 <!-- Open Graph locale alternates -->
-{hreflangData
-  .filter(({ hreflang }) => hreflang !== language)
-  .map(({ hreflang }) => (
-    <meta property="og:locale:alternate" content={hreflang === 'de' ? 'de_DE' : 'en_US'} />
-  ))
+{
+  hreflangData
+    .filter(({ hreflang }) => hreflang !== language)
+    .map(({ hreflang }) => <meta property="og:locale:alternate" content={hreflang === 'de' ? 'de_DE' : 'en_US'} />)
 }
 
 <!-- Twitter Card -->
@@ -117,39 +116,38 @@ const originalLanguage = contentLineage?.originalLanguage || language;
 {modifiedDate && <meta property="article:modified_time" content={modifiedDate.toISOString()} />}
 
 <!-- JSON-LD Structured Data -->
-<script type="application/ld+json" is:inline>
-  {
-    "@context": "https://schema.org",
-    "@type": type === "article" ? "Article" : "WebPage",
-    "headline": {JSON.stringify(title)},
-    "description": {JSON.stringify(description || '')},
-    "url": {JSON.stringify(canonicalUrl)},
-    "inLanguage": {JSON.stringify(language)},
-    {publishDate && `"datePublished": ${JSON.stringify(publishDate.toISOString())},`}
-    {modifiedDate && `"dateModified": ${JSON.stringify(modifiedDate.toISOString())},`}
-    {canonicalId && `"identifier": ${JSON.stringify(canonicalId)},`}
-    {isTranslation && `"isBasedOn": ${JSON.stringify(canonicalUrl)},`}
-    "author": {
-      "@type": "Person",
-      "name": "Seez"
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': type === 'article' ? 'Article' : 'WebPage',
+    headline: title,
+    description: description || '',
+    url: canonicalUrl,
+    inLanguage: language,
+    ...(publishDate && { datePublished: publishDate.toISOString() }),
+    ...(modifiedDate && { dateModified: modifiedDate.toISOString() }),
+    ...(canonicalId && { identifier: canonicalId }),
+    author: {
+      '@type': 'Person',
+      name: 'Seez',
     },
-    "publisher": {
-      "@type": "Organization", 
-      "name": "Seez",
-      "url": {JSON.stringify(site)}
-    }
-  }
-</script>
+    publisher: {
+      '@type': 'Organization',
+      name: 'Seez',
+      url: site,
+    },
+  })}
+/>
 
 <!-- Debug information (development only) -->
-{import.meta.env.DEV && canonicalId && (
-  <script is:inline define:vars={{ canonicalId, canonicalUrl, hreflangData, contentLineage, language }}>
-    console.log('Canonical SEO Debug:', {
-      canonicalId,
-      canonicalUrl, 
-      hreflangData,
-      contentLineage,
-      language
-    });
-  </script>
-)}
+{
+  import.meta.env.DEV && canonicalId && (
+    <script
+      is:inline
+      define:vars={{ canonicalId, canonicalUrl, hreflangData, contentLineage, language }}
+      set:html={`console.log('Canonical SEO Debug:', { canonicalId, canonicalUrl, hreflangData, contentLineage, language });`}
+    />
+  )
+}

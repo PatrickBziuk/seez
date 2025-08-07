@@ -1,195 +1,31 @@
 ---
-// Language selection page for ambiguous cases
-import Layout from '../layouts/Layout.astro';
+// Server-side redirect fallback for root access
+// The middleware should handle this, but this provides an additional fallback
 
-const title = 'Choose Language / Sprache wählen';
+export async function GET() {
+  // Fallback redirect to English if middleware didn't catch it
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: '/en',
+    },
+  });
+}
 ---
 
-<Layout metadata={{ title }}>
-  <main class="language-selector">
-    <div class="container">
-      <div class="loading-section" id="loading">
-        <div class="spinner"></div>
-        <h1>Detecting language / Sprache erkennen...</h1>
-        <p>Redirecting to your preferred language / Weiterleitung zu Ihrer bevorzugten Sprache...</p>
-      </div>
-
-      <div class="selection-section" id="selection" style="display: none;">
-        <h1>Welcome to Seez / Willkommen bei Seez</h1>
-        <p>Please choose your preferred language / Bitte wählen Sie Ihre bevorzugte Sprache:</p>
-
-        <div class="language-options">
-          <a href="/de/" class="language-link" data-lang="de">
-            <span class="flag">🇩🇪</span>
-            <span class="text">Deutsch</span>
-          </a>
-          <a href="/en/" class="language-link" data-lang="en">
-            <span class="flag">🇬🇧</span>
-            <span class="text">English</span>
-          </a>
-        </div>
-
-        <label class="remember-choice">
-          <input type="checkbox" id="remember" checked />
-          Remember my choice / Auswahl merken
-        </label>
-      </div>
-    </div>
-  </main>
-
-  <script>
-    // Automatic language detection and redirect
-    function detectAndRedirect() {
-      // Check for stored preference first
-      const storedLang = document.cookie.match(/preferred_lang=([^;]+)/)?.[1];
-      if (storedLang === 'en' || storedLang === 'de') {
-        setTimeout(() => (window.location.href = `/${storedLang}/`), 500);
-        return true;
-      }
-
-      // Detect from browser languages
-      const supportedLangs = ['de', 'en'];
-      const browserLangs = navigator.languages || [navigator.language];
-
-      for (const lang of browserLangs) {
-        const langCode = lang.split('-')[0].toLowerCase();
-        if (supportedLangs.includes(langCode)) {
-          // Set cookie and redirect
-          document.cookie = `preferred_lang=${langCode}; max-age=${30 * 24 * 60 * 60}; path=/; samesite=lax`;
-          setTimeout(() => (window.location.href = `/${langCode}/`), 500);
-          return true;
-        }
-      }
-
-      // No match found, show manual selection after delay
-      setTimeout(() => {
-        const loadingEl = document.getElementById('loading');
-        const selectionEl = document.getElementById('selection');
-        if (loadingEl) loadingEl.style.display = 'none';
-        if (selectionEl) selectionEl.style.display = 'block';
-      }, 1500);
-
-      return false;
-    }
-
-    // Start detection immediately
-    detectAndRedirect();
-
-    // Manual language selection handlers
-    document.querySelectorAll('.language-link').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        const rememberCheckbox = document.getElementById('remember') as HTMLInputElement;
-        if (rememberCheckbox?.checked) {
-          const target = e.currentTarget as HTMLAnchorElement;
-          const lang = target?.getAttribute('data-lang');
-          if (lang) {
-            document.cookie = `preferred_lang=${lang}; max-age=${30 * 24 * 60 * 60}; path=/; samesite=lax`;
-          }
-        }
-      });
-    });
-  </script>
-
-  <style>
-    .language-selector {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-
-    .container {
-      max-width: 600px;
-      padding: 2rem;
-    }
-
-    .loading-section h1 {
-      margin-bottom: 1rem;
-      font-size: 2rem;
-    }
-
-    .loading-section p {
-      opacity: 0.8;
-      margin-bottom: 2rem;
-    }
-
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 2rem auto;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    .selection-section h1 {
-      margin-bottom: 1rem;
-      font-size: 2.5rem;
-    }
-
-    .language-options {
-      display: flex;
-      gap: 2rem;
-      margin: 2rem 0;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .language-link {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 12px;
-      text-decoration: none;
-      color: white;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      min-width: 120px;
-    }
-
-    .language-link:hover {
-      border-color: rgba(255, 255, 255, 0.8);
-      transform: translateY(-4px);
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .flag {
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .text {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .remember-choice {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 2rem;
-      justify-content: center;
-      opacity: 0.9;
-    }
-
-    .remember-choice input {
-      margin-right: 0.5rem;
-    }
-  </style>
-</Layout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=/en" />
+    <link rel="canonical" href="https://seez.eu/en" />
+  </head>
+  <body>
+    <p>If you are not redirected automatically, <a href="/en">click here</a>.</p>
+    <script>
+      window.location.href = '/en';
+    </script>
+  </body>
+</html>

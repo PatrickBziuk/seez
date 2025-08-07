@@ -3,16 +3,40 @@
  * ContentMetadata - Ultra-minimalistic, aesthetically pleasing metadata display
  * @props {metadata: Object} - Content metadata (title, language, tags, status, etc.)
  * @behavior Clean, subtle metadata with elegant TLDR integration; minimal visual noise
- * @dependencies Tailwind CSS, i18n utilities, astro-icon
+ * @dependencies Tailwind CSS, i18n utilities, astro-icon, TokenStats
  * @usedBy MarkdownLayout.astro, [slug].astro, books, projects, lab, life collections
  */
 import Badge from '../../ui/display/Badge.astro';
 import { Icon } from 'astro-icon/components';
 import { getTranslations, detectLanguage } from '~/utils/i18n';
+import { getCollection } from 'astro:content';
+import { getReadingTime, getWordCount } from '~/utils/reading-stats';
 
-const { language, timestamp, status, tags, ai_tldr } = Astro.props;
+const { 
+  language, 
+  timestamp, 
+  publishDate,
+  modifiedDate,
+  status, 
+  ai_tldr, 
+  ai_metadata, 
+  autoExpandTldr = false, 
+  authors = [], 
+  translators = [],
+  content = ''
+} = Astro.props;
 const currentLanguage = detectLanguage(Astro.url.pathname);
 const translations = await getTranslations(currentLanguage);
+
+// Get author data
+const allAuthors = await getCollection('authors');
+const authorData = authors?.map((authorId: string) => 
+  allAuthors.find(author => author.data.id === authorId)?.data
+).filter(Boolean) || [];
+
+const translatorData = translators?.map((translatorId: string) => 
+  allAuthors.find(author => author.data.id === translatorId)?.data
+).filter(Boolean) || [];
 
 const statusLabels: Record<'Human' | 'AI' | 'AI+Human', string> = {
   Human: translations?.badges?.human || 'Human',
@@ -33,175 +57,254 @@ const formattedDate = timestamp ? new Date(timestamp).toLocaleDateString(current
   day: 'numeric'
 }) : '';
 
-// TLDR processing for markdown and preview
-let tldrPreview = '';
+// Convert date strings to Date objects if needed
+const publishDateObj = publishDate ? (publishDate instanceof Date ? publishDate : new Date(publishDate)) : null;
+const modifiedDateObj = modifiedDate ? (modifiedDate instanceof Date ? modifiedDate : new Date(modifiedDate)) : null;
+
+// Format publication dates
+const formattedPublishDate = publishDateObj ? publishDateObj.toLocaleDateString(currentLanguage || 'en', {
+  year: 'numeric',
+  month: 'short', 
+  day: 'numeric'
+}) : '';
+
+const formattedModifiedDate = modifiedDateObj ? modifiedDateObj.toLocaleDateString(currentLanguage || 'en', {
+  year: 'numeric',
+  month: 'short', 
+  day: 'numeric'
+}) : '';
+
+// Show modified date only if it's different from publish date
+const showModifiedDate = modifiedDateObj && publishDateObj && 
+  modifiedDateObj.getTime() !== publishDateObj.getTime();
+
+// Calculate reading statistics
+const wordCount = content ? getWordCount(content) : 0;
+const readingTime = wordCount > 0 ? getReadingTime(wordCount) : null;
+
+// TLDR processing for markdown
 let tldrFull = '';
 
 if (ai_tldr) {
   // Convert markdown **bold** to HTML
   tldrFull = ai_tldr.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  
-  // Create preview - first sentence or first 100 characters
-  const firstSentence = ai_tldr.split(/[.!?]/)[0];
-  if (firstSentence.length < 100) {
-    tldrPreview = firstSentence + '...';
-  } else {
-    tldrPreview = ai_tldr.substring(0, 100) + '...';
-  }
-  // Remove markdown formatting from preview
-  tldrPreview = tldrPreview.replace(/\*\*(.*?)\*\*/g, '$1');
 }
 
-const tldrId = `tldr-${Math.random().toString(36).substring(2, 11)}`;
+const tldrId = `tldr-${Math.random().toString(36).substring(2, 9)}`;
+
+// Type for author data
+interface AuthorData {
+  id: string;
+  displayName: string;
+  status: {
+    authoring: 'Human' | 'AI' | 'AI+Human';
+  };
+}
 ---
 
-{(language || timestamp || status || tags?.length || ai_tldr) && (
-  <div class="mb-10 space-y-6">
+{(language || timestamp || status || ai_tldr || ai_metadata?.tokenUsage || authors?.length || translators?.length) && (
+  <div class="mb-8">
     
-    <!-- TLDR Section - Ultra minimal and elegant -->
-    {ai_tldr && (
-      <div class="group">
-        <div 
-          id={`${tldrId}-preview`} 
-          class="cursor-pointer"
-        >
-          <div class="flex items-center gap-3 p-4 bg-slate-50/70 dark:bg-slate-800/40 hover:bg-slate-100/80 dark:hover:bg-slate-800/60 rounded-xl transition-all duration-300 border border-slate-200/50 dark:border-slate-700/50 hover:border-slate-300/70 dark:hover:border-slate-600/70 hover:shadow-sm">
-            <div class="flex items-center gap-2">
-              <Icon name="tabler:sparkles" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
-              <span class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">TL;DR</span>
-              <div class="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
-              <Badge variant="ai" text="AI" size="sm" />
-            </div>
-            <p class="text-slate-700 dark:text-slate-200 flex-1 leading-relaxed">{tldrPreview}</p>
-            <Icon name="tabler:chevron-down" class="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-colors" />
-          </div>
-        </div>
-        
-        <div id={`${tldrId}-full`} class="hidden mt-4">
-          <div class="p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
-            <div class="flex items-center gap-2 mb-4">
-              <Icon name="tabler:sparkles" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
-              <span class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">TL;DR</span>
-              <div class="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
-              <Badge variant="ai" text="AI" size="sm" />
-            </div>
-            <div class="text-slate-700 dark:text-slate-200 leading-relaxed mb-4" set:html={tldrFull}></div>
-            <div class="flex items-center justify-between pt-3 border-t border-slate-200/60 dark:border-slate-700/60">
-              <p class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <Icon name="tabler:cpu" class="w-3 h-3" />
-                Generated by AI
-              </p>
-              <button 
-                id={`${tldrId}-collapse`}
-                class="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1 transition-colors px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50"
-              >
-                <Icon name="tabler:chevron-up" class="w-3 h-3" />
-                Collapse
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    )}
-
-    <!-- Minimal Metadata Line -->
-    <div class="flex flex-wrap items-center gap-6 py-3 text-sm">
+    <!-- Compact Single-Line Metadata -->
+    <div class="flex flex-wrap items-center gap-3 py-3 text-sm text-slate-600 dark:text-slate-400 border-b border-slate-200/40 dark:border-slate-700/40">
       
-      <!-- Author -->
-      {status?.authoring && (
-        <div class="flex items-center gap-2">
+      <!-- Authors -->
+      {authorData.length > 0 && (
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">👤</span>
+          <span class="text-slate-600 dark:text-slate-300">{translations?.metadata?.authors || 'Authors'}:</span>
+          <div class="flex items-center gap-1">
+            {authorData.map((author: AuthorData, index: number) => (
+              <span class="flex items-center gap-1">
+                <a 
+                  href={`/${currentLanguage}/authors/${author.id}`}
+                  class="hover:underline font-medium text-slate-700 dark:text-slate-200"
+                >
+                  {author.displayName.replace(/\s*\([^)]*\)/, '')}
+                </a>
+                <span class="text-xs text-slate-500 dark:text-slate-400">
+                  ({author.status?.authoring || 'Human'})
+                </span>
+                {index < authorData.length - 1 && <span class="text-slate-400 dark:text-slate-500 mx-1">+</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      <!-- Translators -->
+      {translatorData.length > 0 && (
+        <div class="flex items-center gap-1.5">
+          <Icon name="tabler:language" class="w-3.5 h-3.5" />
+          <div class="flex items-center gap-1">
+            {translatorData.map((translator: AuthorData, index: number) => (
+              <span class="flex items-center gap-0.5">
+                <a 
+                  href={`/${currentLanguage}/authors/${translator.id}`}
+                  class="hover:underline text-slate-600 dark:text-slate-300"
+                >
+                  {translator.displayName.replace(/\s*\([^)]*\)/, '')}
+                </a>
+                {index < translatorData.length - 1 && <span class="text-slate-400 dark:text-slate-500">,</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      <!-- Fallback to Status (if no authors specified) -->
+      {!authorData.length && !translatorData.length && status?.authoring && (
+        <div class="flex items-center gap-1.5">
           <span class="text-base">{statusIcons[status.authoring as 'Human' | 'AI' | 'AI+Human']}</span>
-          <span class="text-slate-700 dark:text-slate-200 font-medium">{statusLabels[status.authoring as 'Human' | 'AI' | 'AI+Human']}</span>
+          <span class="font-medium text-slate-700 dark:text-slate-200">{statusLabels[status.authoring as 'Human' | 'AI' | 'AI+Human']}</span>
         </div>
       )}
       
-      <!-- Translation -->
-      {status?.translation && (
-        <div class="flex items-center gap-2">
-          <Icon name="tabler:language" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
-          <span class="text-slate-600 dark:text-slate-300">{statusLabels[status.translation as 'Human' | 'AI' | 'AI+Human']} translation</span>
-        </div>
-      )}
-      
-      <!-- Date -->
-      {timestamp && (
-        <div class="flex items-center gap-2">
-          <Icon name="tabler:calendar" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
-          <span class="text-slate-600 dark:text-slate-300">{formattedDate}</span>
-        </div>
-      )}
-      
-      <!-- Language Badge -->
+      <!-- Language -->
       {language && (
-        <div class="flex items-center gap-2">
-          <Icon name="tabler:world" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
-          <span class="text-xs font-mono font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-md uppercase tracking-wider">{language}</span>
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">🌍</span>
+          <span class="font-mono font-bold uppercase tracking-wider">{language}</span>
         </div>
+      )}
+      
+      <!-- Reading Time -->
+      {readingTime && (
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">📖</span>
+          <span class="text-xs font-medium">{readingTime.formatted} {translations?.metadata?.read || 'read'}</span>
+        </div>
+      )}
+      
+      <!-- AI Token Usage (Compact) -->
+      {ai_metadata?.tokenUsage?.total && (
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">🧠</span>
+          <span class="text-xs">
+            {translations?.metadata?.aiUsage || 'AI'}: {ai_metadata.tokenUsage.total.tokens} {translations?.metadata?.tokens || 'tokens'} – 
+            ${ai_metadata.tokenUsage.total.cost.toFixed(ai_metadata.tokenUsage.total.cost < 0.01 ? 4 : 2)} – 
+            {ai_metadata.tokenUsage.total.co2 < 1 
+              ? `${Math.round(ai_metadata.tokenUsage.total.co2 * 1000)}mg` 
+              : `${ai_metadata.tokenUsage.total.co2.toFixed(1)}g`} CO₂
+          </span>
+        </div>
+      )}
+      
+      <!-- Publication Date -->
+      {(publishDateObj || timestamp) && (
+        <div class="flex items-center gap-1.5">
+          <Icon name="tabler:calendar" class="w-3.5 h-3.5" />
+          <span class="text-xs">
+            {publishDateObj ? formattedPublishDate : formattedDate}
+            {showModifiedDate && (
+              <span class="text-slate-500 dark:text-slate-400 ml-1">
+                (updated {formattedModifiedDate})
+              </span>
+            )}
+          </span>
+        </div>
+      )}
+      
+      <!-- TL;DR Toggle -->
+      {ai_tldr && (
+        <button 
+          id={`${tldrId}-toggle`}
+          class="flex items-center gap-1.5 hover:text-slate-800 dark:hover:text-slate-100 transition-colors cursor-pointer"
+        >
+          <Icon name="tabler:sparkles" class="w-3.5 h-3.5" />
+          <span class="text-xs">{translations?.metadata?.tldrAvailable || 'TL;DR available'}</span>
+          <Icon name="tabler:chevron-down" class="w-3 h-3 transition-transform" id={`${tldrId}-chevron`} />
+        </button>
       )}
     </div>
-
-    <!-- Clean Tags Section -->
-    {tags?.length > 0 && (
-      <div class="flex items-start gap-3 pt-3 border-t border-slate-200/40 dark:border-slate-700/40">
-        <Icon name="tabler:tags" class="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" />
-        <div class="flex flex-wrap gap-2">
-          {tags.map((tag: string) => (
-            <a 
-              href={`/${currentLanguage}/tags/${encodeURIComponent(tag)}`} 
-              class="focus:outline-none transition-transform hover:scale-105"
-            >
-              <Badge variant="tag" text={translations?.tags?.[tag] || tag} />
-            </a>
-          ))}
+    
+    <!-- Expandable TL;DR Section -->
+    {ai_tldr && (
+      <div id={`${tldrId}-content`} class="hidden mt-4">
+        <div class="p-4 bg-slate-50/70 dark:bg-slate-800/40 rounded-lg border border-slate-200/50 dark:border-slate-700/50">
+          <div class="flex items-center gap-2 mb-3">
+            <Icon name="tabler:sparkles" class="w-4 h-4 text-slate-500 dark:text-slate-400" />
+            <span class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{translations?.metadata?.tldr || 'TL;DR'}</span>
+            <Badge variant="ai" text={translations?.badges?.ai || 'AI'} size="sm" />
+          </div>
+          <div class="text-slate-700 dark:text-slate-200 leading-relaxed mb-3" set:html={tldrFull}></div>
+          <div class="flex items-center pt-3 border-t border-slate-200/60 dark:border-slate-700/60">
+            <p class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+              <Icon name="tabler:cpu" class="w-3 h-3" />
+              {translations?.metadata?.generatedByAi || 'Generated by AI'}
+            </p>
+            {ai_metadata?.tokenUsage?.tldr && (
+              <span class="text-xs text-slate-500 dark:text-slate-400 ml-3">
+                {ai_metadata.tokenUsage.tldr.tokens} {translations?.metadata?.tokens || 'tokens'} · 
+                ${ai_metadata.tokenUsage.tldr.cost.toFixed(4)} · 
+                {Math.round(ai_metadata.tokenUsage.tldr.co2 * 1000)}mg CO₂
+              </span>
+            )}
+          </div>
         </div>
       </div>
     )}
   </div>
 )}
 
-<!-- TLDR Expand/Collapse JavaScript -->
+<!-- TL;DR Expand/Collapse JavaScript -->
 {ai_tldr && (
-  <script define:vars={{ tldrId }}>
-    document.addEventListener('DOMContentLoaded', () => {
-      const preview = document.getElementById(`${tldrId}-preview`);
-      const full = document.getElementById(`${tldrId}-full`);
-      const collapse = document.getElementById(`${tldrId}-collapse`);
+  <script is:inline define:vars={{ tldrId, autoExpandTldr }}>
+    function setupTldr() {
+      const toggle = document.getElementById(`${tldrId}-toggle`);
+      const content = document.getElementById(`${tldrId}-content`);
+      const chevron = document.getElementById(`${tldrId}-chevron`);
       
-      if (preview && full && collapse) {
-        // Expand TLDR with smooth animation
-        preview.addEventListener('click', () => {
-          preview.style.display = 'none';
-          full.style.display = 'block';
-          full.style.opacity = '0';
-          full.style.transform = 'translateY(-10px)';
+      if (!toggle || !content || !chevron) {
+        console.warn('TL;DR elements not found');
+        return;
+      }
+      
+      // Auto-expand TL;DR if requested
+      if (autoExpandTldr) {
+        content.classList.remove('hidden');
+        chevron.style.transform = 'rotate(180deg)';
+      }
+      
+      // Toggle TL;DR with smooth animation (both expand and collapse)
+      toggle.addEventListener('click', () => {
+        if (content.classList.contains('hidden')) {
+          // Expand
+          content.classList.remove('hidden');
+          content.style.opacity = '0';
+          content.style.transform = 'translateY(-10px)';
+          chevron.style.transform = 'rotate(180deg)';
           
           // Animate in
           requestAnimationFrame(() => {
-            full.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-            full.style.opacity = '1';
-            full.style.transform = 'translateY(0)';
+            content.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            content.style.opacity = '1';
+            content.style.transform = 'translateY(0)';
           });
           
-          // Smooth scroll to keep TLDR in view
+          // Smooth scroll to keep TL;DR in view (mobile-friendly)
           setTimeout(() => {
-            full.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }, 100);
-        });
-        
-        // Collapse TLDR with smooth animation
-        collapse.addEventListener('click', (e) => {
-          e.preventDefault();
-          
-          full.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
-          full.style.opacity = '0';
-          full.style.transform = 'translateY(-5px)';
+        } else {
+          // Collapse
+          content.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+          content.style.opacity = '0';
+          content.style.transform = 'translateY(-5px)';
+          chevron.style.transform = 'rotate(0deg)';
           
           setTimeout(() => {
-            full.style.display = 'none';
-            preview.style.display = 'block';
+            content.classList.add('hidden');
           }, 200);
-        });
-      }
-    });
+        }
+      });
+    }
+    
+    // Setup when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupTldr);
+    } else {
+      setupTldr();
+    }
   </script>
 )}

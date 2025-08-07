@@ -1,0 +1,159 @@
+---
+/**
+ * PostFooter - Comprehensive footer for all content pages
+ * @props {frontmatter: Object, entry: Object} - Content frontmatter and entry data
+ * @behavior Displays GitHub links, social sharing, and sustainability stats
+ * @dependencies GitHubSourceButton, SocialShare, TokenStats, i18n utilities
+ * @usedBy MarkdownLayout.astro and other content layouts
+ */
+
+import GitHubSourceButton from '~/components/common/GitHubSourceButton.astro';
+import SocialShare from './metadata/SocialShare.astro';
+import TokenStats from './metadata/TokenStats.astro';
+import { Icon } from 'astro-icon/components';
+import { detectLanguage } from '~/utils/i18n';
+
+export interface Props {
+  frontmatter?: {
+    title?: string;
+    description?: string;
+    language?: 'en' | 'de';
+    ai_metadata?: {
+      tokenUsage?: {
+        translation?: {
+          tokens: number;
+          cost: number;
+          co2: number;
+        };
+        tldr?: {
+          tokens: number;
+          cost: number;
+          co2: number;
+        };
+        total?: {
+          tokens: number;
+          cost: number;
+          co2: number;
+        };
+      };
+    };
+  };
+  entry?: {
+    collection: string;
+    slug: string;
+    id: string;
+  };
+  className?: string;
+}
+
+const { frontmatter = {}, entry, className = '' } = Astro.props;
+const currentLanguage = detectLanguage(Astro.url.pathname);
+
+// Build file path for GitHub links
+const filePath = entry ? `src/content/${entry.collection}/${entry.id}` : '';
+
+// Build current page URL for social sharing
+const currentUrl = Astro.url.href;
+const shareText = frontmatter.title ? `${frontmatter.title}` : 'Check out this content';
+
+// Check if we have token usage data
+const hasTokenData = frontmatter.ai_metadata?.tokenUsage;
+---
+
+<footer class={`post-footer mt-16 pt-8 border-t border-slate-200 dark:border-slate-700 ${className}`}>
+  <!-- GitHub Integration Section -->
+  {
+    filePath && (
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+          <Icon name="tabler:brand-github" class="w-5 h-5" />
+          <span>See my Source</span>
+        </h3>
+        <p class="text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
+          Want to see how this content is created, contribute improvements, or explore the underlying code? Check out
+          the source file and commit history on GitHub.
+        </p>
+        <GitHubSourceButton filePath={filePath} locale={currentLanguage} showHistory={true} className="justify-start" />
+      </div>
+    )
+  }
+
+  <!-- Social Sharing Section -->
+  <div class="mb-8">
+    <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+      <Icon name="tabler:share" class="w-5 h-5" />
+      <span>Share this content</span>
+    </h3>
+    <SocialShare text={shareText} url={currentUrl} showMastodon={true} class="flex flex-wrap items-center gap-1" />
+  </div>
+
+  <!-- Sustainability & Token Stats Section -->
+  {
+    hasTokenData && (
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+          <Icon name="tabler:leaf" class="w-5 h-5 text-green-600 dark:text-green-400" />
+          <span>AI Usage & Sustainability</span>
+        </h3>
+
+        <div class="bg-slate-50/70 dark:bg-slate-800/40 rounded-xl p-6 border border-slate-200/50 dark:border-slate-700/50">
+          <div class="space-y-4">
+            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              This content includes AI-generated elements. Here's the environmental impact and resource usage:
+            </p>
+
+            <TokenStats
+              tokenUsage={frontmatter.ai_metadata?.tokenUsage}
+              showType="all"
+              className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-slate-200 dark:border-slate-700"
+            />
+
+            <div class="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+              <Icon name="tabler:info-circle" class="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+              <div class="text-xs text-green-800 dark:text-green-300 leading-relaxed">
+                <strong>Environmental Note:</strong> CO₂ estimates are based on average energy consumption for AI
+                inference. We're committed to responsible AI usage and transparency about environmental impact.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  <!-- Optional License/Author Section -->
+  <div class="pt-6 border-t border-slate-200 dark:border-slate-700">
+    <div
+      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-sm text-slate-600 dark:text-slate-400"
+    >
+      <div class="flex items-center gap-2">
+        <Icon name="tabler:copyright" class="w-4 h-4" />
+        <span> 2025 Seez. Content under Creative Commons license. Glad for every attribution.</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <Icon name="tabler:clock" class="w-4 h-4" />
+        <span
+          >Last updated: {
+            new Date().toLocaleDateString(currentLanguage || 'en', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })
+          }</span
+        >
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .post-footer {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .post-footer h3 {
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+</style>

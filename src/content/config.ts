@@ -21,6 +21,23 @@ const sharedSchema = z.object({
       translation: z.enum(['Human', 'AI', 'AI+Human']).optional(),
     })
     .optional(),
+  // Author system
+  authors: z.array(z.string()).optional(), // Array of author IDs
+  translators: z.array(z.string()).optional(), // Array of translator IDs
+
+  // Sources and references
+  sources: z
+    .array(
+      z.object({
+        title: z.string(),
+        url: z.string().url().optional(),
+        author: z.string().optional(),
+        date: z.string().optional(),
+        type: z.enum(['article', 'book', 'video', 'documentation', 'research', 'website', 'other']).default('article'),
+        description: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 
 // Legacy fields for backward compatibility
@@ -31,13 +48,13 @@ const extendedSchema = sharedSchema.extend({
   timestamp: z.string().optional(), // ISO 8601
   translationKey: z.string().optional(), // Unique identifier for pairing across languages
   original: z.string().optional(), // Reference to source file for translations
-  
+
   // Canonical ID system for content integrity
   canonicalId: z.string().optional(), // Format: slug-YYYYMMDD-hash8
   originalLanguage: z.enum(['en', 'de']).optional(), // Language of original content
   translationOf: z.string().optional(), // Canonical ID of source content
   sourceLanguage: z.enum(['en', 'de']).optional(), // Language this was translated from
-  
+
   translationHistory: z
     .array(
       z.object({
@@ -113,16 +130,19 @@ const postSchema = z.object({
       translation: z.enum(['Human', 'AI', 'AI+Human']).optional(),
     })
     .optional(),
+  // Author system
+  authors: z.array(z.string()).optional(),
+  translators: z.array(z.string()).optional(),
   // Translation pipeline support
   translationKey: z.string().optional(),
   original: z.string().optional(),
-  
+
   // Canonical ID system for content integrity
   canonicalId: z.string().optional(),
   originalLanguage: z.enum(['en', 'de']).optional(),
   translationOf: z.string().optional(),
   sourceLanguage: z.enum(['en', 'de']).optional(),
-  
+
   translationHistory: z
     .array(
       z.object({
@@ -179,6 +199,31 @@ const postSchema = z.object({
     .optional(),
 });
 
+// Authors collection schema
+const authorSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  displayName: z.string(),
+  bio: z.string(),
+  avatar: z.string().optional(),
+  website: z.string().optional(),
+  social: z
+    .object({
+      github: z.string().optional(),
+      twitter: z.string().optional(),
+      linkedin: z.string().optional(),
+      mastodon: z.string().optional(),
+    })
+    .optional(),
+  language: z.enum(['en', 'de']).default('en'),
+  status: z.object({
+    authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
+  }),
+  // AI-specific fields
+  model: z.string().optional(),
+  capabilities: z.array(z.string()).optional(),
+});
+
 const books = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/books' }),
   schema: extendedSchema,
@@ -209,6 +254,11 @@ const pages = defineCollection({
   schema: extendedSchema,
 });
 
+const authors = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/authors' }),
+  schema: authorSchema,
+});
+
 export const collections = {
   books,
   projects,
@@ -216,4 +266,5 @@ export const collections = {
   life,
   post,
   pages,
+  authors,
 };

@@ -3,7 +3,7 @@
  * MarkdownLayout - Layout for rendering Markdown content with metadata and responsive design
  * @props {frontmatter: Object, entry: Object} - Markdown frontmatter and entry data
  * @behavior Displays Markdown content, injects metadata, supports badges and i18n, includes SEO
- * @dependencies ContentMetadata, SEO, CustomStyles.astro, Favicons.astro
+ * @dependencies ContentMetadata, TagsSection, SEO, CustomStyles.astro, Favicons.astro
  * @usedBy [slug].astro, books, projects, lab, life collections
  */
 
@@ -11,9 +11,12 @@ import Layout from '~/layouts/PageLayout.astro';
 import SEO from '~/components/core/SEO.astro';
 import CanonicalSEO from '~/components/core/CanonicalSEO.astro';
 import ContentMetadata from '~/components/content/metadata/ContentMetadata.astro';
+import TagsSection from '~/components/content/metadata/TagsSection.astro';
+import ArticleFooter from '~/components/content/metadata/ArticleFooter.astro';
 import ContentFallbackNotice from '~/components/content/metadata/ContentFallbackNotice.astro';
-import GitHubSourceButton from '~/components/common/GitHubSourceButton.astro';
+import PostFooter from '~/components/content/PostFooter.astro';
 import { getTranslations, detectLanguage } from '~/utils/i18n';
+import { getEntry } from 'astro:content';
 
 import type { MetaData, Status } from '~/types';
 
@@ -28,11 +31,44 @@ export interface Props {
     status?: Status;
     tags?: string[];
     ai_tldr?: string;
+    draft?: boolean;
+    // Author system
+    authors?: string[];
+    translators?: string[];
+    // Sources and references
+    sources?: Array<{
+      title: string;
+      url?: string;
+      author?: string;
+      date?: string;
+      type: string;
+      description?: string;
+    }>;
     // Canonical ID system fields
     canonicalId?: string;
     originalLanguage?: 'en' | 'de';
     translationOf?: string;
     sourceLanguage?: 'en' | 'de';
+    // AI metadata with token usage
+    ai_metadata?: {
+      tokenUsage?: {
+        translation?: {
+          tokens: number;
+          cost: number;
+          co2: number;
+        };
+        tldr?: {
+          tokens: number;
+          cost: number;
+          co2: number;
+        };
+        total?: {
+          tokens: number;
+          cost: number;
+          co2: number;
+        };
+      };
+    };
   };
   entry?: {
     collection: string;
@@ -51,7 +87,22 @@ try {
   const gitModule = await import('../generated/git-metadata.json');
   gitMetadata = gitModule.default || gitModule;
 } catch {
-  console.warn('Git metadata not found, using frontmatter dates only');
+  if (import.meta.env.DEV) {
+    console.warn('Git metadata not found, using frontmatter dates only');
+  }
+}
+
+// Get entry content for reading statistics if entry is provided
+let entryContent = '';
+if (entry) {
+  try {
+    const entryData = await getEntry(entry.collection as 'books' | 'projects' | 'lab' | 'life', entry.slug);
+    if (entryData) {
+      entryContent = entryData.body || '';
+    }
+  } catch (e) {
+    console.warn('Failed to get entry content for reading stats:', e);
+  }
 }
 
 const filePath = entry ? `src/content/${entry.collection}/${entry.id}` : '';
@@ -78,45 +129,48 @@ const metadata: MetaData = {
 ---
 
 <Layout metadata={metadata}>
-  {frontmatter.canonicalId ? (
-    <CanonicalSEO
-      canonicalId={frontmatter.canonicalId}
-      title={frontmatter.title || 'Untitled'}
-      description={frontmatter.description}
-      language={frontmatter.language}
-      publishDate={publishDate}
-      modifiedDate={modifiedDate}
-      type="article"
-    />
-  ) : (
-    <SEO
-      title={frontmatter.title || 'Untitled'}
-      description={frontmatter.description}
-      locale={frontmatter.language}
-      alternateLocales={alternateLocales}
-      publishDate={publishDate}
-      modifiedDate={modifiedDate}
-      type="article"
-    />
-  )}
+  {
+    frontmatter.canonicalId ? (
+      <CanonicalSEO
+        canonicalId={frontmatter.canonicalId}
+        title={frontmatter.title || 'Untitled'}
+        description={frontmatter.description}
+        language={frontmatter.language}
+        publishDate={publishDate}
+        modifiedDate={modifiedDate}
+        type="article"
+      />
+    ) : (
+      <SEO
+        title={frontmatter.title || 'Untitled'}
+        description={frontmatter.description}
+        locale={frontmatter.language}
+        alternateLocales={alternateLocales}
+        publishDate={publishDate}
+        modifiedDate={modifiedDate}
+        type="article"
+      />
+    )
+  }
 
   <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
-    <div class="flex justify-between items-start mb-6">
-      <h1 class="font-bold font-heading text-4xl md:text-5xl leading-tighter tracking-tighter flex-1">
+    <div class="mb-6">
+      <h1 class="font-bold font-heading text-4xl md:text-5xl leading-tighter tracking-tighter">
         {frontmatter.title}
       </h1>
-      <div class="ml-4 mt-2">
-        <GitHubSourceButton filePath={filePath} locale={currentLanguage} />
-      </div>
     </div>
     <ContentMetadata
       language={frontmatter.language}
       timestamp={frontmatter.timestamp}
       status={frontmatter.status}
-      tags={frontmatter.tags}
       ai_tldr={frontmatter.ai_tldr}
+      ai_metadata={frontmatter.ai_metadata}
+      authors={frontmatter.authors}
+      translators={frontmatter.translators}
+      autoExpandTldr={true}
       translations={translations}
       locale={currentLanguage}
+      content={entryContent}
     />
     {
       frontmatter.language && frontmatter.language !== currentLanguage && (
@@ -128,5 +182,23 @@ const metadata: MetaData = {
     >
       <slot />
     </div>
+
+    <!-- Article Footer with Statistics, Sources, and Publication Info -->
+    <ArticleFooter
+      content={entryContent}
+      sources={frontmatter.sources}
+      publishDate={gitMetadata[entry?.id || '']?.publishDate || frontmatter.timestamp}
+      modifiedDate={gitMetadata[entry?.id || '']?.modifiedDate}
+      language={frontmatter.language}
+      canonicalId={frontmatter.canonicalId}
+      translations={translations}
+      locale={currentLanguage}
+    />
+
+    <!-- Tags Section at Bottom -->
+    <TagsSection tags={frontmatter.tags} />
+
+    <!-- Enhanced Post Footer with GitHub, Social, and Token Stats -->
+    <PostFooter frontmatter={frontmatter} entry={entry} className="max-w-4xl mx-auto" />
   </section>
 </Layout>

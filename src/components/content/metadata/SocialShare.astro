@@ -2,7 +2,7 @@
 /**
  * SocialShare - Social media sharing buttons for content
  * @props {text: string, url: string | URL, class?: string} - Share text, URL, and optional CSS classes
- * @behavior Renders social sharing buttons for Twitter, Facebook, and LinkedIn with click handlers
+ * @behavior Renders social sharing buttons for Twitter/X, Facebook, LinkedIn, Mastodon, WhatsApp, and Email
  * @dependencies astro-icon/components, social sharing utilities
  * @usedBy Blog posts, article pages, content sharing sections
  */
@@ -12,9 +12,10 @@ export interface Props {
   text: string;
   url: string | URL;
   class?: string;
+  showMastodon?: boolean;
 }
 
-const { text, url, class: className = 'inline-block' } = Astro.props;
+const { text, url, class: className = 'inline-block', showMastodon = true } = Astro.props;
 ---
 
 <div class={className}>
@@ -47,6 +48,22 @@ const { text, url, class: className = 'inline-block' } = Astro.props;
       class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
     />
   </button>
+  {
+    showMastodon && (
+      <button
+        class="ml-2 rtl:ml-0 rtl:mr-2"
+        title="Mastodon Share"
+        data-aw-social-share="mastodon"
+        data-aw-url={url}
+        data-aw-text={text}
+      >
+        <Icon
+          name="tabler:brand-mastodon"
+          class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
+        />
+      </button>
+    )
+  }
   <button
     class="ml-2 rtl:ml-0 rtl:mr-2"
     title="Whatsapp Share"

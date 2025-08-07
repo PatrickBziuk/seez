@@ -3,12 +3,12 @@ import type { SupportedLanguage } from './utils/i18n';
 
 export const getHeaderData = (locale: SupportedLanguage = 'en') => ({
   links: [
-    { text: 'Books', href: getLocalizedUrl('/books', locale) },
-    { text: 'Projects', href: getLocalizedUrl('/projects', locale) },
+    { text: locale === 'de' ? 'Bücher' : 'Books', href: getLocalizedUrl('/books', locale) },
+    { text: locale === 'de' ? 'Projekte' : 'Projects', href: getLocalizedUrl('/projects', locale) },
     { text: 'Lab', href: getLocalizedUrl('/lab', locale) },
-    { text: 'Life', href: getLocalizedUrl('/life', locale) },
-    { text: 'About', href: getLocalizedUrl('/about', locale) },
-    { text: 'Contact', href: getLocalizedUrl('/contact', locale) },
+    { text: locale === 'de' ? 'Leben' : 'Life', href: getLocalizedUrl('/life', locale) },
+    { text: locale === 'de' ? 'Über' : 'About', href: getLocalizedUrl('/about', locale) },
+    { text: locale === 'de' ? 'Kontakt' : 'Contact', href: getLocalizedUrl('/contact', locale) },
   ],
   actions: [],
   locale,
@@ -20,26 +20,29 @@ export const headerData = getHeaderData();
 export const getFooterData = (locale: SupportedLanguage = 'en') => ({
   links: [
     {
-      title: 'legal', // translation key for footer.legal
+      title: locale === 'de' ? 'Rechtliches' : 'Legal',
       links: [
-        { text: 'About', href: getLocalizedUrl('/about', locale) },
-        { text: 'blog', href: getLocalizedUrl('/blog', locale) }, // footer.blog
+        { text: locale === 'de' ? 'Über' : 'About', href: getLocalizedUrl('/about', locale) },
+        { text: locale === 'de' ? 'Blog' : 'Blog', href: getLocalizedUrl('/blog', locale) },
       ],
     },
   ],
   secondaryLinks: [
-    { text: 'privacy', href: getLocalizedUrl('/legal/privacy', locale) }, // legal.privacy
-    { text: 'impressum', href: getLocalizedUrl('/legal/impressum', locale) }, // legal.impressum
+    {
+      text: locale === 'de' ? 'Datenschutzerklärung' : 'Privacy Notice',
+      href: getLocalizedUrl('/legal/privacy', locale),
+    },
+    { text: 'Impressum', href: getLocalizedUrl('/legal/impressum', locale) },
   ],
   socialLinks: [
     {
-      text: 'github',
+      text: 'GitHub',
       href: 'https://github.com/PatrickBziuk/seez',
       icon: 'tabler:brand-github',
-      ariaLabel: 'github',
+      ariaLabel: 'GitHub',
     },
   ],
-  footNote: '',
+  footNote: locale === 'de' ? 'Mit Leidenschaft und Neugier erstellt' : 'Built with passion and curiosity',
   locale,
 });
 

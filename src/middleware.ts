@@ -6,13 +6,23 @@ type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 export const onRequest: MiddlewareHandler = async (context, next) => {
   const { url, request, redirect, cookies } = context;
 
+  if (import.meta.env.DEV) {
+    console.log('🔍 Middleware called for:', url.pathname);
+  }
+
   // Skip for API routes and assets
   if (url.pathname.startsWith('/api/') || url.pathname.includes('.')) {
+    if (import.meta.env.DEV) {
+      console.log('⏭️ Skipping API/asset route:', url.pathname);
+    }
     return next();
   }
 
   // Root path language detection
   if (url.pathname === '/') {
+    if (import.meta.env.DEV) {
+      console.log('🏠 Root path detected');
+    }
     const preferredLang = determineLanguage(
       request.headers.get('accept-language'),
       cookies.get('preferred_lang')?.value
@@ -24,13 +34,39 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
         sameSite: 'lax',
         path: '/',
       });
-      return redirect(`/${preferredLang}/`, 302);
+      // Redirect to detected language homepage (no trailing slash)
+      if (import.meta.env.DEV) {
+        console.log('🔄 Redirecting to:', `/${preferredLang}`);
+      }
+      return redirect(`/${preferredLang}`, 302);
     } else {
-      // Show language selection page
-      return next();
+      // Default to English for unclear cases to avoid interstitial
+      cookies.set('preferred_lang', 'en', {
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+        sameSite: 'lax',
+        path: '/',
+      });
+      if (import.meta.env.DEV) {
+        console.log('🔄 Default redirect to: /en');
+      }
+      return redirect('/en', 302);
     }
   }
 
+  // Handle language routes with trailing slashes (e.g., /en/, /de/)
+  // Redirect to non-trailing slash versions to match trailingSlash: 'never' config
+  const trailingSlashLangMatch = url.pathname.match(/^\/(en|de)\/$/);
+  if (trailingSlashLangMatch) {
+    const langCode = trailingSlashLangMatch[1];
+    if (import.meta.env.DEV) {
+      console.log('🔄 Trailing slash redirect:', `${url.pathname} -> /${langCode}`);
+    }
+    return redirect(`/${langCode}`, 302);
+  }
+
+  if (import.meta.env.DEV) {
+    console.log('➡️ Continuing to next middleware/handler for:', url.pathname);
+  }
   return next();
 };
 

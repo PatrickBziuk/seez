@@ -1,11 +1,11 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-04T19:57:23.949Z",
+  "lastUpdated": "2025-08-07T07:13:48.979Z",
   "metadata": {
-    "totalTags": 50,
+    "totalTags": 43,
     "byLanguage": {
-      "en": 33,
-      "de": 17
+      "en": 28,
+      "de": 15
     },
     "sources": ["content-analysis", "manual-curation"]
   },
@@ -14,43 +14,42 @@
       "en": [
         "programming",
         "software",
-        "ai",
-        "portique",
-        "foss",
         "jamstack",
         "astro",
         "supabase",
+        "portique",
+        "foss",
         "deployment",
         "components",
         "ui",
         "accessibility",
         "mdx"
       ],
-      "de": ["ki", "komponenten"]
+      "de": ["ki", "api", "komponenten"]
     },
     "content": {
-      "en": ["example", "badge", "showcase", "note", "demo", "tldr"],
+      "en": ["example", "demo", "badge", "showcase", "note", "tldr"],
       "de": ["demo", "tldr"]
     },
     "personal": {
-      "en": ["career", "personal", "reflection"],
+      "en": ["career"],
       "de": ["reflexion", "trauma", "liebe", "depression", "selbstfindung", "persönlich", "leben"]
     },
     "creative": {
       "en": ["poetry", "music", "portfolio", "creative"],
-      "de": ["portfolio"]
+      "de": []
     },
     "academic": {
       "en": ["fiction", "german literature"],
       "de": ["literatur"]
     },
     "business": {
-      "en": ["consensus", "platform", "eu-hosting", "digital sovereignty"],
+      "en": ["eu-hosting", "digital sovereignty"],
       "de": ["startup"]
     },
     "other": {
       "en": ["experiment"],
-      "de": ["collaboration", "music", "creative"]
+      "de": ["collaboration"]
     }
   },
   "multilingual_pairs": [
@@ -135,273 +134,249 @@
   "usage_stats": {
     "programming": {
       "language": "en",
-      "count": 1,
-      "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "count": 9,
+      "collections": ["books", "projects", "lab", "life", "pages"],
+      "last_seen": "2025-08-07T07:13:48.980Z"
     },
     "software": {
       "language": "en",
-      "count": 1,
-      "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "count": 6,
+      "collections": ["books", "projects", "lab", "life", "pages"],
+      "last_seen": "2025-08-07T07:13:48.980Z"
     },
     "career": {
       "language": "en",
       "count": 1,
       "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.980Z"
+    },
+    "jamstack": {
+      "language": "en",
+      "count": 4,
+      "collections": ["books", "projects", "pages"],
+      "last_seen": "2025-08-07T07:13:48.980Z"
+    },
+    "astro": {
+      "language": "en",
+      "count": 3,
+      "collections": ["books", "projects", "lab"],
+      "last_seen": "2025-08-07T07:13:48.980Z"
+    },
+    "supabase": {
+      "language": "en",
+      "count": 2,
+      "collections": ["books", "projects"],
+      "last_seen": "2025-08-07T07:13:48.980Z"
     },
     "fiction": {
       "language": "en",
       "count": 1,
       "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.980Z"
     },
     "example": {
       "language": "en",
-      "count": 1,
-      "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "poetry": {
-      "language": "en",
-      "count": 1,
-      "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "german literature": {
-      "language": "en",
-      "count": 1,
-      "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "ai": {
-      "language": "en",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "consensus": {
-      "language": "en",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "platform": {
-      "language": "en",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "music": {
-      "language": "de",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "personal": {
-      "language": "en",
-      "count": 2,
-      "collections": ["projects", "life"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "portique": {
-      "language": "en",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "foss": {
-      "language": "en",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "jamstack": {
-      "language": "en",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "astro": {
-      "language": "en",
-      "count": 2,
-      "collections": ["projects", "lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "supabase": {
-      "language": "en",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "eu-hosting": {
-      "language": "en",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "deployment": {
-      "language": "en",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "digital sovereignty": {
-      "language": "en",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "badge": {
-      "language": "en",
-      "count": 1,
-      "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "components": {
-      "language": "en",
       "count": 3,
-      "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "showcase": {
-      "language": "en",
-      "count": 1,
-      "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "ui": {
-      "language": "en",
-      "count": 1,
-      "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "accessibility": {
-      "language": "en",
-      "count": 1,
-      "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "experiment": {
-      "language": "en",
-      "count": 1,
-      "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "mdx": {
-      "language": "en",
-      "count": 1,
-      "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "note": {
-      "language": "en",
-      "count": 1,
-      "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "collections": ["books", "lab"],
+      "last_seen": "2025-08-07T07:13:48.980Z"
     },
     "demo": {
       "language": "de",
       "count": 1,
       "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "german literature": {
+      "language": "en",
+      "count": 2,
+      "collections": ["books"],
+      "last_seen": "2025-08-07T07:13:48.980Z"
+    },
+    "poetry": {
+      "language": "en",
+      "count": 1,
+      "collections": ["books"],
+      "last_seen": "2025-08-07T07:13:48.980Z"
+    },
+    "portique": {
+      "language": "en",
+      "count": 4,
+      "collections": ["projects", "lab", "life"],
+      "last_seen": "2025-08-07T07:13:48.980Z"
+    },
+    "foss": {
+      "language": "en",
+      "count": 1,
+      "collections": ["projects"],
+      "last_seen": "2025-08-07T07:13:48.980Z"
+    },
+    "eu-hosting": {
+      "language": "en",
+      "count": 2,
+      "collections": ["projects", "lab"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "deployment": {
+      "language": "en",
+      "count": 1,
+      "collections": ["projects"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "digital sovereignty": {
+      "language": "en",
+      "count": 1,
+      "collections": ["projects"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "badge": {
+      "language": "en",
+      "count": 1,
+      "collections": ["lab"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "components": {
+      "language": "en",
+      "count": 3,
+      "collections": ["lab"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "showcase": {
+      "language": "en",
+      "count": 1,
+      "collections": ["lab"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "ui": {
+      "language": "en",
+      "count": 1,
+      "collections": ["lab"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "accessibility": {
+      "language": "en",
+      "count": 1,
+      "collections": ["lab"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "experiment": {
+      "language": "en",
+      "count": 1,
+      "collections": ["lab"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "mdx": {
+      "language": "en",
+      "count": 2,
+      "collections": ["lab"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "note": {
+      "language": "en",
+      "count": 1,
+      "collections": ["lab"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "tldr": {
       "language": "de",
       "count": 1,
       "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
-    "portfolio": {
-      "language": "de",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "creative": {
-      "language": "de",
-      "count": 1,
-      "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "reflection": {
+    "music": {
       "language": "en",
       "count": 1,
       "collections": ["life"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "portfolio": {
+      "language": "en",
+      "count": 1,
+      "collections": ["life"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "creative": {
+      "language": "en",
+      "count": 1,
+      "collections": ["life"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "literatur": {
       "language": "de",
       "count": 1,
       "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "reflexion": {
       "language": "de",
       "count": 2,
       "collections": ["books", "life"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "trauma": {
       "language": "de",
-      "count": 1,
-      "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "count": 2,
+      "collections": ["books", "projects"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "liebe": {
       "language": "de",
       "count": 1,
       "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "depression": {
       "language": "de",
-      "count": 1,
-      "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "count": 2,
+      "collections": ["books", "projects"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "selbstfindung": {
       "language": "de",
-      "count": 1,
-      "collections": ["books"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "count": 2,
+      "collections": ["books", "pages"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "persönlich": {
+      "language": "de",
+      "count": 3,
+      "collections": ["books", "life", "pages"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "leben": {
+      "language": "de",
+      "count": 3,
+      "collections": ["books", "life", "pages"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "ki": {
       "language": "de",
       "count": 1,
       "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "collaboration": {
       "language": "de",
       "count": 1,
       "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "startup": {
       "language": "de",
       "count": 1,
       "collections": ["projects"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.981Z"
+    },
+    "api": {
+      "language": "de",
+      "count": 1,
+      "collections": ["projects"],
+      "last_seen": "2025-08-07T07:13:48.981Z"
     },
     "komponenten": {
       "language": "de",
       "count": 1,
       "collections": ["lab"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "persönlich": {
-      "language": "de",
-      "count": 1,
-      "collections": ["life"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
-    },
-    "leben": {
-      "language": "de",
-      "count": 1,
-      "collections": ["life"],
-      "last_seen": "2025-08-04T19:57:23.950Z"
+      "last_seen": "2025-08-07T07:13:48.981Z"
     }
   }
 }

@@ -2,7 +2,7 @@
 /**
  * LanguageSwitcher - Dropdown/toggle for switching site language
  * @props currentLanguage: SupportedLanguage; availableLanguages?: SupportedLanguage[]; currentPath?: string
- * @behavior Shows current language (flag + label) by default; expands to show all available languages on toggle. Accessible, responsive, disables unavailable languages. Dropdown closes on outside click, selection, or Esc key, with smooth transitions and keyboard navigation.
+ * @behavior Shows current language (flag + label) by default; expands to show all available languages on toggle. Works without JavaScript via CSS. Accessible, responsive, disables unavailable languages. Dropdown closes on outside click, selection, or Esc key, with smooth transitions and keyboard navigation.
  * @dependencies LANGUAGE_INFO, getLocalizedUrl, getTranslations (from ~/utils/i18n)
  * @usedBy Header.astro, PageLayout.astro
  */
@@ -19,60 +19,181 @@ const { currentLanguage, availableLanguages = SUPPORTED_LANGUAGES, currentPath =
 const translations = await getTranslations(currentLanguage);
 ---
 
-<div class="language-switcher relative inline-block text-left">
-  <button
-    type="button"
-    class="inline-flex items-center px-3 py-2 rounded-md border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    aria-haspopup="listbox"
-    aria-expanded="false"
-    aria-controls="language-switcher-dropdown"
-    onclick="document.getElementById('language-switcher-dropdown').style.display = (document.getElementById('language-switcher-dropdown').style.display === 'block' ? 'none' : 'block')"
-    tabindex="0"
-  >
-    <span class="mr-2">{LANGUAGE_INFO[currentLanguage]?.flag}</span>
-    <span>{LANGUAGE_INFO[currentLanguage]?.label}</span>
-    <svg class="ml-2 h-4 w-4" viewBox="0 0 20 20" fill="currentColor"
-      ><path
-        d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.293l3.71-4.063a.75.75 0 1 1 1.08 1.04l-4.25 4.667a.75.75 0 0 1-1.08 0l-4.25-4.667a.75.75 0 0 1 .02-1.06z"
-      ></path></svg
+<div class="language-switcher-wrapper">
+  <details class="language-switcher">
+    <summary
+      class="language-switcher-button"
+      role="button"
+      aria-haspopup="listbox"
+      aria-label={currentLanguage === 'de' ? 'Sprache wählen' : 'Choose language'}
     >
-  </button>
-  <div
-    id="language-switcher-dropdown"
-    class="absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white dark:bg-gray-900 ring-1 ring-black ring-opacity-5 z-10"
-    style="display:none; transition: opacity 0.2s, transform 0.2s;"
-  >
-    <ul tabindex="-1" role="listbox" aria-activedescendant="lang-option" class="py-1">
-      {
-        availableLanguages.map((lang) => {
-          const info = LANGUAGE_INFO[lang];
-          const languageUrl = getLocalizedUrl(currentPath, lang);
-          console.log(`LanguageSwitcher: currentPath="${currentPath}", lang="${lang}", languageUrl="${languageUrl}"`);
-          return (
-            <li
-              role="option"
-              aria-selected={lang === currentLanguage}
-              class={`flex items-center px-4 py-2 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-800 ${lang === currentLanguage ? 'font-bold' : ''}`}
-              tabindex="0"
-              aria-disabled={false}
-            >
-              <a href={languageUrl} class="flex items-center w-full">
-                <span class="mr-2">{info?.flag}</span>
-                <span>{info?.label}</span>
-                {lang === currentLanguage && (
-                  <span class="ml-auto text-xs text-indigo-600">{translations?.navigation?.current || 'Current'}</span>
-                )}
-              </a>
-            </li>
-          );
-        })
-      }
-    </ul>
-  </div>
+      <span class="current-lang">
+        <span class="flag">{LANGUAGE_INFO[currentLanguage]?.flag}</span>
+        <span class="label">{LANGUAGE_INFO[currentLanguage]?.label}</span>
+      </span>
+      <svg class="chevron" viewBox="0 0 20 20" fill="currentColor">
+        <path
+          d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.293l3.71-4.063a.75.75 0 1 1 1.08 1.04l-4.25 4.667a.75.75 0 0 1-1.08 0l-4.25-4.667a.75.75 0 0 1 .02-1.06z"
+        ></path>
+      </svg>
+    </summary>
+
+    <div class="language-dropdown">
+      <ul role="listbox" class="language-list">
+        {
+          availableLanguages.map((lang) => {
+            const info = LANGUAGE_INFO[lang];
+            const languageUrl = getLocalizedUrl(currentPath, lang);
+            return (
+              <li role="option" aria-selected={lang === currentLanguage}>
+                <a
+                  href={languageUrl}
+                  class={`language-option ${lang === currentLanguage ? 'current' : ''}`}
+                  aria-label={`${currentLanguage === 'de' ? 'Wechseln zu' : 'Switch to'} ${info?.label}`}
+                >
+                  <span class="flag">{info?.flag}</span>
+                  <span class="label">{info?.label}</span>
+                  {lang === currentLanguage && (
+                    <span class="current-indicator">
+                      {translations?.navigation?.current || (currentLanguage === 'de' ? 'Aktuell' : 'Current')}
+                    </span>
+                  )}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </details>
 </div>
 
 <style>
+  .language-switcher-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
   .language-switcher {
     position: relative;
+  }
+
+  .language-switcher-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgb(209 213 219);
+    border-radius: 0.375rem;
+    background-color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    list-style: none;
+  }
+
+  .language-switcher-button:hover {
+    background-color: rgb(249 250 251);
+  }
+
+  .language-switcher-button:focus {
+    outline: 2px solid rgb(99 102 241);
+    outline-offset: 2px;
+  }
+
+  .current-lang {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .chevron {
+    width: 1rem;
+    height: 1rem;
+    margin-left: 0.5rem;
+    transition: transform 0.2s ease;
+  }
+
+  .language-switcher[open] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .language-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 0.5rem;
+    min-width: 10rem;
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border: 1px solid rgb(229 231 235);
+    z-index: 50;
+    padding: 0.5rem 0;
+  }
+
+  .language-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .language-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: rgb(55 65 81);
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+    width: 100%;
+  }
+
+  .language-option:hover {
+    background-color: rgb(239 246 255);
+  }
+
+  .language-option.current {
+    font-weight: 600;
+    background-color: rgb(239 246 255);
+  }
+
+  .current-indicator {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: rgb(99 102 241);
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .language-switcher-button {
+      background-color: rgb(31 41 55);
+      border-color: rgb(75 85 99);
+      color: white;
+    }
+
+    .language-switcher-button:hover {
+      background-color: rgb(55 65 81);
+    }
+
+    .language-dropdown {
+      background-color: rgb(31 41 55);
+      border-color: rgb(75 85 99);
+    }
+
+    .language-option {
+      color: rgb(229 231 235);
+    }
+
+    .language-option:hover {
+      background-color: rgb(55 65 81);
+    }
+
+    .language-option.current {
+      background-color: rgb(55 65 81);
+    }
   }
 </style>

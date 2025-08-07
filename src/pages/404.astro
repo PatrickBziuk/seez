@@ -1,8 +1,12 @@
 ---
 import Layout from '~/layouts/Layout.astro';
-import { getHomePermalink } from '~/utils/permalinks';
+import { detectLanguage } from '~/utils/i18n';
 
 const title = `Error 404`;
+
+// Detect language from URL for proper homepage link
+const currentLanguage = detectLanguage(Astro.url.pathname);
+const homepageUrl = `/${currentLanguage}`;
 ---
 
 <Layout metadata={{ title }}>
@@ -17,7 +21,7 @@ const title = `Error 404`;
         <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
           Oh it seems, it's not here. Maybe later on something cool will be here.
         </p>
-        <a rel="noopener noreferrer" href={getHomePermalink()} class="btn ml-4">Back to homepage</a>
+        <a rel="noopener noreferrer" href={homepageUrl} class="btn ml-4">Back to homepage</a>
       </div>
     </div>
   </section>

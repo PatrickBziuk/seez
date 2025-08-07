@@ -1,7 +1,0 @@
----
-// Redirect to language-specific URL
-import { detectLanguage } from '../../utils/i18n';
-
-const locale = detectLanguage(Astro.url.pathname) || 'en';
-return Astro.redirect(`/${locale}/projects`);
----

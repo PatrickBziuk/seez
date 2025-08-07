@@ -10,7 +10,7 @@ site:
 metadata:
   title:
     default: seez
-    template: '%s — AstroWind'
+    template: '%s | seez'
   description: "\U0001F680 A Blog about Development, Writing, Social Projects and Life itself."
   robots:
     index: true
@@ -23,8 +23,8 @@ metadata:
         height: 628
     type: website
   twitter:
-    handle: '@onwidget'
-    site: '@onwidget'
+    handle: '@seez_eu'
+    site: '@seez_eu'
     cardType: summary_large_image
 
 i18n:

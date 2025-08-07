@@ -153,41 +153,62 @@ ai_metadata:
 
 ## Implementation Tasks
 
-### T24-001: Husky Pre-commit Infrastructure
+### T24-001: Husky Pre-commit Infrastructure ✅ COMPLETED
 
-- [ ] Install and configure Husky for Git hooks
-- [ ] Create pre-commit hook script for content validation
-- [ ] Implement canonical ID generation utility
-- [ ] Add content file scanning and metadata injection
-- [ ] Create backup/recovery mechanisms for registry updates
+- [x] Install and configure Husky for Git hooks
+- [x] Create pre-commit hook script for content validation
+- [x] Implement canonical ID generation utility
+- [x] Add content file scanning and metadata injection
+- [x] Create backup/recovery mechanisms for registry updates
 
-### T24-002: Central Content Registry System
+**Status**: ✅ COMPLETED
+**Key Deliverables**: Husky configured with pre-commit hooks, canonical ID generation system implemented
 
-- [ ] Design and implement registry JSON schema
-- [ ] Create registry initialization script for existing content
-- [ ] Build registry update/validation utilities
-- [ ] Add registry backup and recovery tools
-- [ ] Implement content relationship mapping
+### T24-002: Central Content Registry System ✅ COMPLETED
 
-### T24-003: Content Migration & Classification
+- [x] Design and implement registry JSON schema
+- [x] Create registry initialization script for existing content
+- [x] Build registry update/validation utilities
+- [ ] Add registry backup and recovery tools (deferred - manual backups sufficient)
+- [x] Implement content relationship mapping
 
-- [ ] Analyze existing content to identify originals vs translations
-- [ ] Assign canonical IDs to all existing content
-- [ ] Classify translation relationships and fix diverged content
-- [ ] Generate initial content registry from existing files
-- [ ] Validate and test registry integrity
+**Status**: ✅ COMPLETED
+**Key Deliverables**: `data/content-registry.json` with 14 canonical entries tracking 28 content files
 
-### T24-004: Translation Pipeline Rewrite
+### T24-003: Content Migration & Classification ✅ COMPLETED
 
-- [ ] Modify `check_translations.ts` to use registry instead of filename matching
-- [ ] Implement translation direction enforcement (original→target only)
-- [ ] Add canonical ID-based translation task generation
-- [ ] Update translation metadata schema with canonical IDs
-- [ ] Integrate token usage tracking with canonical ID system
+- [x] Analyze existing content to identify originals vs translations
+- [x] Assign canonical IDs to all existing content
+- [x] Classify translation relationships and fix diverged content
+- [x] Generate initial content registry from existing files
+- [x] Validate and test registry integrity
+
+**Status**: ✅ COMPLETED
+**Key Deliverables**:
+
+- Scripts: `analyze-content-relationships.ts`, `classify-content-relationships.ts`, `resolve-content-divergence.ts`
+- All content classified with canonical IDs in format `slug-YYYYMMDD-hash8`
+- Translation relationships established and content divergence resolved
+
+### T24-004: Translation Pipeline Rewrite ✅ COMPLETED
+
+- [x] Modify `check_translations.ts` to use registry instead of filename matching
+- [x] Implement translation direction enforcement (original→target only)
+- [x] Add canonical ID-based translation task generation
+- [x] Update translation metadata schema with canonical IDs
+- [x] Integrate token usage tracking with canonical ID system
+
+**Status**: ✅ COMPLETED
+**Key Deliverables**:
+
+- `scripts/check_translations_registry.ts` (246 lines) - registry-based translation detection
+- `scripts/generate_translations_registry.ts` (467 lines) - OpenAI integration with token tracking
+- 14 translation tasks detected (12 missing, 2 stale) via content hash comparison
+- Complete token usage tracking with cost and CO2 impact calculation
 
 ### T24-005: SEO & Content Integration ✅ COMPLETED
 
-- [x] Update content schema to support canonical ID metadata  
+- [x] Update content schema to support canonical ID metadata
 - [x] Implement canonical URL generation using registry relationships
 - [x] Update hreflang tags to use canonical relationships from registry
 - [x] Add content lineage tracking to SEO metadata with canonical IDs
@@ -195,9 +216,10 @@ ai_metadata:
 
 **Status**: ✅ COMPLETED  
 **Key Deliverables**:
+
 - Extended content schema with canonical ID fields (canonicalId, originalLanguage, translationOf, sourceLanguage)
 - Created `canonical-urls.ts` utility (276 lines) with registry-based URL generation
-- Built `CanonicalSEO.astro` component with hreflang tags and content lineage tracking  
+- Built `CanonicalSEO.astro` component with hreflang tags and content lineage tracking
 - Updated `MarkdownLayout.astro` to conditionally use enhanced SEO based on canonical ID presence
 - Validated SEO metadata in built HTML pages - canonical URLs, hreflang tags, and JSON-LD working correctly
 

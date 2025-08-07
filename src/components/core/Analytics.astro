@@ -14,7 +14,7 @@ interface Props {
 const { language, source } = Astro.props;
 ---
 
-<script define:vars={{ language, source }}>
+<script is:inline define:vars={{ language, source }}>
   // Track language detection events
   if (typeof gtag !== 'undefined') {
     gtag('event', 'language_selection', {

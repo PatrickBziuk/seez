@@ -12,7 +12,7 @@ import compress from 'astro-compress';
 import type { AstroIntegration } from 'astro';
 
 import astrowind from './vendor/integration';
-import astroI18next from 'astro-i18next';
+// import astroI18next from 'astro-i18next';
 
 import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter';
 
@@ -24,15 +24,8 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 
 export default defineConfig({
   output: 'static',
-  trailingSlash: 'ignore',
+  trailingSlash: 'never', // Enforce no trailing slashes for consistency
   site: 'https://seez.eu',
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'de'],
-    routing: {
-      prefixDefaultLocale: true,
-    },
-  },
 
   integrations: [
     tailwind({
@@ -78,12 +71,12 @@ export default defineConfig({
       config: './src/config.yaml',
     }),
 
-    astroI18next({
-      defaultLanguage: 'en',
-      supportedLanguages: ['en', 'de'],
-      fallbackLng: 'en',
-      localesDir: './src/locales',
-    }) as AstroIntegration,
+    // astroI18next({
+    //   defaultLanguage: 'en',
+    //   supportedLanguages: ['en', 'de'],
+    //   fallbackLng: 'en',
+    //   localesDir: './src/locales',
+    // }) as AstroIntegration,
     ...whenExternalScripts(),
   ],
 

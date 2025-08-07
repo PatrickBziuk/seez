@@ -1,14 +1,25 @@
 ---
+/**
+ * Metadata - SEO and social media metadata generation
+ * @props title, ignoreTitleTemplate, canonical, robots, description, openGraph, twitter, alternateLanguages
+ * @behavior Generates comprehensive meta tags for SEO, Open Graph, and Twitter
+ * @dependencies AstroSeo, seez.config for metadata defaults, utils for canonical URLs and images
+ * @usedBy Layout.astro, MarkdownLayout.astro, PageLayout.astro, all page components
+ */
 import merge from 'lodash.merge';
 import { AstroSeo } from '@astrolib/seo';
 
 import type { Props as AstroSeoProps } from '@astrolib/seo';
 
-import { SITE, METADATA, I18N } from 'astrowind:config';
+import { getSiteInfo, getMetadataConfig, getI18nConfig } from '~/config/seez.config';
 import type { MetaData } from '~/types';
 import { getCanonical } from '~/utils/permalinks';
 
 import { adaptOpenGraphImages } from '~/utils/images';
+
+const siteInfo = getSiteInfo();
+const metadataConfig = getMetadataConfig();
+const i18nConfig = getI18nConfig();
 
 export interface Props extends MetaData {
   dontUseTitleTemplate?: boolean;
@@ -36,9 +47,9 @@ const seoProps: AstroSeoProps = merge(
     description: undefined,
     openGraph: {
       url: canonical,
-      site_name: SITE?.name,
+      site_name: siteInfo.name,
       images: [],
-      locale: I18N?.language || 'en',
+      locale: i18nConfig.defaultLanguage || 'en',
       type: 'website',
     },
     twitter: {
@@ -46,13 +57,13 @@ const seoProps: AstroSeoProps = merge(
     },
   },
   {
-    title: METADATA?.title?.default,
-    titleTemplate: METADATA?.title?.template,
-    noindex: typeof METADATA?.robots?.index !== 'undefined' ? !METADATA.robots.index : undefined,
-    nofollow: typeof METADATA?.robots?.follow !== 'undefined' ? !METADATA.robots.follow : undefined,
-    description: METADATA?.description,
-    openGraph: METADATA?.openGraph,
-    twitter: METADATA?.twitter,
+    title: metadataConfig.title?.default,
+    titleTemplate: metadataConfig.title?.template,
+    noindex: typeof metadataConfig.robots?.index !== 'undefined' ? !metadataConfig.robots.index : undefined,
+    nofollow: typeof metadataConfig.robots?.follow !== 'undefined' ? !metadataConfig.robots.follow : undefined,
+    description: metadataConfig.description,
+    openGraph: metadataConfig.openGraph,
+    twitter: metadataConfig.twitter,
   },
   {
     title: title,

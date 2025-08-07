@@ -1,0 +1,194 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '~/layouts/MarkdownLayout.astro';
+import { Icon } from 'astro-icon/components';
+
+export async function getStaticPaths() {
+  const authors = await getCollection('authors');
+  const languages = ['en', 'de'];
+
+  const paths = [];
+
+  for (const lang of languages) {
+    for (const author of authors) {
+      paths.push({
+        params: {
+          lang: lang,
+          authorId: author.data.id,
+        },
+        props: {
+          author,
+          lang,
+        },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { author, lang } = Astro.props;
+const { Content } = await render(author);
+
+// Build frontmatter for MarkdownLayout with proper typing
+const frontmatter = {
+  title: `About ${author.data.displayName}`,
+  description: author.data.bio,
+  language: lang as 'en' | 'de',
+  tags: ['author', 'about'],
+  status: author.data.status,
+};
+
+const entry = {
+  collection: 'authors',
+  slug: author.data.id,
+  id: `${author.data.id}.mdx`,
+};
+---
+
+<Layout frontmatter={frontmatter} entry={entry}>
+  <div class="author-profile">
+    <!-- Author Header -->
+    <div
+      class="flex items-center gap-6 mb-8 p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50"
+    >
+      {
+        author.data.avatar && (
+          <img
+            src={author.data.avatar}
+            alt={author.data.displayName}
+            class="w-20 h-20 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
+          />
+        )
+      }
+
+      <div class="flex-1">
+        <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+          {author.data.displayName}
+        </h1>
+
+        <p class="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+          {author.data.bio}
+        </p>
+
+        <!-- Author Type Badge -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-lg">
+            <span class="text-base">
+              {author.data.status.authoring === 'Human' ? '👤' : author.data.status.authoring === 'AI' ? '🤖' : '🤝'}
+            </span>
+            <span class="text-sm font-medium text-slate-700 dark:text-slate-200">
+              {author.data.status.authoring}
+            </span>
+          </div>
+
+          <!-- AI Model Info -->
+          {
+            author.data.model && (
+              <div class="flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <Icon name="tabler:brain" class="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <span class="text-sm text-blue-700 dark:text-blue-300">{author.data.model}</span>
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Links -->
+    {
+      author.data.social && Object.keys(author.data.social).length > 0 && (
+        <div class="mb-8 p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+          <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+            <Icon name="tabler:link" class="w-5 h-5" />
+            Connect
+          </h2>
+
+          <div class="flex flex-wrap gap-3">
+            {author.data.social.github && (
+              <a
+                href={`https://github.com/${author.data.social.github}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+              >
+                <Icon name="tabler:brand-github" class="w-4 h-4" />
+                <span class="text-sm">GitHub</span>
+              </a>
+            )}
+
+            {author.data.social.twitter && (
+              <a
+                href={`https://twitter.com/${author.data.social.twitter}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+              >
+                <Icon name="tabler:brand-twitter" class="w-4 h-4" />
+                <span class="text-sm">Twitter</span>
+              </a>
+            )}
+
+            {author.data.social.linkedin && (
+              <a
+                href={`https://linkedin.com/in/${author.data.social.linkedin}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+              >
+                <Icon name="tabler:brand-linkedin" class="w-4 h-4" />
+                <span class="text-sm">LinkedIn</span>
+              </a>
+            )}
+
+            {author.data.website && (
+              <a
+                href={author.data.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+              >
+                <Icon name="tabler:world" class="w-4 h-4" />
+                <span class="text-sm">Website</span>
+              </a>
+            )}
+          </div>
+        </div>
+      )
+    }
+
+    <!-- AI Capabilities -->
+    {
+      author.data.capabilities && author.data.capabilities.length > 0 && (
+        <div class="mb-8 p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+          <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+            <Icon name="tabler:settings" class="w-5 h-5" />
+            Capabilities
+          </h2>
+
+          <div class="flex flex-wrap gap-2">
+            {author.data.capabilities.map((capability: string) => (
+              <span class="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 text-sm text-slate-700 dark:text-slate-200">
+                {capability}
+              </span>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    <!-- Author Content -->
+    <div
+      class="prose prose-lg max-w-none dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg"
+    >
+      <Content />
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .author-profile {
+    max-width: 4xl;
+    margin: 0 auto;
+  }
+</style>

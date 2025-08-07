@@ -1,78 +1,38 @@
 {
-  "src\\content\\projects\\en\\meine-musik.mdx": {
-    "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
-  },
-  "src\\content\\projects\\en\\cosensai.mdx": {
-    "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
+  "src\\content\\projects\\en\\portique.mdx": {
+    "publishDate": "2025-08-04T22:30:28+02:00",
+    "modifiedDate": "2025-08-05T21:02:29+02:00"
   },
   "src\\content\\projects\\de\\meine-musik-root.mdx": {
     "publishDate": "2025-08-02T23:25:55+02:00",
-    "modifiedDate": "2025-08-02T23:25:55+02:00"
+    "modifiedDate": "2025-08-05T21:02:29+02:00"
   },
   "src\\content\\projects\\de\\cosensai.mdx": {
     "publishDate": "2025-08-02T21:30:45+02:00",
-    "modifiedDate": "2025-08-02T22:04:07+02:00"
+    "modifiedDate": "2025-08-05T15:28:21+02:00"
   },
   "src\\content\\pages\\about\\en.md": {
     "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
+    "modifiedDate": "2025-08-04T22:30:28+02:00"
   },
   "src\\content\\pages\\about\\de.md": {
     "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
-  },
-  "src\\content\\life\\en\\who-am-i.md": {
-    "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
+    "modifiedDate": "2025-08-04T22:30:28+02:00"
   },
   "src\\content\\life\\en\\who-am-i-root.md": {
     "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
-  },
-  "src\\content\\life\\de\\who-am-i.md": {
-    "publishDate": "2025-08-02T21:30:45+02:00",
-    "modifiedDate": "2025-08-02T21:30:45+02:00"
+    "modifiedDate": "2025-08-05T15:28:21+02:00"
   },
   "src\\content\\lab\\en\\tldr-demo.mdx": {
     "publishDate": "2025-08-02T21:30:45+02:00",
-    "modifiedDate": "2025-08-02T22:04:07+02:00"
-  },
-  "src\\content\\lab\\en\\note-demo.mdx": {
-    "publishDate": "2025-08-02T21:30:45+02:00",
-    "modifiedDate": "2025-08-02T22:04:07+02:00"
-  },
-  "src\\content\\lab\\en\\example-lab.mdx": {
-    "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
-  },
-  "src\\content\\lab\\en\\example-lab-root.mdx": {
-    "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-08-02T23:25:55+02:00"
-  },
-  "src\\content\\lab\\en\\badge-showcase.mdx": {
-    "publishDate": "2025-08-02T21:30:45+02:00",
-    "modifiedDate": "2025-08-02T22:04:07+02:00"
+    "modifiedDate": "2025-08-05T15:28:21+02:00"
   },
   "src\\content\\lab\\de\\tldr-demo.mdx": {
     "publishDate": "2025-08-02T21:30:45+02:00",
-    "modifiedDate": "2025-08-02T23:25:55+02:00"
-  },
-  "src\\content\\books\\en\\licht-am-ende-der-zeilen.md": {
-    "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
-  },
-  "src\\content\\books\\en\\example-book.md": {
-    "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
-  },
-  "src\\content\\books\\en\\example-book-root.md": {
-    "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
+    "modifiedDate": "2025-08-05T21:02:29+02:00"
   },
   "src\\content\\books\\de\\licht-am-ende-der-zeilen.md": {
     "publishDate": "2025-07-30T22:05:39+02:00",
-    "modifiedDate": "2025-07-30T22:05:39+02:00"
+    "modifiedDate": "2025-08-05T15:28:21+02:00"
   }
 }

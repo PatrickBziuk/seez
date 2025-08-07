@@ -10,6 +10,7 @@
 import Layout from '~/layouts/Layout.astro';
 import Header from '~/components/core/layout/Header.astro';
 import Footer from '~/components/core/layout/Footer.astro';
+import UrlDebug from '~/components/debug/UrlDebug.astro';
 import { getHeaderData, getFooterData } from '~/navigation';
 import type { MetaData } from '~/types';
 import { detectLanguage } from '~/utils/i18n';
@@ -25,6 +26,7 @@ const footerData = getFooterData(locale);
 ---
 
 <Layout metadata={metadata}>
+  <UrlDebug locale={locale} />
   <slot name="header">
     <!-- Only render default header if slot not provided -->
     <Header {...headerData} locale={locale} isSticky showRssFeed showToggleTheme />

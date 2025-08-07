@@ -5,7 +5,27 @@
     "language": "Sprache",
     "timestamp": "Zeitstempel",
     "status": "Status",
-    "tags": "Tags"
+    "tags": "Tags",
+    "aiUsage": "KI",
+    "tokens": "Token",
+    "tldr": "Zusammenfassung",
+    "tldrAvailable": "Zusammenfassung verfügbar",
+    "generatedByAi": "Von KI generiert",
+    "authors": "Autoren",
+    "read": "Lesezeit",
+    "wordCount": "Wörter",
+    "published": "Veröffentlicht",
+    "updated": "Aktualisiert",
+    "statistics": "Artikel-Statistiken",
+    "readingTime": "Lesezeit",
+    "paragraphs": "Absätze",
+    "difficulty": "Schwierigkeit",
+    "readingTimeVariants": "Lesezeit-Schätzungen",
+    "slowReader": "Langsam",
+    "averageReader": "Durchschnitt",
+    "fastReader": "Schnell",
+    "sources": "Quellen & Referenzen",
+    "by": "von"
   },
   "badges": {
     "ai": "KI",
@@ -72,5 +92,11 @@
     "previous": "Zurück",
     "view_source": "Quellcode anzeigen",
     "edit_on_github": "Auf GitHub bearbeiten"
+  },
+  "actions": {
+    "collapse": "Einklappen",
+    "expand": "Ausklappen",
+    "read_more": "Mehr lesen",
+    "show_less": "Weniger anzeigen"
   }
 }

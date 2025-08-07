@@ -45,7 +45,10 @@ export function getLocalizedUrl(path: string, language: SupportedLanguage): stri
 
   // Add new language prefix for all languages (including default)
   // since the routing structure uses /[lang]/ for all routes
-  return `/${language}${cleanPath || ''}`;
+  const result = `/${language}${cleanPath || ''}`;
+
+  // Ensure no trailing slash (except for root path "/")
+  return result === '/' ? result : result.replace(/\/$/, '');
 }
 
 /**

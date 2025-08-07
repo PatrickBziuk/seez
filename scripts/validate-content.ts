@@ -4,7 +4,7 @@ import matter from 'gray-matter';
 
 function validateUniqueness(slugs: string[]): string[] {
   const seen = new Set();
-  const duplicates = [];
+  const duplicates: string[] = [];
 
   for (const slug of slugs) {
     if (seen.has(slug)) {
