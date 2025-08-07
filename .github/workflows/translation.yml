@@ -8,6 +8,8 @@ on:
         required: true
         type: string
 
+# Note: GitHub Actions may restrict PR creation permissions for security
+# If PR creation fails, the workflow will create a notification issue instead
 permissions:
   contents: write
   pull-requests: write
@@ -221,7 +223,10 @@ jobs:
           1. Review the generated translations for accuracy and quality
           2. Check the AI quality scores in the frontmatter  
           3. Make any necessary manual edits
-          4. Merge this PR to promote translations to the release branch"
+          4. Merge this PR to promote translations to the release branch" 2>/dev/null || {
+              echo "⚠️ Failed to update PR #$existing_pr - permission issue"
+              echo "Branch $branch_name is ready for manual PR creation"
+            }
             
             echo "pr-created=updated" >> $GITHUB_OUTPUT
             echo "pr-number=$existing_pr" >> $GITHUB_OUTPUT
@@ -229,7 +234,8 @@ jobs:
           else
             echo "🆕 Creating new PR for branch: $branch_name"
             
-            pr_url=$(gh pr create \
+            # Try to create PR, handle permission errors gracefully
+            if pr_url=$(gh pr create \
               --title "AI translations for main @ ${short_sha}" \
               --body "Automated translations generated for updated or missing content.
 
@@ -246,15 +252,61 @@ jobs:
               --base main \
               --head "$branch_name" \
               --draft \
-              --label ai,translation,auto-generated)
+              --label ai,translation,auto-generated 2>/dev/null); then
             
-            # Extract PR number from URL  
-            pr_number=$(echo "$pr_url" | sed 's/.*\/pull\/\([0-9]*\).*/\1/')
-            
-            echo "pr-created=new" >> $GITHUB_OUTPUT
-            echo "pr-number=$pr_number" >> $GITHUB_OUTPUT
-            echo "✅ Created new PR #$pr_number at $pr_url"
+              # Extract PR number from URL  
+              pr_number=$(echo "$pr_url" | sed 's/.*\/pull\/\([0-9]*\).*/\1/')
+              
+              echo "pr-created=new" >> $GITHUB_OUTPUT
+              echo "pr-number=$pr_number" >> $GITHUB_OUTPUT
+              echo "✅ Created new PR #$pr_number at $pr_url"
+            else
+              echo "⚠️ Failed to create PR automatically - GitHub Actions may not have permission"
+              echo "📋 Translation branch '$branch_name' is ready for manual PR creation"
+              echo "🔗 Create PR manually: https://github.com/${{ github.repository }}/compare/main...$branch_name"
+              echo "📝 Branch has ${{ steps.check-commits.outputs.commit-count }} translation commits ready for review"
+              
+              echo "pr-created=manual" >> $GITHUB_OUTPUT
+              echo "pr-number=" >> $GITHUB_OUTPUT
+            fi
           fi
+
+      - name: 📢 Create notification issue for manual PR
+        if: steps.create-pr.outputs.pr-created == 'manual'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch_name="${{ steps.setup-branch.outputs.branch-name }}"
+          short_sha="${{ inputs.commit-sha }}"
+          short_sha="${short_sha:0:7}"
+          
+          # Create an issue to notify about manual PR needed
+          gh issue create \
+            --title "Translation branch ready for manual PR creation" \
+            --body "🤖 **Automated Translation Pipeline Notice**
+
+          A translation branch has been created with AI-generated translations, but automatic PR creation failed due to GitHub Actions permissions.
+
+          **Branch Details:**
+          - Branch: \`$branch_name\`
+          - Commit: ${{ inputs.commit-sha }} (${short_sha})
+          - Translations: ${{ steps.check-commits.outputs.commit-count }} commits ready for review
+
+          **Action Required:**
+          Please create a pull request manually to review and merge the translations:
+
+          👉 **[Create Pull Request](${{ github.server_url }}/${{ github.repository }}/compare/main...$branch_name)**
+
+          **Review Checklist:**
+          - [ ] Review AI-generated translations for accuracy
+          - [ ] Check quality scores in frontmatter
+          - [ ] Make any necessary manual edits
+          - [ ] Merge to promote translations to release branch
+
+          ---
+          *This issue was created automatically by the translation pipeline.*" \
+            --label translation,manual-review,automation \
+          || echo "⚠️ Could not create notification issue, but translation branch is ready"
 
       - name: 🛡️ Preserve branch on failure
         if: failure()

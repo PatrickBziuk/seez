@@ -219,3 +219,7 @@ jobs:
     with:
       commit-sha: ${{ needs.build-and-deploy.outputs.commit-sha }}
     secrets: inherit
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
