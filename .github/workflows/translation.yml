@@ -54,7 +54,7 @@ jobs:
       - name: 🔍 Run translation detection
         run: |
           echo "Detecting missing and stale translations..."
-          npx tsx scripts/check_translations.ts > translation-tasks.json
+          npx tsx scripts/translations/check_translations.ts > translation-tasks.json
           echo "Translation tasks generated:"
           cat translation-tasks.json
 
@@ -157,7 +157,7 @@ jobs:
           echo "Progress will be saved after each successful translation."
           
           # The script handles incremental commits internally
-          npx tsx scripts/generate_translations.ts translation-tasks.json
+          npx tsx scripts/translations/generate_translations.ts translation-tasks.json
           echo "translation-completed=true" >> $GITHUB_OUTPUT
           echo "✅ Translation generation completed!"
 
@@ -189,7 +189,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Detecting translation conflicts..."
-          npx tsx scripts/detect_conflicts.ts translation-tasks.json || true
+          npx tsx scripts/translations/detect_conflicts.ts translation-tasks.json || true
 
       - name: 🔍 Create or update Pull Request
         if: steps.check-commits.outputs.has-commits == 'true'
@@ -272,7 +272,7 @@ jobs:
             echo "🔧 To resume manually:"
             echo "   git fetch origin $branch_name"
             echo "   git checkout $branch_name"
-            echo "   npx tsx scripts/generate_translations.ts translation-tasks.json"
+            echo "   npx tsx scripts/translations/generate_translations.ts translation-tasks.json"
             
             # Create an issue about the failed job
             if [ -n "$GH_TOKEN" ]; then
@@ -287,7 +287,7 @@ jobs:
           **Recovery Instructions**:
           1. Check out the preserved branch: \`git checkout $branch_name\`
           2. Review any partial translations in the branch
-          3. Resume the translation job: \`npx tsx scripts/generate_translations.ts translation-tasks.json\`
+          3. Resume the translation job: \`npx tsx scripts/translations/generate_translations.ts translation-tasks.json\`
           4. Create a PR manually if needed
 
           The branch has been preserved with any completed translations." \

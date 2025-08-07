@@ -1,31 +1,40 @@
 ---
-// Server-side redirect fallback for root access
-// The middleware should handle this, but this provides an additional fallback
+// Root page serves English content directly - no redirect page shown
+import Layout from '../layouts/PageLayout.astro';
+import Hero from '~/components/marketing/hero/Hero.astro';
 
-export async function GET() {
-  // Fallback redirect to English if middleware didn't catch it
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: '/en',
-    },
-  });
-}
+// Get English homepage data
+const metadata = {
+  title: 'seez - Digital Sovereignty & Development',
+  description: '🚀 A Blog about Development, Writing, Social Projects and Life itself.',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: 'website',
+  },
+};
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Redirecting...</title>
-    <meta http-equiv="refresh" content="0; url=/en" />
-    <link rel="canonical" href="https://seez.eu/en" />
-  </head>
-  <body>
-    <p>If you are not redirected automatically, <a href="/en">click here</a>.</p>
-    <script>
-      window.location.href = '/en';
-    </script>
-  </body>
-</html>
+<Layout metadata={metadata}>
+  <Hero
+    tagline="Welcome to seez.eu"
+    title="Digital Sovereignty & Development"
+    subtitle="🚀 A Blog about Development, Writing, Social Projects and Life itself."
+    actions={[
+      {
+        variant: 'primary',
+        text: 'English',
+        href: '/en',
+        icon: 'tabler:world',
+      },
+      { 
+        variant: 'secondary',
+        text: 'Deutsch', 
+        href: '/de',
+        icon: 'tabler:world',
+      },
+    ]}
+  />
+</Layout>

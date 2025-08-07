@@ -167,8 +167,8 @@ jobs:
           echo "Build failed, extracting error..."
           pnpm run build > build.log 2>&1 || true
           
-          if [ -f scripts/extract-error.js ]; then
-            node scripts/extract-error.js build.log > error-summary.txt
+          if [ -f scripts/utils/extract-error.js ]; then
+            node scripts/utils/extract-error.js build.log > error-summary.txt
             head -n 20 error-summary.txt
             ERROR_TITLE=$(head -n1 error-summary.txt)
             

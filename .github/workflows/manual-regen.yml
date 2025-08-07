@@ -35,8 +35,8 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          pnpm exec tsx scripts/check_translations.ts > tasks.json
-          pnpm exec tsx scripts/generate_translations.ts tasks.json
+          pnpm exec tsx scripts/translations/check_translations.ts > tasks.json
+          pnpm exec tsx scripts/translations/generate_translations.ts tasks.json
 
       - name: Commit regeneration
         run: |
