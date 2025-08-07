@@ -20,7 +20,7 @@ translationHistory:
     translator: AI (gpt-4o-mini)
     model: gpt-4o-mini
     sourceSha: d0c33d8e5efd0743614998ceaca9eb641211499f11e6b467036fde13b73edd48
-    timestamp: '2025-08-07T12:51:15.594Z'
+    timestamp: '2025-08-07T12:57:49.448Z'
     status: ai-translated
   - language: de
     translator: AI (gpt-4o-mini)
@@ -30,7 +30,7 @@ translationHistory:
     status: ai-translated
 ai_tldr: >-
   The author describes the various names and identities he has worn throughout
-  his life, and how each name reflects a facet of his personality. From
+  his life and how each name reflects a facet of his personality. From
   professional roles to creative expressions, he shows how these names help him
   navigate the world and understand himself. Ultimately, he is a person who
   wears masks to survive and to sing.
@@ -69,7 +69,7 @@ _The voice I raised when I could not scream under my own name._
 
 **seez.eu** is where I bleed.  
 It has been my alias since the days of forums and Tumblr,  
-a name that felt safer than the world did.
+a name that felt safer when the world did not.
 
 Seez is a poet with a blade between the lines.  
 He sings where I once broke.  
@@ -87,7 +87,7 @@ And, if you are careful, your reflection.
 _“The love for the lines.” A forward-looking past._
 
 Born from a Tumblr blog with 15,000 followers—  
-now reinterpreted as a **publisher** for radical honesty.
+now reinterpreted as a **publishing house** for radical honesty.
 
 zeilenliebe is where stories grow into communities.  
 A platform for lyrical survival.  
@@ -116,13 +116,13 @@ but want to feel held while they search.
 _The abyss that speaks._
 
 This is my shadow archive.  
-Dark thoughts, uncurated fragments,  
+Dark thoughts, uncensored fragments,  
 quotes that have hurt me enough to save.
 
 Anonymous in feeling.  
 A place not meant for the masses.  
 But for those who _know_—  
-that healing begins in the darkness.
+that healing begins in the dark.
 
 ---
 
