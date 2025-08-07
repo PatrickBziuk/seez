@@ -142,7 +142,7 @@ Not ready yet. But growing.
 
 ---
 
-## 🌀 Konstruktives Chaos
+## 🌀 Constructive Chaos
 
 _The name I have not yet built—  
 but already live in._
