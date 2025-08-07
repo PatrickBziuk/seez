@@ -29,6 +29,18 @@ translationHistory:
     translator: AI (gpt-4o-mini)
     model: gpt-4o-mini
     sourceSha: 1b1640529b5ce555eb815749855eff5148fddc7e9c8488654a1858fb356111d6
+    timestamp: '2025-08-07T12:55:03.982Z'
+    status: ai-translated
+  - language: de
+    translator: AI (gpt-4o-mini)
+    model: gpt-4o-mini
+    sourceSha: 7590d998e290729f8af665d7c803db9e9634ec823f2aad0e854d93b35c67507e
+    timestamp: '2025-08-07T12:49:16.706Z'
+    status: ai-translated
+  - language: en
+    translator: AI (gpt-4o-mini)
+    model: gpt-4o-mini
+    sourceSha: 1b1640529b5ce555eb815749855eff5148fddc7e9c8488654a1858fb356111d6
     timestamp: '2025-08-07T12:48:35.316Z'
     status: ai-translated
   - language: de
@@ -40,7 +52,7 @@ translationHistory:
 ai_textscore:
   translationQuality: 95
   originalClarity: 90
-  timestamp: '2025-08-07T12:48:04.683Z'
+  timestamp: '2025-08-07T12:48:37.532Z'
   notes: []
 ---
 
@@ -49,11 +61,11 @@ import Badge from '../../../components/ui/display/Badge.astro';
 
 ## Why Portique Exists
 
-Small and medium-sized European companies, NGOs, and independent creatives are caught between:
+Small and medium-sized European businesses, NGOs, and independent creatives are caught between:
 
 - US-based proprietary platforms with risks to data sovereignty,
 - DIY complexity in maintaining a modern deployment stack,
-- Expensive agency lock-ins that trade control for superficial convenience.
+- Expensive agency ties that trade control for superficial convenience.
 
 Portique offers a third way:  
 **The same technological foundation** as modern Jamstack platforms, but **fully transparent, self-hostable, or managed by a trusted European provider**. The architecture is auditable, reproducible, and designed for long-term independence.
@@ -62,16 +74,16 @@ Portique offers a third way:
 
 ## Core Value Proposition
 
-1. **Data sovereignty & GDPR first.** All infrastructures are EU-based, with no hidden data exposure or dependencies on US clouds (CLOUD Act deliberately avoided).
+1. **Data sovereignty & GDPR first.** All infrastructures are EU-based, with no hidden data exposure or dependencies on US clouds (CLOUD Act intentionally avoided).
 2. **Jamstack DX, but FOSS.** Astro + Vite for builds, CI/CD with Woodpecker, Git-supported content via Gitea — fully transparent and vendor-neutral.
-3. **Dual operating modes:**
+3. **Two operational modes:**
    - _Managed_: A European provider takes care of build, deployment, updates, and monitoring.
-   - _Self-hosted_: Same stack, self-operated, fully reproducible with IaC or containers.
+   - _Self-hosted_: The same stack, self-operated, fully reproducible with IaC or containers.
 4. **Progressive onboarding:** Start with static hosting; expand into visual editors, Supabase-supported backends, and AI support assistants.
 
 ## Architecture Overview
 
-Portique is a **CI/CD-supported platform for static website hosting** with optional “backend-light” features and a dashboard/editor for non-technical users.
+Portique is a **CI/CD-supported platform for hosting static websites** with optional “backend-light” features and a dashboard/editor for non-technical users.
 
 ### Components
 
@@ -79,10 +91,10 @@ Portique is a **CI/CD-supported platform for static website hosting** with optio
 - **Gitea**: Git forge for repo control and content editing — full ownership.
 - **Woodpecker CI**: Executes `astro build`, deploys to Caddy or Bunny.net, manages cache invalidation.
 - **Caddy**: Origin server with auto-HTTPS, reverse proxying.
-- **Bunny.net**: CDN/Edge storage for global static delivery.
+- **Bunny.net**: CDN/edge storage for global static delivery.
 - **Supabase (optional)**: Authentication, database, file storage, functions — ideal for extending static websites with dynamic features.
-- **Visual Editor & Dashboard**: Markdown-first with live preview, WYSIWYG planned.
-- **AI Assistant (optional)**: Support, diagnostics, user onboarding (privacy-conscious).
+- **Visual editor & dashboard**: Markdown-first with live preview, WYSIWYG planned.
+- **AI assistant (optional)**: Support, diagnostics, user onboarding (privacy-conscious).
 
 ### Deployment Modes
 
@@ -92,7 +104,7 @@ A trusted provider offers:
 
 - Complete setup of Portique components
 - CI/CD, TLS, backups, and monitoring
-- Access to the visual editor and support for migration
+- Access to the visual editor and migration support
 
 Customers receive the same Git-based workflow as self-hosting — without the sysadmin duties.
 
@@ -184,13 +196,13 @@ Business models include:
 
 ### Quick Start (Self-hosted)
 
-- Deploy a Linux VM (or container) with Gitea, Caddy, and Woodpecker CI
+- Provision a Linux VM (or container) with Gitea, Caddy, and Woodpecker CI
 - Push an Astro repo to Gitea
 - Configure `.woodpecker.yml` and deployment scripts
-- Set up Bunny.net or Caddy as static host
+- Set up Bunny.net or Caddy as static hosting
 - Configure TLS via Caddy (automatically)
 - Add Supabase if needed
-- Optionally install the dashboard UI and visual editor frontend
+- Optionally install the dashboard UI and the frontend of the visual editor
 
 ### Contribution & Extension
 
@@ -199,7 +211,7 @@ Portique is open for contributions:
 - Fork and self-host
 - Submit plugins (editor blocks, deployment integrations)
 - Share use cases and templates
-- Build a managed offering for your region
+- Create a managed offering for your region
 
 ### Roadmap
 
