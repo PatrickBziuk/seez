@@ -232,7 +232,7 @@ async function main() {
       console.error(`     ${pair}: ${pairTasks.length} tasks`);
     }
 
-    // Output JSON for GitHub Actions
+    // Output JSON to stdout ONLY
     if (tasks.length === 0) {
       console.log('[]');
     } else {

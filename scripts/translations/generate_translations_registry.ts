@@ -93,9 +93,19 @@ function loadTranslationTasks(): RegistryTranslationTask[] {
   }
 
   try {
+    // Additional validation before parsing
+    if (!input.startsWith('[') && !input.startsWith('{')) {
+      console.error('Invalid JSON input - content does not start with [ or {');
+      console.error('Input preview:', input.substring(0, 100) + '...');
+      console.error('This might indicate that git command output was redirected instead of JSON');
+      process.exit(1);
+    }
+
     return JSON.parse(input);
   } catch (error) {
     console.error('Failed to parse translation tasks:', error);
+    console.error('Input content preview:', input.substring(0, 200) + '...');
+    console.error('Input length:', input.length);
     process.exit(1);
   }
 }
@@ -371,13 +381,24 @@ async function processTranslationTask(
       canonicalId: task.canonicalId,
       translationOf: task.canonicalId,
       sourceLanguage: task.sourceLanguage,
-      ai_metadata: {
-        ...(sourceFrontmatter.ai_metadata || {}),
-        tokenUsage: tokenUsageMetadata,
-      },
+      draft: true, // Set as draft initially - requires human review
       status: {
         ...sourceFrontmatter.status,
         translation: 'AI',
+        review: {
+          content: false, // Requires human review
+          translation: false, // AI translation requires human review
+          reviewer: null,
+          reviewDate: null,
+          notes: 'AI-generated translation - requires human review before publication',
+        },
+      },
+      ai_metadata: {
+        ...(sourceFrontmatter.ai_metadata || {}),
+        tokenUsage: tokenUsageMetadata,
+        generationDate: new Date().toISOString(),
+        model: 'gpt-4o-mini',
+        translationQuality: 'pending_review',
       },
     };
 

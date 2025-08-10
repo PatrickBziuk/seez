@@ -1,11 +1,66 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-tsx scripts/translations/check_translations_registry.ts > translation-tasks.json || true
-if [ -s translation-tasks.json ] && [ "$(cat translation-tasks.json)" != "[]" ]; then
-  echo "🔁 Generating translations before push…"
-  tsx scripts/translations/generate_translations_registry.ts translation-tasks.json
-  git add src/content
-  git commit -m "chore(i18n): add/update translations" || true
+echo "� Pre-push validation - checking publication readiness..."
+
+# 1) Validate publication readiness (draft status, review status)
+echo "🔍 Validating content publication readiness..."
+if ! tsx scripts/validation/validate-publication-readiness.ts; then
+  echo ""
+  echo "❌ Push blocked: Content is not ready for publication"
+  echo ""
+  echo "🔧 How to resolve:"
+  echo "   1. For draft content:"
+  echo "      • Review your content thoroughly"
+  echo "      • Set draft=false in frontmatter when ready"
+  echo ""
+  echo "   2. For unreviewed content:"
+  echo "      • Review the content quality"
+  echo "      • Set status.review.content=true in frontmatter"
+  echo ""
+  echo "   3. For unreviewed AI translations:"
+  echo "      • Review the translation accuracy"
+  echo "      • Make any necessary edits"
+  echo "      • Set status.review.translation=true in frontmatter"
+  echo "      • Set draft=false when ready to publish"
+  echo ""
+  echo "💡 Example frontmatter for reviewed content:"
+  echo "   ---"
+  echo "   title: \"Your Title\""
+  echo "   draft: false"
+  echo "   status:"
+  echo "     review:"
+  echo "       content: true"
+  echo "       translation: true  # For translations"
+  echo "       reviewer: \"your-github-username\""
+  echo "       reviewDate: \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\""
+  echo "   ---"
+  echo ""
+  exit 1
 fi
+
+echo "✅ All content passed publication readiness check"
+
+# 2) Optional: Generate any missing translations that are needed
+echo "🔍 Checking for any last-minute translation needs..."
+if tsx scripts/translations/check_translations_registry.ts > translation-tasks.json 2>/dev/null; then
+  if [ -s translation-tasks.json ]; then
+    first_char=$(head -c 1 translation-tasks.json)
+    if [[ "$first_char" == "[" ]] || [[ "$first_char" == "{" ]]; then
+      if [ "$(cat translation-tasks.json)" != "[]" ]; then
+        echo "⚠️  Found missing translations - generating them now..."
+        cat translation-tasks.json | tsx scripts/translations/generate_translations_registry.ts
+        git add src/content
+        git commit -m "chore(i18n): add translations generated during pre-push" || true
+        echo "✅ Translations generated and committed"
+        echo "⚠️  Note: New translations require review before next deployment"
+      else
+        echo "✅ No translation tasks needed"
+      fi
+    fi
+  fi
+fi
+
 rm -f translation-tasks.json
+
+echo "🎉 Push approved - content is ready for publication!"

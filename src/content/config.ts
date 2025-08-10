@@ -19,6 +19,15 @@ const sharedSchema = z.object({
     .object({
       authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
       translation: z.enum(['Human', 'AI', 'AI+Human']).optional(),
+      review: z
+        .object({
+          content: z.boolean().default(false), // Human review of content quality
+          translation: z.boolean().default(false), // Human review of translation quality
+          reviewer: z.string().optional(), // GitHub username of reviewer
+          reviewDate: z.string().optional(), // ISO 8601 timestamp
+          notes: z.string().optional(), // Review notes
+        })
+        .optional(),
     })
     .optional(),
   // Author system
@@ -128,6 +137,15 @@ const postSchema = z.object({
     .object({
       authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
       translation: z.enum(['Human', 'AI', 'AI+Human']).optional(),
+      review: z
+        .object({
+          content: z.boolean().default(false),
+          translation: z.boolean().default(false),
+          reviewer: z.string().optional(),
+          reviewDate: z.string().optional(),
+          notes: z.string().optional(),
+        })
+        .optional(),
     })
     .optional(),
   // Author system
