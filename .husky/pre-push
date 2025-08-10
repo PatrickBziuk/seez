@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+tsx scripts/translations/check_translations_registry.ts > translation-tasks.json || true
+if [ -s translation-tasks.json ] && [ "$(cat translation-tasks.json)" != "[]" ]; then
+  echo "🔁 Generating translations before push…"
+  tsx scripts/translations/generate_translations_registry.ts translation-tasks.json
+  git add src/content
+  git commit -m "chore(i18n): add/update translations" || true
+fi
+rm -f translation-tasks.json

@@ -59,6 +59,23 @@ const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
 
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 
+// Helper function to check if a navigation link is active
+const isLinkActive = (href: string) => {
+  if (!href) return false;
+  
+  // Handle root/home page
+  if (href === `/${safeLocale}` || href === '/') {
+    return currentPath === `/${safeLocale}` || currentPath === '/';
+  }
+  
+  // For category pages like /en/books, /en/projects, etc.
+  const normalizedHref = href.replace(/^\//, '').replace(/\/$/, '');
+  const normalizedPath = currentPath.replace(/^\//, '').replace(/\/$/, '');
+  
+  // Check if current path starts with the href (for category pages)
+  return normalizedPath.startsWith(normalizedHref);
+};
+
 // Debug URL generation
 const logoUrl = getLocalizedUrl('/', safeLocale);
 // Ensure no trailing slash for logo URL
@@ -71,6 +88,48 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     border-radius: 0.75rem;
     padding: 0.5rem 0;
+  }
+
+  /* Navigation Active State with Animated Underline */
+  .nav-list {
+    position: relative;
+  }
+
+  .nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #000;
+    transform: translateX(-50%);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-link.active::after,
+  .nav-link:hover::after {
+    width: calc(100% - 2rem);
+  }
+
+  /* Dark mode support */
+  :global(.dark) .nav-link::after {
+    background: #fff;
+  }
+
+  /* Ensure smooth transitions for mobile */
+  @media (max-width: 768px) {
+    .nav-link::after {
+      display: none;
+    }
   }
 </style>
 
@@ -104,7 +163,7 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
       class="items-center w-full md:w-auto hidden md:flex md:mx-5 text-default overflow-y-auto overflow-x-hidden md:overflow-y-visible md:overflow-x-auto md:justify-self-center"
     >
       <ul
-        class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium md:justify-center"
+        class="nav-list flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium md:justify-center"
       >
         {
           links.map(({ text, href, links }: MenuLink) => (
@@ -140,8 +199,8 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
                 <a
                   aria-label={text}
                   class:list={[
-                    'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap',
-                    { 'aw-link-active': href === currentPath },
+                    'nav-link hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap',
+                    { 'active': isLinkActive(href || '') },
                   ]}
                   href={href}
                 >

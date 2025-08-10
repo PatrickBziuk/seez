@@ -1,22 +1,88 @@
+# =============================================================================
+# Seez - Comprehensive Site Configuration
+# =============================================================================
+# This file centralizes all site settings, theme configuration, and features.
+# Edit this file to customize your site's appearance, content, and behavior.
+
+# -----------------------------------------------------------------------------
+# SITE IDENTITY & BRANDING
+# -----------------------------------------------------------------------------
 site:
-  name: seez
+  name: 'Seez'
   site: 'https://seez.eu'
   base: '/'
   trailingSlash: false
+  title: 'Seez - Personal Portfolio & Digital Sanctuary'
+  description: 'A multilingual platform for sharing projects, thoughts, and creative endeavors.'
+  author: 'Patrick Bziuk'
+  lang: 'en' # Default language
 
+  # Logo and branding assets
+  logo:
+    src: '~/assets/images/logo.svg' # Path to your logo
+    alt: 'Seez Logo'
+    width: 132
+    height: 32
+
+  # SEO verification
   googleSiteVerificationId: xxxxxxxxxxxxxxxxxx # Google Search Console verification ID
+
+# -----------------------------------------------------------------------------
+# THEME & DESIGN SYSTEM
+# -----------------------------------------------------------------------------
+theme:
+  # Color palette (CSS custom properties)
+  colors:
+    # Brand colors
+    primary: '#2563eb' # Blue-600
+    primaryDark: '#1d4ed8' # Blue-700
+    secondary: '#7c3aed' # Violet-600
+    accent: '#f59e0b' # Amber-500
+
+    # Semantic colors
+    success: '#10b981' # Emerald-500
+    warning: '#f59e0b' # Amber-500
+    error: '#ef4444' # Red-500
+    info: '#3b82f6' # Blue-500
+
+    # Neutral colors (light mode)
+    light:
+      background: '#ffffff' # White
+      surface: '#f8fafc' # Slate-50
+      border: '#e2e8f0' # Slate-200
+      text:
+        primary: '#0f172a' # Slate-900
+        secondary: '#475569' # Slate-600
+        muted: '#64748b' # Slate-500
+
+    # Neutral colors (dark mode)
+    dark:
+      background: '#0f172a' # Slate-900
+      surface: '#1e293b' # Slate-800
+      border: '#334155' # Slate-700
+      text:
+        primary: '#f8fafc' # Slate-50
+        secondary: '#cbd5e1' # Slate-300
+        muted: '#94a3b8' # Slate-400
+
+  # Typography configuration
+  typography:
+    fontFamily:
+      sans: ['Inter', 'system-ui', 'sans-serif']
+      serif: ['Georgia', 'serif']
+      mono: ['JetBrains Mono', 'Consolas', 'monospace']
 
 # Default SEO metadata
 metadata:
   title:
-    default: seez
-    template: '%s | seez'
-  description: "\U0001F680 A Blog about Development, Writing, Social Projects and Life itself."
+    default: 'Seez'
+    template: '%s | Seez'
+  description: 'A multilingual platform for sharing projects, thoughts, and creative endeavors.'
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: seez
+    site_name: 'Seez'
     images:
       - url: '~/assets/images/default.png'
         width: 1200
@@ -27,40 +93,221 @@ metadata:
     site: '@seez_eu'
     cardType: summary_large_image
 
+# -----------------------------------------------------------------------------
+# MULTILINGUAL CONFIGURATION
+# -----------------------------------------------------------------------------
 i18n:
-  language: en
-  textDirection: ltr
+  language: 'en'
+  textDirection: 'ltr'
+  locales: ['en', 'de']
 
+  # Translation settings
+  translations:
+    autoGenerate: true
+    qualityThreshold: 70
+    provider: 'openai'
+    model: 'gpt-4o'
+
+    # Cost and environmental tracking
+    tracking:
+      enabled: true
+      co2PerToken: 0.0000043 # grams CO2 per token
+
+# -----------------------------------------------------------------------------
+# API KEYS & INTEGRATIONS
+# -----------------------------------------------------------------------------
+# Note: Actual secrets should be in .env.local (local) or GitHub Secrets (CI)
+integrations:
+  # OpenAI for translations and AI features
+  openai:
+    enabled: true
+    # Key loaded from environment: OPENAI_API_KEY
+    model: 'gpt-4o'
+    maxTokens: 2000
+    temperature: 0.3
+
+  # Contact form (Formspree)
+  contact:
+    enabled: true
+    provider: 'formspree'
+    endpoint: 'https://formspree.io/f/mwkgbkkp'
+
+  # Search functionality
+  search:
+    enabled: true
+    provider: 'pagefind'
+    hotkeys: ['/', '.']
+
+# -----------------------------------------------------------------------------
+# CONTENT CONFIGURATION
+# -----------------------------------------------------------------------------
+content:
+  # Collection settings
+  collections:
+    books:
+      enabled: true
+      title: 'Books'
+      description: 'Literary works and creative writing'
+      icon: '📚'
+
+    projects:
+      enabled: true
+      title: 'Projects'
+      description: 'Software projects and technical endeavors'
+      icon: '🚀'
+
+    lab:
+      enabled: true
+      title: 'Lab'
+      description: 'Experiments and technical explorations'
+      icon: '🧪'
+
+    life:
+      enabled: true
+      title: 'Life'
+      description: 'Personal reflections and experiences'
+      icon: '🌱'
+
+# -----------------------------------------------------------------------------
+# HOMEPAGE CONFIGURATION
+# -----------------------------------------------------------------------------
+homepage:
+  # Hero section
+  hero:
+    enabled: true
+    title: 'Welcome to Seez'
+    subtitle: 'A multilingual platform for sharing projects, thoughts, and creative endeavors.'
+    showImage: true
+
+    # Call-to-action buttons
+    cta:
+      primary:
+        text: 'Explore Projects'
+        url: '/en/projects'
+        style: 'primary'
+      secondary:
+        text: 'Read About Me'
+        url: '/en/about'
+        style: 'secondary'
+
+  # Featured sections
+  featured:
+    enabled: true
+    sections:
+      - type: 'projects'
+        title: 'Latest Projects'
+        limit: 3
+        showMore: true
+
+      - type: 'books'
+        title: 'Recent Writing'
+        limit: 2
+        showMore: true
+
+# -----------------------------------------------------------------------------
+# NAVIGATION CONFIGURATION
+# -----------------------------------------------------------------------------
+navigation:
+  # Header navigation
+  header:
+    showLogo: true
+    showThemeToggle: true
+    showLanguageSwitch: true
+    showSearch: true
+
+    # Main navigation items
+    items:
+      - text: 'Projects'
+        href: '/projects'
+        icon: '🚀'
+      - text: 'Books'
+        href: '/books'
+        icon: '📚'
+      - text: 'Lab'
+        href: '/lab'
+        icon: '🧪'
+      - text: 'Life'
+        href: '/life'
+        icon: '🌱'
+      - text: 'About'
+        href: '/about'
+        icon: '👋'
+      - text: 'Contact'
+        href: '/contact'
+        icon: '📧'
+
+  # Footer navigation
+  footer:
+    enabled: true
+
+    # Social links
+    social:
+      - platform: 'github'
+        url: 'https://github.com/PatrickBziuk'
+        icon: 'github'
+      - platform: 'email'
+        url: 'mailto:hello@seez.eu'
+        icon: 'mail'
+
+    # Legal pages
+    legal:
+      - text: 'Privacy Policy'
+        href: '/legal/privacy'
+      - text: 'Impressum'
+        href: '/legal/impressum'
+
+# -----------------------------------------------------------------------------
+# FEATURE FLAGS
+# -----------------------------------------------------------------------------
+features:
+  # Content features
+  enableComments: false
+  enableShare: true
+  enablePrint: true
+  enableSearch: true
+  enableTags: true
+
+  # Translation features
+  enableAutoTranslation: true
+  enableTranslationHooks: true
+  showTranslationMetadata: true
+
+  # Performance features
+  enableImageOptimization: true
+  enableMinification: true
+  enableCompression: true
+
+# Legacy blog configuration (kept for compatibility)
 apps:
   blog:
-    isEnabled: true
+    isEnabled: false
     postsPerPage: 6
 
     post:
-      isEnabled: true
-      permalink: '/%slug%' # Variables: %slug%, %year%, %month%, %day%, %hour%, %minute%, %second%, %category%
+      isEnabled: false
+      permalink: '/%slug%'
       robots:
         index: true
 
     list:
-      isEnabled: true
-      pathname: 'blog' # Blog main path, you can change this to "articles" (/articles)
+      isEnabled: false
+      pathname: 'blog'
       robots:
         index: true
 
     category:
-      isEnabled: true
-      pathname: 'category' # Category main path /category/some-category, you can change this to "group" (/group/some-category)
+      isEnabled: false
+      pathname: 'category'
       robots:
         index: true
 
     tag:
-      isEnabled: true
-      pathname: 'tag' # Tag main path /tag/some-tag, you can change this to "topics" (/topics/some-category)
+      isEnabled: false
+      pathname: 'tag'
       robots:
         index: false
 
-    isRelatedPostsEnabled: true
+    isRelatedPostsEnabled: false
     relatedPostsCount: 4
 
 analytics:

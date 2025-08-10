@@ -1,8 +1,8 @@
 ---
 /**
- * LanguageSwitcher - Dropdown/toggle for switching site language
+ * LanguageSwitcher - Minimal toggle for switching site language
  * @props currentLanguage: SupportedLanguage; availableLanguages?: SupportedLanguage[]; currentPath?: string
- * @behavior Shows current language (flag + label) by default; expands to show all available languages on toggle. Works without JavaScript via CSS. Accessible, responsive, disables unavailable languages. Dropdown closes on outside click, selection, or Esc key, with smooth transitions and keyboard navigation.
+ * @behavior Shows minimal US/DE when not interacted with, expands to full language names on interaction, blends with header background
  * @dependencies LANGUAGE_INFO, getLocalizedUrl, getTranslations (from ~/utils/i18n)
  * @usedBy Header.astro, PageLayout.astro
  */
@@ -17,6 +17,12 @@ export interface Props {
 
 const { currentLanguage, availableLanguages = SUPPORTED_LANGUAGES, currentPath = Astro.url.pathname } = Astro.props;
 const translations = await getTranslations(currentLanguage);
+
+// Minimal language codes for display
+const languageCodes = {
+  en: 'US',
+  de: 'DE'
+} as const;
 ---
 
 <div class="language-switcher-wrapper">
@@ -27,10 +33,7 @@ const translations = await getTranslations(currentLanguage);
       aria-haspopup="listbox"
       aria-label={currentLanguage === 'de' ? 'Sprache wählen' : 'Choose language'}
     >
-      <span class="current-lang">
-        <span class="flag">{LANGUAGE_INFO[currentLanguage]?.flag}</span>
-        <span class="label">{LANGUAGE_INFO[currentLanguage]?.label}</span>
-      </span>
+      <span class="minimal-code">{languageCodes[currentLanguage]}</span>
       <svg class="chevron" viewBox="0 0 20 20" fill="currentColor">
         <path
           d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.293l3.71-4.063a.75.75 0 1 1 1.08 1.04l-4.25 4.667a.75.75 0 0 1-1.08 0l-4.25-4.667a.75.75 0 0 1 .02-1.06z"
@@ -81,20 +84,24 @@ const translations = await getTranslations(currentLanguage);
   .language-switcher-button {
     display: inline-flex;
     align-items: center;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid rgb(209 213 219);
+    gap: 0.25rem;
+    padding: 0.5rem;
+    border: none;
     border-radius: 0.375rem;
-    background-color: white;
-    font-size: 0.875rem;
-    font-weight: 500;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    background-color: transparent;
+    font-size: 0.75rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: all 0.15s ease;
     list-style: none;
+    color: rgb(107 114 128);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .language-switcher-button:hover {
-    background-color: rgb(249 250 251);
+    background-color: rgb(243 244 246);
+    color: rgb(55 65 81);
   }
 
   .language-switcher-button:focus {
@@ -102,21 +109,26 @@ const translations = await getTranslations(currentLanguage);
     outline-offset: 2px;
   }
 
-  .current-lang {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  .minimal-code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
   }
 
   .chevron {
-    width: 1rem;
-    height: 1rem;
-    margin-left: 0.5rem;
+    width: 0.75rem;
+    height: 0.75rem;
     transition: transform 0.2s ease;
+    opacity: 0.6;
   }
 
   .language-switcher[open] .chevron {
     transform: rotate(180deg);
+  }
+
+  .language-switcher[open] .language-switcher-button {
+    background-color: rgb(243 244 246);
+    color: rgb(55 65 81);
   }
 
   .language-dropdown {
@@ -124,59 +136,70 @@ const translations = await getTranslations(currentLanguage);
     right: 0;
     top: 100%;
     margin-top: 0.5rem;
-    min-width: 10rem;
+    min-width: 8rem;
     background-color: white;
-    border-radius: 0.75rem;
+    border-radius: 0.5rem;
     box-shadow:
-      0 4px 6px -1px rgb(0 0 0 / 0.1),
-      0 2px 4px -2px rgb(0 0 0 / 0.1);
+      0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -2px rgb(0 0 0 / 0.05);
     border: 1px solid rgb(229 231 235);
     z-index: 50;
-    padding: 0.5rem 0;
+    padding: 0.5rem;
   }
 
   .language-list {
     margin: 0;
     padding: 0;
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
   }
 
   .language-option {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     color: rgb(55 65 81);
     text-decoration: none;
     transition: background-color 0.15s ease;
     width: 100%;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
   }
 
   .language-option:hover {
-    background-color: rgb(239 246 255);
+    background-color: rgb(249 250 251);
   }
 
   .language-option.current {
     font-weight: 600;
     background-color: rgb(239 246 255);
+    color: rgb(37 99 235);
   }
 
   .current-indicator {
     margin-left: auto;
     font-size: 0.75rem;
     color: rgb(99 102 241);
+    opacity: 0.8;
+  }
+
+  .flag {
+    font-size: 1rem;
   }
 
   /* Dark mode support */
   @media (prefers-color-scheme: dark) {
     .language-switcher-button {
-      background-color: rgb(31 41 55);
-      border-color: rgb(75 85 99);
-      color: white;
+      color: rgb(156 163 175);
     }
 
-    .language-switcher-button:hover {
+    .language-switcher-button:hover,
+    .language-switcher[open] .language-switcher-button {
       background-color: rgb(55 65 81);
+      color: rgb(229 231 235);
     }
 
     .language-dropdown {
@@ -193,7 +216,8 @@ const translations = await getTranslations(currentLanguage);
     }
 
     .language-option.current {
-      background-color: rgb(55 65 81);
+      background-color: rgb(30 58 138);
+      color: rgb(147 197 253);
     }
   }
 </style>

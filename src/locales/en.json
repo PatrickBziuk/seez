@@ -98,5 +98,12 @@
     "expand": "Expand",
     "read_more": "Read more",
     "show_less": "Show less"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "button": "Search",
+    "results": "results",
+    "no_results": "No results found",
+    "hotkey_hint": "Press / or . to search"
   }
 }

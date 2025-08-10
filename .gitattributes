@@ -1,0 +1,16 @@
+# Ensure consistent line endings for shell scripts and hooks
+.husky/* text eol=lf
+*.sh text eol=lf
+
+# Standard Git attributes
+* text=auto
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

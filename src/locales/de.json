@@ -98,5 +98,12 @@
     "expand": "Ausklappen",
     "read_more": "Mehr lesen",
     "show_less": "Weniger anzeigen"
+  },
+  "search": {
+    "placeholder": "Suchen...",
+    "button": "Suchen",
+    "results": "Ergebnisse",
+    "no_results": "Keine Ergebnisse gefunden",
+    "hotkey_hint": "Drücke / oder . zum Suchen"
   }
 }

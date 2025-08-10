@@ -100,17 +100,14 @@ jobs:
           echo "Running Prettier check..."
           pnpm run check:prettier || echo "⚠️ Prettier found issues, but continuing"
 
-  # Build and Deploy (only on main branch pushes)
+  # Build Only (main branch pushes just validate, no deploy)
   build-and-deploy:
-    name: Build & Deploy to GitHub Pages
+    name: Build & Validate
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     outputs:
       build-success: ${{ steps.build-status.outputs.success }}
       commit-sha: ${{ github.sha }}
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -157,6 +154,13 @@ jobs:
         if: success()
         run: echo "success=true" >> $GITHUB_OUTPUT
 
+      - name: ✅ Build validation complete
+        if: success()
+        run: |
+          echo "🎉 Build validation successful!"      
+          echo "📦 Build SHA: ${{ github.sha }}"
+          echo "ℹ️ Deployment happens only from 'release' branch"
+
       - name: ❌ On Build Failure – Create GitHub Issue
         if: failure()
         env:
@@ -187,39 +191,3 @@ jobs:
               --body "Build failed on main branch at commit ${COMMIT_SHA}. See run: ${RUN_URL}" \
               --label build-failure,automated
           fi
-
-      - name: 📄 Setup Pages
-        if: success()
-        uses: actions/configure-pages@v4
-
-      - name: 📤 Upload artifact
-        if: success()
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
-
-      - name: 🚀 Deploy to GitHub Pages
-        id: deployment
-        if: success()
-        uses: actions/deploy-pages@v4
-
-      - name: ✅ Deployment complete
-        if: success()
-        run: |
-          echo "🎉 Site successfully deployed to GitHub Pages!"      
-          echo "📦 Deployment SHA: ${{ github.sha }}"
-          echo "🌐 Site URL: ${{ steps.deployment.outputs.page_url }}"
-
-  # Trigger translation workflow only after successful build
-  trigger-translation:
-    name: Trigger Translation Pipeline
-    needs: build-and-deploy
-    if: needs.build-and-deploy.outputs.build-success == 'true'
-    uses: ./.github/workflows/translation.yml
-    with:
-      commit-sha: ${{ needs.build-and-deploy.outputs.commit-sha }}
-    secrets: inherit
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write

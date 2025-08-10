@@ -4,41 +4,79 @@ on:
   push:
     branches: [release]
 
+# Set permissions for GitHub token
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+env:
+  NODE_VERSION: '20'
+
 jobs:
   build-and-deploy:
+    name: Build & Deploy from Release Branch
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Need full history for git metadata
       
-      - uses: pnpm/action-setup@v2
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          version: latest
+          version: 9
       
-      - uses: actions/setup-node@v4
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
       
-      - name: Install dependencies
-        run: pnpm install
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing dependencies with pnpm..."
+          pnpm install --frozen-lockfile
       
-      - name: Extract Git metadata
-        run: pnpm run extract:git-metadata
+      - name: 📊 Extract Git metadata
+        run: |
+          echo "Extracting Git metadata..."
+          pnpm run extract:git-metadata
       
-      - name: Validate content
-        run: pnpm run validate:content
+      - name: ✅ Validate content
+        run: |
+          echo "Validating content structure..."
+          pnpm run validate:content
       
-      - name: Sync Astro content
-        run: pnpm astro sync
+      - name: 🔄 Sync Astro content types
+        run: |
+          echo "Syncing Astro content types..."
+          pnpm run astro sync
       
-      - name: Build site
-        run: pnpm build
+      - name: 🏗️ Build site
+        run: |
+          echo "Building Astro site for production..."
+          pnpm run build
+          echo "✅ Build completed successfully!"
       
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: 📄 Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: 📤 Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
+          path: './dist'
+
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: ✅ Deployment complete
+        run: |
+          echo "🎉 Site successfully deployed from release branch!"      
+          echo "📦 Deployment SHA: ${{ github.sha }}"
+          echo "🌐 Site URL: ${{ steps.deployment.outputs.page_url }}"

@@ -1,5 +1,6 @@
 ---
 import Layout from '../../../layouts/PageLayout.astro';
+import ContentCard from '../../../components/content/cards/ContentCard.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SUPPORTED_LANGUAGES, getTranslations } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
@@ -21,12 +22,6 @@ const filteredLife = allLife.filter(
   (item) => !item.data.draft && (item.data.language === lang || (!item.data.language && lang === 'en'))
 );
 
-// Helper function to extract clean slug from content ID
-const getCleanSlug = (id: string) => {
-  // Remove language prefix (e.g., "en/who-am-i" -> "who-am-i")
-  return id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
-};
-
 const metadata = {
   title: t.navigation.Life,
   description: 'Personal thoughts and life experiences.',
@@ -45,22 +40,7 @@ const metadata = {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {
         filteredLife.map((item) => (
-          <a
-            href={`/${lang}/life/${getCleanSlug(item.id)}`}
-            class="block p-6 rounded-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition-all duration-200"
-          >
-            <h2 class="text-xl font-semibold mb-2 font-heading dark:text-gray-200">{item.data.title}</h2>
-            {item.data.subtitle && <p class="text-muted dark:text-slate-400 mb-3">{item.data.subtitle}</p>}
-            {item.data.tags && item.data.tags.length > 0 && (
-              <div class="flex flex-wrap gap-2">
-                {item.data.tags.map((tag) => (
-                  <span class="inline-block bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs px-2 py-1 rounded">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </a>
+          <ContentCard item={item} lang={lang} basePath="life" />
         ))
       }
     </div>

@@ -1,0 +1,73 @@
+---
+/**
+ * Search - Pagefind site search component
+ * @props - None required, all configuration handled via uiOptions
+ * @behavior - Provides site-wide search functionality with keyboard shortcuts
+ * @dependencies - astro-pagefind for search indexing and UI
+ * @usedBy - Header component for site navigation
+ */
+---
+
+<div id="search" class="pagefind-ui"></div>
+
+<script is:inline>
+  // Search hotkey functionality - focus search on '/' or '.' key
+  window.addEventListener('keydown', (e) => {
+    // Only trigger if not already in an input field
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      return;
+    }
+    
+    if (e.key === '/' || e.key === '.') {
+      e.preventDefault();
+      const searchInput = document.querySelector('#search input');
+      if (searchInput) {
+        searchInput.focus();
+      }
+    }
+  });
+</script>
+
+<style>
+  /* Custom Pagefind styling to match site theme */
+  .pagefind-ui {
+    --pagefind-ui-primary: hsl(var(--color-primary));
+    --pagefind-ui-text: hsl(var(--color-text-default));
+    --pagefind-ui-background: hsl(var(--color-bg-page));
+    --pagefind-ui-border: hsl(var(--color-border));
+    --pagefind-ui-tag: hsl(var(--color-secondary));
+  }
+
+  .pagefind-ui__search-input {
+    @apply rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2;
+    @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary;
+  }
+
+  .pagefind-ui__results {
+    @apply mt-4 space-y-4;
+  }
+
+  .pagefind-ui__result {
+    @apply p-4 rounded-lg border border-gray-200 dark:border-gray-700;
+    @apply bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700;
+    @apply transition-colors duration-200;
+  }
+
+  .pagefind-ui__result-title {
+    @apply text-lg font-semibold text-primary hover:text-primary-darker;
+    @apply mb-2 no-underline;
+  }
+
+  .pagefind-ui__result-excerpt {
+    @apply text-sm text-gray-600 dark:text-gray-300 line-clamp-2;
+  }
+
+  .pagefind-ui__result-tags {
+    @apply mt-2 flex flex-wrap gap-1;
+  }
+
+  .pagefind-ui__result-tag {
+    @apply px-2 py-1 text-xs rounded-full bg-secondary text-white;
+  }
+</style>

@@ -1,47 +1,244 @@
-name: Manual translation regeneration
+name: Manual Translation Regeneration
 
 on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Translation mode'
+        type: choice
+        options:
+          - 'check-only'
+          - 'generate-missing'
+          - 'regenerate-all'
+        default: 'generate-missing'
+      target_language:
+        description: 'Target language (leave empty for all languages)'
+        type: string
+        required: false
+      create_pr:
+        description: 'Create pull request with results'
+        type: boolean
+        default: true
   pull_request:
     types: [labeled]
 
+env:
+  NODE_VERSION: '20'
+
 jobs:
-  regen:
-    name: Re-run translations on label 'regen-needed'
-    if: contains(github.event.pull_request.labels.*.name, 'regen-needed')
+  manual-regen:
+    name: Manual Translation Regeneration
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'regen-needed')
     runs-on: ubuntu-latest
+    env:
+      TRANSLATION_QUALITY_THRESHOLD: 70
+      # This secret must be configured in repository settings
+      # Go to: Settings → Secrets and variables → Actions → New repository secret
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref }}
           fetch-depth: 0
 
-      - name: Setup pnpm
+      - name: 📦 Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      - uses: actions/setup-node@v4
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Sync Astro content types
-        run: pnpm run astro sync
-
-      - name: Re-run translations
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - name: 📦 Install dependencies
         run: |
-          pnpm exec tsx scripts/translations/check_translations.ts > tasks.json
-          pnpm exec tsx scripts/translations/generate_translations.ts tasks.json
+          echo "Installing dependencies with pnpm..."
+          pnpm install --frozen-lockfile
 
-      - name: Commit regeneration
+      - name: 🔄 Sync Astro content types
+        run: |
+          echo "Syncing Astro content types..."
+          pnpm run astro sync
+
+      - name: 🔧 Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -am "chore: regenerate translations after regen-needed label" || echo "No changes to commit"
+
+      - name: 🔍 Check translation status
+        id: check-translations
+        run: |
+          echo "Checking translation requirements..."
+          
+          # Generate tasks based on mode
+          case "${{ github.event.inputs.mode || 'generate-missing' }}" in
+            "check-only")
+              echo "mode=check" >> $GITHUB_OUTPUT
+              npx tsx scripts/translations/check_translations_registry.ts > translation-report.json
+              echo "✅ Translation check completed - see translation-report.json"
+              ;;
+            "generate-missing")
+              echo "mode=generate" >> $GITHUB_OUTPUT
+              npx tsx scripts/translations/check_translations_registry.ts > translation-tasks.json
+              echo "📋 Translation tasks for missing content generated"
+              ;;
+            "regenerate-all")
+              echo "mode=regenerate" >> $GITHUB_OUTPUT
+              npx tsx scripts/translations/generate_all_tasks.ts > translation-tasks.json
+              echo "🔄 Full regeneration tasks created"
+              ;;
+          esac
+
+      - name: 📊 Upload translation report
+        if: steps.check-translations.outputs.mode == 'check'
+        uses: actions/upload-artifact@v4
+        with:
+          name: translation-report
+          path: translation-report.json
+
+      - name: 🤖 Generate translations
+        if: steps.check-translations.outputs.mode != 'check'
+        run: |
+          if [ -f translation-tasks.json ] && [ -s translation-tasks.json ]; then
+            echo "🚀 Starting translation generation..."
+            
+            # Add target language filter if specified
+            if [ -n "${{ github.event.inputs.target_language }}" ]; then
+              echo "🎯 Filtering for language: ${{ github.event.inputs.target_language }}"
+              npx tsx scripts/translations/filter_tasks.ts translation-tasks.json "${{ github.event.inputs.target_language }}" > filtered-tasks.json
+              mv filtered-tasks.json translation-tasks.json
+            fi
+            
+            # Generate with registry system
+            npx tsx scripts/translations/generate_translations_registry.ts translation-tasks.json
+            echo "✅ Translation generation completed"
+          else
+            echo "ℹ️ No translation tasks found - all content appears to be up to date"
+          fi
+
+      - name: 📝 Commit changes
+        if: steps.check-translations.outputs.mode != 'check'
+        id: commit-changes
+        run: |
+          if git diff --staged --quiet && git diff --quiet; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No changes to commit"
+          else
+            git add .
+            
+            # Create descriptive commit message
+            case "${{ github.event.inputs.mode || 'generate-missing' }}" in
+              "generate-missing")
+                commit_msg="chore: generate missing translations via manual workflow"
+                ;;
+              "regenerate-all")
+                commit_msg="chore: regenerate all translations via manual workflow"
+                ;;
+              *)
+                commit_msg="chore: update translations via manual workflow"
+                ;;
+            esac
+            
+            if [ -n "${{ github.event.inputs.target_language }}" ]; then
+              commit_msg="$commit_msg (language: ${{ github.event.inputs.target_language }})"
+            fi
+            
+            git commit -m "$commit_msg"
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "✅ Changes committed: $commit_msg"
+          fi
+
+      - name: 📤 Push changes (if PR labeled)
+        if: github.event_name == 'pull_request' && steps.commit-changes.outputs.changes == 'true'
+        run: |
+          echo "📤 Pushing changes to PR branch..."
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          echo "✅ Changes pushed to PR"
+
+      - name: 🌿 Create translation branch (if manual dispatch)
+        if: github.event_name == 'workflow_dispatch' && steps.commit-changes.outputs.changes == 'true'
+        id: create-branch
+        run: |
+          timestamp=$(date +%Y%m%d-%H%M%S)
+          branch_name="manual-translations-$timestamp"
+          
+          git checkout -b "$branch_name"
+          git push origin "$branch_name"
+          
+          echo "branch-name=$branch_name" >> $GITHUB_OUTPUT
+          echo "✅ Created translation branch: $branch_name"
+
+      - name: 🔍 Create Pull Request
+        if: github.event_name == 'workflow_dispatch' && steps.commit-changes.outputs.changes == 'true' && github.event.inputs.create_pr == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch_name="${{ steps.create-branch.outputs.branch-name }}"
+          
+          # Create descriptive PR title and body
+          case "${{ github.event.inputs.mode }}" in
+            "generate-missing")
+              pr_title="Manual translation generation: missing content"
+              pr_body="🤖 **Manual Translation Generation**
+
+          Generated missing translations using the manual workflow.
+
+          **Configuration:**
+          - Mode: Generate missing translations only
+          - Target Language: ${{ github.event.inputs.target_language || 'All languages' }}
+          - Quality Threshold: ${TRANSLATION_QUALITY_THRESHOLD}
+
+          **Review Instructions:**
+          1. Review the generated translations for accuracy and quality
+          2. Check the AI quality scores in the frontmatter
+          3. Make any necessary manual edits
+          4. Merge this PR to promote translations to the release branch"
+              ;;
+            "regenerate-all")
+              pr_title="Manual translation regeneration: full refresh"
+              pr_body="🔄 **Manual Translation Regeneration**
+
+          Regenerated all translations using the manual workflow.
+
+          **Configuration:**
+          - Mode: Regenerate all translations
+          - Target Language: ${{ github.event.inputs.target_language || 'All languages' }}
+          - Quality Threshold: ${TRANSLATION_QUALITY_THRESHOLD}
+
+          **⚠️ Review Carefully:**
+          This regenerated existing translations. Please review all changes carefully.
+
+          **Review Instructions:**
+          1. Compare with previous translations for any regression
+          2. Check the AI quality scores in the frontmatter
+          3. Make any necessary manual edits
+          4. Merge this PR to promote translations to the release branch"
+              ;;
+          esac
+          
+          gh pr create \
+            --title "$pr_title" \
+            --body "$pr_body" \
+            --base main \
+            --head "$branch_name" \
+            --label manual,translation,review-required
+          
+          echo "✅ Pull request created for manual translations"
+
+      - name: 📋 Summary
+        run: |
+          echo "🎉 Manual translation workflow completed!"
+          echo "Mode: ${{ github.event.inputs.mode || 'generate-missing' }}"
+          echo "Target Language: ${{ github.event.inputs.target_language || 'All languages' }}"
+          echo "Changes Made: ${{ steps.commit-changes.outputs.changes || 'false' }}"
+          
+          if [ "${{ steps.commit-changes.outputs.changes }}" = "true" ]; then
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              echo "✅ Changes committed to PR: #${{ github.event.pull_request.number }}"
+            else
+              echo "✅ Translation branch created: ${{ steps.create-branch.outputs.branch-name }}"
+            fi
+          fi

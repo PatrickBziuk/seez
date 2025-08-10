@@ -1,8 +1,27 @@
-# Run content validation and registry update
-npx tsx scripts/validation/validate-content-precommit-simple.ts
+#!/usr/bin/env bash
+set -euo pipefail
 
-# If registry was updated, stage the changes
+# 1) Validate content & update registry if needed
+tsx scripts/validation/validate-content-precommit-simple.ts
+
 if [ -f "data/content-registry.json.updated" ]; then
   git add data/content-registry.json
   rm data/content-registry.json.updated
 fi
+
+# 2) Only proceed if MD/MDX staged
+if ! git diff --cached --name-only | grep -E '^src/content/.*\.(md|mdx)$' >/dev/null; then
+  exit 0
+fi
+
+# 3) Detect missing/stale translations (registry-based)
+tsx scripts/translations/check_translations_registry.ts > translation-tasks.json || true
+
+# 4) Generate if needed
+if [ -s translation-tasks.json ] && [ "$(cat translation-tasks.json)" != "[]" ]; then
+  echo "🔁 Generating translations locally…"
+  tsx scripts/translations/generate_translations_registry.ts translation-tasks.json
+  git add src/content
+fi
+
+rm -f translation-tasks.json

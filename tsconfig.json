@@ -7,7 +7,10 @@
     "paths": {
       "~/*": ["src/*"]
     },
-    "strict": true
+    "strict": true,
+    "jsx": "preserve",
+    "jsxImportSource": "astro",
+    "skipLibCheck": true
   },
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist/"]

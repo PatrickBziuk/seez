@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const entry = await getEntry('projects', `de/${slug}`);
+const entry = await getEntry('projects', `de/${slug}.mdx`) || await getEntry('projects', `de/${slug}`);
 if (!entry) throw new Error(`Project not found: de/${slug}`);
 
 const { Content } = await render(entry);
