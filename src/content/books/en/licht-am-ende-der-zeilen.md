@@ -59,27 +59,27 @@ ai_metadata:
       operation: translation
       canonicalId: slug-20250805-d90c95e9
       model: gpt-4o-mini
-      inputTokens: 1018
-      outputTokens: 738
-      totalTokens: 1756
-      cost: 0.0005955
-      co2Impact: 0.1756
-      timestamp: '2025-08-12T21:12:12.321Z'
+      inputTokens: 1022
+      outputTokens: 730
+      totalTokens: 1752
+      cost: 0.0005912999999999999
+      co2Impact: 0.17520000000000002
+      timestamp: '2025-08-12T21:16:38.347Z'
       sourceLanguage: de
       targetLanguage: en
     total:
-      tokens: 1842
-      cost: 0.0006237
-      co2: 0.1842
-  generationDate: '2025-08-12T21:12:13.990Z'
+      tokens: 1838
+      cost: 0.0006194999999999999
+      co2: 0.18380000000000002
+  generationDate: '2025-08-12T21:16:40.370Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
 📖 **TL;DR – Book Concept:**  
-Proposed Title: “Light at the End of the Lines”
+Proposed title: “Light at the End of the Lines”
 
 🧭 **Core Concept:**  
-A now 27-year-old author looks back at texts he wrote between the ages of 14 and 21 – poems, fragments, emotional monologues. Today, he is writing a book about the attempt to write a book back then, taking readers on a literary-emotional journey through his own past.
+A now 27-year-old author reflects on texts he wrote between the ages of 14 and 21 – poems, fragments, emotional monologues. Today, he is writing a book about the attempt to write a book back then, taking readers on a literary-emotional journey through his own past.
 
 Each chapter contains:
 
@@ -91,23 +91,23 @@ The book is both product and process – it shows how writing was once a salvati
 
 🎯 **Target Audience:**
 
-- Young Adults (16–21): People who are still in the self-discovery phase, often struggling and feeling misunderstood  
-- New Adults (21–29): People who want to understand what has happened to them in hindsight  
+- Young adults (16–21): People who are still in the self-discovery phase, often struggling and feeling misunderstood  
+- New adults (21–29): People who want to understand what happened to them in hindsight  
 - Young men with emotional depth, who are rarely seen in mainstream literature  
 
-💎 **USP – What Makes the Book Unique?**
+💎 **USP – What makes the book unique?**
 
-1. **Authenticity Through Original Texts**  
+1. **Authenticity through Original Texts**  
    No staged fiction, no smoothed retelling:  
    You read the real words of a teenager – raw, honest, vulnerable.  
-   These texts carry a time capsule within them, as no invented character could have written like this.
+   These texts carry a time capsule that no invented character could have written.
 
 2. **Dual Perspective – Young & Adult**  
-   The work is reflection and hindsight in one –  
+   The work is reflection and retrospective in one –  
    The “then voice” speaks directly. The “now voice” responds – not condescending, but understanding.
 
 3. **Meta-Level: The Book as Process**  
-   The reader accompanies not just a story, but the actual process of the book's creation.  
+   The reader accompanies not just a story, but the actual process of book creation.  
    This ensures:  
    - emotional closeness  
    - literary depth  
@@ -122,23 +122,23 @@ The book is both product and process – it shows how writing was once a salvati
 
 ✒️ **Distinction from Other Books in the Genre:**
 
-| Typical Young Adults                               | Your Book                                      |
-| ------------------------------------------------- | --------------------------------------------- |
-| Fictional characters                               | Authentic first-person perspective             |
-| Linear plot (romantic drama, coming-of-age)      | Fragmented journey of memories                 |
-| Smooth polished style                              | Raw, real original texts & today's reflections |
-| Predictable tension arcs                           | Unpredictable inner development                 |
-| Identity questions triggered by other characters   | Identity questions triggered by one's own texts|
+| Typical Young Adults                                 | Your Book                                       |
+| --------------------------------------------------- | ------------------------------------------------ |
+| Fictional characters                                 | Authentic first-person perspective               |
+| Linear plot (romantic drama, coming-of-age)        | Fragmented journey of memories                   |
+| Smooth polished style                                | Raw, real original texts & today's reflections   |
+| Predictable tension arcs                             | Unpredictable inner development                  |
+| Identity questions triggered by other characters    | Identity questions triggered by one’s own texts  |
 
 🧩 **Example Structure:**
 
-| Chapter     | Content                                                    |
-| ----------- | --------------------------------------------------------- |
-| Prologue    | The 27-year-old begins to read his old texts again       |
-| Chapter 1   | Violence, silence, inner rage (e.g. “fighting back”)      |
-| Chapter 2   | Depression, suicidal thoughts (“And he”)                  |
-| Chapter 3   | Love, loss, tender moments (“Butterfly moments”)          |
-| Chapter 4   | Traumatized attachment (“Alaska”)                          |
-| Chapter 5   | Writing as a last refuge (“Lines of Love”, “Follower”)   |
-| Chapter 6   | The reader in me today (reflection at 27)                 |
-| Epilogue    | What remains – and what I want to pass on to you          |
+| Chapter        | Content                                               |
+| -------------- | ----------------------------------------------------- |
+| Prologue       | The 27-year-old begins to read his old texts again   |
+| Chapter 1      | Violence, silence, inner rage (e.g. “fighting back”)  |
+| Chapter 2      | Depression, suicidal thoughts (“And he”)              |
+| Chapter 3      | Love, loss, tender moments (“Butterfly moments”)      |
+| Chapter 4      | Traumatized attachment (“Alaska”)                      |
+| Chapter 5      | Writing as the last refuge (“Lines of Love”, “Follower”) |
+| Chapter 6      | The reader in me today (Reflection at 27)             |
+| Epilogue       | What remains – and what I want to pass on to you      |
