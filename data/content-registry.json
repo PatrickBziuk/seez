@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-12T21:36:26.756Z",
+  "lastUpdated": "2025-08-12T21:41:01.816Z",
   "entries": {
     "slug-20250805-d90c95e9": {
       "canonicalId": "slug-20250805-d90c95e9",
@@ -13,8 +13,8 @@
         "en": {
           "path": "src/content/books/en/licht-am-ende-der-zeilen.md",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:32:41.605Z",
-          "translationHash": "58840038067ea0890a0e6d0d978ae46e176f2826d1ef9f5a79703b077c704901"
+          "lastTranslated": "2025-08-12T21:37:10.026Z",
+          "translationHash": "df474fa0ea0ffcc82c2435de95f27b3218ac228e73aeaa6c5fd12fea832963d5"
         }
       }
     },
@@ -29,7 +29,7 @@
         "de": {
           "path": "src/content/books/de/example-book-root.md",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:32:46.475Z",
+          "lastTranslated": "2025-08-12T21:37:14.770Z",
           "translationHash": "0c2310434f310473be2bdf75a9b15d5c88525c1e98fb55a186738c3e0cb68033"
         }
       }
@@ -45,8 +45,8 @@
         "de": {
           "path": "src/content/books/de/example-book.md",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:33:18.490Z",
-          "translationHash": "ed421fec5333aae90964c677aa99b0201bb3ee805c4c56575163b6a7138a1dc5"
+          "lastTranslated": "2025-08-12T21:37:58.887Z",
+          "translationHash": "52e1bb2e5ac6c6eef4540ab0dc3a91fd78c2ac4c13b80c05e75b3ef184020002"
         }
       }
     },
@@ -61,8 +61,8 @@
         "de": {
           "path": "src/content/books/de/licht-am-ende-der-zeilen.md",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:33:37.535Z",
-          "translationHash": "96559b7c22f5b4d62f351dd7856970d475deb64c9690d16c22798d6700a5cf94"
+          "lastTranslated": "2025-08-12T21:38:25.947Z",
+          "translationHash": "e1e8305462f547764409d8a8b7e304210008dafb5907655c55d7b2e11317f893"
         }
       }
     },
@@ -77,8 +77,8 @@
         "en": {
           "path": "src/content/projects/en/cosensai.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:34:06.591Z",
-          "translationHash": "e61013fb00e3852eeef2abc6817a154c3303f1e2dbbed7509f9d4ac96488da1d"
+          "lastTranslated": "2025-08-12T21:39:03.897Z",
+          "translationHash": "f13aa9bef28d6b4de3d3c78a25c1091faed5a4ed5c7067318c1dcc1aacd5f32a"
         }
       }
     },
@@ -93,8 +93,8 @@
         "en": {
           "path": "src/content/projects/en/meine-musik-root.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:35:42.214Z",
-          "translationHash": "91225bbc35049b53b8ec265f0aa3a46f587cab21442bd14d359c3634c20f7d2b"
+          "lastTranslated": "2025-08-12T21:40:09.049Z",
+          "translationHash": "733ef6c13016661dc9abae0606bab3d817cf36b4976ae739c6118375885ad3fa"
         }
       }
     },
@@ -118,7 +118,7 @@
         "de": {
           "path": "src/content/lab/de/badge-showcase.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:35:45.732Z",
+          "lastTranslated": "2025-08-12T21:40:16.774Z",
           "translationHash": "a7fe51bd1c5a00bd334909973d33f30d9cf19eb9f6c218ca78ba074167852ead"
         }
       }
@@ -143,8 +143,8 @@
         "de": {
           "path": "src/content/lab/de/example-lab.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:35:49.994Z",
-          "translationHash": "7a6d07f23e114111aafd81cd1012695cecd3679c72a49c7e6df7e7c3ba045545"
+          "lastTranslated": "2025-08-12T21:40:20.548Z",
+          "translationHash": "58b7b34f6e17d44059c9abab45d7236ba62f51e842b7c3b53b181693f8f2ff69"
         }
       }
     },
@@ -168,8 +168,8 @@
         "de": {
           "path": "src/content/lab/de/tldr-demo.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:35:59.016Z",
-          "translationHash": "bacdefe9d5538c0ddce98c31addaa6e5c0a52c263c9d67edba2a10c82433bbd0"
+          "lastTranslated": "2025-08-12T21:40:33.708Z",
+          "translationHash": "c4478dc10e71ff1914e8bd9cc893079331ce55e75ae117b2f6a5008549dceafa"
         }
       }
     },
@@ -184,8 +184,8 @@
         "en": {
           "path": "src/content/life/en/who-am-i.md",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:36:04.326Z",
-          "translationHash": "052127938655bcd088ab83ce210ab775cc1aee9115715af36fad0e7d3b4f9c47"
+          "lastTranslated": "2025-08-12T21:40:39.937Z",
+          "translationHash": "0566bdefdc0afd5d1921f60bd5a0669e2b539f6eb1be756cc66aeec786167f41"
         }
       }
     },
@@ -200,8 +200,8 @@
         "de": {
           "path": "src/content/life/de/who-am-i-root.md",
           "status": "current",
-          "lastTranslated": "2025-08-12T21:36:26.756Z",
-          "translationHash": "5aeaa089b8d2067c4c419bf60669089b8ee2cbf25550fd346af328c21a371e82"
+          "lastTranslated": "2025-08-12T21:41:01.816Z",
+          "translationHash": "ac5823c4b8a98a3161473bff6ac52683e8d48b986de9c6cedf19800fe3feb276"
         }
       }
     },

@@ -60,18 +60,18 @@ ai_metadata:
       canonicalId: slug-20250805-8b154d9c
       model: gpt-4o-mini
       inputTokens: 869
-      outputTokens: 869
-      totalTokens: 1738
-      cost: 0.00065175
-      co2Impact: 0.1738
-      timestamp: '2025-08-12T21:33:36.333Z'
+      outputTokens: 867
+      totalTokens: 1736
+      cost: 0.00065055
+      co2Impact: 0.1736
+      timestamp: '2025-08-12T21:38:24.395Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1824
-      cost: 0.00068085
-      co2: 0.1824
-  generationDate: '2025-08-12T21:33:37.534Z'
+      tokens: 1822
+      cost: 0.00067965
+      co2: 0.1822
+  generationDate: '2025-08-12T21:38:25.945Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -92,7 +92,7 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie Schreiben einst e
 🎯 **Zielgruppe:**
 
 - Junge Erwachsene (16–21): Menschen, die sich noch in der Selbstentdeckungsphase befinden, oft kämpfen und sich missverstanden fühlen  
-- Neue Erwachsene (21–29): Menschen, die verstehen wollen, was ihnen im Rückblick passiert ist  
+- Neue Erwachsene (21–29): Menschen, die verstehen wollen, was ihnen im Nachhinein passiert ist  
 - Junge Männer mit emotionaler Tiefe, die in der Mainstream-Literatur selten gesehen werden  
 
 💎 **USP – Was macht das Buch einzigartig?**
@@ -120,23 +120,23 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie Schreiben einst e
    - dass Selbstverständnis oft Jahre später reift  
    - und dass Literatur nicht um Lösungen, sondern um Überleben geht  
 
-✒️ **Unterscheidung von anderen Büchern im Genre:**
+✒️ **Abgrenzung von anderen Büchern im Genre:**
 
-| Typische Junge Erwachsene                           | Dein Buch                                       |
+| Typische junge Erwachsene                           | Dein Buch                                       |
 | -------------------------------------------------- | ------------------------------------------------ |
-| Fiktive Charaktere                                 | Authentische Ich-Perspektive                    |
+| Fiktive Charaktere                                  | Authentische Ich-Perspektive                    |
 | Linearer Plot (romantisches Drama, Coming-of-Age) | Fragmentierte Reise der Erinnerungen             |
-| Glatt polierter Stil                               | Roh, echte Originaltexte & heutige Reflexionen   |
-| Vorhersehbare Spannungsbögen                       | Unvorhersehbare innere Entwicklung               |
-| Identitätsfragen, die durch andere Charaktere ausgelöst werden | Identitätsfragen, die durch eigene Texte ausgelöst werden |
+| Glatt polierter Stil                                | Roh, echte Originaltexte & heutige Reflexionen   |
+| Vorhersehbare Spannungsbögen                        | Unvorhersehbare innere Entwicklung               |
+| Identitätsfragen ausgelöst durch andere Charaktere  | Identitätsfragen ausgelöst durch eigene Texte    |
 
 🧩 **Beispielstruktur:**
 
 | Kapitel        | Inhalt                                           |
 | ---------------| ------------------------------------------------- |
 | Prolog         | Der 27-Jährige beginnt, seine alten Texte erneut zu lesen |
-| Kapitel 1      | Gewalt, Stille, innere Wut (z.B. „sich wehren“) |
-| Kapitel 2      | Depression, suizidale Gedanken („Und er“)      |
+| Kapitel 1      | Gewalt, Stille, innere Wut (z.B. „zurückkämpfen“) |
+| Kapitel 2      | Depression, Suizidgedanken („Und er“)          |
 | Kapitel 3      | Liebe, Verlust, zarte Momente („Schmetterlingsmomente“) |
 | Kapitel 4      | Traumatisierte Bindung („Alaska“)               |
 | Kapitel 5      | Schreiben als letzter Zufluchtsort („Zeilen der Liebe“, „Follower“) |

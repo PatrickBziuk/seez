@@ -54,18 +54,18 @@ ai_metadata:
       canonicalId: slug-20250805-2e3f9452
       model: gpt-4o-mini
       inputTokens: 910
-      outputTokens: 938
-      totalTokens: 1848
-      cost: 0.0006993
-      co2Impact: 0.18480000000000002
-      timestamp: '2025-08-12T21:36:25.933Z'
+      outputTokens: 942
+      totalTokens: 1852
+      cost: 0.0007017
+      co2Impact: 0.18520000000000003
+      timestamp: '2025-08-12T21:41:00.636Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1884
-      cost: 0.0007119
-      co2: 0.1884
-  generationDate: '2025-08-12T21:36:26.754Z'
+      tokens: 1888
+      cost: 0.0007143
+      co2: 0.18880000000000002
+  generationDate: '2025-08-12T21:41:01.815Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -79,7 +79,7 @@ Nur Spiegel—jeder fängt ein anderes Licht ein.
 
 _Der Systembauer. Die Schnittstelle zwischen Logik und der Welt._
 
-**seez.eu** ist, wo ich mein Rückgrat trage.  
+**seez.eu** ist, wo ich meine Wirbelsäule trage.  
 IT, Automatisierung, Dynamics 365, technische Beratung.  
 Es ist mein Nachname, mein Beruf, der Teil von mir,  
 der Struktur als eine Art Anmut versteht.
@@ -100,7 +100,7 @@ Es ist mein Alias seit den Tagen der Foren und Tumblr,
 ein Name, der sich sicherer anfühlte als die Welt.
 
 Seez ist ein Poet mit einer Klinge zwischen den Zeilen.  
-Er singt, wo ich einst zerbrach.  
+Er singt, wo ich einst brach.  
 Er ist roh, romantisch, wütend, sanft.  
 Er ist ein Teil von mir, der nie optimiert werden wollte.
 
@@ -135,7 +135,7 @@ ein Raum, in dem andere sich in meinen finden können.
 
 deinanker ist die Brücke.  
 Ein Hafen für diejenigen, die noch nicht wissen, wohin sie gehen,  
-aber gehalten werden möchten, während sie suchen.
+aber sich gehalten fühlen wollen, während sie suchen.
 
 ---
 
@@ -145,7 +145,7 @@ _Die Tiefe, die spricht._
 
 Dies ist mein Schattenarchiv.  
 Dunkle Gedanken, zensierte Fragmente,  
-Zitate, die mich genug verletzt haben, um sie zu retten.
+Zitate, die mich genug verletzt haben, um sie zu bewahren.
 
 Anonym im Gefühl.  
 Ein Ort, der nicht für die Massen gedacht ist.  
@@ -166,7 +166,7 @@ Jedes dieser Projekte ist ein Gedankenexperiment, das ich benannt habe:
 - **circles.** – soziale Netzwerke, die um die Realität neu aufgebaut werden.
 
 Sie leben im **Labor** von seez.eu.  
-Noch nicht bereit. Aber wachsend.
+Noch nicht bereit. Aber im Wachstum.
 
 ---
 
@@ -175,7 +175,7 @@ Noch nicht bereit. Aber wachsend.
 _Der Name, den ich noch nicht gebaut habe—  
 aber bereits darin lebe._
 
-Eines Tages werde ich hier alles vereinen:  
+Eines Tages werde ich alles hier vereinen:  
 die Technologie, die Poesie, das Paradoxe.  
 Keine Marke. Eine Philosophie.
 
@@ -202,5 +202,5 @@ Willkommen im Zentrum.
 ---
 
 _„Ich bin nicht einer, ich bin viele.  
-Aber alle sind sie wahr.  
+Aber alle von ihnen sind wahr.  
 Und vielleicht werden du und ich das vollständige Bild niemals kennen.“_
