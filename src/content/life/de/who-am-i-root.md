@@ -58,20 +58,20 @@ ai_metadata:
       totalTokens: 1858
       cost: 0.0007053
       co2Impact: 0.18580000000000002
-      timestamp: '2025-08-12T20:59:31.210Z'
+      timestamp: '2025-08-12T21:03:44.417Z'
       sourceLanguage: en
       targetLanguage: de
     total:
       tokens: 1894
       cost: 0.0007178999999999999
       co2: 0.1894
-  generationDate: '2025-08-12T20:59:32.052Z'
+  generationDate: '2025-08-12T21:03:45.250Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
 Ich habe viele Namen getragen.  
 Aber keiner von ihnen war eine Lüge.  
-Nur Spiegel – jeder fängt ein anderes Licht ein.
+Nur Spiegel—jeder fängt ein anderes Licht ein.
 
 ---
 
@@ -79,7 +79,7 @@ Nur Spiegel – jeder fängt ein anderes Licht ein.
 
 _Der Systembauer. Die Schnittstelle zwischen Logik und der Welt._
 
-**seez.eu** ist der Ort, an dem ich meine Wirbelsäule trage.  
+**seez.eu** ist der Ort, an dem ich mein Rückgrat trage.  
 IT, Automatisierung, Dynamics 365, technische Beratung.  
 Es ist mein Nachname, mein Beruf, der Teil von mir,  
 der Struktur als eine Art Anmut versteht.
@@ -114,7 +114,7 @@ Und, wenn du vorsichtig bist, dein Spiegelbild.
 
 _„Die Liebe zu den Zeilen.“ Eine zukunftsorientierte Vergangenheit._
 
-Geboren aus einem Tumblr-Blog mit 15.000 Followern –  
+Geboren aus einem Tumblr-Blog mit 15.000 Followern—  
 jetzt neu interpretiert als **Verlag** für radikale Ehrlichkeit.
 
 zeilenliebe ist der Ort, an dem Geschichten zu Gemeinschaften wachsen.  
@@ -134,7 +134,7 @@ Instagram & Threads. Zitatfliesen, sanfte Worte,
 ein Raum, in dem andere sich in meinen finden können.
 
 deinanker ist die Brücke.  
-Ein Hafen für diejenigen, die noch nicht wissen, wohin sie gehen sollen,  
+Ein Hafen für diejenigen, die noch nicht wissen, wohin sie gehen,  
 aber sich gehalten fühlen wollen, während sie suchen.
 
 ---
@@ -149,7 +149,7 @@ Zitate, die mich genug verletzt haben, um sie zu bewahren.
 
 Anonym im Gefühl.  
 Ein Ort, der nicht für die Massen gedacht ist.  
-Sondern für diejenigen, die _wissen_ –  
+Sondern für diejenigen, die _wissen_—  
 dass Heilung in der Dunkelheit beginnt.
 
 ---
@@ -157,43 +157,43 @@ dass Heilung in der Dunkelheit beginnt.
 ## 🧪 Cosensai, marken., circles.
 
 _Nicht Startups. Noch keine Produkte.  
-Sondern Rituale im Entstehen._
+Sondern Rituale in der Entstehung._
 
 Jedes dieser Projekte ist ein Gedankenexperiment, das ich benannt habe:
 
-- **Cosensai** – ein selbstgehosteter KI-Gedächtnisassistent.
+- **Cosensai** – ein selbstgehosteter KI-Erinnerungsassistent.
 - **marken.** – transparente Mode.
 - **circles.** – soziale Netzwerke, die um die Realität neu aufgebaut werden.
 
 Sie leben im **Labor** von seez.eu.  
-Noch nicht bereit. Aber wachsend.
+Noch nicht bereit. Aber im Wachstum.
 
 ---
 
 ## 🌀 Konstruktives Chaos
 
-_Der Name, den ich noch nicht gebaut habe –  
+_Der Name, den ich noch nicht gebaut habe—  
 aber bereits darin lebe._
 
-Eines Tages werde ich alles hier vereinen:  
-die Technologie, die Poesie, das Paradoxe.  
+Eines Tages werde ich hier alles vereinen:  
+die Technologie, die Poesie, das Paradoxon.  
 Keine Marke. Eine Philosophie.
 
 Denn mein Leben ist kein Split zwischen Identitäten.  
 Es ist ein **System von Spannungen**.  
-Nicht gelöst – aber lebendig.
+Nicht gelöst—aber lebendig.
 
 ---
 
 ## Wer bin ich?
 
-Ein System im Entstehen.  
+Ein System in der Entstehung.  
 Eine Gedächtnismaschine, eingehüllt in Haut.  
 Ein Autor, der schreibt, um real zu bleiben.  
 Ein Entwickler, der baut, um gesund zu bleiben.  
 Ein Mensch,  
 der Masken trägt, nicht um sich zu verstecken,  
-sondern um zu überleben – und zu singen.
+sondern um zu überleben—und zu singen.
 
 Wenn du es hierher geschafft hast,  
 warst du dazu bestimmt.  
