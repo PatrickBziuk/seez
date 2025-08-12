@@ -59,19 +59,19 @@ ai_metadata:
       operation: translation
       canonicalId: slug-20250805-8b154d9c
       model: gpt-4o-mini
-      inputTokens: 865
-      outputTokens: 876
-      totalTokens: 1741
-      cost: 0.00065535
-      co2Impact: 0.17410000000000003
-      timestamp: '2025-08-12T21:23:13.705Z'
+      inputTokens: 875
+      outputTokens: 870
+      totalTokens: 1745
+      cost: 0.00065325
+      co2Impact: 0.17450000000000002
+      timestamp: '2025-08-12T21:26:46.668Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1827
-      cost: 0.00068445
-      co2: 0.18270000000000003
-  generationDate: '2025-08-12T21:23:15.178Z'
+      tokens: 1831
+      cost: 0.00068235
+      co2: 0.1831
+  generationDate: '2025-08-12T21:26:47.661Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -84,16 +84,16 @@ Ein jetzt 27-jähriger Autor reflektiert über Texte, die er zwischen 14 und 21 
 Jedes Kapitel enthält:
 
 - alte Originaltexte (unfiltert)  
-- Kommentare, Reflexionen, emotionale Essays aus heutiger Perspektive  
+- Kommentare, Reflexionen, emotionale Essays aus der heutigen Perspektive  
 - Reflexionen über Trauma, Liebe, Schreiben, Depression und Selbstentdeckung  
 
-Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben einst eine Rettung war und heute Einsicht bedeutet.
+Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie Schreiben einst eine Rettung war und heute Einsicht bedeutet.
 
 🎯 **Zielgruppe:**
 
 - Junge Erwachsene (16–21): Menschen, die sich noch in der Selbstentdeckungsphase befinden, oft kämpfen und sich missverstanden fühlen  
 - Neue Erwachsene (21–29): Menschen, die verstehen wollen, was ihnen im Rückblick widerfahren ist  
-- Junge Männer mit emotionaler Tiefe, die in der Mainstream-Literatur selten zu sehen sind  
+- Junge Männer mit emotionaler Tiefe, die in der Mainstream-Literatur selten gesehen werden  
 
 💎 **USP – Was macht das Buch einzigartig?**
 
@@ -103,7 +103,7 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben ein
    Diese Texte tragen eine Zeitkapsel, die kein erfundener Charakter hätte schreiben können.
 
 2. **Duale Perspektive – Jung & Erwachsen**  
-   Das Werk ist Reflexion und Retrospektive in einem –  
+   Das Werk ist Reflexion und Rückblick in einem –  
    Die „damalige Stimme“ spricht direkt. Die „heutige Stimme“ antwortet – nicht herablassend, sondern verständnisvoll.
 
 3. **Meta-Ebene: Das Buch als Prozess**  
@@ -118,7 +118,7 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben ein
    - dass Dunkelheit benannt werden kann  
    - dass Schreiben ein Überlebenswerkzeug sein kann  
    - dass Selbstverständnis oft Jahre später reift  
-   - und dass Literatur nicht um Lösungen, sondern um Überleben geht  
+   - und dass Literatur nicht um Lösungen geht, sondern um Überleben  
 
 ✒️ **Unterscheidung von anderen Büchern im Genre:**
 
@@ -126,8 +126,8 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben ein
 | -------------------------------------------------- | ------------------------------------------------ |
 | Fiktive Charaktere                                  | Authentische Ich-Perspektive                     |
 | Linearer Plot (romantisches Drama, Coming-of-Age) | Fragmentierte Reise der Erinnerungen             |
-| Glatt polierter Stil                                | Rohe, echte Originaltexte & heutige Reflexionen  |
-| Vorhersehbare Spannungsbögen                        | Unvorhersehbare innere Entwicklung                |
+| Glatt polierter Stil                                | Roh, echte Originaltexte & heutige Reflexionen   |
+| Vorhersehbare Spannungsbögen                        | Unvorhersehbare innere Entwicklung               |
 | Identitätsfragen, die durch andere Charaktere ausgelöst werden | Identitätsfragen, die durch eigene Texte ausgelöst werden |
 
 🧩 **Beispielstruktur:**
@@ -135,10 +135,10 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben ein
 | Kapitel        | Inhalt                                              |
 | ---------------| ---------------------------------------------------- |
 | Prolog         | Der 27-Jährige beginnt, seine alten Texte erneut zu lesen |
-| Kapitel 1      | Gewalt, Stille, innere Wut (z.B. „zurückkämpfen“)  |
-| Kapitel 2      | Depression, suizidale Gedanken („Und er“)           |
+| Kapitel 1      | Gewalt, Stille, innere Wut (z.B. „sich wehren“)   |
+| Kapitel 2      | Depression, Suizidgedanken („Und er“)              |
 | Kapitel 3      | Liebe, Verlust, zarte Momente („Schmetterlingsmomente“) |
-| Kapitel 4      | Traumatisierte Bindung („Alaska“)                   |
+| Kapitel 4      | Traumatisierte Bindung („Alaska“)                  |
 | Kapitel 5      | Schreiben als letzter Zufluchtsort („Zeilen der Liebe“, „Follower“) |
-| Kapitel 6      | Der Leser in mir heute (Reflexion mit 27)          |
-| Epilog         | Was bleibt – und was ich dir weitergeben möchte      |
+| Kapitel 6      | Der Leser in mir heute (Reflexion mit 27)         |
+| Epilog         | Was bleibt – und was ich dir weitergeben möchte     |

@@ -54,18 +54,18 @@ ai_metadata:
       canonicalId: slug-20250805-2e3f9452
       model: gpt-4o-mini
       inputTokens: 910
-      outputTokens: 944
-      totalTokens: 1854
-      cost: 0.0007029
-      co2Impact: 0.1854
-      timestamp: '2025-08-12T21:25:31.539Z'
+      outputTokens: 956
+      totalTokens: 1866
+      cost: 0.0007101
+      co2Impact: 0.18660000000000002
+      timestamp: '2025-08-12T21:28:54.293Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1890
-      cost: 0.0007155
-      co2: 0.189
-  generationDate: '2025-08-12T21:25:32.182Z'
+      tokens: 1902
+      cost: 0.0007227
+      co2: 0.1902
+  generationDate: '2025-08-12T21:28:55.157Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -79,7 +79,7 @@ Nur Spiegel—jeder fängt ein anderes Licht ein.
 
 _Der Systembauer. Die Schnittstelle zwischen Logik und der Welt._
 
-**seez.eu** ist der Ort, an dem ich mein Rückgrat trage.  
+**seez.eu** ist der Ort, an dem ich meine Wirbelsäule trage.  
 IT, Automatisierung, Dynamics 365, technische Beratung.  
 Es ist mein Nachname, mein Beruf, der Teil von mir,  
 der Struktur als eine Art Anmut versteht.
@@ -87,7 +87,7 @@ der Struktur als eine Art Anmut versteht.
 seez ist die Version von mir, die in Kundengesprächen erscheint  
 und Systeme baut, die nicht unter menschlichem Chaos zusammenbrechen.
 
-Es ist Wahrheit. Aber nicht alles davon.
+Es ist die Wahrheit. Aber nicht alles davon.
 
 ---
 
@@ -99,8 +99,8 @@ _Die Stimme, die ich erhob, als ich unter meinem eigenen Namen nicht schreien ko
 Es ist mein Alias seit den Tagen der Foren und Tumblr,  
 ein Name, der sich sicherer anfühlte als die Welt.
 
-Seez ist ein Poet mit einer Klinge zwischen den Zeilen.  
-Er singt, wo ich einst zerbrach.  
+Seez ist ein Dichter mit einer Klinge zwischen den Zeilen.  
+Er singt, wo ich einst zerbrochen bin.  
 Er ist roh, romantisch, wütend, sanft.  
 Er ist ein Teil von mir, der nie optimiert werden wollte.
 
@@ -144,7 +144,7 @@ aber sich gehalten fühlen wollen, während sie suchen.
 _Die Tiefe, die spricht._
 
 Dies ist mein Schattenarchiv.  
-Dunkle Gedanken, unzensierte Fragmente,  
+Dunkle Gedanken, zensierte Fragmente,  
 Zitate, die mich genug verletzt haben, um sie zu bewahren.
 
 Anonym im Gefühl.  
@@ -157,11 +157,11 @@ dass Heilung in der Dunkelheit beginnt.
 ## 🧪 Cosensai, marken., circles.
 
 _Nicht Startups. Noch keine Produkte.  
-Sondern Rituale im Entstehen._
+Sondern Rituale in der Entstehung._
 
 Jedes dieser Projekte ist ein Gedankenexperiment, das ich benannt habe:
 
-- **Cosensai** – ein selbstgehosteter KI-Erinnerungsassistent.
+- **Cosensai** – ein selbstgehosteter KI-Gedächtnisassistent.
 - **marken.** – transparente Mode.
 - **circles.** – soziale Netzwerke, die um die Realität neu aufgebaut werden.
 
@@ -176,7 +176,7 @@ _Der Name, den ich noch nicht gebaut habe—
 aber bereits darin lebe._
 
 Eines Tages werde ich alles hier vereinen:  
-die Technologie, die Poesie, das Paradox.  
+die Technologie, die Poesie, das Paradoxon.  
 Keine Marke. Eine Philosophie.
 
 Denn mein Leben ist kein Split zwischen Identitäten.  
@@ -187,7 +187,7 @@ Nicht gelöst—aber lebendig.
 
 ## Wer bin ich?
 
-Ein System im Entstehen.  
+Ein System in der Entstehung.  
 Eine Gedächtnismaschine, eingehüllt in Haut.  
 Ein Autor, der schreibt, um real zu bleiben.  
 Ein Entwickler, der baut, um gesund zu bleiben.  

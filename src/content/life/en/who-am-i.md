@@ -55,20 +55,20 @@ ai_metadata:
       totalTokens: 292
       cost: 0.0000798
       co2Impact: 0.0292
-      timestamp: '2025-08-12T21:25:12.143Z'
+      timestamp: '2025-08-12T21:28:34.761Z'
       sourceLanguage: de
       targetLanguage: en
     total:
       tokens: 330
       cost: 0.0000936
       co2: 0.033
-  generationDate: '2025-08-12T21:25:13.630Z'
+  generationDate: '2025-08-12T21:28:35.393Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
 # Who am I?
 
-A question that concerns us all and changes over time.
+A question that occupies us all and changes over time.
 
 ## Personal Development
 

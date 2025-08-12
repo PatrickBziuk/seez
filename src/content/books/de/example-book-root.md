@@ -59,14 +59,14 @@ ai_metadata:
       totalTokens: 155
       cost: 0.0000363
       co2Impact: 0.0155
-      timestamp: '2025-08-12T21:25:13.758Z'
+      timestamp: '2025-08-12T21:28:43.085Z'
       sourceLanguage: en
       targetLanguage: de
     total:
       tokens: 196
       cost: 0.000051450000000000004
       co2: 0.0196
-  generationDate: '2025-08-12T21:25:14.709Z'
+  generationDate: '2025-08-12T21:28:43.976Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
