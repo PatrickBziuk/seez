@@ -1,7 +1,7 @@
 ---
 title: >-
-  The translation of "Licht am Ende der Zeilen" from German to English is "Light
-  at the End of the Lines."
+  The title "Licht am Ende der Zeilen" translates to "Light at the End of the
+  Lines" in English.
 subtitle: Eine literarisch-emotionale Reise
 tags:
   - literatur
@@ -59,19 +59,19 @@ ai_metadata:
       operation: translation
       canonicalId: slug-20250805-d90c95e9
       model: gpt-4o-mini
-      inputTokens: 993
+      inputTokens: 1001
       outputTokens: 734
-      totalTokens: 1727
-      cost: 0.00058935
-      co2Impact: 0.17270000000000002
-      timestamp: '2025-08-12T20:53:52.248Z'
+      totalTokens: 1735
+      cost: 0.00059055
+      co2Impact: 0.17350000000000002
+      timestamp: '2025-08-12T20:59:14.571Z'
       sourceLanguage: de
       targetLanguage: en
     total:
-      tokens: 1777
-      cost: 0.00060855
-      co2: 0.17770000000000002
-  generationDate: '2025-08-12T20:53:53.264Z'
+      tokens: 1801
+      cost: 0.0006117
+      co2: 0.1801
+  generationDate: '2025-08-12T20:59:15.617Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -79,7 +79,7 @@ ai_metadata:
 Title suggestion: “Light at the End of the Lines”
 
 🧭 **Core Concept:**  
-A now 27-year-old author looks back at texts he wrote between the ages of 14 and 21 – poems, fragments, emotional monologues. He is writing a book today about the attempt to write a book back then, taking readers on a literary-emotional journey through his own past.
+A now 27-year-old author reflects on texts he wrote between the ages of 14 and 21 – poems, fragments, emotional monologues. He is writing a book today about the attempt to write a book back then, taking readers on a literary-emotional journey through his own past.
 
 Each chapter contains:
 
@@ -87,11 +87,11 @@ Each chapter contains:
 - comments, reflections, emotional essays from today’s perspective  
 - reflections on trauma, love, writing, depression, and self-discovery  
 
-The book is both a product and a process – it shows how writing was once a salvation and today means insight.
+The book is both product and process – it shows how writing was once a salvation and today means insight.
 
 🎯 **Target Audience:**
 
-- Young adults (16–21): People who are still in the process of self-discovery, often struggling and feeling misunderstood  
+- Young adults (16–21): People who are still in the self-discovery phase, often struggling and feeling misunderstood  
 - New adults (21–29): People who want to understand what happened to them in retrospect  
 - Young men with emotional depth, who are rarely seen in mainstream literature  
 
@@ -103,10 +103,10 @@ The book is both a product and a process – it shows how writing was once a sal
    These texts carry a time capsule within them, as no invented character could have written exactly like this.
 
 2. **Dual Perspective – Young & Adult**  
-   The work is reflection and retrospective in one –  
-   The “then voice” speaks directly. The “now voice” responds – not condescendingly, but understandingly.
+   The work is reflection and retrospect in one –  
+   The “then voice” speaks directly. The “now voice” responds – not condescending, but understanding.
 
-3. **Meta-Level: The Book as a Process**  
+3. **Meta-Level: The Book as Process**  
    The reader accompanies not just a story, but the creation process of the book itself.  
    This ensures:  
    - emotional closeness  
@@ -122,23 +122,23 @@ The book is both a product and a process – it shows how writing was once a sal
 
 ✒️ **Distinction from Other Books in the Genre:**
 
-| Typical Young Adults                           | Your Book                                     |
+| Typical Young Adults                          | Your Book                                      |
 | --------------------------------------------- | --------------------------------------------- |
-| Fictional characters                           | Authentic first-person perspective             |
-| Linear plot (romantic drama, coming-of-age)      | Fragmentary journey of memories               |
+| Fictional characters                          | Authentic first-person perspective             |
+| Linear plot (romantic drama, coming-of-age) | Fragmented journey of memories                 |
 | Smooth polished style                         | Raw, real original texts & today's reflections |
-| Predictable tension arcs                       | Unpredictable inner development                |
+| Predictable tension arcs                      | Unpredictable inner development                |
 | Identity questions triggered by other characters | Identity questions triggered by one's own texts |
 
 🧩 **Example Structure:**
 
-| Chapter   | Content                                                        |
-| --------- | ------------------------------------------------------------- |
-| Prologue  | The 27-year-old begins to reread his old texts               |
-| Chapter 1 | Violence, speechlessness, inner rage (e.g. “strike back”)     |
-| Chapter 2 | Depression, suicidal thoughts (“And he”)                      |
-| Chapter 3 | Love, loss, tender moments (“Butterfly moments”)              |
-| Chapter 4 | Traumatized attachment (“Alaska”)                             |
-| Chapter 5 | Writing as the last refuge (“Lines of Love”, “Follower”)     |
-| Chapter 6 | The reader in me today (retrospective at 27)                 |
-| Epilogue  | What remains – and what I want to pass on to you
+| Chapter    | Content                                                       |
+| ---------- | ------------------------------------------------------------- |
+| Prologue   | The 27-year-old begins to reread his old texts              |
+| Chapter 1  | Violence, speechlessness, inner rage (e.g. “strike back”)    |
+| Chapter 2  | Depression, suicidal thoughts (“And he”)                     |
+| Chapter 3  | Love, loss, tender moments (“butterfly moments”)            |
+| Chapter 4  | Traumatized attachment (“Alaska”)                            |
+| Chapter 5  | Writing as the last refuge (“Lines of Love”, “Follower”)    |
+| Chapter 6  | The reader in me today (retrospective at 27)                |
+| Epilogue   | What remains – and what I want to pass on to you             |
