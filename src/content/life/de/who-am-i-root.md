@@ -54,18 +54,18 @@ ai_metadata:
       canonicalId: slug-20250805-2e3f9452
       model: gpt-4o-mini
       inputTokens: 910
-      outputTokens: 948
-      totalTokens: 1858
-      cost: 0.0007053
-      co2Impact: 0.18580000000000002
-      timestamp: '2025-08-12T21:03:44.417Z'
+      outputTokens: 954
+      totalTokens: 1864
+      cost: 0.0007088999999999999
+      co2Impact: 0.1864
+      timestamp: '2025-08-12T21:08:21.242Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1894
-      cost: 0.0007178999999999999
-      co2: 0.1894
-  generationDate: '2025-08-12T21:03:45.250Z'
+      tokens: 1900
+      cost: 0.0007214999999999999
+      co2: 0.19
+  generationDate: '2025-08-12T21:08:22.063Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -79,7 +79,7 @@ Nur Spiegel—jeder fängt ein anderes Licht ein.
 
 _Der Systembauer. Die Schnittstelle zwischen Logik und der Welt._
 
-**seez.eu** ist der Ort, an dem ich mein Rückgrat trage.  
+**seez.eu** ist der Ort, an dem ich meine Wirbelsäule trage.  
 IT, Automatisierung, Dynamics 365, technische Beratung.  
 Es ist mein Nachname, mein Beruf, der Teil von mir,  
 der Struktur als eine Art Anmut versteht.
@@ -87,7 +87,7 @@ der Struktur als eine Art Anmut versteht.
 seez ist die Version von mir, die in Kundengesprächen erscheint  
 und Systeme baut, die nicht unter menschlichem Chaos zusammenbrechen.
 
-Es ist Wahrheit. Aber nicht alles davon.
+Es ist die Wahrheit. Aber nicht alles davon.
 
 ---
 
@@ -97,7 +97,7 @@ _Die Stimme, die ich erhob, als ich unter meinem eigenen Namen nicht schreien ko
 
 **seez.eu** ist der Ort, an dem ich blute.  
 Es ist mein Alias seit den Tagen der Foren und Tumblr,  
-ein Name, der sich sicherer anfühlte als die Welt.
+ein Name, der sich sicherer anfühlte als die Welt es tat.
 
 Seez ist ein Poet mit einer Klinge zwischen den Zeilen.  
 Er singt, wo ich einst brach.  
@@ -134,7 +134,7 @@ Instagram & Threads. Zitatfliesen, sanfte Worte,
 ein Raum, in dem andere sich in meinen finden können.
 
 deinanker ist die Brücke.  
-Ein Hafen für diejenigen, die noch nicht wissen, wohin sie gehen,  
+Ein Hafen für diejenigen, die noch nicht wissen, wohin sie gehen sollen,  
 aber sich gehalten fühlen wollen, während sie suchen.
 
 ---
@@ -166,7 +166,7 @@ Jedes dieser Projekte ist ein Gedankenexperiment, das ich benannt habe:
 - **circles.** – soziale Netzwerke, die um die Realität neu aufgebaut werden.
 
 Sie leben im **Labor** von seez.eu.  
-Noch nicht bereit. Aber im Wachstum.
+Noch nicht bereit. Aber wachsend.
 
 ---
 
@@ -175,8 +175,8 @@ Noch nicht bereit. Aber im Wachstum.
 _Der Name, den ich noch nicht gebaut habe—  
 aber bereits darin lebe._
 
-Eines Tages werde ich hier alles vereinen:  
-die Technologie, die Poesie, das Paradoxon.  
+Eines Tages werde ich alles hier vereinen:  
+die Technologie, die Poesie, das Paradoxe.  
 Keine Marke. Eine Philosophie.
 
 Denn mein Leben ist kein Split zwischen Identitäten.  

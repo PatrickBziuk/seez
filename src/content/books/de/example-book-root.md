@@ -1,7 +1,7 @@
 ---
 title: >-
-  The title "The Pragmatic Programmer" translates to German as "Der pragmatische
-  Programmierer."
+  The title "The Pragmatic Programmer" can be translated into German as "Der
+  pragmatische Programmierer."
 subtitle: Your Journey to Mastery
 tags:
   - programming
@@ -59,14 +59,14 @@ ai_metadata:
       totalTokens: 155
       cost: 0.0000363
       co2Impact: 0.0155
-      timestamp: '2025-08-12T21:03:34.662Z'
+      timestamp: '2025-08-12T21:08:08.636Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 196
-      cost: 0.000051450000000000004
-      co2: 0.0196
-  generationDate: '2025-08-12T21:03:35.308Z'
+      tokens: 198
+      cost: 0.00005265
+      co2: 0.019799999999999998
+  generationDate: '2025-08-12T21:08:09.793Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---

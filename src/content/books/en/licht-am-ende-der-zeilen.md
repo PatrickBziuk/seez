@@ -1,11 +1,7 @@
 ---
 title: >-
-  The title "Licht am Ende der Zeilen" translates to "Light at the End of the
-  Lines" in English. 
-
-
-  In German, it would be: "Der Titel 'Licht am Ende der Zeilen' wird ins
-  Englische als 'Light at the End of the Lines' übersetzt."
+  The translation of the title is: "The title 'Licht am Ende der Zeilen' is
+  translated into English as 'Light at the End of the Lines'."
 subtitle: Eine literarisch-emotionale Reise
 tags:
   - literatur
@@ -63,27 +59,27 @@ ai_metadata:
       operation: translation
       canonicalId: slug-20250805-d90c95e9
       model: gpt-4o-mini
-      inputTokens: 1043
-      outputTokens: 734
-      totalTokens: 1777
-      cost: 0.0005968499999999999
-      co2Impact: 0.1777
-      timestamp: '2025-08-12T21:03:29.436Z'
+      inputTokens: 1025
+      outputTokens: 738
+      totalTokens: 1763
+      cost: 0.0005965499999999999
+      co2Impact: 0.1763
+      timestamp: '2025-08-12T21:08:04.749Z'
       sourceLanguage: de
       targetLanguage: en
     total:
-      tokens: 1917
-      cost: 0.0006457499999999998
-      co2: 0.1917
-  generationDate: '2025-08-12T21:03:31.150Z'
+      tokens: 1849
+      cost: 0.00062475
+      co2: 0.1849
+  generationDate: '2025-08-12T21:08:05.833Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
 📖 **TL;DR – Book Concept:**  
-Proposed title: “Light at the End of the Lines”
+Proposed Title: “Light at the End of the Lines”
 
 🧭 **Core Concept:**  
-A now 27-year-old author looks back at texts he wrote between the ages of 14 and 21 – poems, fragments, emotional monologues. Today, he is writing a book about the attempt to write a book back then, taking readers on a literary-emotional journey through his own past.
+A now 27-year-old author looks back at texts he wrote between the ages of 14 and 21 – poems, fragments, emotional monologues. Today, he writes a book about the attempt to write a book back then, taking readers on a literary-emotional journey through his own past.
 
 Each chapter contains:
 
@@ -95,8 +91,8 @@ The book is both product and process – it shows how writing was once a salvati
 
 🎯 **Target Audience:**
 
-- Young adults (16–21): People who are still in the self-discovery phase, often struggling and feeling misunderstood  
-- New adults (21–29): People who want to understand in retrospect what has happened to them  
+- Young Adults (16–21): People who are still in the self-discovery phase, often struggling and feeling misunderstood  
+- New Adults (21–29): People who want to understand what has happened to them in retrospect  
 - Young men with emotional depth, who are rarely seen in mainstream literature  
 
 💎 **USP – What Makes the Book Unique?**
@@ -111,7 +107,7 @@ The book is both product and process – it shows how writing was once a salvati
    The “then voice” speaks directly. The “now voice” responds – not condescending, but understanding.
 
 3. **Meta-Level: The Book as Process**  
-   The reader not only accompanies a story but the creation process of the book itself.  
+   The reader accompanies not just a story, but the very process of the book’s creation.  
    This ensures:  
    - emotional closeness  
    - literary depth  
@@ -122,7 +118,7 @@ The book is both product and process – it shows how writing was once a salvati
    - that darkness can be named  
    - that writing can be a survival tool  
    - that self-understanding often matures years later  
-   - and that literature consists not of solutions, but of survival  
+   - and that literature is not about solutions, but about survival  
 
 ✒️ **Distinction from Other Books in the Genre:**
 
@@ -138,11 +134,11 @@ The book is both product and process – it shows how writing was once a salvati
 
 | Chapter    | Content                                                      |
 | ---------- | ----------------------------------------------------------- |
-| Prologue   | The 27-year-old begins to read his old texts again         |
-| Chapter 1  | Violence, silence, inner rage (e.g. “to strike back”)      |
+| Prologue   | The 27-year-old begins to reread his old texts            |
+| Chapter 1  | Violence, silence, inner rage (e.g., “striking back”)      |
 | Chapter 2  | Depression, suicidal thoughts (“And he”)                    |
-| Chapter 3  | Love, loss, tender moments (“Butterfly moments”)           |
-| Chapter 4  | Traumatized attachment (“Alaska”)                          |
-| Chapter 5  | Writing as the last refuge (“Lines of Love”, “Follower”)  |
-| Chapter 6  | The reader in me today (reflection at 27)                  |
+| Chapter 3  | Love, loss, tender moments (“butterfly moments”)           |
+| Chapter 4  | Traumatized attachment (“Alaska”)                           |
+| Chapter 5  | Writing as a last refuge (“Lines of Love”, “Follower”)     |
+| Chapter 6  | The reader in me today (retrospective at 27)               |
 | Epilogue   | What remains – and what I want to pass on to you           |
