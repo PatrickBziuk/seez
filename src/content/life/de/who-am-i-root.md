@@ -54,18 +54,18 @@ ai_metadata:
       canonicalId: slug-20250805-2e3f9452
       model: gpt-4o-mini
       inputTokens: 910
-      outputTokens: 956
-      totalTokens: 1866
-      cost: 0.0007101
-      co2Impact: 0.18660000000000002
-      timestamp: '2025-08-12T21:16:54.543Z'
+      outputTokens: 954
+      totalTokens: 1864
+      cost: 0.0007088999999999999
+      co2Impact: 0.1864
+      timestamp: '2025-08-12T21:21:56.876Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1902
-      cost: 0.0007227
-      co2: 0.1902
-  generationDate: '2025-08-12T21:16:56.083Z'
+      tokens: 1900
+      cost: 0.0007214999999999999
+      co2: 0.19
+  generationDate: '2025-08-12T21:21:57.993Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -85,7 +85,7 @@ Es ist mein Nachname, mein Beruf, der Teil von mir,
 der Struktur als eine Art Anmut versteht.
 
 seez ist die Version von mir, die in Kundengesprächen erscheint  
-und Systeme baut, die unter menschlichem Chaos nicht zusammenbrechen.
+und Systeme baut, die nicht unter menschlichem Chaos zusammenbrechen.
 
 Es ist Wahrheit. Aber nicht alles davon.
 
@@ -100,7 +100,7 @@ Es ist mein Alias seit den Tagen der Foren und Tumblr,
 ein Name, der sich sicherer anfühlte als die Welt.
 
 Seez ist ein Poet mit einer Klinge zwischen den Zeilen.  
-Er singt, wo ich einst brach.  
+Er singt, wo ich einst zerbrach.  
 Er ist roh, romantisch, wütend, sanft.  
 Er ist ein Teil von mir, der nie optimiert werden wollte.
 
@@ -134,7 +134,7 @@ Instagram & Threads. Zitatfliesen, sanfte Worte,
 ein Raum, in dem andere sich in meinen finden können.
 
 deinanker ist die Brücke.  
-Ein Hafen für diejenigen, die noch nicht wissen, wohin sie gehen sollen,  
+Ein Hafen für diejenigen, die noch nicht wissen, wohin sie gehen,  
 aber sich gehalten fühlen wollen, während sie suchen.
 
 ---
@@ -161,12 +161,12 @@ Sondern Rituale in der Entstehung._
 
 Jedes dieser Projekte ist ein Gedankenexperiment, das ich benannt habe:
 
-- **Cosensai** – ein selbstgehosteter KI-Gedächtnisassistent.
+- **Cosensai** – ein selbstgehosteter KI-Erinnerungsassistent.
 - **marken.** – transparente Mode.
 - **circles.** – soziale Netzwerke, die um die Realität neu aufgebaut werden.
 
 Sie leben im **Labor** von seez.eu.  
-Noch nicht bereit. Aber wachsend.
+Noch nicht bereit. Aber im Wachstum.
 
 ---
 
@@ -176,10 +176,10 @@ _Der Name, den ich noch nicht gebaut habe—
 aber bereits darin lebe._
 
 Eines Tages werde ich alles hier vereinen:  
-die Technologie, die Poesie, das Paradoxon.  
+die Technologie, die Poesie, das Paradoxe.  
 Keine Marke. Eine Philosophie.
 
-Denn mein Leben ist kein Split zwischen Identitäten.  
+Denn mein Leben ist kein Bruch zwischen Identitäten.  
 Es ist ein **System von Spannungen**.  
 Nicht gelöst—aber lebendig.
 
@@ -188,7 +188,7 @@ Nicht gelöst—aber lebendig.
 ## Wer bin ich?
 
 Ein System in der Entstehung.  
-Eine Gedächtnismaschine, eingewickelt in Haut.  
+Eine Gedächtnismaschine, eingehüllt in Haut.  
 Ein Autor, der schreibt, um real zu bleiben.  
 Ein Entwickler, der baut, um gesund zu bleiben.  
 Ein Mensch,  
