@@ -60,18 +60,18 @@ ai_metadata:
       canonicalId: slug-20250805-d90c95e9
       model: gpt-4o-mini
       inputTokens: 1015
-      outputTokens: 726
-      totalTokens: 1741
-      cost: 0.00058785
-      co2Impact: 0.17410000000000003
-      timestamp: '2025-08-12T21:37:09.004Z'
+      outputTokens: 727
+      totalTokens: 1742
+      cost: 0.0005884499999999999
+      co2Impact: 0.17420000000000002
+      timestamp: '2025-08-12T21:45:17.775Z'
       sourceLanguage: de
       targetLanguage: en
     total:
-      tokens: 1827
-      cost: 0.00061605
-      co2: 0.18270000000000003
-  generationDate: '2025-08-12T21:37:10.018Z'
+      tokens: 1828
+      cost: 0.0006166499999999999
+      co2: 0.18280000000000002
+  generationDate: '2025-08-12T21:45:18.919Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -97,7 +97,7 @@ The book is both product and process – it shows how writing was once a salvati
 
 💎 **USP – What Makes the Book Unique?**
 
-1. **Authenticity Through Original Texts**  
+1. **Authenticity through Original Texts**  
    No staged fiction, no smoothed retelling:  
    You read the real words of a teenager – raw, honest, vulnerable.  
    These texts carry a time capsule that no invented character could have written.
@@ -107,7 +107,7 @@ The book is both product and process – it shows how writing was once a salvati
    The “then voice” speaks directly. The “now voice” responds – not condescending, but understanding.
 
 3. **Meta-Level: The Book as Process**  
-   The reader accompanies not just a story but the actual process of book creation.  
+   The reader accompanies not just a story, but the actual process of book creation.  
    This ensures:  
    - emotional closeness  
    - literary depth  
@@ -122,23 +122,23 @@ The book is both product and process – it shows how writing was once a salvati
 
 ✒️ **Distinction from Other Books in the Genre:**
 
-| Typical Young Adults                               | Your Book                                       |
-| -------------------------------------------------- | ------------------------------------------------ |
-| Fictional characters                               | Authentic first-person perspective               |
-| Linear plot (romantic drama, coming-of-age)       | Fragmented journey of memories                   |
+| Typical Young Adults                              | Your Book                                       |
+| ------------------------------------------------- | ------------------------------------------------ |
+| Fictional characters                               | Authentic first-person perspective                |
+| Linear plot (romantic drama, coming-of-age)      | Fragmented journey of memories                   |
 | Smooth polished style                              | Raw, real original texts & today's reflections   |
-| Predictable tension arcs                           | Unpredictable inner development                  |
+| Predictable tension arcs                           | Unpredictable inner development                   |
 | Identity questions triggered by other characters   | Identity questions triggered by one’s own texts  |
 
 🧩 **Example Structure:**
 
-| Chapter        | Content                                           |
+| Chapter        | Content                                          |
 | ---------------| ------------------------------------------------- |
-| Prologue       | The 27-year-old begins to reread his old texts   |
+| Prologue       | The 27-year-old begins to reread his old texts  |
 | Chapter 1      | Violence, silence, inner rage (e.g. “to fight back”) |
-| Chapter 2      | Depression, suicidal thoughts (“And he”)         |
+| Chapter 2      | Depression, suicidal thoughts (“And he”)        |
 | Chapter 3      | Love, loss, tender moments (“Butterfly moments”) |
 | Chapter 4      | Traumatized attachment (“Alaska”)                |
-| Chapter 5      | Writing as a last refuge (“Lines of Love”, “Follower”) |
+| Chapter 5      | Writing as the last refuge (“Lines of Love”, “Follower”) |
 | Chapter 6      | The reader in me today (Reflection at 27)       |
 | Epilogue       | What remains – and what I want to pass on to you |
