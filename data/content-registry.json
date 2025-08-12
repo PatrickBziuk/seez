@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-05T14:10:12.393Z",
+  "lastUpdated": "2025-08-12T20:53:53.269Z",
   "entries": {
     "slug-20250805-d90c95e9": {
       "canonicalId": "slug-20250805-d90c95e9",
@@ -12,9 +12,9 @@
       "translations": {
         "en": {
           "path": "src/content/books/en/licht-am-ende-der-zeilen.md",
-          "status": "missing",
-          "lastTranslated": "2025-08-05T14:04:41.827Z",
-          "translationHash": "02ee51c77b4b9830c676e6da8aa8bcf603b540d6be3c47e9489135e6fe54515a"
+          "status": "current",
+          "lastTranslated": "2025-08-12T20:53:53.268Z",
+          "translationHash": "e95fac9c598c04f3d98bf9a21bd65c6553b253ce79b826fa8a50030c434aace9"
         }
       }
     },
@@ -140,6 +140,24 @@
       "title": "Who am I",
       "lastModified": "2025-08-05T13:12:52.066Z",
       "contentHash": "3542f7d143c5aa7c4647e82d0a50b69eb3d3bd7866c87abc7243a206e469a35d",
+      "translations": {}
+    },
+    "slug-20250812-b8f5ef54": {
+      "canonicalId": "slug-20250812-b8f5ef54",
+      "originalPath": "projects/de/circles.mdx",
+      "originalLanguage": "de",
+      "title": "circles",
+      "lastModified": "2025-08-12T20:42:36.855Z",
+      "contentHash": "a0313fec4f3f72fa8a2f6b905151765211f3696656f1add1ab617eedcc1e6116",
+      "translations": {}
+    },
+    "slug-20250812-6f8d704e": {
+      "canonicalId": "slug-20250812-6f8d704e",
+      "originalPath": "projects/de/cosensai.mdx",
+      "originalLanguage": "de",
+      "title": "Cosensai",
+      "lastModified": "2025-08-12T20:42:36.857Z",
+      "contentHash": "d75def78cebf05738a841b3b5ff463d22bd71eadb520cbbd6a663793a86a9185",
       "translations": {}
     }
   }

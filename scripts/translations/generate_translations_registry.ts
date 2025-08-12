@@ -8,7 +8,7 @@
  * - Content integrity checks
  * - Resume capability for interrupted jobs
  *
- * Environment variables should be set in the shell or .env.local file
+ * Loads environment variables from .env.local file
  */
 
 import fs from 'fs';
@@ -17,6 +17,25 @@ import { execSync } from 'child_process';
 import matter from 'gray-matter';
 import OpenAI from 'openai';
 import { createHash } from 'crypto';
+
+// Load environment variables from .env.local if it exists
+try {
+  const envPath = path.join(process.cwd(), '.env.local');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    envContent.split('\n').forEach((line: string) => {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith('#')) {
+        const [key, ...values] = trimmed.split('=');
+        if (key && values.length > 0) {
+          process.env[key.trim()] = values.join('=').trim();
+        }
+      }
+    });
+  }
+} catch {
+  // Silently continue if .env.local loading fails
+}
 
 // Import the registry-based task interface
 type RegistryTranslationTask = {
