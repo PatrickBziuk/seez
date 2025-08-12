@@ -54,18 +54,18 @@ ai_metadata:
       canonicalId: slug-20250805-2e3f9452
       model: gpt-4o-mini
       inputTokens: 910
-      outputTokens: 941
-      totalTokens: 1851
-      cost: 0.0007011
-      co2Impact: 0.18510000000000001
-      timestamp: '2025-08-12T21:32:13.340Z'
+      outputTokens: 938
+      totalTokens: 1848
+      cost: 0.0006993
+      co2Impact: 0.18480000000000002
+      timestamp: '2025-08-12T21:36:25.933Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1887
-      cost: 0.0007137
-      co2: 0.1887
-  generationDate: '2025-08-12T21:32:14.094Z'
+      tokens: 1884
+      cost: 0.0007119
+      co2: 0.1884
+  generationDate: '2025-08-12T21:36:26.754Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -100,7 +100,7 @@ Es ist mein Alias seit den Tagen der Foren und Tumblr,
 ein Name, der sich sicherer anfühlte als die Welt.
 
 Seez ist ein Poet mit einer Klinge zwischen den Zeilen.  
-Er singt, wo ich einst brach.  
+Er singt, wo ich einst zerbrach.  
 Er ist roh, romantisch, wütend, sanft.  
 Er ist ein Teil von mir, der nie optimiert werden wollte.
 
@@ -135,7 +135,7 @@ ein Raum, in dem andere sich in meinen finden können.
 
 deinanker ist die Brücke.  
 Ein Hafen für diejenigen, die noch nicht wissen, wohin sie gehen,  
-aber sich gehalten fühlen wollen, während sie suchen.
+aber gehalten werden möchten, während sie suchen.
 
 ---
 
@@ -145,7 +145,7 @@ _Die Tiefe, die spricht._
 
 Dies ist mein Schattenarchiv.  
 Dunkle Gedanken, zensierte Fragmente,  
-Zitate, die mich genug verletzt haben, um sie zu bewahren.
+Zitate, die mich genug verletzt haben, um sie zu retten.
 
 Anonym im Gefühl.  
 Ein Ort, der nicht für die Massen gedacht ist.  
@@ -175,8 +175,8 @@ Noch nicht bereit. Aber wachsend.
 _Der Name, den ich noch nicht gebaut habe—  
 aber bereits darin lebe._
 
-Eines Tages werde ich alles hier vereinen:  
-die Technologie, die Poesie, das Paradoxon.  
+Eines Tages werde ich hier alles vereinen:  
+die Technologie, die Poesie, das Paradoxe.  
 Keine Marke. Eine Philosophie.
 
 Denn mein Leben ist kein Split zwischen Identitäten.  
@@ -188,7 +188,7 @@ Nicht gelöst—aber lebendig.
 ## Wer bin ich?
 
 Ein System in der Entstehung.  
-Eine Gedächtnismaschine, eingehüllt in Haut.  
+Ein Gedächtnismotor, eingehüllt in Haut.  
 Ein Autor, der schreibt, um real zu bleiben.  
 Ein Entwickler, der baut, um gesund zu bleiben.  
 Ein Mensch,  
@@ -202,5 +202,5 @@ Willkommen im Zentrum.
 ---
 
 _„Ich bin nicht einer, ich bin viele.  
-Aber alle von ihnen sind wahr.  
+Aber alle sind sie wahr.  
 Und vielleicht werden du und ich das vollständige Bild niemals kennen.“_

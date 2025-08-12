@@ -59,19 +59,19 @@ ai_metadata:
       operation: translation
       canonicalId: slug-20250805-8b154d9c
       model: gpt-4o-mini
-      inputTokens: 871
-      outputTokens: 870
-      totalTokens: 1741
-      cost: 0.0006526500000000001
-      co2Impact: 0.17410000000000003
-      timestamp: '2025-08-12T21:30:17.560Z'
+      inputTokens: 869
+      outputTokens: 869
+      totalTokens: 1738
+      cost: 0.00065175
+      co2Impact: 0.1738
+      timestamp: '2025-08-12T21:33:36.333Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1827
-      cost: 0.0006817500000000001
-      co2: 0.18270000000000003
-  generationDate: '2025-08-12T21:30:18.628Z'
+      tokens: 1824
+      cost: 0.00068085
+      co2: 0.1824
+  generationDate: '2025-08-12T21:33:37.534Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -87,7 +87,7 @@ Jedes Kapitel enthält:
 - Kommentare, Reflexionen, emotionale Essays aus der heutigen Perspektive  
 - Reflexionen über Trauma, Liebe, Schreiben, Depression und Selbstentdeckung  
 
-Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben einst eine Rettung war und heute Einsicht bedeutet.
+Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie Schreiben einst eine Rettung war und heute Einsicht bedeutet.
 
 🎯 **Zielgruppe:**
 
@@ -103,12 +103,12 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben ein
    Diese Texte tragen eine Zeitkapsel, die kein erfundener Charakter hätte schreiben können.
 
 2. **Duale Perspektive – Jung & Erwachsen**  
-   Das Werk ist Reflexion und Rückblick in einem –  
-   Die “damalige Stimme” spricht direkt. Die “heutige Stimme” antwortet – nicht herablassend, sondern verständnisvoll.
+   Das Werk ist Reflexion und Retrospektive in einem –  
+   Die „damalige Stimme“ spricht direkt. Die „heutige Stimme“ antwortet – nicht herablassend, sondern verständnisvoll.
 
 3. **Meta-Ebene: Das Buch als Prozess**  
    Der Leser begleitet nicht nur eine Geschichte, sondern den tatsächlichen Prozess der Buchentstehung.  
-   Das sichert:  
+   Das gewährleistet:  
    - emotionale Nähe  
    - literarische Tiefe  
    - strukturelle Wiedererkennbarkeit  
@@ -118,27 +118,27 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben ein
    - dass Dunkelheit benannt werden kann  
    - dass Schreiben ein Überlebenswerkzeug sein kann  
    - dass Selbstverständnis oft Jahre später reift  
-   - und dass Literatur nicht um Lösungen geht, sondern um Überleben  
+   - und dass Literatur nicht um Lösungen, sondern um Überleben geht  
 
 ✒️ **Unterscheidung von anderen Büchern im Genre:**
 
-| Typische junge Erwachsene                           | Dein Buch                                       |
+| Typische Junge Erwachsene                           | Dein Buch                                       |
 | -------------------------------------------------- | ------------------------------------------------ |
 | Fiktive Charaktere                                 | Authentische Ich-Perspektive                    |
 | Linearer Plot (romantisches Drama, Coming-of-Age) | Fragmentierte Reise der Erinnerungen             |
 | Glatt polierter Stil                               | Roh, echte Originaltexte & heutige Reflexionen   |
 | Vorhersehbare Spannungsbögen                       | Unvorhersehbare innere Entwicklung               |
-| Identitätsfragen, die durch andere Charaktere ausgelöst werden | Identitätsfragen, die durch die eigenen Texte ausgelöst werden |
+| Identitätsfragen, die durch andere Charaktere ausgelöst werden | Identitätsfragen, die durch eigene Texte ausgelöst werden |
 
 🧩 **Beispielstruktur:**
 
-| Kapitel        | Inhalt                                             |
-| ---------------| ---------------------------------------------------- |
+| Kapitel        | Inhalt                                           |
+| ---------------| ------------------------------------------------- |
 | Prolog         | Der 27-Jährige beginnt, seine alten Texte erneut zu lesen |
-| Kapitel 1      | Gewalt, Stille, innere Wut (z.B. “zurückkämpfen”) |
-| Kapitel 2      | Depression, suizidale Gedanken (“Und er”)         |
-| Kapitel 3      | Liebe, Verlust, zarte Momente (“Schmetterlingsmomente”) |
-| Kapitel 4      | Traumatisierte Bindung (“Alaska”)                 |
-| Kapitel 5      | Schreiben als letzter Zufluchtsort (“Zeilen der Liebe”, “Follower”) |
-| Kapitel 6      | Der Leser in mir heute (Reflexion mit 27)        |
-| Epilog         | Was bleibt – und was ich dir weitergeben möchte    |
+| Kapitel 1      | Gewalt, Stille, innere Wut (z.B. „sich wehren“) |
+| Kapitel 2      | Depression, suizidale Gedanken („Und er“)      |
+| Kapitel 3      | Liebe, Verlust, zarte Momente („Schmetterlingsmomente“) |
+| Kapitel 4      | Traumatisierte Bindung („Alaska“)               |
+| Kapitel 5      | Schreiben als letzter Zufluchtsort („Zeilen der Liebe“, „Follower“) |
+| Kapitel 6      | Der Leser in mir heute (Reflexion mit 27)      |
+| Epilog         | Was bleibt – und was ich dir weitergeben möchte |
