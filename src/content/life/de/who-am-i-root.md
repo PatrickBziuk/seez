@@ -54,24 +54,24 @@ ai_metadata:
       canonicalId: slug-20250805-2e3f9452
       model: gpt-4o-mini
       inputTokens: 910
-      outputTokens: 954
-      totalTokens: 1864
-      cost: 0.0007088999999999999
-      co2Impact: 0.1864
-      timestamp: '2025-08-12T21:08:21.242Z'
+      outputTokens: 949
+      totalTokens: 1859
+      cost: 0.0007059
+      co2Impact: 0.1859
+      timestamp: '2025-08-12T21:12:36.493Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1900
-      cost: 0.0007214999999999999
-      co2: 0.19
-  generationDate: '2025-08-12T21:08:22.063Z'
+      tokens: 1895
+      cost: 0.0007185
+      co2: 0.1895
+  generationDate: '2025-08-12T21:12:37.127Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
 Ich habe viele Namen getragen.  
 Aber keiner von ihnen war eine Lüge.  
-Nur Spiegel—jeder fängt ein anderes Licht ein.
+Nur Spiegel – jeder fängt ein anderes Licht ein.
 
 ---
 
@@ -87,7 +87,7 @@ der Struktur als eine Art Anmut versteht.
 seez ist die Version von mir, die in Kundengesprächen erscheint  
 und Systeme baut, die nicht unter menschlichem Chaos zusammenbrechen.
 
-Es ist die Wahrheit. Aber nicht alles davon.
+Es ist Wahrheit. Aber nicht alles davon.
 
 ---
 
@@ -114,7 +114,7 @@ Und, wenn du vorsichtig bist, dein Spiegelbild.
 
 _„Die Liebe zu den Zeilen.“ Eine zukunftsorientierte Vergangenheit._
 
-Geboren aus einem Tumblr-Blog mit 15.000 Followern—  
+Geboren aus einem Tumblr-Blog mit 15.000 Followern –  
 jetzt neu interpretiert als **Verlag** für radikale Ehrlichkeit.
 
 zeilenliebe ist der Ort, an dem Geschichten zu Gemeinschaften wachsen.  
@@ -134,14 +134,14 @@ Instagram & Threads. Zitatfliesen, sanfte Worte,
 ein Raum, in dem andere sich in meinen finden können.
 
 deinanker ist die Brücke.  
-Ein Hafen für diejenigen, die noch nicht wissen, wohin sie gehen sollen,  
+Ein Hafen für diejenigen, die noch nicht wissen, wohin sie gehen,  
 aber sich gehalten fühlen wollen, während sie suchen.
 
 ---
 
 ## 🕳 keinanker
 
-_Die Tiefe, die spricht._
+_Die Leere, die spricht._
 
 Dies ist mein Schattenarchiv.  
 Dunkle Gedanken, zensierte Fragmente,  
@@ -149,7 +149,7 @@ Zitate, die mich genug verletzt haben, um sie zu bewahren.
 
 Anonym im Gefühl.  
 Ein Ort, der nicht für die Massen gedacht ist.  
-Sondern für diejenigen, die _wissen_—  
+Sondern für diejenigen, die _wissen_ –  
 dass Heilung in der Dunkelheit beginnt.
 
 ---
@@ -172,7 +172,7 @@ Noch nicht bereit. Aber wachsend.
 
 ## 🌀 Konstruktives Chaos
 
-_Der Name, den ich noch nicht gebaut habe—  
+_Der Name, den ich noch nicht gebaut habe –  
 aber bereits darin lebe._
 
 Eines Tages werde ich alles hier vereinen:  
@@ -181,19 +181,19 @@ Keine Marke. Eine Philosophie.
 
 Denn mein Leben ist kein Split zwischen Identitäten.  
 Es ist ein **System von Spannungen**.  
-Nicht gelöst—aber lebendig.
+Nicht gelöst – aber lebendig.
 
 ---
 
 ## Wer bin ich?
 
 Ein System in der Entstehung.  
-Eine Gedächtnismaschine, eingehüllt in Haut.  
+Eine Erinnerungsmaschine, eingewickelt in Haut.  
 Ein Autor, der schreibt, um real zu bleiben.  
 Ein Entwickler, der baut, um gesund zu bleiben.  
 Ein Mensch,  
 der Masken trägt, nicht um sich zu verstecken,  
-sondern um zu überleben—und zu singen.
+sondern um zu überleben – und zu singen.
 
 Wenn du es hierher geschafft hast,  
 warst du dazu bestimmt.  
