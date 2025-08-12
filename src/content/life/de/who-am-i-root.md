@@ -54,18 +54,18 @@ ai_metadata:
       canonicalId: slug-20250805-2e3f9452
       model: gpt-4o-mini
       inputTokens: 910
-      outputTokens: 956
-      totalTokens: 1866
-      cost: 0.0007101
-      co2Impact: 0.18660000000000002
-      timestamp: '2025-08-12T21:28:54.293Z'
+      outputTokens: 941
+      totalTokens: 1851
+      cost: 0.0007011
+      co2Impact: 0.18510000000000001
+      timestamp: '2025-08-12T21:32:13.340Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1902
-      cost: 0.0007227
-      co2: 0.1902
-  generationDate: '2025-08-12T21:28:55.157Z'
+      tokens: 1887
+      cost: 0.0007137
+      co2: 0.1887
+  generationDate: '2025-08-12T21:32:14.094Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -79,15 +79,15 @@ Nur Spiegel—jeder fängt ein anderes Licht ein.
 
 _Der Systembauer. Die Schnittstelle zwischen Logik und der Welt._
 
-**seez.eu** ist der Ort, an dem ich meine Wirbelsäule trage.  
+**seez.eu** ist, wo ich mein Rückgrat trage.  
 IT, Automatisierung, Dynamics 365, technische Beratung.  
 Es ist mein Nachname, mein Beruf, der Teil von mir,  
 der Struktur als eine Art Anmut versteht.
 
 seez ist die Version von mir, die in Kundengesprächen erscheint  
-und Systeme baut, die nicht unter menschlichem Chaos zusammenbrechen.
+und Systeme baut, die unter menschlichem Chaos nicht zusammenbrechen.
 
-Es ist die Wahrheit. Aber nicht alles davon.
+Es ist Wahrheit. Aber nicht alles davon.
 
 ---
 
@@ -95,12 +95,12 @@ Es ist die Wahrheit. Aber nicht alles davon.
 
 _Die Stimme, die ich erhob, als ich unter meinem eigenen Namen nicht schreien konnte._
 
-**seez.eu** ist der Ort, an dem ich blute.  
+**seez.eu** ist, wo ich blute.  
 Es ist mein Alias seit den Tagen der Foren und Tumblr,  
 ein Name, der sich sicherer anfühlte als die Welt.
 
-Seez ist ein Dichter mit einer Klinge zwischen den Zeilen.  
-Er singt, wo ich einst zerbrochen bin.  
+Seez ist ein Poet mit einer Klinge zwischen den Zeilen.  
+Er singt, wo ich einst brach.  
 Er ist roh, romantisch, wütend, sanft.  
 Er ist ein Teil von mir, der nie optimiert werden wollte.
 
@@ -117,7 +117,7 @@ _„Die Liebe zu den Zeilen.“ Eine zukunftsorientierte Vergangenheit._
 Geboren aus einem Tumblr-Blog mit 15.000 Followern—  
 jetzt neu interpretiert als **Verlag** für radikale Ehrlichkeit.
 
-zeilenliebe ist der Ort, an dem Geschichten zu Gemeinschaften wachsen.  
+zeilenliebe ist, wo Geschichten zu Gemeinschaften wachsen.  
 Eine Plattform für lyrisches Überleben.  
 Eines Tages könnte es mehr sein als nur ich.  
 Ein kleiner Verlag. Ein Kollektiv. Eine Bewegung.
