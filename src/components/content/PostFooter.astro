@@ -78,13 +78,9 @@ const hasTokenData = frontmatter.ai_metadata?.tokenUsage;
     )
   }
 
-  <!-- Social Sharing Section -->
-  <div class="mb-8">
-    <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-      <Icon name="tabler:share" class="w-5 h-5" />
-      <span>Share this content</span>
-    </h3>
-    <SocialShare text={shareText} url={currentUrl} showMastodon={true} class="flex flex-wrap items-center gap-1" />
+  <!-- Social Sharing - Minimal inline version -->
+  <div class="mb-4">
+    <SocialShare text={shareText} url={currentUrl} showMastodon={true} class="flex items-center" />
   </div>
 
   <!-- Sustainability & Token Stats Section -->

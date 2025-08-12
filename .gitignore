@@ -2,6 +2,10 @@
 dist/
 .output/
 
+# Test Results
+playwright-report/
+test-results/*
+
 # dependencies
 node_modules/
 
@@ -11,6 +15,15 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Development artifacts
+*.log
+*_debug.json
+test-*.js
+test-*.mjs
+*_tasks_*.json
+
+# Generated translation data (keep in data/ folder)
+/translation_tasks.json
 
 # environment variables
 .env

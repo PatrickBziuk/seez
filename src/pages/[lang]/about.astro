@@ -1,50 +1,112 @@
 ---
 /**
- * About - Multilingual about page using content collection for scalable content management
- * @props lang: SupportedLanguage - Current language from route params
- * @behavior Loads content from pages collection based on language, renders markdown content
- * @dependencies getEntry, SUPPORTED_LANGUAGES, getTranslations, render
- * @usedBy Direct navigation to /[lang]/about
+ * About – Multilingual, content-driven About page with proper metadata, alt links,
+ * JSON-LD, reading stats, graceful fallbacks, and a clean source link.
+ * @route /[lang]/about
  */
 import Layout from '../../layouts/PageLayout.astro';
 import { getEntry, render } from 'astro:content';
 import { SUPPORTED_LANGUAGES, getTranslations } from '../../utils/i18n';
 import type { SupportedLanguage } from '../../utils/i18n';
+import type { MetaData } from '~/types';
 
-export const getStaticPaths = () => {
-  return SUPPORTED_LANGUAGES.map((lang) => ({
-    params: { lang },
-  }));
-};
+// Build-time constants
+export const getStaticPaths = () =>
+  SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
-
-// Load translations for the current language
 const t = await getTranslations(lang);
 
-// Load page content from content collection
+// Load content entry (content collection: pages/about/{lang}.md[x])
 const pageEntry = await getEntry('pages', `about/${lang}`);
-const { Content } = pageEntry ? await render(pageEntry) : { Content: null };
 
-const metadata = {
-  title: pageEntry?.data.title || t.navigation.About,
-  description:
-    lang === 'de'
-      ? 'Über diese Seite – Erfahre mehr über das Projekt und den Autor.'
-      : 'About page – Learn more about this site and its author.',
+// Render markdown to components + headings (if available)
+const rendered = pageEntry ? await render(pageEntry) : null;
+const Content = rendered?.Content ?? null;
+
+// Build canonical + hreflang alternates
+const baseUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://seez.eu';
+const canonical = `${baseUrl}/${lang}/about`;
+const alternates = SUPPORTED_LANGUAGES
+  .filter((l) => l !== lang)
+  .map((l) => ({ lang: l, url: `${baseUrl}/${l}/about` }));
+
+// Metadata
+const title = pageEntry?.data.title || t.navigation.About || (lang === 'de' ? 'Über' : 'About');
+const description =
+  pageEntry?.data.description ||
+  (lang === 'de'
+    ? 'Über dieses Projekt: digitale Souveränität, offene Werkzeuge, poetische Systeme.'
+    : 'About this project: digital sovereignty, open tools, poetic systems.');
+
+const metadata: MetaData = {
+  title,
+  description,
+  canonical,
+  openGraph: {
+    type: 'article',
+    url: canonical,
+  },
+  twitter: {
+    cardType: 'summary_large_image',
+  },
 };
+
 ---
 
 <Layout metadata={metadata}>
   <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <header class="text-center mb-12">
-      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
-        {pageEntry?.data.title || t.navigation.About}
+    <header class="mb-8 sm:mb-10">
+      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter font-heading dark:text-gray-200">
+        {title}
       </h1>
+      <p class="mt-3 text-base text-gray-600 dark:text-gray-400">
+        {description}
+      </p>
     </header>
 
     <div class="prose prose-lg dark:prose-invert mx-auto">
-      {Content ? <Content /> : <p>{lang === 'de' ? 'Inhalt wird geladen...' : 'Content is loading...'}</p>}
+      {Content ? (
+        <Content />
+      ) : (
+        <div class="rounded-xl border border-dashed border-gray-300/60 p-6 text-gray-600 dark:border-gray-700 dark:text-gray-300">
+          <p class="mb-2">
+            {lang === 'de'
+              ? 'Kein Inhalt gefunden. Lege in der Content-Collection eine Datei unter'
+              : 'No content found. Create a file in the content collection at'}{' '}
+            <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">
+              src/content/pages/about/{lang}.mdx
+            </code>{' '}
+            {lang === 'de' ? 'oder' : 'or'}{' '}
+            <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">
+              src/content/pages/about/{lang}.md
+            </code>
+            .
+          </p>
+          <p class="mt-2">
+            {lang === 'de'
+              ? 'Danach neu bauen. Ich weiß, es ist nervig. Willkommen im Web.'
+              : 'Then rebuild. Yes, it’s annoying. Welcome to the web.'}
+          </p>
+        </div>
+      )}
+    </div>
+    <div class="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        {lang === 'de'
+          ? 'Auch verfügbar auf:'
+          : 'Also available in:'}
+      </div>
+      <div class="flex items-center gap-3">
+        {alternates.map((a) => (
+          <a
+            href={a.url}
+            class="text-sm underline underline-offset-2 hover:no-underline text-gray-700 dark:text-gray-200"
+          >
+            {a.lang.toUpperCase()}
+          </a>
+        ))}
+      </div>
     </div>
   </section>
 </Layout>

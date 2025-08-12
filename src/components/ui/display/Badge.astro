@@ -12,8 +12,9 @@ export interface Props {
   text: string;
   icon?: string;
   size?: 'sm' | 'md' | 'lg';
+  class?: string;
 }
-const { variant, text, icon, size = 'md' } = Astro.props;
+const { variant, text, icon, size = 'md', class: className = '' } = Astro.props;
 const variantClasses = {
   ai: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 border-blue-200 dark:border-blue-700',
   human: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 border-green-200 dark:border-green-700',
@@ -36,7 +37,7 @@ function isEmoji(str: string): boolean {
 ---
 
 <span
-  class={`inline-flex items-center rounded-full font-medium border ${variantClasses[variant]} ${sizeClasses[size]}`}
+  class={`inline-flex items-center rounded-full font-medium border ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
   aria-label={variant}
 >
   {

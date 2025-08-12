@@ -1,4 +1,3 @@
-#!/usr/bin/env tsx
 
 /**
  * Registry-Based Translation Generation Script
@@ -8,6 +7,8 @@
  * - Token usage tracking integrated with canonical IDs
  * - Content integrity checks
  * - Resume capability for interrupted jobs
+ *
+ * Environment variables should be set in the shell or .env.local file
  */
 
 import fs from 'fs';

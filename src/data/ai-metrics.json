@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2025-08-12T09:30:00Z",
+  "metrics": {
+    "_schema": {
+      "description": "AI metrics data structure",
+      "canonical_id_format": "slug-YYYYMMDD-hash8",
+      "example": {
+        "model": "gpt-4o",
+        "region": "us-east-1",
+        "items": [
+          {
+            "label": "Initial content generation",
+            "type": "generation",
+            "input_tokens": 1500,
+            "output_tokens": 3000,
+            "price_per_1k_input": 0.005,
+            "price_per_1k_output": 0.015
+          },
+          {
+            "label": "Content revision",
+            "type": "revision",
+            "input_tokens": 2000,
+            "output_tokens": 1000,
+            "price_per_1k_input": 0.005,
+            "price_per_1k_output": 0.015
+          }
+        ]
+      }
+    },
+    "example-article-20250812-a1b2c3d4": {
+      "model": "gpt-4o",
+      "region": "us-east-1",
+      "items": [
+        {
+          "label": "Article content generation",
+          "type": "generation",
+          "input_tokens": 2500,
+          "output_tokens": 4200,
+          "price_per_1k_input": 0.005,
+          "price_per_1k_output": 0.015
+        },
+        {
+          "label": "TLDR generation",
+          "type": "summary",
+          "input_tokens": 4200,
+          "output_tokens": 150,
+          "price_per_1k_input": 0.005,
+          "price_per_1k_output": 0.015
+        }
+      ]
+    }
+  }
+}

@@ -3,7 +3,7 @@
  * MarkdownLayout - Layout for rendering Markdown content with metadata and responsive design
  * @props {frontmatter: Object, entry: Object} - Markdown frontmatter and entry data
  * @behavior Displays Markdown content, injects metadata, supports badges and i18n, includes SEO
- * @dependencies ContentMetadata, TagsSection, SEO, CustomStyles.astro, Favicons.astro
+ * @dependencies ContentMetadata, SEO, CustomStyles.astro, Favicons.astro
  * @usedBy [slug].astro, books, projects, lab, life collections
  */
 
@@ -11,10 +11,8 @@ import Layout from '~/layouts/PageLayout.astro';
 import SEO from '~/components/core/SEO.astro';
 import CanonicalSEO from '~/components/core/CanonicalSEO.astro';
 import ContentMetadata from '~/components/content/metadata/ContentMetadata.astro';
-import TagsSection from '~/components/content/metadata/TagsSection.astro';
-import ArticleFooter from '~/components/content/metadata/ArticleFooter.astro';
+import ArticleFooter from '~/components/article/ArticleFooter.astro';
 import ContentFallbackNotice from '~/components/content/metadata/ContentFallbackNotice.astro';
-import PostFooter from '~/components/content/PostFooter.astro';
 import { getTranslations, detectLanguage } from '~/utils/i18n';
 import { getEntry } from 'astro:content';
 
@@ -69,6 +67,11 @@ export interface Props {
         };
       };
     };
+    // Plan 10031: New frontmatter fields from remark plugins
+    wordCount?: number;
+    readingTime?: number;
+    readingFormatted?: string;
+    lastModified?: string;
   };
   entry?: {
     collection: string;
@@ -159,6 +162,7 @@ const metadata: MetaData = {
         {frontmatter.title}
       </h1>
     </div>
+    
     <ContentMetadata
       language={frontmatter.language}
       timestamp={frontmatter.timestamp}
@@ -171,6 +175,7 @@ const metadata: MetaData = {
       translations={translations}
       locale={currentLanguage}
       content={entryContent}
+      entry={entry}
     />
     {
       frontmatter.language && frontmatter.language !== currentLanguage && (
@@ -184,22 +189,19 @@ const metadata: MetaData = {
       <slot />
     </div>
 
-    <!-- Article Footer with Statistics, Sources, and Publication Info -->
+    <!-- New Article Footer (Plan 10031) -->
     <ArticleFooter
-      content={entryContent}
-      sources={frontmatter.sources}
-      publishDate={gitMetadata[entry?.id || '']?.publishDate || frontmatter.timestamp}
-      modifiedDate={gitMetadata[entry?.id || '']?.modifiedDate}
-      language={frontmatter.language}
+      title={frontmatter.title || 'Untitled'}
+      url={Astro.url}
+      wordCount={frontmatter.wordCount}
+      readingTime={frontmatter.readingTime}
+      readingFormatted={frontmatter.readingFormatted}
+      publishDate={publishDate}
+      lastModified={frontmatter.lastModified}
       canonicalId={frontmatter.canonicalId}
-      translations={translations}
-      locale={currentLanguage}
+      language={frontmatter.language}
+      slug={entry?.slug}
+      tags={frontmatter.tags}
     />
-
-    <!-- Tags Section at Bottom -->
-    <TagsSection tags={frontmatter.tags} />
-
-    <!-- Enhanced Post Footer with GitHub, Social, and Token Stats -->
-    <PostFooter frontmatter={frontmatter} entry={entry} className="max-w-4xl mx-auto" />
   </section>
 </Layout>

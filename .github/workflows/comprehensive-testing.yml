@@ -1,0 +1,745 @@
+name: Comprehensive Testing Suite
+
+# This workflow implements Plan 10029 comprehensive testing strategy
+# It runs non-blocking tests and creates GitHub issues for failures
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    # Run daily at 2 AM UTC for monitoring
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - 'full'
+          - 'smoke'
+          - 'performance'
+          - 'accessibility'
+          - 'validation'
+          - 'e2e'
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  pages: read
+
+env:
+  NODE_VERSION: '20'
+  PLAYWRIGHT_BROWSERS_PATH: 0
+
+jobs:
+  # Phase 1: Pre-commit Validation Tests
+  validation-tests:
+    name: Phase 1 - Validation Tests
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    outputs:
+      validation-success: ${{ steps.validation-status.outputs.success }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔄 Sync Astro content types
+        run: pnpm run astro sync
+
+      - name: 🔍 Content Validation
+        id: content-validation
+        continue-on-error: true
+        run: |
+          echo "Running content pipeline validation..."
+          if ! pnpm run test:validation; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📄 Frontmatter Validation
+        id: frontmatter-validation
+        continue-on-error: true
+        run: |
+          echo "Running frontmatter integrity validation..."
+          if ! npx tsx tests/validation/frontmatter-validation.spec.ts; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🌐 Translation Validation
+        id: translation-validation
+        continue-on-error: true
+        run: |
+          echo "Running translation consistency validation..."
+          if ! npx tsx tests/validation/translation-validation.spec.ts; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📊 Metadata Validation
+        id: metadata-validation
+        continue-on-error: true
+        run: |
+          echo "Running metadata compliance validation..."
+          if ! npx tsx tests/validation/metadata-validation.spec.ts; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: ✅ Set validation status
+        id: validation-status
+        run: |
+          if [[ "${{ steps.content-validation.outputs.failed }}" != "true" && "${{ steps.frontmatter-validation.outputs.failed }}" != "true" && "${{ steps.translation-validation.outputs.failed }}" != "true" && "${{ steps.metadata-validation.outputs.failed }}" != "true" ]]; then
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🚨 Create validation issue on failure
+        if: steps.content-validation.outputs.failed == 'true' || steps.frontmatter-validation.outputs.failed == 'true' || steps.translation-validation.outputs.failed == 'true' || steps.metadata-validation.outputs.failed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Validation Tests Failed - $(date '+%Y-%m-%d %H:%M')" \
+            --body "**Phase 1 Validation Tests Failed**
+
+          - Content Validation: ${CONTENT_VALIDATION_FAILED:-✅}
+          - Frontmatter Validation: ${FRONTMATTER_VALIDATION_FAILED:-✅}
+          - Translation Validation: ${TRANSLATION_VALIDATION_FAILED:-✅}
+          - Metadata Validation: ${METADATA_VALIDATION_FAILED:-✅}
+
+          **Details:**
+          - Commit: ${{ github.sha }}
+          - Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          - Branch: ${{ github.ref_name }}
+
+          This is an automated issue created by the Plan 10029 testing strategy." \
+            --label "testing,validation,automated,plan-10029"
+
+  # Phase 2: Build site for testing
+  build-for-testing:
+    name: Build Site for Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔄 Sync Astro content types
+        run: pnpm run astro sync
+
+      - name: 🏗️ Build site
+        run: pnpm run build
+
+      - name: 📦 Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+          retention-days: 1
+
+  # Phase 2: E2E Functionality Tests
+  e2e-tests:
+    name: Phase 2 - E2E Tests
+    runs-on: ubuntu-latest
+    needs: build-for-testing
+    continue-on-error: true
+    outputs:
+      e2e-success: ${{ steps.e2e-status.outputs.success }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+
+      - name: 🎭 Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: 🚀 Start preview server
+        run: |
+          pnpm run preview &
+          sleep 10  # Wait for server to start
+
+      - name: 🧭 Navigation Tests
+        id: navigation-tests
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:e2e:navigation; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📄 Content Loading Tests
+        id: content-tests
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:e2e:content; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🔍 Search Functionality Tests
+        id: search-tests
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:e2e:search; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🌐 Language Switching Tests
+        id: language-tests
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:e2e:language; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🔗 Multilingual Content Tests
+        id: multilingual-tests
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:e2e:multilingual; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: ✅ Set E2E status
+        id: e2e-status
+        run: |
+          if [[ "${{ steps.navigation-tests.outputs.failed }}" != "true" && "${{ steps.content-tests.outputs.failed }}" != "true" && "${{ steps.search-tests.outputs.failed }}" != "true" && "${{ steps.language-tests.outputs.failed }}" != "true" && "${{ steps.multilingual-tests.outputs.failed }}" != "true" ]]; then
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📊 Upload E2E test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-results
+          path: playwright-report/
+          retention-days: 7
+
+      - name: 🚨 Create E2E issue on failure
+        if: steps.navigation-tests.outputs.failed == 'true' || steps.content-tests.outputs.failed == 'true' || steps.search-tests.outputs.failed == 'true' || steps.language-tests.outputs.failed == 'true' || steps.multilingual-tests.outputs.failed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "E2E Tests Failed - $(date '+%Y-%m-%d %H:%M')" \
+            --body "**Phase 2 E2E Functionality Tests Failed**
+
+          - Navigation Tests: ${{ steps.navigation-tests.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Content Loading Tests: ${{ steps.content-tests.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Search Functionality Tests: ${{ steps.search-tests.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Language Switching Tests: ${{ steps.language-tests.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Multilingual Content Tests: ${{ steps.multilingual-tests.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+
+          **Details:**
+          - Commit: ${{ github.sha }}
+          - Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          - Branch: ${{ github.ref_name }}
+
+          **Test Report:**
+          Check the uploaded artifacts for detailed test results.
+
+          This is an automated issue created by the Plan 10029 testing strategy." \
+            --label "testing,e2e,automated,plan-10029"
+
+  # Phase 2: Component Tests
+  component-tests:
+    name: Phase 2 - Component Tests
+    runs-on: ubuntu-latest
+    needs: build-for-testing
+    continue-on-error: true
+    outputs:
+      component-success: ${{ steps.component-status.outputs.success }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+
+      - name: 🎭 Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: 🚀 Start preview server
+        run: |
+          pnpm run preview &
+          sleep 10
+
+      - name: 📝 TLDR Component Tests
+        id: tldr-component
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:components:tldr; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📊 Metadata Component Tests
+        id: metadata-component
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:components:metadata; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📤 Social Share Tests
+        id: social-component
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:components:social; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🔗 GitHub Integration Tests
+        id: github-component
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:components:github; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🌐 Language Switcher Tests
+        id: language-component
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:components:language; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🔍 Search Component Tests
+        id: search-component
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:components:search; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🧭 Navigation Component Tests
+        id: navigation-component
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:components:navigation; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: ✅ Set component status
+        id: component-status
+        run: |
+          if [[ "${{ steps.tldr-component.outputs.failed }}" != "true" && "${{ steps.metadata-component.outputs.failed }}" != "true" && "${{ steps.social-component.outputs.failed }}" != "true" && "${{ steps.github-component.outputs.failed }}" != "true" && "${{ steps.language-component.outputs.failed }}" != "true" && "${{ steps.search-component.outputs.failed }}" != "true" && "${{ steps.navigation-component.outputs.failed }}" != "true" ]]; then
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📊 Upload component test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: component-test-results
+          path: playwright-report/
+          retention-days: 7
+
+      - name: 🚨 Create component issue on failure
+        if: steps.tldr-component.outputs.failed == 'true' || steps.metadata-component.outputs.failed == 'true' || steps.social-component.outputs.failed == 'true' || steps.github-component.outputs.failed == 'true' || steps.language-component.outputs.failed == 'true' || steps.search-component.outputs.failed == 'true' || steps.navigation-component.outputs.failed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Component Tests Failed - $(date '+%Y-%m-%d %H:%M')" \
+            --body "**Phase 2 Component Tests Failed**
+
+          - TLDR Component: ${{ steps.tldr-component.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Metadata Component: ${{ steps.metadata-component.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Social Share Component: ${{ steps.social-component.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - GitHub Integration: ${{ steps.github-component.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Language Switcher: ${{ steps.language-component.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Search Component: ${{ steps.search-component.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Navigation Component: ${{ steps.navigation-component.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+
+          **Details:**
+          - Commit: ${{ github.sha }}
+          - Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          - Branch: ${{ github.ref_name }}
+
+          **Test Report:**
+          Check the uploaded artifacts for detailed test results.
+
+          This is an automated issue created by the Plan 10029 testing strategy." \
+            --label "testing,components,automated,plan-10029"
+
+          **Details:**
+          - Commit: ${{ github.sha }}
+          - Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          - Branch: ${{ github.ref_name }}
+
+          This is an automated issue created by the Plan 10029 testing strategy." \
+            --label "testing,components,automated,plan-10029"
+
+  # Phase 2: Accessibility Tests
+  accessibility-tests:
+    name: Phase 2 - Accessibility Tests
+    runs-on: ubuntu-latest
+    needs: build-for-testing
+    continue-on-error: true
+    outputs:
+      accessibility-success: ${{ steps.accessibility-status.outputs.success }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+
+      - name: 🎭 Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: 🚀 Start preview server
+        run: |
+          pnpm run preview &
+          sleep 10
+
+      - name: ♿ Run accessibility tests
+        id: accessibility-tests
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:accessibility; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: ✅ Set accessibility status
+        id: accessibility-status
+        run: |
+          if [[ "${{ steps.accessibility-tests.outputs.failed }}" != "true" ]]; then
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📊 Upload accessibility test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: accessibility-test-results
+          path: playwright-report/
+          retention-days: 7
+
+      - name: 🚨 Create accessibility issue on failure
+        if: steps.accessibility-tests.outputs.failed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Accessibility Tests Failed - $(date '+%Y-%m-%d %H:%M')" \
+            --body "**Phase 2 Accessibility Tests Failed**
+
+          The comprehensive accessibility testing suite has detected WCAG compliance issues.
+
+          **Test Areas:**
+          - Page structure and landmarks
+          - Keyboard navigation
+          - Screen reader compatibility
+          - Color contrast and visual accessibility
+          - Mobile accessibility
+          - Form and input accessibility
+
+          **Details:**
+          - Commit: ${{ github.sha }}
+          - Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          - Branch: ${{ github.ref_name }}
+
+          **Action Required:**
+          Review the test results in the uploaded artifacts and address accessibility issues.
+
+          This is an automated issue created by the Plan 10029 testing strategy." \
+            --label "testing,accessibility,wcag,automated,plan-10029"
+
+  # Phase 4: Performance and Monitoring Tests
+  performance-tests:
+    name: Phase 4 - Performance Tests
+    runs-on: ubuntu-latest
+    needs: build-for-testing
+    continue-on-error: true
+    outputs:
+      performance-success: ${{ steps.performance-status.outputs.success }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+
+      - name: 🎭 Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: 🚀 Start preview server
+        run: |
+          pnpm run preview &
+          sleep 10
+
+      - name: ⚡ Core Web Vitals Tests
+        id: vitals-tests
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:performance:vitals; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🔍 SEO Monitoring Tests
+        id: seo-tests
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:performance:seo; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📊 Performance Monitoring Tests
+        id: monitoring-tests
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:performance:monitoring; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🚀 Core Performance Tests
+        id: performance-tests
+        continue-on-error: true
+        run: |
+          if ! pnpm run test:performance:core; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: ✅ Set performance status
+        id: performance-status
+        run: |
+          if [[ "${{ steps.vitals-tests.outputs.failed }}" != "true" && "${{ steps.seo-tests.outputs.failed }}" != "true" && "${{ steps.monitoring-tests.outputs.failed }}" != "true" && "${{ steps.performance-tests.outputs.failed }}" != "true" ]]; then
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📊 Upload performance test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30  # Keep longer for trend analysis
+
+      - name: 🚨 Create performance issue on failure
+        if: steps.vitals-tests.outputs.failed == 'true' || steps.seo-tests.outputs.failed == 'true' || steps.monitoring-tests.outputs.failed == 'true' || steps.performance-tests.outputs.failed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Performance Tests Failed - $(date '+%Y-%m-%d %H:%M')" \
+            --body "**Phase 4 Performance Tests Failed**
+
+          - Core Web Vitals: ${{ steps.vitals-tests.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - SEO Monitoring: ${{ steps.seo-tests.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Performance Monitoring: ${{ steps.monitoring-tests.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Core Performance: ${{ steps.performance-tests.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+
+          **Impact:**
+          Performance degradation may affect user experience and search engine rankings.
+
+          **Details:**
+          - Commit: ${{ github.sha }}
+          - Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          - Branch: ${{ github.ref_name }}
+
+          **Metrics to Review:**
+          - Largest Contentful Paint (LCP)
+          - Cumulative Layout Shift (CLS)
+          - First Input Delay (FID)
+          - SEO metadata and structure
+          - Resource optimization
+
+          This is an automated issue created by the Plan 10029 testing strategy." \
+            --label "testing,performance,core-web-vitals,seo,automated,plan-10029"
+
+  # Cross-Browser Compatibility Tests
+  cross-browser-tests:
+    name: Cross-Browser Tests
+    runs-on: ubuntu-latest
+    needs: build-for-testing
+    continue-on-error: true
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+
+      - name: 🎭 Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: 🚀 Start preview server
+        run: |
+          pnpm run preview &
+          sleep 10
+
+      - name: 🌐 Run cross-browser tests (${{ matrix.browser }})
+        run: |
+          pnpm exec playwright test --project=${{ matrix.browser }} tests/e2e/navigation.spec.ts tests/components/navigation.spec.ts
+
+      - name: 📊 Upload browser test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ matrix.browser }}-test-results
+          path: playwright-report/
+          retention-days: 7
+
+  # Test Results Summary
+  test-summary:
+    name: Test Results Summary
+    runs-on: ubuntu-latest
+    needs: [validation-tests, e2e-tests, component-tests, accessibility-tests, performance-tests]
+    if: always()
+    steps:
+      - name: 📊 Generate test summary
+        run: |
+          echo "# 🧪 Plan 10029 Test Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Phase | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Validation Tests | ${{ needs.validation-tests.outputs.validation-success == 'true' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ needs.e2e-tests.outputs.e2e-success == 'true' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Component Tests | ${{ needs.component-tests.outputs.component-success == 'true' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Accessibility Tests | ${{ needs.accessibility-tests.outputs.accessibility-success == 'true' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Performance Tests | ${{ needs.performance-tests.outputs.performance-success == 'true' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📋 Test Strategy" >> $GITHUB_STEP_SUMMARY
+          echo "This testing suite implements Plan 10029's comprehensive testing strategy:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Phase 1**: Content validation and integrity checks" >> $GITHUB_STEP_SUMMARY
+          echo "- **Phase 2**: E2E functionality, component, and accessibility testing" >> $GITHUB_STEP_SUMMARY
+          echo "- **Phase 4**: Performance monitoring and Core Web Vitals" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **Test Artifacts**: Check the Actions tab for detailed test reports and screenshots." >> $GITHUB_STEP_SUMMARY
+          echo "🚨 **Failed Tests**: Automated GitHub issues have been created for any test failures." >> $GITHUB_STEP_SUMMARY
+
+      - name: 📈 Update health metrics
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          echo "Scheduled monitoring run completed at $(date)"
+          echo "Health metrics and monitoring data have been updated."

@@ -3,7 +3,7 @@
  * Layout - Main site layout, wraps all pages with header, footer, and global styles
  * @props {children: any} - Page content
  * @behavior Provides consistent structure, navigation, and global styles
- * @dependencies CustomStyles.astro, Favicons.astro, Header, Footer
+ * @dependencies CustomStyles.astro, Favicons.astro, Header, Footer, PerformanceMonitor.astro
  * @usedBy All pages, MarkdownLayout.astro, PageLayout.astro
  */
 
@@ -14,11 +14,13 @@ import { getI18nConfig } from '~/config/seez.config';
 import CommonMeta from '~/components/core/meta/CommonMeta.astro';
 import Favicons from '~/components/core/meta/Favicons.astro';
 import CustomStyles from '~/components/core/meta/CustomStyles.astro';
+import CriticalCSS from '~/components/core/meta/CriticalCSS.astro';
 import ApplyColorMode from '~/components/core/meta/ApplyColorMode.astro';
 import Metadata from '~/components/core/meta/Metadata.astro';
 import SiteVerification from '~/components/core/meta/SiteVerification.astro';
 import Analytics from '~/components/core/meta/Analytics.astro';
 import BasicScripts from '~/components/core/meta/BasicScripts.astro';
+import PerformanceMonitor from '~/components/core/performance/PerformanceMonitor.astro';
 
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
@@ -51,6 +53,7 @@ const alternateLanguages = availableLanguages.map((lang) => ({
   <head>
     <CommonMeta />
     <Favicons />
+    <CriticalCSS />
     <CustomStyles />
     <ApplyColorMode />
     <Metadata {...metadata} alternateLanguages={alternateLanguages} />
@@ -65,5 +68,6 @@ const alternateLanguages = availableLanguages.map((lang) => ({
     <slot />
 
     <BasicScripts />
+    <PerformanceMonitor debug={import.meta.env.DEV} />
   </body>
 </html>

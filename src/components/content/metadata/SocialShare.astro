@@ -18,72 +18,81 @@ export interface Props {
 const { text, url, class: className = 'inline-block', showMastodon = true } = Astro.props;
 ---
 
-<div class={className}>
-  <span class="align-super font-bold text-slate-500 dark:text-slate-400">Share:</span>
-  <button
-    class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Twitter Share"
-    data-aw-social-share="twitter"
-    data-aw-url={url}
-    data-aw-text={text}
+<div class={`${className} flex items-center gap-1`}>
+  <span class="text-xs text-slate-500 dark:text-slate-400 mr-2 font-medium">Share:</span>
+  <a
+    class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200"
+    title="Share on Twitter/X"
+    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url.toString())}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Share on Twitter/X (opens in new tab)"
     ><Icon
       name="tabler:brand-x"
-      class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
+      class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
     />
-  </button>
-  <button class="ml-2 rtl:ml-0 rtl:mr-2" title="Facebook Share" data-aw-social-share="facebook" data-aw-url={url}
+  </a>
+  <a
+    class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200"
+    title="Share on Facebook"
+    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url.toString())}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Share on Facebook (opens in new tab)"
     ><Icon
       name="tabler:brand-facebook"
-      class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
+      class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
     />
-  </button>
-  <button
-    class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Linkedin Share"
-    data-aw-social-share="linkedin"
-    data-aw-url={url}
-    data-aw-text={text}
+  </a>
+  <a
+    class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200"
+    title="Share on LinkedIn"
+    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url.toString())}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Share on LinkedIn (opens in new tab)"
     ><Icon
       name="tabler:brand-linkedin"
-      class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
+      class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
     />
-  </button>
+  </a>
   {
     showMastodon && (
-      <button
-        class="ml-2 rtl:ml-0 rtl:mr-2"
-        title="Mastodon Share"
-        data-aw-social-share="mastodon"
-        data-aw-url={url}
-        data-aw-text={text}
+      <a
+        class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200"
+        title="Share on Mastodon"
+        href={`https://mastodon.social/share?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url.toString())}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Share on Mastodon (opens in new tab)"
       >
         <Icon
           name="tabler:brand-mastodon"
-          class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
+          class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
         />
-      </button>
+      </a>
     )
   }
-  <button
-    class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Whatsapp Share"
-    data-aw-social-share="whatsapp"
-    data-aw-url={url}
-    data-aw-text={text}
+  <a
+    class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200"
+    title="Share via WhatsApp"
+    href={`https://wa.me/?text=${encodeURIComponent(text + ' ' + url.toString())}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Share via WhatsApp (opens in new tab)"
     ><Icon
       name="tabler:brand-whatsapp"
-      class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
+      class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
     />
-  </button>
-  <button
-    class="ml-2 rtl:ml-0 rtl:mr-2"
-    title="Email Share"
-    data-aw-social-share="mail"
-    data-aw-url={url}
-    data-aw-text={text}
+  </a>
+  <a
+    class="inline-flex items-center justify-center w-6 h-6 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200"
+    title="Share via Email"
+    href={`mailto:?subject=${encodeURIComponent(text)}&body=${encodeURIComponent(text + '\n\n' + url.toString())}`}
+    aria-label="Share via Email"
     ><Icon
       name="tabler:mail"
-      class="w-6 h-6 text-gray-400 dark:text-slate-500 hover:text-black dark:hover:text-slate-300"
+      class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
     />
-  </button>
+  </a>
 </div>

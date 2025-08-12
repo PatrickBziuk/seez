@@ -1,8 +1,8 @@
 ---
 /**
- * TagsSection - Clean tags display section for article bottom
- * @props {tags: string[]} - Array of tag strings
- * @behavior Displays tags at the bottom of articles with clean styling
+ * TagsSection - Clean tags display section for article top or bottom
+ * @props {tags: string[], placement?: 'top' | 'bottom'} - Array of tag strings and placement context
+ * @behavior Displays tags with discovery-focused styling when at top, minimal when at bottom
  * @dependencies Badge component, i18n utilities, astro-icon
  * @usedBy MarkdownLayout.astro, [slug].astro
  */
@@ -10,22 +10,33 @@ import Badge from '../../ui/display/Badge.astro';
 import { Icon } from 'astro-icon/components';
 import { getTranslations, detectLanguage } from '~/utils/i18n';
 
-const { tags = [] } = Astro.props;
+const { tags = [], placement = 'bottom' } = Astro.props;
 const currentLanguage = detectLanguage(Astro.url.pathname);
 const translations = await getTranslations(currentLanguage);
+
+// Different styling based on placement
+const isTop = placement === 'top';
+const isBottom = placement === 'bottom';
 ---
 
 {
   tags?.length > 0 && (
-    <div class="flex items-start gap-3 pt-6 mt-8 border-t border-slate-200/40 dark:border-slate-700/40">
-      <Icon name="tabler:tags" class="w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0" />
-      <div class="flex flex-wrap gap-2">
+    <div class={`flex items-start gap-3 ${isBottom ? 'pt-6 mt-8 border-t border-slate-200/40 dark:border-slate-700/40' : 'pb-4 mb-6'}`}>
+      <Icon 
+        name="tabler:tags" 
+        class={`w-4 h-4 text-slate-500 dark:text-slate-400 mt-0.5 flex-shrink-0 ${isTop ? 'w-5 h-5' : ''}`} 
+      />
+      <div class={`flex flex-wrap gap-2 ${isTop ? 'gap-3' : ''}`}>
         {tags.map((tag: string) => (
           <a
             href={`/${currentLanguage}/tags/${encodeURIComponent(tag)}`}
-            class="focus:outline-none transition-transform hover:scale-105"
+            class={`focus:outline-none transition-transform hover:scale-105 ${isTop ? 'hover:scale-110' : ''}`}
           >
-            <Badge variant="tag" text={translations?.tags?.[tag] || tag} />
+            <Badge 
+              variant="tag" 
+              text={translations?.tags?.[tag] || tag}
+              class={isTop ? 'text-sm px-3 py-1.5 font-medium' : ''}
+            />
           </a>
         ))}
       </div>

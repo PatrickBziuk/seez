@@ -1,0 +1,162 @@
+---
+/**
+ * AIImpact - Collapsible environmental impact display for AI usage
+ * @props canonicalId - Unique identifier for content to load metrics
+ * @props metrics - Optional AI metrics object to display
+ * @behavior Default collapsed with expandable breakdown
+ * @dependencies aiImpact utilities for calculations
+ * @usedBy ArticleFooter component for environmental transparency
+ */
+
+import type { AIMetrics } from '../../utils/aiImpact';
+import { 
+  calculateEnvironmentalImpact, 
+  formatEnergy, 
+  formatCO2, 
+  formatCost, 
+  getCO2Context 
+} from '../../utils/aiImpact';
+
+interface Props {
+  canonicalId?: string;
+  metrics?: AIMetrics;
+  defaultExpanded?: boolean;
+}
+
+const { canonicalId, metrics: providedMetrics, defaultExpanded = false } = Astro.props;
+
+// For now, we'll use a mock metrics object if none provided
+// In production, this would load from the AI metrics JSON
+let metrics: AIMetrics | null = providedMetrics || null;
+
+// Mock data for demonstration (remove when real data loading is implemented)
+if (!metrics && canonicalId) {
+  metrics = {
+    model: 'gpt-4o',
+    region: 'us-east-1',
+    items: [
+      {
+        label: 'Content generation',
+        type: 'generation',
+        input_tokens: 2500,
+        output_tokens: 4200,
+        price_per_1k_input: 0.005,
+        price_per_1k_output: 0.015,
+      },
+      {
+        label: 'TLDR summary',
+        type: 'summary',
+        input_tokens: 4200,
+        output_tokens: 150,
+        price_per_1k_input: 0.005,
+        price_per_1k_output: 0.015,
+      },
+    ],
+  };
+}
+
+let impact = null;
+if (metrics) {
+  impact = calculateEnvironmentalImpact(metrics);
+}
+---
+
+{impact && (
+  <div class="ai-impact-container border-t border-gray-200 dark:border-gray-700 pt-4">
+    <details class="group" open={defaultExpanded}>
+      <summary class="cursor-pointer select-none">
+        <div class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+          <span class="group-open:rotate-90 transition-transform duration-200">▶</span>
+          <span class="font-medium">AI Environmental Impact</span>
+          <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+            {formatCO2(impact.co2.mid)} • {formatEnergy(impact.energy.mid)} • {formatCost(impact.cost)}
+          </span>
+        </div>
+      </summary>
+      
+      <div class="mt-3 pl-6 space-y-3 text-sm">
+        <!-- Impact Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="bg-orange-50 dark:bg-orange-900/20 p-3 rounded-lg">
+            <div class="font-medium text-orange-900 dark:text-orange-200">CO₂ Emissions</div>
+            <div class="text-lg font-bold text-orange-800 dark:text-orange-300">
+              {formatCO2(impact.co2.low)} - {formatCO2(impact.co2.high)}
+            </div>
+            <div class="text-xs text-orange-700 dark:text-orange-400 mt-1">
+              {getCO2Context(impact.co2.mid)}
+            </div>
+          </div>
+          
+          <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+            <div class="font-medium text-blue-900 dark:text-blue-200">Energy Used</div>
+            <div class="text-lg font-bold text-blue-800 dark:text-blue-300">
+              {formatEnergy(impact.energy.low)} - {formatEnergy(impact.energy.high)}
+            </div>
+            <div class="text-xs text-blue-700 dark:text-blue-400 mt-1">
+              {impact.totalTokens.toLocaleString()} tokens processed
+            </div>
+          </div>
+          
+          <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+            <div class="font-medium text-green-900 dark:text-green-200">Cost</div>
+            <div class="text-lg font-bold text-green-800 dark:text-green-300">
+              {formatCost(impact.cost)}
+            </div>
+            <div class="text-xs text-green-700 dark:text-green-400 mt-1">
+              Model: {metrics?.model}
+            </div>
+          </div>
+        </div>
+
+        <!-- Breakdown by Operation -->
+        {metrics && metrics.items.length > 1 && (
+          <div class="border-t border-gray-200 dark:border-gray-600 pt-3">
+            <div class="font-medium text-gray-700 dark:text-gray-300 mb-2">Breakdown by Operation</div>
+            <div class="space-y-2">
+              {metrics.items.map((item) => {
+                const itemTokens = item.input_tokens + item.output_tokens;
+                const itemCost = (item.input_tokens / 1000) * (item.price_per_1k_input || 0) + 
+                                (item.output_tokens / 1000) * (item.price_per_1k_output || 0);
+                return (
+                  <div class="flex justify-between items-center text-xs bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded">
+                    <span class="font-medium">{item.label}</span>
+                    <div class="flex gap-3 text-gray-600 dark:text-gray-400">
+                      <span>{itemTokens.toLocaleString()} tokens</span>
+                      <span>{formatCost(itemCost)}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <!-- Methodology -->
+        <div class="border-t border-gray-200 dark:border-gray-600 pt-3">
+          <div class="font-medium text-gray-700 dark:text-gray-300 mb-2">Methodology</div>
+          <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+            {impact.methodology}
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">
+            These estimates include uncertainty ranges to reflect the complexity of measuring AI environmental impact. 
+            Calculations are based on publicly available research and may not reflect actual infrastructure efficiency.
+          </p>
+        </div>
+      </div>
+    </details>
+  </div>
+)}
+
+<style>
+  .ai-impact-container details[open] summary {
+    margin-bottom: 0.5rem;
+  }
+  
+  .ai-impact-container summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  .ai-impact-container summary {
+    list-style: none;
+  }
+</style>

@@ -41,26 +41,30 @@ fi
 
 echo "✅ All content passed publication readiness check"
 
-# 2) Optional: Generate any missing translations that are needed
+# 2) Optional: Generate any missing translations that are needed (if API key available)
 echo "🔍 Checking for any last-minute translation needs..."
-if tsx scripts/translations/check_translations_registry.ts > translation-tasks.json 2>/dev/null; then
-  if [ -s translation-tasks.json ]; then
-    first_char=$(head -c 1 translation-tasks.json)
-    if [[ "$first_char" == "[" ]] || [[ "$first_char" == "{" ]]; then
-      if [ "$(cat translation-tasks.json)" != "[]" ]; then
-        echo "⚠️  Found missing translations - generating them now..."
-        cat translation-tasks.json | tsx scripts/translations/generate_translations_registry.ts
-        git add src/content
-        git commit -m "chore(i18n): add translations generated during pre-push" || true
-        echo "✅ Translations generated and committed"
-        echo "⚠️  Note: New translations require review before next deployment"
-      else
-        echo "✅ No translation tasks needed"
+if [ -z "${OPENAI_API_KEY:-}" ]; then
+  echo "ℹ️  No OpenAI API key - skipping automatic translation generation"
+  echo "   Missing translations will need to be generated manually later"
+else
+  if tsx scripts/translations/check_translations_registry.ts > translation-tasks.json 2>/dev/null; then
+    if [ -s translation-tasks.json ]; then
+      first_char=$(head -c 1 translation-tasks.json)
+      if [[ "$first_char" == "[" ]] || [[ "$first_char" == "{" ]]; then
+        if [ "$(cat translation-tasks.json)" != "[]" ]; then
+          echo "⚠️  Found missing translations - generating them now..."
+          cat translation-tasks.json | tsx scripts/translations/generate_translations_registry.ts
+          git add src/content
+          git commit -m "chore(i18n): add translations generated during pre-push" || true
+          echo "✅ Translations generated and committed"
+          echo "⚠️  Note: New translations require review before next deployment"
+        else
+          echo "✅ No translation tasks needed"
+        fi
       fi
     fi
   fi
+  rm -f translation-tasks.json
 fi
-
-rm -f translation-tasks.json
 
 echo "🎉 Push approved - content is ready for publication!"

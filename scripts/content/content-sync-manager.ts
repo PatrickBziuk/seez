@@ -49,7 +49,7 @@ class ContentSyncManager {
     { path: 'src/data/tags/tag-analysis.json', type: 'data', description: 'Tag analysis results' },
     { path: 'src/data/tags/tag-suggestions-report.json', type: 'data', description: 'Tag suggestions' },
     { path: 'src/data/tags/master-tag-registry.json', type: 'data', description: 'Master tag registry' },
-    { path: 'translation_tasks.json', type: 'cache', description: 'Translation tasks' },
+    { path: 'data/translation_tasks.json', type: 'cache', description: 'Translation tasks' },
     { path: 'data/content-registry.json', type: 'generated', description: 'Content registry' },
   ];
 

@@ -160,7 +160,8 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
     </div>
     <nav
       aria-label={locale === 'de' ? 'Hauptnavigation' : 'Main navigation'}
-      class="items-center w-full md:w-auto hidden md:flex md:mx-5 text-default overflow-y-auto overflow-x-hidden md:overflow-y-visible md:overflow-x-auto md:justify-self-center"
+      class="main-nav items-center w-full md:w-auto hidden md:flex md:mx-5 text-default overflow-y-auto overflow-x-hidden md:overflow-y-visible md:overflow-x-auto md:justify-self-center"
+      data-nav="desktop"
     >
       <ul
         class="nav-list flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium md:justify-center"
@@ -212,6 +213,62 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
         }
       </ul>
     </nav>
+    
+    <!-- Mobile Navigation -->
+    <nav
+      aria-label={locale === 'de' ? 'Mobile Navigation' : 'Mobile navigation'}
+      class="mobile-nav md:hidden w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg mt-2 hidden"
+      data-nav="mobile"
+      id="mobile-navigation"
+    >
+      <ul class="flex flex-col py-2">
+        {
+          links.map(({ text, href, links }: MenuLink) => (
+            <li>
+              {links?.length ? (
+                <div class="mobile-dropdown">
+                  <button
+                    type="button"
+                    aria-label={text}
+                    class="w-full text-left hover:bg-gray-100 dark:hover:bg-gray-700 px-4 py-3 flex items-center justify-between"
+                  >
+                    {text}
+                    <Icon name="tabler:chevron-down" class="w-4 h-4" />
+                  </button>
+                  <ul class="mobile-submenu hidden pl-4 bg-gray-50 dark:bg-gray-700">
+                    {links.map(({ text: text2, href: href2 }: MenuLink) => (
+                      <li>
+                        <a
+                          aria-label={text2}
+                          class:list={[
+                            'block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600',
+                            { 'active bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400': href2 === currentPath },
+                          ]}
+                          href={href2}
+                        >
+                          {text2}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <a
+                  aria-label={text}
+                  class:list={[
+                    'block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 border-l-4 border-transparent',
+                    { 'active bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400 border-blue-500': isLinkActive(href || '') },
+                  ]}
+                  href={href}
+                >
+                  {text}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
     <div
       class:list={[
         { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
@@ -249,3 +306,46 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
     </div>
   </div>
 </header>
+
+<script>
+  // Mobile navigation toggle functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.querySelector('[data-aw-toggle-menu]');
+    const mobileNav = document.getElementById('mobile-navigation');
+    
+    if (toggleButton && mobileNav) {
+      toggleButton.addEventListener('click', () => {
+        const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+        
+        // Toggle mobile nav visibility
+        mobileNav.classList.toggle('hidden');
+        
+        // Update button state
+        toggleButton.setAttribute('aria-expanded', !isExpanded ? 'true' : 'false');
+        toggleButton.classList.toggle('expanded');
+        
+        // Handle mobile dropdown toggles
+        const mobileDropdowns = mobileNav.querySelectorAll('.mobile-dropdown button');
+        mobileDropdowns.forEach(button => {
+          button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const submenu = button.nextElementSibling;
+            if (submenu) {
+              submenu.classList.toggle('hidden');
+              button.classList.toggle('expanded');
+            }
+          });
+        });
+      });
+      
+      // Close mobile nav when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!mobileNav.contains(e.target as Node) && !toggleButton.contains(e.target as Node)) {
+          mobileNav.classList.add('hidden');
+          toggleButton.setAttribute('aria-expanded', 'false');
+          toggleButton.classList.remove('expanded');
+        }
+      });
+    }
+  });
+</script>

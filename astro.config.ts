@@ -15,7 +15,7 @@ import astrowind from './vendor/integration';
 import pagefind from 'astro-pagefind';
 // import astroI18next from 'astro-i18next';
 
-import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter';
+import { readingTimeRemarkPlugin, remarkModifiedTime, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -62,9 +62,17 @@ export default defineConfig({
           removeAttributeQuotes: false,
         },
       },
-      Image: false,
+      Image: {
+        // Enable image compression for Plan 10030
+        sharp: {
+          jpeg: { quality: 85, progressive: true },
+          png: { quality: 85, progressive: true },
+          webp: { quality: 85 },
+          avif: { quality: 80 },
+        }
+      },
       JavaScript: true,
-      SVG: false,
+      SVG: true,
       Logger: 1,
     }),
 
@@ -86,10 +94,17 @@ export default defineConfig({
 
   image: {
     domains: ['cdn.pixabay.com'],
+    // Add service configuration for optimized image processing
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: {
+        limitInputPixels: 268402689, // ~16K x 16K pixels
+      }
+    }
   },
 
   markdown: {
-    remarkPlugins: [readingTimeRemarkPlugin],
+    remarkPlugins: [readingTimeRemarkPlugin, remarkModifiedTime],
     rehypePlugins: [responsiveTablesRehypePlugin, lazyImagesRehypePlugin],
   },
 
@@ -98,6 +113,26 @@ export default defineConfig({
       alias: {
         '~': path.resolve(__dirname, './src'),
       },
+    },
+    // T30-013: JavaScript bundle optimization
+    build: {
+      rollupOptions: {
+        output: {
+          // Code splitting for better caching
+          manualChunks: {
+            'vendor': ['astro/transitions', 'astro/client'],
+            'ui': ['astro-icon/components'],
+          },
+        },
+      },
+      // Enable minification
+      minify: 'esbuild',
+      // Source maps for debugging
+      sourcemap: false, // Disable in production for smaller bundles
+    },
+    // Tree shaking optimization
+    esbuild: {
+      drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
     },
   },
 });

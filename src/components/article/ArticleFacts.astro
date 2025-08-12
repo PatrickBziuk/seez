@@ -1,0 +1,225 @@
+---
+/**
+ * ArticleFacts - Unified metadata display component
+ * @props wordCount - Article word count (from frontmatter)
+ * @props readingTime - Reading time in minutes (from frontmatter)
+ * @props readingFormatted - Formatted reading time string (from frontmatter)
+ * @props publishDate - Article publish date
+ * @props lastModified - Last modified date (from frontmatter)
+ * @props canonicalId - Unique content identifier
+ * @props language - Current content language
+ * @props slug - Article slug for GitHub links
+ * @behavior Compact single line with optional details toggle
+ * @dependencies i18n utilities, GitHub integration, language counterpart detection
+ * @usedBy ArticleFooter for consolidated metadata display
+ */
+
+import { findLanguageCounterpart, getLanguageLabel, getLanguageFlag } from '../../utils/languageCounterpart';
+
+interface Props {
+  wordCount?: number;
+  readingTime?: number;
+  readingFormatted?: string;
+  publishDate?: Date | string;
+  lastModified?: string;
+  canonicalId?: string;
+  language?: string;
+  slug?: string;
+  showDetails?: boolean;
+}
+
+const {
+  wordCount,
+  readingTime,
+  readingFormatted,
+  publishDate,
+  lastModified,
+  canonicalId,
+  language = 'en',
+  slug,
+  showDetails = false,
+} = Astro.props;
+
+// Find language counterpart
+let languageCounterpart = null;
+if (canonicalId) {
+  languageCounterpart = await findLanguageCounterpart(canonicalId, language);
+}
+
+// Format dates for display
+function formatDate(date: Date | string | undefined): string {
+  if (!date) return 'Unknown';
+  const d = date instanceof Date ? date : new Date(date);
+  return d.toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+// Format the last modified date
+const lastModifiedDate = lastModified ? new Date(lastModified) : null;
+const publishedDate = publishDate ? (publishDate instanceof Date ? publishDate : new Date(publishDate)) : null;
+
+// Check if content has been updated (modified after publish)
+const isUpdated = lastModifiedDate && publishedDate && lastModifiedDate > publishedDate;
+
+// Generate GitHub edit URL
+const githubEditUrl = slug 
+  ? `https://github.com/PatrickBziuk/seez/edit/main/src/content/${slug.includes('/') ? slug : `misc/${slug}`}.md`
+  : null;
+---
+
+<div class="article-facts border-t border-gray-200 dark:border-gray-700 pt-4">
+  <details class="group" open={showDetails}>
+    <summary class="cursor-pointer select-none">
+      <div class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors">
+        <span class="group-open:rotate-90 transition-transform duration-200">▶</span>
+        <span class="font-medium">Article Details</span>
+        <span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+          {wordCount ? `${wordCount.toLocaleString()} words` : ''}
+          {wordCount && readingFormatted ? ' • ' : ''}
+          {readingFormatted || (readingTime ? `${readingTime} min` : '')}
+          {publishedDate ? ` • ${formatDate(publishedDate)}` : ''}
+        </span>
+      </div>
+    </summary>
+    
+    <div class="mt-3 pl-6 space-y-3 text-sm">
+      <!-- Content Statistics -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {wordCount && (
+          <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+            <div class="font-medium text-blue-900 dark:text-blue-200">Word Count</div>
+            <div class="text-lg font-bold text-blue-800 dark:text-blue-300">
+              {wordCount.toLocaleString()}
+            </div>
+            <div class="text-xs text-blue-700 dark:text-blue-400 mt-1">
+              {language === 'de' ? 'Wörter' : 'words'}
+            </div>
+          </div>
+        )}
+        
+        {(readingFormatted || readingTime) && (
+          <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+            <div class="font-medium text-green-900 dark:text-green-200">Reading Time</div>
+            <div class="text-lg font-bold text-green-800 dark:text-green-300">
+              {readingFormatted || `${readingTime} min`}
+            </div>
+            <div class="text-xs text-green-700 dark:text-green-400 mt-1">
+              {language === 'de' ? 'Lesezeit' : 'estimated'}
+            </div>
+          </div>
+        )}
+        
+        {language && (
+          <div class="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
+            <div class="font-medium text-purple-900 dark:text-purple-200">Language</div>
+            <div class="text-lg font-bold text-purple-800 dark:text-purple-300 flex items-center gap-2">
+              <span>{getLanguageFlag(language)}</span>
+              <span>{language.toUpperCase()}</span>
+            </div>
+            <div class="text-xs text-purple-700 dark:text-purple-400 mt-1">
+              {languageCounterpart && (
+                <a 
+                  href={languageCounterpart.url} 
+                  class="hover:underline"
+                  title={`${language === 'de' ? 'Verfügbar in' : 'Available in'} ${getLanguageLabel(languageCounterpart.language, language)}`}
+                >
+                  {getLanguageFlag(languageCounterpart.language)} {getLanguageLabel(languageCounterpart.language, language)}
+                  {languageCounterpart.status === 'outdated' && (
+                    <span class="ml-1 text-orange-500">⚠️</span>
+                  )}
+                </a>
+              )}
+              {!languageCounterpart && (
+                <span>{language === 'de' ? 'Nur auf Deutsch' : 'English only'}</span>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- Publication Information -->
+      {(publishedDate || lastModifiedDate) && (
+        <div class="border-t border-gray-200 dark:border-gray-600 pt-3">
+          <div class="font-medium text-gray-700 dark:text-gray-300 mb-2">
+            {language === 'de' ? 'Veröffentlichung' : 'Publication'}
+          </div>
+          <div class="space-y-2 text-xs">
+            {publishedDate && (
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600 dark:text-gray-400">
+                  {language === 'de' ? 'Erstveröffentlichung:' : 'First published:'}
+                </span>
+                <span class="font-medium">{formatDate(publishedDate)}</span>
+              </div>
+            )}
+            {isUpdated && lastModifiedDate && (
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600 dark:text-gray-400">
+                  {language === 'de' ? 'Zuletzt aktualisiert:' : 'Last updated:'}
+                </span>
+                <span class="font-medium text-orange-600 dark:text-orange-400">
+                  {formatDate(lastModifiedDate)}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      <!-- Technical Information -->
+      <div class="border-t border-gray-200 dark:border-gray-600 pt-3">
+        <div class="font-medium text-gray-700 dark:text-gray-300 mb-2">
+          {language === 'de' ? 'Technische Details' : 'Technical Details'}
+        </div>
+        <div class="space-y-2 text-xs">
+          {canonicalId && (
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 dark:text-gray-400">
+                {language === 'de' ? 'Artikel-ID:' : 'Article ID:'}
+              </span>
+              <button 
+                class="font-mono text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                onclick={`navigator.clipboard.writeText('${canonicalId}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = '${canonicalId}', 1000)`}
+                title={language === 'de' ? 'Klicken zum Kopieren' : 'Click to copy'}
+              >
+                {canonicalId}
+              </button>
+            </div>
+          )}
+          {githubEditUrl && (
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600 dark:text-gray-400">
+                {language === 'de' ? 'Quelle:' : 'Source:'}
+              </span>
+              <a 
+                href={githubEditUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                {language === 'de' ? 'Auf GitHub bearbeiten' : 'Edit on GitHub'}
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </details>
+</div>
+
+<style>
+  .article-facts details[open] summary {
+    margin-bottom: 0.5rem;
+  }
+  
+  .article-facts summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  .article-facts summary {
+    list-style: none;
+  }
+</style>

@@ -90,10 +90,16 @@ const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
     <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
       {
         socialLinks?.length ? (
-          <ul>
+          <ul class="flex items-center gap-4">
             {socialLinks.map(({ ariaLabel, href, text, icon }: Link) => (
               <li>
-                <a href={href} aria-label={ariaLabel || text}>
+                <a 
+                  href={href} 
+                  aria-label={ariaLabel || text}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
+                >
                   {icon && <Icon name={icon} class="w-5 h-5" />}
                   {text}
                 </a>

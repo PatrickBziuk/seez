@@ -1,0 +1,176 @@
+---
+/**
+ * SocialShareFooter - Enhanced social sharing for article footer with integrated tags
+ * @props text - Share text content
+ * @props url - Share URL
+ * @props language - Content language for localized labels
+ * @props tags - Article tags to display
+ * @behavior Three-row design: Social sharing → Follow updates → Tags
+ * @dependencies astro-icon/components, Badge component, i18n utilities
+ * @usedBy ArticleFooter for prominent social sharing and tag display
+ */
+
+import { Icon } from 'astro-icon/components';
+import Badge from '../ui/display/Badge.astro';
+import { getTranslations, detectLanguage } from '~/utils/i18n';
+
+interface Props {
+  text: string;
+  url: string | URL;
+  language?: string;
+  compact?: boolean;
+  tags?: string[];
+}
+
+const { text, url, language = 'en', compact = false, tags = [] } = Astro.props;
+
+const currentLanguage = detectLanguage(Astro.url.pathname);
+const translations = await getTranslations(currentLanguage);
+
+const shareLabel = language === 'de' ? 'Teilen' : 'Share this article';
+const followLabel = language === 'de' ? 'Für Updates folgen' : 'Follow for updates';
+const topicsLabel = language === 'de' ? 'Themen' : 'Topics';
+
+const platforms = [
+  {
+    name: 'Twitter/X',
+    icon: 'tabler:brand-x',
+    href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url.toString())}`,
+    label: 'X',
+  },
+  {
+    name: 'LinkedIn',
+    icon: 'tabler:brand-linkedin',
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url.toString())}`,
+    label: 'LinkedIn',
+  },
+  {
+    name: 'Mastodon',
+    icon: 'tabler:brand-mastodon',
+    href: `https://mastodon.social/share?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url.toString())}`,
+    label: 'Mastodon',
+  },
+  {
+    name: 'WhatsApp',
+    icon: 'tabler:brand-whatsapp',
+    href: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url.toString())}`,
+    label: 'WhatsApp',
+  },
+  {
+    name: 'Email',
+    icon: 'tabler:mail',
+    href: `mailto:?subject=${encodeURIComponent(text)}&body=${encodeURIComponent(text + '\n\n' + url.toString())}`,
+    label: language === 'de' ? 'E-Mail' : 'Email',
+  },
+];
+
+const followPlatforms = [
+  {
+    name: 'RSS Feed',
+    icon: 'tabler:rss',
+    href: language === 'de' ? '/de/rss.xml' : '/en/rss.xml',
+    label: 'RSS',
+  },
+  {
+    name: 'Newsletter',
+    icon: 'tabler:mail-forward',
+    href: language === 'de' ? '/de/newsletter' : '/en/newsletter',
+    label: language === 'de' ? 'Newsletter' : 'Newsletter',
+  },
+];
+---
+
+<div class="social-share-footer bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+  {!compact && (
+    <div class="space-y-6">
+      <!-- Row 1: Share Section (Minimalistic) -->
+      <div>
+        <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{shareLabel}</h3>
+        <div class="flex flex-wrap gap-2">
+          {platforms.map((platform) => (
+            <a
+              href={platform.href}
+              target={platform.name !== 'Email' ? '_blank' : undefined}
+              rel={platform.name !== 'Email' ? 'noopener noreferrer' : undefined}
+              class="inline-flex items-center gap-2 px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
+              title={`Share on ${platform.name}`}
+              aria-label={`Share on ${platform.name}${platform.name !== 'Email' ? ' (opens in new tab)' : ''}`}
+            >
+              <Icon
+                name={platform.icon}
+                class="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300"
+              />
+              <span class="text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200">
+                {platform.label}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Row 2: Follow Section -->
+      <div>
+        <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{followLabel}</h3>
+        <div class="flex flex-wrap gap-2">
+          {followPlatforms.map((platform) => (
+            <a
+              href={platform.href}
+              class="inline-flex items-center gap-2 px-3 py-2 text-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors group"
+              title={platform.name}
+            >
+              <Icon
+                name={platform.icon}
+                class="w-4 h-4 text-blue-600 dark:text-blue-400"
+              />
+              <span class="text-blue-700 dark:text-blue-300">
+                {platform.label}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Row 3: Tags Section -->
+      {tags.length > 0 && (
+        <div>
+          <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{topicsLabel}</h3>
+          <div class="flex flex-wrap gap-2">
+            {tags.map((tag: string) => (
+              <a
+                href={`/${language}/tags/${encodeURIComponent(tag)}`}
+                class="focus:outline-none transition-transform hover:scale-105"
+              >
+                <Badge 
+                  variant="tag" 
+                  text={translations?.tags?.[tag] || tag}
+                  class="text-xs"
+                />
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )}
+
+  {compact && (
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="text-sm font-medium text-gray-600 dark:text-gray-400 mr-2">{shareLabel}:</span>
+      {platforms.map((platform) => (
+        <a
+          href={platform.href}
+          target={platform.name !== 'Email' ? '_blank' : undefined}
+          rel={platform.name !== 'Email' ? 'noopener noreferrer' : undefined}
+          class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          title={`Share on ${platform.name}`}
+          aria-label={`Share on ${platform.name}${platform.name !== 'Email' ? ' (opens in new tab)' : ''}`}
+        >
+          <Icon
+            name={platform.icon}
+            class="w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+          />
+        </a>
+      ))}
+    </div>
+  )}
+</div>

@@ -23,7 +23,8 @@ const {
   autoExpandTldr = false, 
   authors = [], 
   translators = [],
-  content = ''
+  content = '',
+  entry = null
 } = Astro.props;
 const currentLanguage = detectLanguage(Astro.url.pathname);
 const translations = await getTranslations(currentLanguage);
@@ -81,6 +82,11 @@ const showModifiedDate = modifiedDateObj && publishDateObj &&
 // Calculate reading statistics
 const wordCount = content ? getWordCount(content) : 0;
 const readingTime = wordCount > 0 ? getReadingTime(wordCount) : null;
+
+// Create source URL for GitHub (if entry is provided)
+const sourceUrl = entry 
+  ? `https://github.com/PatrickBziuk/seez/tree/main/src/content/${entry.collection}/${entry.id.replace('.md', '').replace('.mdx', '')}`
+  : null;
 
 // TLDR processing for markdown
 let tldrFull = '';
@@ -168,11 +174,34 @@ interface AuthorData {
         </div>
       )}
       
+      <!-- Word Count -->
+      {wordCount > 0 && (
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">📝</span>
+          <span class="text-xs font-medium">{wordCount.toLocaleString()} words</span>
+        </div>
+      )}
+      
       <!-- Reading Time -->
       {readingTime && (
         <div class="flex items-center gap-1.5">
           <span class="text-base">📖</span>
           <span class="text-xs font-medium">{readingTime.formatted} {translations?.metadata?.read || 'read'}</span>
+        </div>
+      )}
+      
+      <!-- View Source -->
+      {sourceUrl && (
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">🔗</span>
+          <a 
+            href={sourceUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-xs font-medium underline underline-offset-2 hover:no-underline"
+          >
+            View source
+          </a>
         </div>
       )}
       

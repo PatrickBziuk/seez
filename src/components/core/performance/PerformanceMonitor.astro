@@ -1,0 +1,241 @@
+---
+/**
+ * PerformanceMonitor - Real-time performance monitoring and regression detection
+ * @props enabled, debug, thresholds
+ * @behavior Monitors Core Web Vitals and sends alerts on regression
+ * @dependencies Web Performance API, localStorage for persistence
+ * @usedBy Layout.astro for site-wide performance monitoring
+ */
+
+export interface Props {
+  enabled?: boolean;
+  debug?: boolean;
+  thresholds?: {
+    fcp?: number;  // First Contentful Paint (ms)
+    fid?: number;  // First Input Delay (ms)
+    cls?: number;  // Cumulative Layout Shift
+    lcp?: number;  // Largest Contentful Paint (ms)
+  };
+}
+
+const {
+  enabled = true,
+  debug = false,
+  thresholds = {
+    fcp: 1800,
+    fid: 100,
+    cls: 0.1,
+    lcp: 2500
+  }
+} = Astro.props;
+---
+
+{enabled && (
+  <script define:vars={{ debug, thresholds }}>
+    // Performance monitoring with regression detection
+    class PerformanceMonitor {
+      constructor(thresholds, debug = false) {
+        this.thresholds = thresholds;
+        this.debug = debug;
+        this.metrics = {};
+        this.storageKey = 'perf_monitor_history';
+        this.init();
+      }
+
+      init() {
+        // Wait for page load
+        if (document.readyState === 'loading') {
+          window.addEventListener('DOMContentLoaded', () => this.startMonitoring());
+        } else {
+          this.startMonitoring();
+        }
+      }
+
+      startMonitoring() {
+        this.observePerformance();
+        this.measureCustomMetrics();
+        
+        // Report after page interaction
+        setTimeout(() => this.reportMetrics(), 3000);
+      }
+
+      observePerformance() {
+        // Core Web Vitals observation
+        if ('PerformanceObserver' in window) {
+          // FCP and LCP
+          const paintObserver = new PerformanceObserver((list) => {
+            list.getEntries().forEach(entry => {
+              if (entry.name === 'first-contentful-paint') {
+                this.metrics.fcp = entry.startTime;
+              }
+            });
+          });
+          paintObserver.observe({ type: 'paint', buffered: true });
+
+          // LCP
+          const lcpObserver = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            const lastEntry = entries[entries.length - 1];
+            this.metrics.lcp = lastEntry.startTime;
+          });
+          lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+
+          // FID
+          const fidObserver = new PerformanceObserver((list) => {
+            list.getEntries().forEach(entry => {
+              this.metrics.fid = entry.processingStart - entry.startTime;
+            });
+          });
+          fidObserver.observe({ type: 'first-input', buffered: true });
+
+          // CLS
+          let clsValue = 0;
+          const clsObserver = new PerformanceObserver((list) => {
+            list.getEntries().forEach(entry => {
+              if (!entry.hadRecentInput) {
+                clsValue += entry.value;
+              }
+            });
+            this.metrics.cls = clsValue;
+          });
+          clsObserver.observe({ type: 'layout-shift', buffered: true });
+        }
+      }
+
+      measureCustomMetrics() {
+        // Bundle size estimation
+        this.metrics.resourceCount = performance.getEntriesByType('resource').length;
+        
+        // Critical resource timing
+        const navigation = performance.getEntriesByType('navigation')[0];
+        if (navigation) {
+          this.metrics.domContentLoaded = navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart;
+          this.metrics.loadComplete = navigation.loadEventEnd - navigation.loadEventStart;
+        }
+
+        // JavaScript execution time
+        const scriptResources = performance.getEntriesByType('resource').filter(r => r.name.includes('.js'));
+        this.metrics.scriptLoadTime = scriptResources.reduce((sum, script) => sum + script.duration, 0);
+      }
+
+      reportMetrics() {
+        const report = {
+          timestamp: Date.now(),
+          url: window.location.pathname,
+          userAgent: navigator.userAgent,
+          viewport: {
+            width: window.innerWidth,
+            height: window.innerHeight
+          },
+          metrics: this.metrics,
+          regressions: this.detectRegressions()
+        };
+
+        this.storeMetrics(report);
+        
+        if (this.debug) {
+          console.group('🔍 Performance Monitor Report');
+          console.table(this.metrics);
+          console.log('Thresholds:', this.thresholds);
+          console.log('Regressions:', report.regressions);
+          console.groupEnd();
+        }
+
+        // Send alerts for critical regressions
+        if (report.regressions.length > 0) {
+          this.sendAlert(report);
+        }
+      }
+
+      detectRegressions() {
+        const regressions = [];
+        const history = this.getStoredMetrics();
+        
+        if (history.length < 2) return regressions;
+
+        const baseline = this.calculateBaseline(history.slice(-5)); // Last 5 measurements
+        
+        Object.entries(this.thresholds).forEach(([metric, threshold]) => {
+          const current = this.metrics[metric];
+          const baselineValue = baseline[metric];
+          
+          if (current && baselineValue) {
+            const regression = ((current - baselineValue) / baselineValue) * 100;
+            
+            if (current > threshold || regression > 20) { // 20% regression threshold
+              regressions.push({
+                metric,
+                current: Math.round(current * 100) / 100,
+                baseline: Math.round(baselineValue * 100) / 100,
+                threshold,
+                regression: Math.round(regression * 10) / 10
+              });
+            }
+          }
+        });
+
+        return regressions;
+      }
+
+      calculateBaseline(measurements) {
+        const baseline = {};
+        
+        Object.keys(this.thresholds).forEach(metric => {
+          const values = measurements
+            .map(m => m.metrics[metric])
+            .filter(v => v !== undefined && v !== null);
+          
+          if (values.length > 0) {
+            baseline[metric] = values.reduce((sum, val) => sum + val, 0) / values.length;
+          }
+        });
+
+        return baseline;
+      }
+
+      storeMetrics(report) {
+        try {
+          const history = this.getStoredMetrics();
+          history.push(report);
+          
+          // Keep only last 20 measurements
+          const trimmed = history.slice(-20);
+          
+          localStorage.setItem(this.storageKey, JSON.stringify(trimmed));
+        } catch (e) {
+          // localStorage not available or full
+          if (this.debug) console.warn('Failed to store metrics:', e);
+        }
+      }
+
+      getStoredMetrics() {
+        try {
+          const stored = localStorage.getItem(this.storageKey);
+          return stored ? JSON.parse(stored) : [];
+        } catch {
+          return [];
+        }
+      }
+
+      sendAlert(report) {
+        // Console warning for now - can be extended to send to monitoring service
+        console.warn('🚨 Performance regression detected:', report.regressions);
+        
+        // Could integrate with services like:
+        // - DataDog, New Relic, Sentry
+        // - Custom webhook endpoint
+        // - Browser notification API
+        
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Performance Alert', {
+            body: `${report.regressions.length} regression(s) detected`,
+            icon: '/favicon.svg'
+          });
+        }
+      }
+    }
+
+    // Initialize monitor
+    new PerformanceMonitor(thresholds, debug);
+  </script>
+)}

@@ -1,4 +1,11 @@
 ---
+/**
+ * Image - Optimized image component with lazy loading and intersection observer
+ * @props src, alt, width, height, loading, decoding, priority
+ * @behavior Enhanced lazy loading with intersection observer for better performance
+ * @dependencies astro assets, unpic, findImage utility
+ * @usedBy Various components for displaying optimized images
+ */
 import type { HTMLAttributes } from 'astro/types';
 import { findImage } from '~/utils/images';
 import {
@@ -9,7 +16,12 @@ import {
   type ImageProps,
 } from '~/utils/images-optimization';
 
-type Props = ImageProps;
+type Props = ImageProps & {
+  priority?: boolean;
+  observerRoot?: string;
+  observerRootMargin?: string;
+  observerThreshold?: number;
+};
 type ImageType = {
   src: string;
   attributes: HTMLAttributes<'img'>;
@@ -29,8 +41,13 @@ if (typeof props.height === 'string') {
   props.height = parseInt(props.height);
 }
 
+// Enhanced loading strategy
 if (!props.loading) {
-  props.loading = 'lazy';
+  if (props.priority) {
+    props.loading = 'eager';
+  } else {
+    props.loading = 'lazy';
+  }
 }
 
 if (!props.decoding) {
@@ -50,12 +67,60 @@ if (
 } else if (_image) {
   image = await getImagesOptimized(_image, props, astroAssetsOptimizer);
 }
+
+// Generate unique ID for intersection observer
+const imageId = `img-${Math.random().toString(36).substr(2, 9)}`;
+const rootMargin = props.observerRootMargin || '50px';
+const threshold = props.observerThreshold || 0.1;
 ---
 
 {
   !image ? (
     <Fragment />
   ) : (
-    <img src={image.src} crossorigin="anonymous" referrerpolicy="no-referrer" {...image.attributes} />
+    <img 
+      id={imageId}
+      src={image.src} 
+      crossorigin="anonymous" 
+      referrerpolicy="no-referrer"
+      data-priority={props.priority ? 'true' : 'false'}
+      {...image.attributes} 
+    />
   )
 }
+
+{!props.priority && (
+  <script define:vars={{ imageId, rootMargin, threshold }}>
+    // Enhanced intersection observer for lazy loading
+    if ('IntersectionObserver' in window) {
+      const img = document.getElementById(imageId);
+      if (img && img.loading === 'lazy') {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const target = entry.target;
+              // Preload next images for smoother scrolling
+              const nextImages = document.querySelectorAll('img[loading="lazy"]:not([data-observed])');
+              for (let i = 0; i < Math.min(2, nextImages.length); i++) {
+                const nextImg = nextImages[i];
+                if (nextImg && nextImg !== target) {
+                  nextImg.setAttribute('data-observed', 'true');
+                  // Force browser to load the image
+                  const src = nextImg.src;
+                  nextImg.src = '';
+                  nextImg.src = src;
+                }
+              }
+              observer.unobserve(target);
+            }
+          });
+        }, {
+          rootMargin: rootMargin,
+          threshold: threshold
+        });
+        
+        observer.observe(img);
+      }
+    }
+  </script>
+)}

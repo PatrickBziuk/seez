@@ -33,10 +33,11 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+const cleanSlug = entry.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
 
 const { Content } = await render(entry);
 ---
 
-<MarkdownLayout frontmatter={entry.data}>
+<MarkdownLayout frontmatter={entry.data} entry={{ collection: 'projects', slug: cleanSlug, id: entry.id }}>
   <Content />
 </MarkdownLayout>

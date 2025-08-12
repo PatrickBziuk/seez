@@ -1,34 +1,258 @@
+## ✅ COMPLETED: Root Directory Cleanup & Organization (see plan-10032-root-directory-cleanup.md)
+
+**Status**: ✅ IMPLEMENTATION COMPLETE - ROOT DIRECTORY CLEANED AND ORGANIZED  
+**Date**: August 12, 2025  
+**Implementation Time**: ~30 minutes  
+**Plan**: `docs/plan-10032-root-directory-cleanup.md`
+
+### ✅ Implementation Tasks Completed
+
+#### **Phase 1: Safe Removals**
+- [x] **T32-001**: Remove development log files (`stderr.log`)
+- [x] **T32-002**: Remove empty test files (`test_translation_tasks_small.json`, `translation_tasks_debug.json`)
+- [x] **T32-003**: Remove development test scripts (`test-i18n.mjs`, `test-reading-stats.js`, `test-urls.js`)
+- [x] **T32-004**: Remove completed migration script (`update-imports.mjs`)
+
+#### **Phase 2: File Relocations**  
+- [x] **T32-005**: Move `vscode.tailwind.json` to `.vscode/tailwind.json`
+- [x] **T32-006**: Update `.vscode/settings.json` to reference new location
+- [x] **T32-007**: Move `translation_tasks.json` to `data/translation_tasks.json`
+- [x] **T32-008**: Update script references in `content-sync-manager.ts`
+
+#### **Phase 3: Configuration Evaluation**
+- [x] **T32-009**: Remove unused `sandbox.config.json` (no CodeSandbox integration found)
+- [x] **T32-010**: Verify no dependencies on removed files
+
+#### **Phase 4: Prevention Measures**
+- [x] **T32-011**: Update `.gitignore` with cleanup patterns to prevent future clutter
+- [x] **T32-012**: Test build and deployment after cleanup (successful)
+
+### Results Achieved
+
+**Files Removed** (8 files):
+- ✅ `stderr.log` - Development log output
+- ✅ `test_translation_tasks_small.json` - Empty test file
+- ✅ `translation_tasks_debug.json` - Empty debug file
+- ✅ `test-i18n.mjs` - Development test script
+- ✅ `test-reading-stats.js` - Development test script
+- ✅ `test-urls.js` - Development test script
+- ✅ `update-imports.mjs` - Completed migration script
+- ✅ `sandbox.config.json` - Unused CodeSandbox configuration
+
+**Files Relocated** (2 files):
+- ✅ `vscode.tailwind.json` → `.vscode/tailwind.json`
+- ✅ `translation_tasks.json` → `data/translation_tasks.json`
+
+**Configuration Updates**:
+- ✅ Updated `.vscode/settings.json` to reference new tailwind.json location
+- ✅ Updated `scripts/content/content-sync-manager.ts` for moved translation_tasks.json
+- ✅ Enhanced `.gitignore` with patterns to prevent future root directory clutter
+
+**Validation Results**:
+- ✅ Build passes successfully (no errors)
+- ✅ All dependencies verified (no broken references)
+- ✅ VS Code integration still works properly
+- ✅ Translation pipeline continues to function
+
+### Key Benefits Delivered
+
+1. **Cleaner Root Directory**: Reduced from 32 to 24 files (25% reduction)
+2. **Better Organization**: Files in appropriate locations (`.vscode/`, `data/`)
+3. **Improved Maintainability**: No stale development artifacts
+4. **Enhanced Developer Experience**: Easier to find important configuration files
+5. **Future Prevention**: `.gitignore` patterns prevent similar clutter
+6. **Build Safety**: All functionality preserved and tested
+
+---
+
+## 🚀 Article Footer Refactoring - Modern, Scannable & Transparent (see plan-10031-article-footer-refactoring.md)
+
+**Status**: 📋 READY FOR IMPLEMENTATION  
+**Date**: August 11, 2025  
+**Plan**: `docs/plan-10031-article-footer-refactoring.md`
+
+### 🎯 Vision & Goals
+
+**Transform article endings from messy accumulation to scannable, honest, and user-friendly experience**
+
+**New Structure (Priority Order)**:
+1. **Share & Follow** - Single row with icons + labels (most engaged readers)
+2. **Article Facts** - Compact line + details toggle (word count, dates, language switcher)  
+3. **AI Usage & Environmental Impact** - Default collapsed, transparent methodology
+4. **Tags** - Moved to top of article under deck/summary (discovery-focused)
+5. **License & Timestamp** - Tiny footer line
+
+### 📋 Implementation Phases
+
+#### **Phase 1: Enhanced Remark Plugins (Days 1-2)**
+- [ ] **T31-001**: Word Count & Reading Time Plugin (auto-inject via remark)
+- [ ] **T31-002**: Git-Based Last Modified Plugin (remark with Git log fallback)
+- [ ] **T31-003**: Astro Config Plugin Integration (wire into existing pipeline)
+
+#### **Phase 2: AI Metrics & Environmental Impact (Days 3-4)**  
+- [ ] **T31-004**: AI Metrics JSON Structure (`src/data/ai-metrics.json` with canonical IDs)
+- [ ] **T31-005**: Enhanced AI Impact Utilities (transparent range-based calculations)
+- [ ] **T31-006**: AIImpact Component (collapsible, honest environmental display)
+
+#### **Phase 3: Article Facts & Metadata Consolidation (Days 5-6)**
+- [ ] **T31-007**: Enhanced ArticleFacts Component (unified metadata display)
+- [ ] **T31-008**: Language Counterpart Detection (canonical ID system integration)
+- [ ] **T31-009**: Social Share Enhancement (prominent top placement)
+
+#### **Phase 4: New ArticleFooter Component (Days 7-8)**
+- [ ] **T31-010**: Complete ArticleFooter Rewrite (new ordered structure)
+- [ ] **T31-011**: Footer Integration & Testing (wire into all layouts)
+
+#### **Phase 5: Tags Repositioning & Enhancement (Days 9-10)**  
+- [ ] **T31-012**: Tags Section Relocation (move to top under title/deck)
+- [ ] **T31-013**: Enhanced Tags Design (discovery-focused presentation)
+
+#### **Phase 6: Integration & Polish (Days 11-12)**
+- [ ] **T31-014**: Complete Layout Integration (all content types)
+- [ ] **T31-015**: Testing & Validation (comprehensive testing)
+
+---
+
+## 🧪 ACTIVE: Test Optimization Implementation (see plan-10030-test-optimization.md)
+
+**Status**: 📋 READY FOR IMPLEMENTATION  
+**Date**: August 11, 2025  
+**Plan**: `docs/plan-10030-test-optimization.md`
+
+### 🎯 Optimization Goals
+
+**Target**: Achieve >95% test success rate across all test suites
+
+**Performance Targets**:
+- CSS Bundle: 144KB → 100KB (-30%)
+- Page Weight: 2.3MB → 2MB (-13%)
+- FID: 200-300ms → <100ms (-50-67%)
+
+### 📋 Implementation Phases
+
+#### **Phase 1: Navigation & Mobile Fixes (Days 1-2)**
+- [ ] **T30-001**: Fix Mobile Navigation Visibility (`hidden md:flex` → responsive alternatives)
+- [ ] **T30-002**: Fix Language Switcher Component (mobile responsive design)
+- [ ] **T30-003**: Add missing `target="_blank"` to social links
+- [ ] **T30-004**: Test responsive navigation patterns
+
+#### **Phase 2: Performance Optimization (Days 3-5)**
+- [ ] **T30-005**: CSS Bundle Size Optimization (144KB→100KB)
+- [ ] **T30-006**: Page Weight Optimization (2.3MB→2MB)
+- [ ] **T30-007**: Image optimization and lazy loading
+- [ ] **T30-008**: Font loading optimization
+
+#### **Phase 3: Test Configuration Improvements (Days 6-7)**
+- [ ] **T30-009**: Update Performance Budgets (realistic targets)
+- [ ] **T30-010**: Improve Test Selectors (responsive design compatibility)
+- [ ] **T30-011**: Enhanced Mobile Test Coverage
+- [ ] **T30-012**: Cross-browser consistency improvements
+
+#### **Phase 4: FID & Interaction Optimization (Days 8-9)**
+- [ ] **T30-013**: JavaScript Bundle Optimization
+- [ ] **T30-014**: Third-party Script Optimization
+- [ ] **T30-015**: Critical CSS Inlining
+- [ ] **T30-016**: Interaction delay reduction
+
+#### **Phase 5: Monitoring & Reporting (Day 10)**
+- [ ] **T30-017**: Enhanced Performance Dashboard
+- [ ] **T30-018**: Regression Detection Improvements
+- [ ] **T30-019**: Test Result Analytics
+- [ ] **T30-020**: Documentation Updates
+
+### 🔧 Technical Focus Areas
+
+**Immediate Fixes**:
+- Mobile navigation visibility (`hidden md:flex` pattern)
+- Language switcher responsive behavior
+- Social link accessibility (`target="_blank"`)
+
+**Performance Optimization**:
+- CSS tree shaking and minification
+- Image compression and format optimization
+- JavaScript code splitting and lazy loading
+- Font display optimization
+
+**Test Framework Enhancement**:
+- Realistic performance budget thresholds
+- Responsive-aware test selectors
+- Enhanced mobile testing patterns
+
+### 📊 Test Results Analysis (from Plan 10029 execution)
+
+**Issues Identified for Optimization**:
+- 🔧 **CSS Bundle Size**: 144KB vs 100KB target (40% oversized)
+- 🔧 **Page Weight**: 2.3MB vs 2MB target (13% oversized)
+- 🔧 **FID Performance**: 200-300ms vs 100ms target (50-67% slower)
+- 🔧 **Mobile Navigation**: `hidden md:flex` classes causing test failures
+- 🔧 **Language Switcher**: Visibility issues on mobile devices
+- 🔧 **Social Links**: Missing `target="_blank"` attributes
+
+**Framework Success Rates**:
+- ✅ **Performance Monitoring**: 79/80 tests passed (98.75% success rate)
+- ✅ **Component Testing**: 1157/1240 tests passed (93% success rate)  
+- ✅ **Core Web Vitals**: 128/180 tests passed (71% success rate)
+
+---
+
+## 🧪 ACTIVE: Comprehensive Testing Strategy Implementation (see plan-10029-comprehensive-testing-strategy.md)
+
+**Status**: 📋 PLANNING COMPLETE - READY FOR IMPLEMENTATION  
+**Date**: August 11, 2025  
+**Plan**: `docs/plan-10029-comprehensive-testing-strategy.md`
+
+### � Testing Strategy Overview
+
+**Goal**: Implement a 4-tier testing framework that validates all critical functionality while creating GitHub issues for failures instead of blocking deployments.
+
+**Philosophy**: **"Test everything, block nothing, inform always"**
+
+### 📋 Implementation Tasks
+
+#### **Phase 1: Content Pipeline Testing (Week 1)**
+- [ ] **T29-001**: Translation Quality Validation (`scripts/ci/test-translation-quality.ts`)
+- [ ] **T29-002**: Content Structure Validation (`scripts/ci/test-content-structure.ts`)
+- [ ] **T29-003**: AI Pipeline Health Check (`scripts/ci/test-ai-pipeline.ts`)
+
+#### **Phase 2: Core Functionality Testing (Week 1)**
+- [ ] **T29-004**: Enhanced E2E Testing Suite (Language switching, Dark mode, RSS feeds)
+- [ ] **T29-005**: Cross-Browser Compatibility (Chrome, Firefox, Safari + Mobile)
+
+#### **Phase 3: UI Component Testing (Week 2)**
+- [ ] **T29-006**: Interactive Component Testing (TLDR, Metadata, Social share)
+- [ ] **T29-007**: Responsive Design Validation (Mobile, tablet, desktop layouts)
+
+#### **Phase 4: Performance & Monitoring (Week 2)**
+- [ ] **T29-008**: Performance Testing (Bundle analysis, Core Web Vitals)
+- [ ] **T29-009**: SEO & Accessibility Monitoring (Meta tags, hreflang, WCAG)
+
+#### **Phase 5: CI/CD Integration (Week 3)**
+- [ ] **T29-010**: Non-blocking GitHub Actions workflow integration
+- [ ] **T29-011**: Test report generation and issue creation system
+- [ ] **T29-012**: Package.json script organization and documentation
+
+### 🔧 Technical Architecture
+
+**4-Tier Testing Strategy**:
+1. **Tier 1**: Content & Pipeline Validation (Pre-commit + CI)
+2. **Tier 2**: Core Site Functionality (Every CI run)  
+3. **Tier 3**: UI Component & Interaction Testing (Every CI run)
+4. **Tier 4**: Performance & SEO Monitoring (Daily + major deployments)
+
+**Key Features**:
+- ✅ All tests create GitHub issues on failure (never block deployment)
+- ✅ Comprehensive reporting with actionable recommendations
+- ✅ Cross-browser and responsive testing
+- ✅ AI pipeline validation and quality checks
+- ✅ Performance monitoring and regression detection
+
+---
+
 ## ✅ COMPLETED: Fix Redirect Loop Issue (see plan-10028-redirect-loop-resolution.md)
 
 **Status**: ✅ IMPLEMENTATION COMPLETE - ALL ROUTING ISSUES RESOLVED  
 **Date**: August 7, 2025  
 **Implementation Time**: ~60 minutes
-
-### 🎉 Problem Completely Resolved
-
-**ISSUE**: ERR_TOO_MANY_REDIRECTS when accessing any URL (localhost:4321, /en, /de)
-
-- Site completely inaccessible due to redirect loop
-- Multiple conflicting routing mechanisms
-
-**ROOT CAUSE**: Multiple redirect mechanisms competing:
-
-1. ✅ Astro config redirects (REMOVED)
-2. ❌ Empty static route files (DELETED)
-3. ❌ Conflicting redirect page (DELETED)
-4. ✅ Dynamic routes working correctly
-
-### ✅ Implementation Tasks Completed
-
-- [x] **T28-001**: Remove redirect loop causes from `astro.config.ts`
-- [x] **T28-002**: Delete empty conflicting static route files (`/en/index.astro`, `/de/index.astro`, `/en.astro`)
-- [x] **T28-003**: Clean up debug code from production components (Header.astro, books/[slug].astro)
-- [x] **T28-004**: Make debug components dev-mode only using `import.meta.env.DEV`
-- [x] **T28-005**: Test basic site accessibility (/, /en, /de) - ALL WORKING
-- [x] **T28-006**: Verify logo navigation works correctly - FUNCTIONAL
-- [x] **T28-007**: Confirm trailing slash handling works via Astro's built-in `trailingSlash: 'never'` - WORKING
-
-### Key Technical Changes
 
 1. **Removed Config Redirects**: Eliminated circular redirects from `astro.config.ts`
 2. **Deleted Conflicting Files**: Removed all empty/conflicting static route files
