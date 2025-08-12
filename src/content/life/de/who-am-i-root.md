@@ -54,18 +54,18 @@ ai_metadata:
       canonicalId: slug-20250805-2e3f9452
       model: gpt-4o-mini
       inputTokens: 910
-      outputTokens: 954
-      totalTokens: 1864
-      cost: 0.0007088999999999999
-      co2Impact: 0.1864
-      timestamp: '2025-08-12T21:21:56.876Z'
+      outputTokens: 944
+      totalTokens: 1854
+      cost: 0.0007029
+      co2Impact: 0.1854
+      timestamp: '2025-08-12T21:25:31.539Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1900
-      cost: 0.0007214999999999999
-      co2: 0.19
-  generationDate: '2025-08-12T21:21:57.993Z'
+      tokens: 1890
+      cost: 0.0007155
+      co2: 0.189
+  generationDate: '2025-08-12T21:25:32.182Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -79,7 +79,7 @@ Nur Spiegel—jeder fängt ein anderes Licht ein.
 
 _Der Systembauer. Die Schnittstelle zwischen Logik und der Welt._
 
-**seez.eu** ist der Ort, an dem ich meine Wirbelsäule trage.  
+**seez.eu** ist der Ort, an dem ich mein Rückgrat trage.  
 IT, Automatisierung, Dynamics 365, technische Beratung.  
 Es ist mein Nachname, mein Beruf, der Teil von mir,  
 der Struktur als eine Art Anmut versteht.
@@ -144,8 +144,8 @@ aber sich gehalten fühlen wollen, während sie suchen.
 _Die Tiefe, die spricht._
 
 Dies ist mein Schattenarchiv.  
-Dunkle Gedanken, zensierte Fragmente,  
-Zitate, die mir genug wehgetan haben, um sie zu bewahren.
+Dunkle Gedanken, unzensierte Fragmente,  
+Zitate, die mich genug verletzt haben, um sie zu bewahren.
 
 Anonym im Gefühl.  
 Ein Ort, der nicht für die Massen gedacht ist.  
@@ -157,7 +157,7 @@ dass Heilung in der Dunkelheit beginnt.
 ## 🧪 Cosensai, marken., circles.
 
 _Nicht Startups. Noch keine Produkte.  
-Sondern Rituale in der Entstehung._
+Sondern Rituale im Entstehen._
 
 Jedes dieser Projekte ist ein Gedankenexperiment, das ich benannt habe:
 
@@ -166,7 +166,7 @@ Jedes dieser Projekte ist ein Gedankenexperiment, das ich benannt habe:
 - **circles.** – soziale Netzwerke, die um die Realität neu aufgebaut werden.
 
 Sie leben im **Labor** von seez.eu.  
-Noch nicht bereit. Aber im Wachstum.
+Noch nicht bereit. Aber wachsend.
 
 ---
 
@@ -176,10 +176,10 @@ _Der Name, den ich noch nicht gebaut habe—
 aber bereits darin lebe._
 
 Eines Tages werde ich alles hier vereinen:  
-die Technologie, die Poesie, das Paradoxe.  
+die Technologie, die Poesie, das Paradox.  
 Keine Marke. Eine Philosophie.
 
-Denn mein Leben ist kein Bruch zwischen Identitäten.  
+Denn mein Leben ist kein Split zwischen Identitäten.  
 Es ist ein **System von Spannungen**.  
 Nicht gelöst—aber lebendig.
 
@@ -187,7 +187,7 @@ Nicht gelöst—aber lebendig.
 
 ## Wer bin ich?
 
-Ein System in der Entstehung.  
+Ein System im Entstehen.  
 Eine Gedächtnismaschine, eingehüllt in Haut.  
 Ein Autor, der schreibt, um real zu bleiben.  
 Ein Entwickler, der baut, um gesund zu bleiben.  

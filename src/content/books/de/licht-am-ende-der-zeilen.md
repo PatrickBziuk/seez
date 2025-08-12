@@ -59,19 +59,19 @@ ai_metadata:
       operation: translation
       canonicalId: slug-20250805-8b154d9c
       model: gpt-4o-mini
-      inputTokens: 873
-      outputTokens: 874
-      totalTokens: 1747
+      inputTokens: 865
+      outputTokens: 876
+      totalTokens: 1741
       cost: 0.00065535
-      co2Impact: 0.17470000000000002
-      timestamp: '2025-08-12T21:19:31.075Z'
+      co2Impact: 0.17410000000000003
+      timestamp: '2025-08-12T21:23:13.705Z'
       sourceLanguage: en
       targetLanguage: de
     total:
-      tokens: 1833
+      tokens: 1827
       cost: 0.00068445
-      co2: 0.18330000000000002
-  generationDate: '2025-08-12T21:19:32.106Z'
+      co2: 0.18270000000000003
+  generationDate: '2025-08-12T21:23:15.178Z'
   model: gpt-4o-mini
   translationQuality: pending_review
 ---
@@ -84,7 +84,7 @@ Ein jetzt 27-jähriger Autor reflektiert über Texte, die er zwischen 14 und 21 
 Jedes Kapitel enthält:
 
 - alte Originaltexte (unfiltert)  
-- Kommentare, Reflexionen, emotionale Essays aus der heutigen Perspektive  
+- Kommentare, Reflexionen, emotionale Essays aus heutiger Perspektive  
 - Reflexionen über Trauma, Liebe, Schreiben, Depression und Selbstentdeckung  
 
 Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben einst eine Rettung war und heute Einsicht bedeutet.
@@ -92,8 +92,8 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben ein
 🎯 **Zielgruppe:**
 
 - Junge Erwachsene (16–21): Menschen, die sich noch in der Selbstentdeckungsphase befinden, oft kämpfen und sich missverstanden fühlen  
-- Neue Erwachsene (21–29): Menschen, die im Rückblick verstehen wollen, was mit ihnen passiert ist  
-- Junge Männer mit emotionaler Tiefe, die in der Mainstream-Literatur selten gesehen werden  
+- Neue Erwachsene (21–29): Menschen, die verstehen wollen, was ihnen im Rückblick widerfahren ist  
+- Junge Männer mit emotionaler Tiefe, die in der Mainstream-Literatur selten zu sehen sind  
 
 💎 **USP – Was macht das Buch einzigartig?**
 
@@ -103,12 +103,12 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben ein
    Diese Texte tragen eine Zeitkapsel, die kein erfundener Charakter hätte schreiben können.
 
 2. **Duale Perspektive – Jung & Erwachsen**  
-   Das Werk ist Reflexion und Rückblick in einem –  
+   Das Werk ist Reflexion und Retrospektive in einem –  
    Die „damalige Stimme“ spricht direkt. Die „heutige Stimme“ antwortet – nicht herablassend, sondern verständnisvoll.
 
 3. **Meta-Ebene: Das Buch als Prozess**  
    Der Leser begleitet nicht nur eine Geschichte, sondern den tatsächlichen Prozess der Buchentstehung.  
-   Das sichert:  
+   Das gewährleistet:  
    - emotionale Nähe  
    - literarische Tiefe  
    - strukturelle Wiedererkennbarkeit  
@@ -122,23 +122,23 @@ Das Buch ist sowohl Produkt als auch Prozess – es zeigt, wie das Schreiben ein
 
 ✒️ **Unterscheidung von anderen Büchern im Genre:**
 
-| Typische junge Erwachsene                            | Dein Buch                                       |
-| --------------------------------------------------- | ------------------------------------------------ |
-| Fiktive Charaktere                                   | Authentische Ich-Perspektive                     |
-| Linearer Plot (romantisches Drama, Coming-of-Age)  | Fragmentierte Reise der Erinnerungen             |
-| Glatt polierter Stil                                 | Roh, echte Originaltexte & heutige Reflexionen   |
-| Vorhersehbare Spannungsbögen                         | Unvorhersehbare innere Entwicklung               |
-| Identitätsfragen, die durch andere Charaktere ausgelöst werden | Identitätsfragen, die durch die eigenen Texte ausgelöst werden |
+| Typische Junge Erwachsene                           | Dein Buch                                        |
+| -------------------------------------------------- | ------------------------------------------------ |
+| Fiktive Charaktere                                  | Authentische Ich-Perspektive                     |
+| Linearer Plot (romantisches Drama, Coming-of-Age) | Fragmentierte Reise der Erinnerungen             |
+| Glatt polierter Stil                                | Rohe, echte Originaltexte & heutige Reflexionen  |
+| Vorhersehbare Spannungsbögen                        | Unvorhersehbare innere Entwicklung                |
+| Identitätsfragen, die durch andere Charaktere ausgelöst werden | Identitätsfragen, die durch eigene Texte ausgelöst werden |
 
 🧩 **Beispielstruktur:**
 
 | Kapitel        | Inhalt                                              |
-| ---------------| --------------------------------------------------- |
+| ---------------| ---------------------------------------------------- |
 | Prolog         | Der 27-Jährige beginnt, seine alten Texte erneut zu lesen |
-| Kapitel 1      | Gewalt, Stille, innere Wut (z. B. „zurückkämpfen“)  |
+| Kapitel 1      | Gewalt, Stille, innere Wut (z.B. „zurückkämpfen“)  |
 | Kapitel 2      | Depression, suizidale Gedanken („Und er“)           |
 | Kapitel 3      | Liebe, Verlust, zarte Momente („Schmetterlingsmomente“) |
 | Kapitel 4      | Traumatisierte Bindung („Alaska“)                   |
 | Kapitel 5      | Schreiben als letzter Zufluchtsort („Zeilen der Liebe“, „Follower“) |
 | Kapitel 6      | Der Leser in mir heute (Reflexion mit 27)          |
-| Epilog         | Was bleibt – und was ich dir weitergeben möchte     |
+| Epilog         | Was bleibt – und was ich dir weitergeben möchte      |
