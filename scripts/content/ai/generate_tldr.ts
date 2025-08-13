@@ -14,6 +14,10 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import OpenAI from 'openai';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env.local
+dotenv.config({ path: '.env.local' });
 
 /**
  * Configuration constants
@@ -278,7 +282,7 @@ async function main() {
 }
 
 // Execute if called directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(console.error);
 }
 

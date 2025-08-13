@@ -5,7 +5,7 @@ echo "🔍 Pre-commit validation, metadata injection, and content analysis..."
 
 # 1) Validate content & update registry if needed
 echo "📋 Validating content structure..."
-tsx scripts/validation/validate-content-precommit-simple.ts
+npx tsx scripts/validation/validate-content-precommit-simple.ts
 
 if [ -f "data/content-registry.json.updated" ]; then
   git add data/content-registry.json
@@ -14,13 +14,13 @@ fi
 
 # 2) NEW: Comprehensive metadata detection and content analysis
 echo "🏷️  Analyzing content for metadata, TL;DR, tags, and translation needs..."
-tsx scripts/utils/detect-metadata-changes.ts > metadata-changes.json 2>/dev/null || echo "[]" > metadata-changes.json
+npx tsx scripts/utils/detect-metadata-changes.ts > metadata-changes.json 2>/dev/null || echo "[]" > metadata-changes.json
 
 # Check if we have metadata changes to process
 METADATA_UPDATED=false
 if [ -s metadata-changes.json ] && [ "$(cat metadata-changes.json)" != "[]" ]; then
   echo "📝 Injecting metadata updates..."
-  tsx scripts/utils/inject-metadata.ts
+  npx tsx scripts/utils/inject-metadata.ts
   
   # Auto-add files that were updated with metadata
   if [ -f "updated-files.txt" ]; then
@@ -45,25 +45,28 @@ rm -f metadata-changes.json metadata-affected-files.txt
 if git diff --cached --name-only | grep -E '^src/content/.*\.(md|mdx)$' >/dev/null; then
   echo "🧠 Analyzing content for missing TL;DR and tags..."
   
-  # TODO: Add TL;DR generation check
-  # if tsx scripts/ai/check-missing-tldr.ts > missing-tldr.json 2>/dev/null; then
-  #   if [ -s missing-tldr.json ] && [ "$(cat missing-tldr.json)" != "[]" ]; then
-  #     echo "📄 Generating missing TL;DR summaries..."
-  #     tsx scripts/ai/generate-tldr.ts
-  #   fi
-  # fi
+  # Check for missing TL;DR and generate them
+  echo "📄 Checking for content missing TL;DR summaries..."
+  if npx tsx scripts/content/ai/generate_tldr.ts > tldr-results.json 2>/dev/null; then
+    echo "✅ TL;DR generation completed"
+    if [ -f "tldr-results.json" ]; then
+      rm tldr-results.json
+    fi
+  else
+    echo "⚠️  TL;DR generation failed"
+  fi
   
   # TODO: Add tag analysis
-  # if tsx scripts/ai/check-missing-tags.ts > missing-tags.json 2>/dev/null; then
+  # if npx tsx scripts/ai/check-missing-tags.ts > missing-tags.json 2>/dev/null; then
   #   if [ -s missing-tags.json ] && [ "$(cat missing-tags.json)" != "[]" ]; then
   #     echo "🏷️  Generating missing tags..."
-  #     tsx scripts/ai/generate-tags.ts
+  #     npx tsx scripts/ai/generate-tags.ts
   #   fi
   # fi
   
   # 4) Translation detection (registry-based)
   echo "🔍 Detecting translation tasks..."
-  if tsx scripts/translations/check_translations_registry.ts > translation-tasks.json 2>/dev/null; then
+  if npx tsx scripts/translations/check_translations_registry.ts > translation-tasks.json 2>/dev/null; then
     echo "✅ Translation detection completed"
   else
     echo "⚠️  Translation detection failed, creating empty task list"
@@ -77,7 +80,7 @@ if git diff --cached --name-only | grep -E '^src/content/.*\.(md|mdx)$' >/dev/nu
     if [[ "$first_char" == "[" ]] || [[ "$first_char" == "{" ]]; then
       if [ "$(cat translation-tasks.json)" != "[]" ]; then
         echo "🤖 Generating AI translations (will be marked as draft and require review)..."
-        cat translation-tasks.json | tsx scripts/translations/generate_translations_registry.ts
+        cat translation-tasks.json | npx tsx scripts/translations/generate_translations_registry.ts
         echo "✅ Translations generated successfully"
         echo "📋 Note: Generated translations are marked as draft and require human review"
         echo "   • Review the translations in the generated files"

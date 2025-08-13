@@ -140,9 +140,26 @@ function detectFileMetadataChanges(filePath: string): MetadataChange | null {
     needsFirstPublishDate = !currentFrontmatter.firstPublishDate;
     changeDescription = 'New content published';
   }
+  
+  // Check if published content is missing required metadata (independent of other conditions)
+  if (currentStatus === 'published') {
+    if (!currentFrontmatter.firstPublishDate || !currentFrontmatter.publishDate) {
+      // If no other action was determined, set to metadata-update
+      if (action === 'metadata-update') {
+        needsPublishDate = !currentFrontmatter.publishDate;
+        needsFirstPublishDate = !currentFrontmatter.firstPublishDate;
+        changeDescription = 'Adding missing publication metadata to published content';
+      }
+      // If another action was already set, still ensure we add missing metadata
+      else {
+        needsPublishDate = needsPublishDate || !currentFrontmatter.publishDate;
+        needsFirstPublishDate = needsFirstPublishDate || !currentFrontmatter.firstPublishDate;
+      }
+    }
+  }
 
   // If no significant changes detected, return null
-  if (!needsPublishDate && !needsChangeDate && !needsFirstPublishDate && action === 'metadata-update') {
+  if (!needsPublishDate && !needsChangeDate && !needsFirstPublishDate) {
     return null;
   }
 
