@@ -5,14 +5,39 @@ const sharedSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   slug: z.string().optional(),
+  
+  // Enhanced publication metadata
   publishDate: z
     .string()
     .transform((s) => new Date(s))
     .optional(),
+  firstPublishDate: z
+    .string()
+    .transform((s) => new Date(s))
+    .optional(), // Never changes after first publication
+  lastChangeDate: z
+    .string()
+    .transform((s) => new Date(s))
+    .optional(), // Updated on content changes
   modifiedDate: z
     .string()
     .transform((s) => new Date(s))
+    .optional(), // Git-based modification date
+  
+  // Publication status and workflow
+  publicationStatus: z.enum(['draft', 'published', 'archived']).default('draft'),
+  changeLog: z
+    .array(
+      z.object({
+        date: z.string(), // ISO 8601 timestamp
+        description: z.string(),
+        author: z.string().optional(), // GitHub username
+        type: z.enum(['content', 'metadata', 'structure', 'translation']).default('content'),
+        automated: z.boolean().default(false), // Whether change was automated
+      })
+    )
     .optional(),
+  
   tags: z.array(z.string()).default([]),
   language: z.enum(['en', 'de']).default('en'),
   status: z
@@ -23,8 +48,8 @@ const sharedSchema = z.object({
         .object({
           content: z.boolean().default(false), // Human review of content quality
           translation: z.boolean().default(false), // Human review of translation quality
-          reviewer: z.string().optional(), // GitHub username of reviewer
-          reviewDate: z.string().optional(), // ISO 8601 timestamp
+          reviewer: z.string().nullable().optional(), // GitHub username of reviewer
+          reviewDate: z.string().nullable().optional(), // ISO 8601 timestamp
           notes: z.string().optional(), // Review notes
         })
         .optional(),
@@ -96,23 +121,35 @@ const extendedSchema = sharedSchema.extend({
         .object({
           translation: z
             .object({
-              tokens: z.number(),
-              cost: z.number(),
-              co2: z.number(),
+              // New schema format
+              tokens: z.number().optional(),
+              cost: z.number().optional(),
+              co2: z.number().optional(),
+              // Legacy schema format - more detailed
+              operation: z.string().optional(),
+              canonicalId: z.string().optional(),
+              model: z.string().optional(),
+              inputTokens: z.number().optional(),
+              outputTokens: z.number().optional(),
+              totalTokens: z.number().optional(),
+              co2Impact: z.number().optional(),
+              timestamp: z.string().optional(),
+              sourceLanguage: z.string().optional(),
+              targetLanguage: z.string().optional(),
             })
             .optional(),
           tldr: z
             .object({
-              tokens: z.number(),
-              cost: z.number(),
-              co2: z.number(),
+              tokens: z.number().optional(),
+              cost: z.number().optional(),
+              co2: z.number().optional(),
             })
             .optional(),
           total: z
             .object({
-              tokens: z.number(),
-              cost: z.number(),
-              co2: z.number(),
+              tokens: z.number().optional(),
+              cost: z.number().optional(),
+              co2: z.number().optional(),
             })
             .optional(),
         })
@@ -192,23 +229,35 @@ const postSchema = z.object({
         .object({
           translation: z
             .object({
-              tokens: z.number(),
-              cost: z.number(),
-              co2: z.number(),
+              // New schema format
+              tokens: z.number().optional(),
+              cost: z.number().optional(),
+              co2: z.number().optional(),
+              // Legacy schema format - more detailed
+              operation: z.string().optional(),
+              canonicalId: z.string().optional(),
+              model: z.string().optional(),
+              inputTokens: z.number().optional(),
+              outputTokens: z.number().optional(),
+              totalTokens: z.number().optional(),
+              co2Impact: z.number().optional(),
+              timestamp: z.string().optional(),
+              sourceLanguage: z.string().optional(),
+              targetLanguage: z.string().optional(),
             })
             .optional(),
           tldr: z
             .object({
-              tokens: z.number(),
-              cost: z.number(),
-              co2: z.number(),
+              tokens: z.number().optional(),
+              cost: z.number().optional(),
+              co2: z.number().optional(),
             })
             .optional(),
           total: z
             .object({
-              tokens: z.number(),
-              cost: z.number(),
-              co2: z.number(),
+              tokens: z.number().optional(),
+              cost: z.number().optional(),
+              co2: z.number().optional(),
             })
             .optional(),
         })

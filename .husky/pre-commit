@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "🔍 Pre-commit validation and translation generation..."
+echo "🔍 Pre-commit validation, metadata injection, and content analysis..."
 
 # 1) Validate content & update registry if needed
 echo "📋 Validating content structure..."
@@ -12,46 +12,95 @@ if [ -f "data/content-registry.json.updated" ]; then
   rm data/content-registry.json.updated
 fi
 
-# 2) Only proceed if MD/MDX staged
-if ! git diff --cached --name-only | grep -E '^src/content/.*\.(md|mdx)$' >/dev/null; then
-  echo "ℹ️  No content files staged, skipping translation generation"
-  exit 0
-fi
+# 2) NEW: Comprehensive metadata detection and content analysis
+echo "🏷️  Analyzing content for metadata, TL;DR, tags, and translation needs..."
+tsx scripts/utils/detect-metadata-changes.ts > metadata-changes.json 2>/dev/null || echo "[]" > metadata-changes.json
 
-# 3) Detect missing/stale translations (registry-based)
-echo "🔍 Detecting translation tasks..."
-if tsx scripts/translations/check_translations_registry.ts > translation-tasks.json 2>/dev/null; then
-  echo "✅ Translation detection completed"
-else
-  echo "⚠️  Translation detection failed, creating empty task list"
-  echo "[]" > translation-tasks.json
-fi
-
-# 4) Generate translations (but don't block commit)
-if [ -s translation-tasks.json ]; then
-  # Check if file contains valid JSON (starts with [ or {)
-  first_char=$(head -c 1 translation-tasks.json)
-  if [[ "$first_char" == "[" ]] || [[ "$first_char" == "{" ]]; then
-    if [ "$(cat translation-tasks.json)" != "[]" ]; then
-      echo "🤖 Generating AI translations (will be marked as draft and require review)..."
-      cat translation-tasks.json | tsx scripts/translations/generate_translations_registry.ts
-      echo "✅ Translations generated successfully"
-      echo "📋 Note: Generated translations are marked as draft and require human review"
-      echo "   • Review the translations in the generated files"
-      echo "   • Set draft=false and status.review.translation=true when ready"
-      git add src/content
-    else
-      echo "ℹ️ No translation tasks found"
-    fi
-  else
-    echo "⚠️  Invalid JSON in translation-tasks.json, skipping translation generation"
-    echo "Content preview: $(head -n 1 translation-tasks.json)"
+# Check if we have metadata changes to process
+METADATA_UPDATED=false
+if [ -s metadata-changes.json ] && [ "$(cat metadata-changes.json)" != "[]" ]; then
+  echo "📝 Injecting metadata updates..."
+  tsx scripts/utils/inject-metadata.ts
+  
+  # Auto-add files that were updated with metadata
+  if [ -f "updated-files.txt" ]; then
+    echo "📋 Auto-adding files with updated metadata..."
+    while IFS= read -r file; do
+      if [[ "$file" =~ ^src/content/ ]] && [ -f "$file" ]; then
+        git add "$file"
+        echo "  ✅ Added: $file"
+        METADATA_UPDATED=true
+      fi
+    done < updated-files.txt
+    rm updated-files.txt
   fi
 else
-  echo "ℹ️ No translation tasks file created"
+  echo "ℹ️  No metadata updates needed"
 fi
 
-rm -f translation-tasks.json
+# Clean up temporary files
+rm -f metadata-changes.json metadata-affected-files.txt
+
+# 3) Content analysis for TL;DR and tagging (only if content files are staged)
+if git diff --cached --name-only | grep -E '^src/content/.*\.(md|mdx)$' >/dev/null; then
+  echo "🧠 Analyzing content for missing TL;DR and tags..."
+  
+  # TODO: Add TL;DR generation check
+  # if tsx scripts/ai/check-missing-tldr.ts > missing-tldr.json 2>/dev/null; then
+  #   if [ -s missing-tldr.json ] && [ "$(cat missing-tldr.json)" != "[]" ]; then
+  #     echo "📄 Generating missing TL;DR summaries..."
+  #     tsx scripts/ai/generate-tldr.ts
+  #   fi
+  # fi
+  
+  # TODO: Add tag analysis
+  # if tsx scripts/ai/check-missing-tags.ts > missing-tags.json 2>/dev/null; then
+  #   if [ -s missing-tags.json ] && [ "$(cat missing-tags.json)" != "[]" ]; then
+  #     echo "🏷️  Generating missing tags..."
+  #     tsx scripts/ai/generate-tags.ts
+  #   fi
+  # fi
+  
+  # 4) Translation detection (registry-based)
+  echo "🔍 Detecting translation tasks..."
+  if tsx scripts/translations/check_translations_registry.ts > translation-tasks.json 2>/dev/null; then
+    echo "✅ Translation detection completed"
+  else
+    echo "⚠️  Translation detection failed, creating empty task list"
+    echo "[]" > translation-tasks.json
+  fi
+
+  # 5) Generate translations (but don't block commit)
+  if [ -s translation-tasks.json ]; then
+    # Check if file contains valid JSON (starts with [ or {)
+    first_char=$(head -c 1 translation-tasks.json)
+    if [[ "$first_char" == "[" ]] || [[ "$first_char" == "{" ]]; then
+      if [ "$(cat translation-tasks.json)" != "[]" ]; then
+        echo "🤖 Generating AI translations (will be marked as draft and require review)..."
+        cat translation-tasks.json | tsx scripts/translations/generate_translations_registry.ts
+        echo "✅ Translations generated successfully"
+        echo "📋 Note: Generated translations are marked as draft and require human review"
+        echo "   • Review the translations in the generated files"
+        echo "   • Set draft=false and status.review.translation=true when ready"
+        git add src/content
+      else
+        echo "ℹ️ No translation tasks found"
+      fi
+    else
+      echo "⚠️  Invalid JSON in translation-tasks.json, skipping translation generation"
+      echo "Content preview: $(head -n 1 translation-tasks.json)"
+    fi
+  else
+    echo "ℹ️ No translation tasks file created"
+  fi
+
+  rm -f translation-tasks.json
+else
+  echo "ℹ️  No content files staged, skipping content analysis and translation generation"
+fi
 
 echo "✅ Pre-commit processing completed"
+if [ "$METADATA_UPDATED" = true ]; then
+  echo "💡 Files were automatically updated with metadata and added to this commit"
+fi
 echo "💡 Reminder: Review generated translations before pushing!"

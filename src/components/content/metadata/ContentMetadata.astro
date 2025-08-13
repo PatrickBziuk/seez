@@ -16,7 +16,11 @@ const {
   language, 
   timestamp, 
   publishDate,
+  firstPublishDate,
+  lastChangeDate,
   modifiedDate,
+  publicationStatus,
+  changeLog = [],
   status, 
   ai_tldr, 
   ai_metadata, 
@@ -219,19 +223,80 @@ interface AuthorData {
         </div>
       )}
       
-      <!-- Publication Date -->
-      {(publishDateObj || timestamp) && (
+      <!-- Enhanced Publication Timeline -->
+      {(firstPublishDate || publishDateObj || lastChangeDate || timestamp) && (
         <div class="flex items-center gap-1.5">
           <Icon name="tabler:calendar" class="w-3.5 h-3.5" />
           <span class="text-xs">
-            {publishDateObj ? formattedPublishDate : formattedDate}
-            {showModifiedDate && (
-              <span class="text-slate-500 dark:text-slate-400 ml-1">
-                (updated {formattedModifiedDate})
-              </span>
+            {firstPublishDate ? (
+              <>
+                Published {new Date(firstPublishDate).toLocaleDateString(currentLanguage || 'en', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}
+                {lastChangeDate && new Date(lastChangeDate).getTime() !== new Date(firstPublishDate).getTime() && (
+                  <span class="text-slate-500 dark:text-slate-400 ml-1">
+                    • Updated {new Date(lastChangeDate).toLocaleDateString(currentLanguage || 'en', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </span>
+                )}
+              </>
+            ) : publishDateObj ? (
+              <>
+                {formattedPublishDate}
+                {showModifiedDate && (
+                  <span class="text-slate-500 dark:text-slate-400 ml-1">
+                    (updated {formattedModifiedDate})
+                  </span>
+                )}
+              </>
+            ) : (
+              formattedDate
             )}
           </span>
         </div>
+      )}
+      
+      <!-- Publication Status Badge -->
+      {publicationStatus && publicationStatus !== 'published' && (
+        <div class="flex items-center gap-1.5">
+          <Badge 
+            text={publicationStatus.charAt(0).toUpperCase() + publicationStatus.slice(1)} 
+            variant={publicationStatus === 'draft' ? 'draft' : publicationStatus === 'archived' ? 'archived' : 'info'}
+            size="sm"
+          />
+        </div>
+      )}
+      
+      <!-- Change Log (Collapsible if has entries) -->
+      {changeLog && changeLog.length > 0 && (
+        <details class="group text-xs">
+          <summary class="cursor-pointer flex items-center gap-1.5 hover:text-slate-800 dark:hover:text-slate-100 transition-colors">
+            <Icon name="tabler:history" class="w-3.5 h-3.5" />
+            <span>{translations?.metadata?.changeHistory || 'Change History'} ({changeLog.length})</span>
+            <Icon name="tabler:chevron-down" class="w-3 h-3 transition-transform group-open:rotate-180" />
+          </summary>
+          <div class="mt-2 pl-5 space-y-1 text-slate-600 dark:text-slate-400">
+            {changeLog.slice(-5).reverse().map((change: { date: string; description: string; automated?: boolean }) => (
+              <div class="flex items-center gap-2 text-xs">
+                <span class="text-slate-500 dark:text-slate-500">
+                  {new Date(change.date).toLocaleDateString(currentLanguage || 'en', {
+                    month: 'short',
+                    day: 'numeric'
+                  })}
+                </span>
+                <span>{change.description}</span>
+                {change.automated && (
+                  <span class="text-slate-400 dark:text-slate-500">(auto)</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </details>
       )}
       
       <!-- TL;DR Toggle -->

@@ -25,7 +25,17 @@ export interface Props {
     language?: 'en' | 'de';
     timestamp?: string;
     publishDate?: Date;
+    firstPublishDate?: Date;
+    lastChangeDate?: Date;
     modifiedDate?: Date;
+    publicationStatus?: 'draft' | 'published' | 'archived';
+    changeLog?: Array<{
+      date: string;
+      description: string;
+      author?: string;
+      type: 'content' | 'metadata' | 'structure' | 'translation';
+      automated: boolean;
+    }>;
     status?: Status;
     tags?: string[];
     ai_tldr?: string;
@@ -84,6 +94,20 @@ const { frontmatter, entry } = Astro.props;
 const currentLanguage = detectLanguage(Astro.url.pathname);
 const translations = await getTranslations(currentLanguage);
 
+// Ensure frontmatter has the correct type with new fields
+const typedFrontmatter = frontmatter as typeof frontmatter & {
+  firstPublishDate?: Date;
+  lastChangeDate?: Date;
+  publicationStatus?: 'draft' | 'published' | 'archived';
+  changeLog?: Array<{
+    date: string;
+    description: string;
+    author?: string;
+    type: 'content' | 'metadata' | 'structure' | 'translation';
+    automated: boolean;
+  }>;
+};
+
 // Try to import git metadata, fallback to empty object if file doesn't exist
 let gitMetadata: Record<string, { publishDate?: string; modifiedDate?: string }> = {};
 try {
@@ -99,7 +123,7 @@ try {
 let entryContent = '';
 if (entry) {
   try {
-    const entryData = await getEntry(entry.collection as 'books' | 'projects' | 'lab' | 'life', entry.slug);
+    const entryData = await getEntry(entry.collection as 'projects' | 'pages' | 'post' | 'authors', entry.slug);
     if (entryData) {
       entryContent = entryData.body || '';
     }
@@ -164,13 +188,19 @@ const metadata: MetaData = {
     </div>
     
     <ContentMetadata
-      language={frontmatter.language}
-      timestamp={frontmatter.timestamp}
-      status={frontmatter.status}
-      ai_tldr={frontmatter.ai_tldr}
-      ai_metadata={frontmatter.ai_metadata}
-      authors={frontmatter.authors}
-      translators={frontmatter.translators}
+      language={typedFrontmatter.language}
+      timestamp={typedFrontmatter.timestamp}
+      publishDate={publishDate}
+      firstPublishDate={typedFrontmatter.firstPublishDate}
+      lastChangeDate={typedFrontmatter.lastChangeDate}
+      modifiedDate={modifiedDate}
+      publicationStatus={typedFrontmatter.publicationStatus}
+      changeLog={typedFrontmatter.changeLog}
+      status={typedFrontmatter.status}
+      ai_tldr={typedFrontmatter.ai_tldr}
+      ai_metadata={typedFrontmatter.ai_metadata}
+      authors={typedFrontmatter.authors}
+      translators={typedFrontmatter.translators}
       autoExpandTldr={false}
       translations={translations}
       locale={currentLanguage}
