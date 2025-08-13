@@ -9644,5 +9644,83 @@
     "timestamp": "2025-08-13T07:16:14.583Z",
     "sourceLanguage": "de",
     "targetLanguage": "en"
+  },
+  {
+    "operation": "translation",
+    "canonicalId": "slug-20250805-e84d4526",
+    "model": "gpt-4o-mini",
+    "inputTokens": 2074,
+    "outputTokens": 1542,
+    "totalTokens": 3616,
+    "cost": 0.0012362999999999999,
+    "co2Impact": 0.36160000000000003,
+    "timestamp": "2025-08-13T07:16:39.069Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
+  },
+  {
+    "operation": "title-translation",
+    "canonicalId": "slug-20250805-e84d4526",
+    "model": "gpt-4o-mini",
+    "inputTokens": 20,
+    "outputTokens": 71,
+    "totalTokens": 91,
+    "cost": 0.0000456,
+    "co2Impact": 0.0091,
+    "timestamp": "2025-08-13T07:16:40.904Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
+  },
+  {
+    "operation": "translation",
+    "canonicalId": "slug-20250805-bf655b06",
+    "model": "gpt-4o-mini",
+    "inputTokens": 4147,
+    "outputTokens": 3390,
+    "totalTokens": 7537,
+    "cost": 0.0026560499999999996,
+    "co2Impact": 0.7537,
+    "timestamp": "2025-08-13T07:17:24.782Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
+  },
+  {
+    "operation": "title-translation",
+    "canonicalId": "slug-20250805-bf655b06",
+    "model": "gpt-4o-mini",
+    "inputTokens": 19,
+    "outputTokens": 15,
+    "totalTokens": 34,
+    "cost": 0.00001185,
+    "co2Impact": 0.0034000000000000002,
+    "timestamp": "2025-08-13T07:17:25.571Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
+  },
+  {
+    "operation": "translation",
+    "canonicalId": "slug-20250805-bf655b06",
+    "model": "gpt-4o-mini",
+    "inputTokens": 4159,
+    "outputTokens": 3421,
+    "totalTokens": 7580,
+    "cost": 0.00267645,
+    "co2Impact": 0.758,
+    "timestamp": "2025-08-13T07:17:26.170Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
+  },
+  {
+    "operation": "title-translation",
+    "canonicalId": "slug-20250805-bf655b06",
+    "model": "gpt-4o-mini",
+    "inputTokens": 19,
+    "outputTokens": 15,
+    "totalTokens": 34,
+    "cost": 0.00001185,
+    "co2Impact": 0.0034000000000000002,
+    "timestamp": "2025-08-13T07:17:27.047Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
   }
 ]
