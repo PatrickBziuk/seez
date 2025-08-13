@@ -10710,5 +10710,57 @@
     "timestamp": "2025-08-13T07:32:59.261Z",
     "sourceLanguage": "de",
     "targetLanguage": "en"
+  },
+  {
+    "operation": "translation",
+    "canonicalId": "slug-20250805-e84d4526",
+    "model": "gpt-4.1-nano",
+    "inputTokens": 2074,
+    "outputTokens": 1521,
+    "totalTokens": 3595,
+    "cost": 0.0008158000000000001,
+    "co2Impact": 0.35950000000000004,
+    "timestamp": "2025-08-13T07:33:32.434Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
+  },
+  {
+    "operation": "title-translation",
+    "canonicalId": "slug-20250805-e84d4526",
+    "model": "gpt-4.1-nano",
+    "inputTokens": 20,
+    "outputTokens": 23,
+    "totalTokens": 43,
+    "cost": 0.000011200000000000001,
+    "co2Impact": 0.0043,
+    "timestamp": "2025-08-13T07:33:33.445Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
+  },
+  {
+    "operation": "translation",
+    "canonicalId": "slug-20250805-bf655b06",
+    "model": "gpt-4.1-nano",
+    "inputTokens": 4159,
+    "outputTokens": 3356,
+    "totalTokens": 7515,
+    "cost": 0.0017583000000000002,
+    "co2Impact": 0.7515000000000001,
+    "timestamp": "2025-08-13T07:34:02.717Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
+  },
+  {
+    "operation": "title-translation",
+    "canonicalId": "slug-20250805-bf655b06",
+    "model": "gpt-4.1-nano",
+    "inputTokens": 19,
+    "outputTokens": 1,
+    "totalTokens": 20,
+    "cost": 0.0000023000000000000004,
+    "co2Impact": 0.002,
+    "timestamp": "2025-08-13T07:34:03.105Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
   }
 ]
