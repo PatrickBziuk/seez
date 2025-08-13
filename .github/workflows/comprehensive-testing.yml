@@ -710,36 +710,74 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-  # Test Results Summary
+  # Test Results Summary and Deployment Decision
   test-summary:
-    name: Test Results Summary
+    name: Test Results Summary & Deployment Decision
     runs-on: ubuntu-latest
     needs: [validation-tests, e2e-tests, component-tests, accessibility-tests, performance-tests]
     if: always()
+    outputs:
+      deployment-allowed: ${{ steps.success-rate.outputs.deployment-allowed }}
+      success-rate: ${{ steps.success-rate.outputs.success-rate }}
     steps:
-      - name: 📊 Generate test summary
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 📊 Calculate Test Success Rate
+        id: success-rate
+        env:
+          VALIDATION_SUCCESS: ${{ needs.validation-tests.outputs.validation-success }}
+          E2E_SUCCESS: ${{ needs.e2e-tests.outputs.e2e-success }}
+          COMPONENT_SUCCESS: ${{ needs.component-tests.outputs.component-success }}
+          ACCESSIBILITY_SUCCESS: ${{ needs.accessibility-tests.outputs.accessibility-success }}
+          PERFORMANCE_SUCCESS: ${{ needs.performance-tests.outputs.performance-success }}
         run: |
-          echo "# 🧪 Plan 10029 Test Results Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Test Phase | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Validation Tests | ${{ needs.validation-tests.outputs.validation-success == 'true' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| E2E Tests | ${{ needs.e2e-tests.outputs.e2e-success == 'true' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Component Tests | ${{ needs.component-tests.outputs.component-success == 'true' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Accessibility Tests | ${{ needs.accessibility-tests.outputs.accessibility-success == 'true' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Performance Tests | ${{ needs.performance-tests.outputs.performance-success == 'true' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 📋 Test Strategy" >> $GITHUB_STEP_SUMMARY
-          echo "This testing suite implements Plan 10029's comprehensive testing strategy:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Phase 1**: Content validation and integrity checks" >> $GITHUB_STEP_SUMMARY
-          echo "- **Phase 2**: E2E functionality, component, and accessibility testing" >> $GITHUB_STEP_SUMMARY
-          echo "- **Phase 4**: Performance monitoring and Core Web Vitals" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "🔗 **Test Artifacts**: Check the Actions tab for detailed test reports and screenshots." >> $GITHUB_STEP_SUMMARY
-          echo "🚨 **Failed Tests**: Automated GitHub issues have been created for any test failures." >> $GITHUB_STEP_SUMMARY
+          echo "🧪 Calculating overall test success rate..."
+          pnpm run test:success-rate:verbose
 
       - name: 📈 Update health metrics
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: |
           echo "Scheduled monitoring run completed at $(date)"
           echo "Health metrics and monitoring data have been updated."
+
+  # Conditional Deployment Decision
+  deployment-decision:
+    name: Deployment Decision
+    runs-on: ubuntu-latest
+    needs: [test-summary]
+    if: always() && github.ref == 'refs/heads/main'
+    steps:
+      - name: 🎯 Deployment Decision
+        run: |
+          echo "## 🚀 Deployment Decision" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Overall Success Rate**: ${{ needs.test-summary.outputs.success-rate }}%" >> $GITHUB_STEP_SUMMARY
+          echo "**Threshold**: 80%" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.test-summary.outputs.deployment-allowed }}" == "true" ]]; then
+            echo "✅ **Deployment Status**: ALLOWED" >> $GITHUB_STEP_SUMMARY
+            echo "The test success rate meets the minimum 80% threshold." >> $GITHUB_STEP_SUMMARY
+            echo "✅ Deployment allowed - ${{ needs.test-summary.outputs.success-rate }}% success rate meets 80% threshold"
+          else
+            echo "❌ **Deployment Status**: BLOCKED" >> $GITHUB_STEP_SUMMARY
+            echo "The test success rate is below the minimum 80% threshold." >> $GITHUB_STEP_SUMMARY
+            echo "GitHub issues have been created for failed tests." >> $GITHUB_STEP_SUMMARY
+            echo "❌ Deployment blocked - ${{ needs.test-summary.outputs.success-rate }}% success rate below 80% threshold"
+            exit 1
+          fi

@@ -242,25 +242,26 @@ const authorSchema = z.object({
   capabilities: z.array(z.string()).optional(),
 });
 
-const books = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/books' }),
-  schema: extendedSchema,
-});
+// Temporarily disabled collections due to empty directories
+// const books = defineCollection({
+//   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/books' }),
+//   schema: extendedSchema,
+// });
 
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
   schema: extendedSchema,
 });
 
-const lab = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/lab' }),
-  schema: extendedSchema,
-});
+// const lab = defineCollection({
+//   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/lab' }),
+//   schema: extendedSchema,
+// });
 
-const life = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/life' }),
-  schema: extendedSchema,
-});
+// const life = defineCollection({
+//   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/life' }),
+//   schema: extendedSchema,
+// });
 
 const post = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/data/post' }),
@@ -278,10 +279,10 @@ const authors = defineCollection({
 });
 
 export const collections = {
-  books,
+  // books,
   projects,
-  lab,
-  life,
+  // lab,
+  // life,
   post,
   pages,
   authors,

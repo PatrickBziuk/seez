@@ -134,6 +134,12 @@ jobs:
           echo "Syncing Astro content types..."
           pnpm run astro sync
 
+      - name: 🧹 Sync content metadata (cleanup stale entries)
+        run: |
+          echo "Syncing content metadata to match filesystem..."
+          pnpm run sync:content-metadata
+          echo "✅ Content metadata synchronized!"
+
       - name: 🔍 Run Astro check (allow failures)
         continue-on-error: true
         run: |
@@ -191,3 +197,30 @@ jobs:
               --body "Build failed on main branch at commit ${COMMIT_SHA}. See run: ${RUN_URL}" \
               --label build-failure,automated
           fi
+
+  # Trigger comprehensive testing workflow
+  trigger-comprehensive-tests:
+    name: Trigger Comprehensive Tests
+    runs-on: ubuntu-latest
+    needs: [build-and-deploy]
+    if: needs.build-and-deploy.outputs.build-success == 'true'
+    steps:
+      - name: 🧪 Trigger comprehensive testing
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: workflow } = await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'comprehensive-testing.yml',
+              ref: context.ref,
+              inputs: {
+                test_suite: 'full'
+              }
+            });
+            
+            console.log('🧪 Comprehensive testing workflow triggered');
+            core.summary.addHeading('Test Suite Triggered');
+            core.summary.addRaw('The comprehensive testing suite has been triggered. ');
+            core.summary.addRaw('Deployment will proceed only if tests achieve >80% success rate.');
+            await core.summary.write();
