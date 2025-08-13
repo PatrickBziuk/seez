@@ -2,7 +2,7 @@
 
 /**
  * Metadata Injection Script
- * 
+ *
  * Automatically injects publish dates, change dates, and other metadata into content files
  * based on the output from detect-metadata-changes.ts
  */
@@ -47,33 +47,33 @@ function updateFrontmatter(content: string, changes: MetadataChange): string {
   const frontmatter = parsed.data;
   const currentTime = getCurrentTimestamp();
   const gitUser = getGitUser();
-  
+
   let updated = false;
-  
+
   // Add publishDate for first publication
   if (changes.needsPublishDate && !frontmatter.publishDate) {
     frontmatter.publishDate = currentTime;
     updated = true;
   }
-  
+
   // Add firstPublishDate for first publication (never changes)
   if (changes.needsFirstPublishDate && !frontmatter.firstPublishDate) {
     frontmatter.firstPublishDate = frontmatter.publishDate || currentTime;
     updated = true;
   }
-  
+
   // Update lastChangeDate for content changes
   if (changes.needsChangeDate) {
     frontmatter.lastChangeDate = currentTime;
     updated = true;
   }
-  
+
   // Ensure publicationStatus is set correctly
   if (changes.currentStatus && frontmatter.publicationStatus !== changes.currentStatus) {
     frontmatter.publicationStatus = changes.currentStatus;
     updated = true;
   }
-  
+
   // Add to change log
   if (updated) {
     const changeLogEntry: ChangeLogEntry = {
@@ -81,25 +81,25 @@ function updateFrontmatter(content: string, changes: MetadataChange): string {
       description: changes.changeDescription,
       author: gitUser,
       type: getChangeType(changes.action),
-      automated: changes.automated
+      automated: changes.automated,
     };
-    
+
     if (!frontmatter.changeLog) {
       frontmatter.changeLog = [];
     }
-    
+
     frontmatter.changeLog.push(changeLogEntry);
-    
+
     // Keep only last 10 entries to avoid bloat
     if (frontmatter.changeLog.length > 10) {
       frontmatter.changeLog = frontmatter.changeLog.slice(-10);
     }
   }
-  
+
   if (!updated) {
     return content; // No changes needed
   }
-  
+
   // Reconstruct the file with updated frontmatter
   return matter.stringify(parsed.content, frontmatter);
 }
@@ -128,7 +128,7 @@ function processFile(change: MetadataChange): boolean {
   try {
     const originalContent = fs.readFileSync(change.filePath, 'utf8');
     const updatedContent = updateFrontmatter(originalContent, change);
-    
+
     if (updatedContent !== originalContent) {
       fs.writeFileSync(change.filePath, updatedContent, 'utf8');
       console.log(`✅ Updated metadata for: ${change.filePath}`);
@@ -154,30 +154,30 @@ async function injectMetadata(changes?: MetadataChange[]): Promise<string[]> {
   if (!changes) {
     changes = await detectMetadataChanges();
   }
-  
+
   if (changes.length === 0) {
     console.log('ℹ️  No files need metadata updates');
     return [];
   }
-  
+
   console.log(`📝 Processing ${changes.length} files for metadata injection...`);
-  
+
   const updatedFiles: string[] = [];
-  
+
   for (const change of changes) {
     const wasUpdated = processFile(change);
     if (wasUpdated) {
       updatedFiles.push(change.filePath);
     }
   }
-  
+
   console.log(`✅ Updated metadata for ${updatedFiles.length} files`);
-  
+
   // Write list of updated files for pre-commit hook consumption
   if (updatedFiles.length > 0) {
     fs.writeFileSync('updated-files.txt', updatedFiles.join('\n'));
   }
-  
+
   return updatedFiles;
 }
 
@@ -187,7 +187,7 @@ async function injectMetadata(changes?: MetadataChange[]): Promise<string[]> {
 if (import.meta.url === `file://${process.argv[1]}`) {
   // Check if changes are provided via stdin or file
   let inputChanges: MetadataChange[] | undefined;
-  
+
   // Try to read from metadata-changes.json if it exists
   if (fs.existsSync('metadata-changes.json')) {
     try {
@@ -200,13 +200,13 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       console.error('⚠️  Error reading metadata-changes.json:', error);
     }
   }
-  
+
   injectMetadata(inputChanges)
-    .then(updatedFiles => {
+    .then((updatedFiles) => {
       if (updatedFiles.length > 0) {
         console.log('\n📋 Summary of updated files:');
-        updatedFiles.forEach(file => console.log(`  - ${file}`));
-        
+        updatedFiles.forEach((file) => console.log(`  - ${file}`));
+
         console.log('\n💡 These files have been updated with metadata and should be added to the commit.');
         process.exit(0);
       } else {
@@ -214,7 +214,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         process.exit(0);
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('❌ Error injecting metadata:', error);
       process.exit(1);
     });

@@ -2,7 +2,7 @@
 
 /**
  * Metadata Change Detection Script
- * 
+ *
  * Detects which content files need publish dates, change dates, or other metadata updates
  * during the pre-commit phase. Integrates with the existing content registry system.
  */
@@ -31,9 +31,9 @@ function getStagedContentFiles(): string[] {
     const output = execSync('git diff --cached --name-only', { encoding: 'utf8' });
     return output
       .split('\n')
-      .filter(line => line.trim())
-      .filter(file => file.startsWith('src/content/') && (file.endsWith('.md') || file.endsWith('.mdx')))
-      .filter(file => fs.existsSync(file)); // Only include files that exist
+      .filter((line) => line.trim())
+      .filter((file) => file.startsWith('src/content/') && (file.endsWith('.md') || file.endsWith('.mdx')))
+      .filter((file) => fs.existsSync(file)); // Only include files that exist
   } catch (error) {
     console.error('Error getting staged files:', error);
     return [];
@@ -70,18 +70,18 @@ function parseFrontmatter(content: string) {
  */
 function hasSignificantContentChange(currentContent: string, previousContent: string): boolean {
   if (!previousContent) return true; // New file
-  
+
   const currentMatter = matter(currentContent);
   const previousMatter = matter(previousContent);
-  
+
   // Compare the actual content body
   const currentBody = currentMatter.content.trim();
   const previousBody = previousMatter.content.trim();
-  
+
   if (currentBody !== previousBody) {
     return true;
   }
-  
+
   // Check for significant frontmatter changes (excluding automated metadata)
   const significantFields = ['title', 'description', 'tags', 'language', 'canonicalId'];
   for (const field of significantFields) {
@@ -89,7 +89,7 @@ function hasSignificantContentChange(currentContent: string, previousContent: st
       return true;
     }
   }
-  
+
   return false;
 }
 
@@ -99,21 +99,21 @@ function hasSignificantContentChange(currentContent: string, previousContent: st
 function detectFileMetadataChanges(filePath: string): MetadataChange | null {
   const currentContent = fs.readFileSync(filePath, 'utf8');
   const previousContent = getPreviousFileContent(filePath);
-  
+
   const currentFrontmatter = parseFrontmatter(currentContent);
   const previousFrontmatter = previousContent ? parseFrontmatter(previousContent) : {};
-  
-  const currentStatus = currentFrontmatter.publicationStatus || 
-                       (currentFrontmatter.draft === false ? 'published' : 'draft');
-  const previousStatus = previousFrontmatter.publicationStatus || 
-                        (previousFrontmatter.draft === false ? 'published' : 'draft');
-  
+
+  const currentStatus =
+    currentFrontmatter.publicationStatus || (currentFrontmatter.draft === false ? 'published' : 'draft');
+  const previousStatus =
+    previousFrontmatter.publicationStatus || (previousFrontmatter.draft === false ? 'published' : 'draft');
+
   let action: MetadataChange['action'] = 'metadata-update';
   let needsPublishDate = false;
   let needsChangeDate = false;
   let needsFirstPublishDate = false;
   let changeDescription = 'Metadata update';
-  
+
   // Detect publication status change (draft -> published)
   if (previousStatus === 'draft' && currentStatus === 'published') {
     action = 'first-publish';
@@ -140,12 +140,12 @@ function detectFileMetadataChanges(filePath: string): MetadataChange | null {
     needsFirstPublishDate = !currentFrontmatter.firstPublishDate;
     changeDescription = 'New content published';
   }
-  
+
   // If no significant changes detected, return null
   if (!needsPublishDate && !needsChangeDate && !needsFirstPublishDate && action === 'metadata-update') {
     return null;
   }
-  
+
   return {
     filePath,
     action,
@@ -155,7 +155,7 @@ function detectFileMetadataChanges(filePath: string): MetadataChange | null {
     needsChangeDate,
     needsFirstPublishDate,
     changeDescription,
-    automated: true
+    automated: true,
   };
 }
 
@@ -165,9 +165,9 @@ function detectFileMetadataChanges(filePath: string): MetadataChange | null {
 async function detectMetadataChanges(): Promise<MetadataChange[]> {
   const stagedFiles = getStagedContentFiles();
   const changes: MetadataChange[] = [];
-  
+
   console.log(`🔍 Checking ${stagedFiles.length} staged content files for metadata changes...`);
-  
+
   for (const filePath of stagedFiles) {
     const change = detectFileMetadataChanges(filePath);
     if (change) {
@@ -175,7 +175,7 @@ async function detectMetadataChanges(): Promise<MetadataChange[]> {
       console.log(`📝 ${filePath}: ${change.changeDescription}`);
     }
   }
-  
+
   return changes;
 }
 
@@ -184,12 +184,12 @@ async function detectMetadataChanges(): Promise<MetadataChange[]> {
  */
 if (import.meta.url === `file://${process.argv[1]}`) {
   detectMetadataChanges()
-    .then(changes => {
+    .then((changes) => {
       // Output as JSON for consumption by other scripts
       console.log(JSON.stringify(changes, null, 2));
-      
+
       // Also create a simple list for bash processing
-      const affectedFiles = changes.map(c => c.filePath);
+      const affectedFiles = changes.map((c) => c.filePath);
       if (affectedFiles.length > 0) {
         fs.writeFileSync('metadata-affected-files.txt', affectedFiles.join('\n'));
         console.error(`✅ Detected ${changes.length} files needing metadata updates`);
@@ -197,7 +197,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.error('ℹ️  No metadata changes needed');
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('❌ Error detecting metadata changes:', error);
       process.exit(1);
     });

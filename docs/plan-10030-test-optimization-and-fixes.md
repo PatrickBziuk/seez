@@ -7,14 +7,17 @@ Based on the comprehensive test execution results from Plan 10029, this plan add
 ## 📊 Current Test Results Analysis
 
 ### Performance Test Results
+
 - **128 passed / 52 failed** (71% success rate)
 - Main issues: Performance budgets, navigation visibility, CSS bundle size
 
-### Component Test Results  
+### Component Test Results
+
 - **1,157 passed / 83 failed** (93% success rate)
 - Main issues: Mobile navigation, language switcher, social links
 
 ### Performance Monitoring Results
+
 - **79 passed / 1 failed** (98.75% success rate)
 - Excellent overall health monitoring
 
@@ -25,19 +28,23 @@ Achieve **95%+ test success rate** across all test suites by fixing identified i
 ## 📋 Implementation Plan
 
 ### Phase 1: Critical Navigation and Mobile Issues
+
 **Priority: HIGH | Timeline: 1-2 days**
 
 #### 1.1 Fix Mobile Navigation Visibility
+
 **Problem**: Navigation elements are hidden on mobile devices due to `hidden md:flex` classes
 
 **Root Cause**: Tests expect navigation to be visible on mobile, but design uses hidden mobile nav with hamburger menu
 
 **Solution Options**:
+
 - **Option A**: Update tests to account for hamburger menu pattern
 - **Option B**: Ensure mobile navigation is accessible through proper selectors
 - **Option C**: Add mobile-specific navigation visibility tests
 
 **Implementation**:
+
 ```typescript
 // Update navigation selectors to handle mobile hamburger menu
 const mobileMenuButton = page.locator('[data-aw-toggle-menu], .hamburger-menu, .mobile-menu-toggle');
@@ -54,17 +61,21 @@ if (viewport.width < 768) {
 ```
 
 #### 1.2 Fix Language Switcher Component
+
 **Problem**: Language switcher elements not visible for interaction on mobile devices
 
 **Solution**:
+
 - Update selectors to target actual language switcher implementation
 - Add proper mobile responsive handling
 - Ensure touch-friendly sizing (44px minimum)
 
 #### 1.3 Fix Social Media Links
+
 **Problem**: Missing `target="_blank"` attributes
 
 **Solution**:
+
 ```typescript
 // Update social link expectations or fix implementation
 const socialLinks = page.locator('.social-links a, .footer a[href*="github"], a[href*="linkedin"]');
@@ -77,60 +88,66 @@ for (const link of await socialLinks.all()) {
 ```
 
 ### Phase 2: Performance Budget Optimization
+
 **Priority: HIGH | Timeline: 2-3 days**
 
 #### 2.1 CSS Bundle Size Optimization
+
 **Current**: 144KB | **Target**: <100KB | **Reduction needed**: 44KB (30%)
 
 **Actions**:
+
 1. **CSS Purging**: Enable aggressive CSS purging in Tailwind
 2. **Critical CSS**: Split critical vs non-critical CSS
 3. **CSS Compression**: Ensure proper minification
 4. **Remove Unused Styles**: Audit and remove unused CSS
 
 **Implementation**:
+
 ```typescript
 // tailwind.config.js optimization
 module.exports = {
-  content: [
-    './src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
-  ],
+  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   safelist: [
     // Only include absolutely necessary classes
   ],
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [require('@tailwindcss/typography')],
   // Enable CSS purging in production
   purge: {
     enabled: process.env.NODE_ENV === 'production',
     content: ['./src/**/*.{astro,html,js,jsx,ts,tsx,vue,svelte}'],
-  }
-}
+  },
+};
 ```
 
 #### 2.2 Page Weight Optimization
+
 **Current**: 2.3MB | **Target**: <2MB | **Reduction needed**: 300KB (13%)
 
 **Actions**:
+
 1. **Image Optimization**: Implement WebP/AVIF formats
 2. **Font Optimization**: Subset fonts and use font-display: swap
 3. **JavaScript Bundling**: Code splitting and tree shaking
 4. **Asset Compression**: Enable Brotli/Gzip compression
 
 #### 2.3 First Input Delay (FID) Optimization
+
 **Current**: 200-300ms | **Target**: <100ms | **Improvement needed**: 50-67%
 
 **Actions**:
+
 1. **JavaScript Optimization**: Reduce main thread blocking
 2. **Code Splitting**: Load non-critical JS asynchronously
 3. **Event Handler Optimization**: Debounce/throttle interactions
 4. **Third-party Script Optimization**: Defer non-critical scripts
 
 ### Phase 3: Test Configuration Optimization
+
 **Priority: MEDIUM | Timeline: 1-2 days**
 
 #### 3.1 Update Performance Budgets
+
 **Action**: Adjust test thresholds to realistic but aspirational targets
 
 ```typescript
@@ -141,7 +158,7 @@ const PERFORMANCE_BUDGETS = {
   TOTAL_TRANSFER_SIZE: 2.2 * 1024 * 1024, // 2.2MB (was 2MB)
   FID_THRESHOLD: 150, // 150ms (was 100ms)
   CONSISTENCY_RATIO: 2.0, // 2x (was 1.5x)
-  
+
   // Target budgets for future optimization
   TARGET_CSS_BUNDLE_SIZE: 100 * 1024,
   TARGET_TOTAL_TRANSFER_SIZE: 2 * 1024 * 1024,
@@ -151,6 +168,7 @@ const PERFORMANCE_BUDGETS = {
 ```
 
 #### 3.2 Improve Test Selectors
+
 **Action**: Make selectors more robust and less brittle
 
 ```typescript
@@ -170,11 +188,12 @@ const SELECTORS = {
   SOCIAL_LINKS: {
     FOOTER: 'footer a[href*="http"]:not([href*="seez.eu"])',
     HEADER: 'header .social-links a',
-  }
+  },
 };
 ```
 
 #### 3.3 Add Retry Logic and Graceful Degradation
+
 **Action**: Make tests more resilient to timing issues
 
 ```typescript
@@ -195,87 +214,78 @@ async function clickWithRetry(page: Page, selector: string, maxRetries = 3) {
 ```
 
 ### Phase 4: Site Implementation Fixes
+
 **Priority: MEDIUM | Timeline: 2-3 days**
 
 #### 4.1 Mobile Navigation Implementation
+
 **Current Issue**: Hidden navigation on mobile devices
 
 **Solution**: Implement proper mobile navigation pattern
+
 ```astro
 <!-- Header.astro -->
 <nav class="hidden md:flex" aria-label="Main navigation">
   <!-- Desktop navigation -->
 </nav>
 
-<button 
-  data-aw-toggle-menu 
-  class="md:hidden"
-  aria-label="Toggle mobile menu"
-  aria-expanded="false"
->
+<button data-aw-toggle-menu class="md:hidden" aria-label="Toggle mobile menu" aria-expanded="false">
   <span class="sr-only">Toggle navigation</span>
   <!-- Hamburger icon -->
 </button>
 
-<nav 
-  class="mobile-nav hidden md:hidden" 
-  data-mobile-nav
-  aria-label="Mobile navigation"
->
+<nav class="mobile-nav hidden md:hidden" data-mobile-nav aria-label="Mobile navigation">
   <!-- Mobile navigation content -->
 </nav>
 ```
 
 #### 4.2 Language Switcher Enhancement
+
 **Solution**: Ensure proper touch targets and visibility
 
 ```astro
 <!-- LanguageSwitcher.astro -->
 <div class="language-switcher" data-language-switcher>
-  <button 
-    class="language-button min-h-[44px] min-w-[44px]" 
-    data-lang-button
-    aria-label="Change language"
-  >
+  <button class="language-button min-h-[44px] min-w-[44px]" data-lang-button aria-label="Change language">
     {currentLang}
   </button>
   <div class="language-options" data-lang-options>
-    {languages.map(lang => (
-      <a 
-        href={getLocalizedPath(lang)}
-        class="language-option min-h-[44px] flex items-center px-3"
-        data-lang-option={lang}
-        aria-label={`Switch to ${lang}`}
-      >
-        {lang}
-      </a>
-    ))}
+    {
+      languages.map((lang) => (
+        <a
+          href={getLocalizedPath(lang)}
+          class="language-option min-h-[44px] flex items-center px-3"
+          data-lang-option={lang}
+          aria-label={`Switch to ${lang}`}
+        >
+          {lang}
+        </a>
+      ))
+    }
   </div>
 </div>
 ```
 
 #### 4.3 Social Links Fix
+
 **Solution**: Add proper external link attributes
 
 ```astro
-<!-- Social links component -->
-{socialLinks.map(link => (
-  <a 
-    href={link.url}
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label={link.label}
-    class="social-link"
-  >
-    <Icon name={link.icon} />
-  </a>
-))}
+<!-- Social links component -->{
+  socialLinks.map((link) => (
+    <a href={link.url} target="_blank" rel="noopener noreferrer" aria-label={link.label} class="social-link">
+      <Icon name={link.icon} />
+    </a>
+  ))
+}
 ```
 
 ### Phase 5: Performance Implementation
+
 **Priority: MEDIUM | Timeline: 3-4 days**
 
 #### 5.1 Astro Configuration Optimization
+
 ```typescript
 // astro.config.ts
 export default defineConfig({
@@ -304,13 +314,14 @@ export default defineConfig({
         content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
         // Aggressive purging
         safelist: [],
-      }
+      },
     }),
   ],
 });
 ```
 
 #### 5.2 Font and Asset Optimization
+
 ```astro
 ---
 // Font optimization
@@ -320,14 +331,12 @@ const fonts = [
     as: 'font',
     type: 'font/woff2',
     crossorigin: 'anonymous',
-  }
+  },
 ];
 ---
 
 <head>
-  {fonts.map(font => (
-    <link rel="preload" {...font} />
-  ))}
+  {fonts.map((font) => <link rel="preload" {...font} />)}
   <style>
     @font-face {
       font-family: 'Inter';
@@ -340,9 +349,11 @@ const fonts = [
 ```
 
 ### Phase 6: Advanced Test Enhancements
+
 **Priority: LOW | Timeline: 1-2 days**
 
 #### 6.1 Performance Test Stabilization
+
 **Action**: Add warmup runs and multiple measurements
 
 ```typescript
@@ -351,30 +362,31 @@ test('Core Web Vitals - LCP', async ({ page }) => {
   // Warmup run
   await page.goto('/');
   await page.waitForLoadState('networkidle');
-  
+
   // Clear cache and measure
   await page.context().clearCookies();
-  
+
   const measurements = [];
   for (let i = 0; i < 3; i++) {
     await page.reload();
     const lcp = await measureLCP(page);
     measurements.push(lcp);
   }
-  
+
   const avgLCP = measurements.reduce((a, b) => a + b) / measurements.length;
   expect(avgLCP).toBeLessThan(2500);
 });
 ```
 
 #### 6.2 Visual Regression Testing
+
 **Action**: Add screenshot comparisons for critical components
 
 ```typescript
 // Visual regression testing
 test('Language Switcher Visual Regression', async ({ page }) => {
   await page.goto('/');
-  
+
   const languageSwitcher = page.locator('[data-language-switcher]');
   await expect(languageSwitcher).toHaveScreenshot('language-switcher.png');
 });
@@ -383,21 +395,25 @@ test('Language Switcher Visual Regression', async ({ page }) => {
 ## 📈 Success Metrics
 
 ### Phase 1 Success Criteria
+
 - [ ] Mobile navigation tests pass: >90%
 - [ ] Language switcher tests pass: >90%
 - [ ] Social link tests pass: 100%
 
 ### Phase 2 Success Criteria
+
 - [ ] CSS bundle size: <120KB (interim target)
 - [ ] Page weight: <2.2MB (interim target)
 - [ ] FID: <150ms (interim target)
 
 ### Phase 3 Success Criteria
+
 - [ ] Test flakiness: <5%
 - [ ] Test execution time: <15 minutes total
 - [ ] Component tests pass: >95%
 
 ### Overall Success Criteria
+
 - [ ] **Performance tests**: >90% pass rate
 - [ ] **Component tests**: >95% pass rate
 - [ ] **E2E tests**: >95% pass rate
@@ -406,12 +422,14 @@ test('Language Switcher Visual Regression', async ({ page }) => {
 ## 🔄 Validation Process
 
 ### After Each Phase
+
 1. **Run affected test suites**
 2. **Measure improvement metrics**
 3. **Document changes and results**
 4. **Update test thresholds if needed**
 
 ### Final Validation
+
 1. **Full test suite execution**
 2. **Performance benchmarking**
 3. **Cross-browser validation**
@@ -420,11 +438,13 @@ test('Language Switcher Visual Regression', async ({ page }) => {
 ## 📝 Documentation Updates
 
 ### Test Documentation
+
 - [ ] Update test selector documentation
 - [ ] Document performance budget rationale
 - [ ] Create troubleshooting guide for common failures
 
-### Implementation Documentation  
+### Implementation Documentation
+
 - [ ] Document mobile navigation pattern
 - [ ] Create performance optimization checklist
 - [ ] Update component development guidelines
@@ -432,12 +452,14 @@ test('Language Switcher Visual Regression', async ({ page }) => {
 ## 🎯 Long-term Optimization Strategy
 
 ### Continuous Improvement
+
 1. **Monthly performance budget reviews**
 2. **Quarterly test suite optimization**
 3. **Regular device/browser matrix updates**
 4. **Performance regression monitoring**
 
 ### Future Enhancements
+
 1. **Visual regression testing integration**
 2. **Accessibility automation expansion**
 3. **Performance monitoring dashboard**

@@ -15,7 +15,12 @@ import astrowind from './vendor/integration';
 import pagefind from 'astro-pagefind';
 // import astroI18next from 'astro-i18next';
 
-import { readingTimeRemarkPlugin, remarkModifiedTime, responsiveTablesRehypePlugin, lazyImagesRehypePlugin } from './src/utils/frontmatter';
+import {
+  readingTimeRemarkPlugin,
+  remarkModifiedTime,
+  responsiveTablesRehypePlugin,
+  lazyImagesRehypePlugin,
+} from './src/utils/frontmatter';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -69,7 +74,7 @@ export default defineConfig({
           png: { quality: 85, progressive: true },
           webp: { quality: 85 },
           avif: { quality: 80 },
-        }
+        },
       },
       JavaScript: true,
       SVG: true,
@@ -99,8 +104,8 @@ export default defineConfig({
       entrypoint: 'astro/assets/services/sharp',
       config: {
         limitInputPixels: 268402689, // ~16K x 16K pixels
-      }
-    }
+      },
+    },
   },
 
   markdown: {
@@ -120,8 +125,8 @@ export default defineConfig({
         output: {
           // Code splitting for better caching
           manualChunks: {
-            'vendor': ['astro/transitions', 'astro/client'],
-            'ui': ['astro-icon/components'],
+            vendor: ['astro/transitions', 'astro/client'],
+            ui: ['astro-icon/components'],
           },
         },
       },

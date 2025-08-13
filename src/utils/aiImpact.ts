@@ -6,9 +6,9 @@
 // Energy consumption estimates per 1k tokens (in Wh)
 // Based on various research sources with uncertainty ranges
 export const DEFAULT_WH_PER_KTOKENS = {
-  low: 2.9,    // Conservative estimate
-  mid: 4.2,    // Best estimate
-  high: 6.1,   // Upper bound estimate
+  low: 2.9, // Conservative estimate
+  mid: 4.2, // Best estimate
+  high: 6.1, // Upper bound estimate
 };
 
 // Grid carbon intensity by region (gCO2/kWh)
@@ -17,8 +17,8 @@ export const GRID_INTENSITY = {
   'us-east-1': { low: 350, mid: 400, high: 450 }, // US East Coast
   'us-west-1': { low: 200, mid: 250, high: 300 }, // US West Coast (more renewable)
   'eu-central-1': { low: 300, mid: 350, high: 400 }, // EU Central
-  'eu-west-1': { low: 280, mid: 320, high: 360 },    // EU West
-  'global': { low: 400, mid: 475, high: 550 },       // Global average
+  'eu-west-1': { low: 280, mid: 320, high: 360 }, // EU West
+  global: { low: 400, mid: 475, high: 550 }, // Global average
 } as const;
 
 // Model-specific pricing (USD per 1k tokens)
@@ -49,16 +49,16 @@ export interface AIMetrics {
 
 export interface EnvironmentalImpact {
   energy: {
-    low: number;    // Wh
+    low: number; // Wh
     mid: number;
     high: number;
   };
   co2: {
-    low: number;    // gCO2
+    low: number; // gCO2
     mid: number;
     high: number;
   };
-  cost: number;     // USD
+  cost: number; // USD
   totalTokens: number;
   methodology: string;
 }
@@ -117,10 +117,7 @@ export function calculateEnvironmentalImpact(
   metrics: AIMetrics,
   customEnergyRates?: typeof DEFAULT_WH_PER_KTOKENS
 ): EnvironmentalImpact {
-  const totalTokens = metrics.items.reduce(
-    (sum, item) => sum + item.input_tokens + item.output_tokens,
-    0
-  );
+  const totalTokens = metrics.items.reduce((sum, item) => sum + item.input_tokens + item.output_tokens, 0);
 
   const energy = calculateEnergyConsumption(totalTokens, customEnergyRates);
   const co2 = calculateCO2Emissions(energy, metrics.region);
@@ -177,19 +174,19 @@ export function formatCost(costUSD: number): string {
  */
 export function getCO2Context(co2g: number): string {
   const co2kg = co2g / 1000;
-  
+
   if (co2kg < 0.001) {
-    return "≈ breathing for a few minutes";
+    return '≈ breathing for a few minutes';
   } else if (co2kg < 0.01) {
-    return "≈ smartphone charge";
+    return '≈ smartphone charge';
   } else if (co2kg < 0.1) {
-    return "≈ cup of coffee";
+    return '≈ cup of coffee';
   } else if (co2kg < 1) {
-    return "≈ short email";
+    return '≈ short email';
   } else if (co2kg < 10) {
-    return "≈ driving 100m";
+    return '≈ driving 100m';
   } else {
-    return "≈ driving 1km";
+    return '≈ driving 1km';
   }
 }
 

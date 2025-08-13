@@ -21,27 +21,28 @@ Everything else should work automatically based on your configuration!
 
 ```yaml
 site:
-  name: 'Seez'                    # Site name (appears in title, header, metadata)
-  site: 'https://seez.eu'         # Full site URL (used for canonical URLs, sitemaps)
-  base: '/'                       # Base path (for subdirectory deployments)
-  trailingSlash: false           # Whether URLs should have trailing slashes
+  name: 'Seez' # Site name (appears in title, header, metadata)
+  site: 'https://seez.eu' # Full site URL (used for canonical URLs, sitemaps)
+  base: '/' # Base path (for subdirectory deployments)
+  trailingSlash: false # Whether URLs should have trailing slashes
   title: 'Seez - Personal Portfolio & Digital Sanctuary'
   description: 'A multilingual platform for sharing projects, thoughts, and creative endeavors.'
-  author: 'Patrick Bziuk'        # Site author (used in metadata)
-  lang: 'en'                     # Default language
-  
+  author: 'Patrick Bziuk' # Site author (used in metadata)
+  lang: 'en' # Default language
+
   # Logo configuration
   logo:
-    src: '~/assets/images/logo.svg'  # Path to logo file
-    alt: 'Seez Logo'                 # Alt text for accessibility
-    width: 132                       # Logo width in pixels
-    height: 32                       # Logo height in pixels
-  
+    src: '~/assets/images/logo.svg' # Path to logo file
+    alt: 'Seez Logo' # Alt text for accessibility
+    width: 132 # Logo width in pixels
+    height: 32 # Logo height in pixels
+
   # SEO verification
-  googleSiteVerificationId: xxxxxxxxxxxxxxxxxx  # Google Search Console ID
+  googleSiteVerificationId: xxxxxxxxxxxxxxxxxx # Google Search Console ID
 ```
 
 **Effects on Application:**
+
 - `name`: Used in `<title>` tags, header logo text, metadata
 - `site`: Base URL for canonical links, Open Graph URLs, sitemaps
 - `title`: Default page title template
@@ -50,6 +51,7 @@ site:
 - Maps to: `SITE` config in `astrowind:config` module
 
 **Used in Components:**
+
 - `src/layouts/Layout.astro` - Title and metadata
 - `src/components/core/layout/Header.astro` - Logo and site name
 - `src/pages/sitemap.xml.ts` - Sitemap generation
@@ -63,37 +65,37 @@ site:
 theme:
   colors:
     # Brand colors - used throughout the application
-    primary: '#2563eb'        # Primary brand color (buttons, links)
-    primaryDark: '#1d4ed8'    # Primary color dark variant
-    secondary: '#7c3aed'      # Secondary accent color
-    accent: '#f59e0b'         # Accent color (highlights, CTAs)
-    
+    primary: '#2563eb' # Primary brand color (buttons, links)
+    primaryDark: '#1d4ed8' # Primary color dark variant
+    secondary: '#7c3aed' # Secondary accent color
+    accent: '#f59e0b' # Accent color (highlights, CTAs)
+
     # Semantic colors - used for UI states
-    success: '#10b981'        # Success states (form validation, alerts)
-    warning: '#f59e0b'        # Warning states
-    error: '#ef4444'          # Error states
-    info: '#3b82f6'           # Informational states
-    
+    success: '#10b981' # Success states (form validation, alerts)
+    warning: '#f59e0b' # Warning states
+    error: '#ef4444' # Error states
+    info: '#3b82f6' # Informational states
+
     # Light mode colors
     light:
-      background: '#ffffff'   # Page background
-      surface: '#f8fafc'      # Card/panel backgrounds
-      border: '#e2e8f0'       # Border colors
+      background: '#ffffff' # Page background
+      surface: '#f8fafc' # Card/panel backgrounds
+      border: '#e2e8f0' # Border colors
       text:
-        primary: '#0f172a'    # Main text color
-        secondary: '#475569'  # Secondary text (captions, labels)
-        muted: '#64748b'      # Muted text (metadata)
-    
+        primary: '#0f172a' # Main text color
+        secondary: '#475569' # Secondary text (captions, labels)
+        muted: '#64748b' # Muted text (metadata)
+
     # Dark mode colors
     dark:
-      background: '#0f172a'   # Dark page background
-      surface: '#1e293b'      # Dark card backgrounds
-      border: '#334155'       # Dark border colors
+      background: '#0f172a' # Dark page background
+      surface: '#1e293b' # Dark card backgrounds
+      border: '#334155' # Dark border colors
       text:
-        primary: '#f8fafc'    # Dark mode main text
-        secondary: '#cbd5e1'  # Dark mode secondary text
-        muted: '#94a3b8'      # Dark mode muted text
-  
+        primary: '#f8fafc' # Dark mode main text
+        secondary: '#cbd5e1' # Dark mode secondary text
+        muted: '#94a3b8' # Dark mode muted text
+
   # Typography settings
   typography:
     fontFamily:
@@ -103,12 +105,14 @@ theme:
 ```
 
 **Effects on Application:**
+
 - Colors are converted to CSS custom properties (CSS variables)
 - Applied globally via Tailwind CSS configuration
 - Used for consistent theming across light/dark modes
 - Typography fonts loaded and applied site-wide
 
 **Used in Components:**
+
 - Applied globally via `src/assets/styles/tailwind.css`
 - `src/utils/config.ts` - ThemeUtils for CSS variable manipulation
 - All components inherit these color values
@@ -121,12 +125,12 @@ theme:
 ```yaml
 metadata:
   title:
-    default: 'Seez'           # Default title (fallback)
-    template: '%s | Seez'     # Title template (%s = page title)
+    default: 'Seez' # Default title (fallback)
+    template: '%s | Seez' # Title template (%s = page title)
   description: 'A multilingual platform for sharing projects, thoughts, and creative endeavors.'
   robots:
-    index: true              # Allow search engine indexing
-    follow: true             # Allow following links
+    index: true # Allow search engine indexing
+    follow: true # Allow following links
   openGraph:
     site_name: 'Seez'
     images:
@@ -135,18 +139,20 @@ metadata:
         height: 628
     type: website
   twitter:
-    handle: '@seez_eu'       # Twitter handle for Twitter Cards
+    handle: '@seez_eu' # Twitter handle for Twitter Cards
     site: '@seez_eu'
     cardType: summary_large_image
 ```
 
 **Effects on Application:**
+
 - Generates proper `<meta>` tags for SEO
 - Creates Open Graph tags for social media sharing
 - Configures Twitter Card metadata
 - Sets up robots.txt directives
 
 **Used in Components:**
+
 - `src/components/core/meta/SEO.astro` - Main SEO component
 - `src/layouts/Layout.astro` - Page-level metadata
 - `src/pages/robots.txt.ts` - Robots.txt generation
@@ -157,30 +163,32 @@ metadata:
 
 ```yaml
 i18n:
-  language: 'en'              # Default language
-  textDirection: 'ltr'        # Text direction (ltr/rtl)
-  locales: ['en', 'de']       # Supported languages
-  
+  language: 'en' # Default language
+  textDirection: 'ltr' # Text direction (ltr/rtl)
+  locales: ['en', 'de'] # Supported languages
+
   # Translation settings
   translations:
-    autoGenerate: true        # Enable automatic AI translation
-    qualityThreshold: 70      # Minimum quality score (0-100)
-    provider: 'openai'        # Translation provider
-    model: 'gpt-4o'          # AI model to use
-    
+    autoGenerate: true # Enable automatic AI translation
+    qualityThreshold: 70 # Minimum quality score (0-100)
+    provider: 'openai' # Translation provider
+    model: 'gpt-4o' # AI model to use
+
     # Environmental impact tracking
     tracking:
-      enabled: true           # Track CO₂ emissions
-      co2PerToken: 0.0000043  # Grams CO₂ per token
+      enabled: true # Track CO₂ emissions
+      co2PerToken: 0.0000043 # Grams CO₂ per token
 ```
 
 **Effects on Application:**
+
 - Sets up language routing (`/en/`, `/de/`)
 - Configures automatic translation pipeline
 - Enables environmental impact tracking
 - Controls translation quality thresholds
 
 **Used in Components:**
+
 - `src/middleware.ts` - Language detection and routing
 - `src/components/core/layout/LanguageSwitcher.astro` - Language selection
 - `scripts/translations/` - All translation scripts
@@ -195,34 +203,37 @@ integrations:
   # OpenAI for translations and AI features
   openai:
     enabled: true
-    model: 'gpt-4o'          # AI model for translations
-    maxTokens: 2000          # Maximum tokens per request
-    temperature: 0.3         # Creativity level (0.0-1.0)
-  
+    model: 'gpt-4o' # AI model for translations
+    maxTokens: 2000 # Maximum tokens per request
+    temperature: 0.3 # Creativity level (0.0-1.0)
+
   # Contact form integration
   contact:
     enabled: true
     provider: 'formspree'
     endpoint: 'https://formspree.io/f/mwkgbkkp'
-  
+
   # Search functionality
   search:
     enabled: true
-    provider: 'pagefind'     # Search provider
-    hotkeys: ['/', '.']      # Keyboard shortcuts to open search
+    provider: 'pagefind' # Search provider
+    hotkeys: ['/', '.'] # Keyboard shortcuts to open search
 ```
 
 **Effects on Application:**
+
 - Enables/disables major features
 - Configures third-party service integration
 - Controls AI translation behavior
 - Sets up contact form processing
 
 **Environment Variables Required:**
+
 - `OPENAI_API_KEY` - For AI translations
 - `FORMSPREE_ENDPOINT` - For contact forms (optional override)
 
 **Used in Components:**
+
 - `src/components/Search.astro` - Search functionality
 - `src/pages/[lang]/contact.astro` - Contact form
 - `scripts/translations/` - AI translation scripts
@@ -236,23 +247,23 @@ integrations:
 content:
   collections:
     books:
-      enabled: true           # Enable books collection
-      title: 'Books'         # Display title
+      enabled: true # Enable books collection
+      title: 'Books' # Display title
       description: 'Literary works and creative writing'
-      icon: '📚'             # Emoji icon for navigation
-    
+      icon: '📚' # Emoji icon for navigation
+
     projects:
       enabled: true
       title: 'Projects'
       description: 'Software projects and technical endeavors'
       icon: '🚀'
-    
+
     lab:
       enabled: true
       title: 'Lab'
       description: 'Experiments and technical explorations'
       icon: '🧪'
-    
+
     life:
       enabled: true
       title: 'Life'
@@ -261,12 +272,14 @@ content:
 ```
 
 **Effects on Application:**
+
 - Controls which content collections are active
 - Sets navigation labels and descriptions
 - Defines collection icons for UI
 - Enables/disables entire content sections
 
 **Used in Components:**
+
 - `src/navigation.ts` - Main navigation generation
 - `src/components/core/layout/Header.astro` - Navigation menu
 - `src/pages/[lang]/[collection]/index.astro` - Collection listing pages
@@ -284,7 +297,7 @@ homepage:
     title: 'Welcome to Seez'
     subtitle: 'A multilingual platform for sharing projects, thoughts, and creative endeavors.'
     showImage: true
-    
+
     # Call-to-action buttons
     cta:
       primary:
@@ -295,16 +308,16 @@ homepage:
         text: 'Read About Me'
         url: '/en/about'
         style: 'secondary'
-  
+
   # Featured content sections
   featured:
     enabled: true
     sections:
-      - type: 'projects'      # Which collection to feature
+      - type: 'projects' # Which collection to feature
         title: 'Latest Projects'
-        limit: 3              # How many items to show
-        showMore: true        # Show "View All" link
-      
+        limit: 3 # How many items to show
+        showMore: true # Show "View All" link
+
       - type: 'books'
         title: 'Recent Writing'
         limit: 2
@@ -312,12 +325,14 @@ homepage:
 ```
 
 **Effects on Application:**
+
 - Controls homepage layout and content
 - Sets hero section text and CTAs
 - Configures featured content sections
 - Determines how many items to show
 
 **Used in Components:**
+
 - `src/pages/index.astro` - Homepage layout
 - `src/components/marketing/content/Hero.astro` - Hero section
 - `src/components/marketing/content/FeaturedContent.astro` - Featured sections
@@ -330,25 +345,25 @@ homepage:
 navigation:
   # Header navigation
   header:
-    showLogo: true           # Display site logo
-    showThemeToggle: true    # Show dark/light mode toggle
+    showLogo: true # Display site logo
+    showThemeToggle: true # Show dark/light mode toggle
     showLanguageSwitch: true # Show language switcher
-    showSearch: true         # Show search button
-    
+    showSearch: true # Show search button
+
     # Main navigation items
     items:
-      - text: 'Projects'     # Navigation label
-        href: '/projects'    # URL (language prefix added automatically)
-        icon: '🚀'          # Optional icon
+      - text: 'Projects' # Navigation label
+        href: '/projects' # URL (language prefix added automatically)
+        icon: '🚀' # Optional icon
       - text: 'Books'
         href: '/books'
         icon: '📚'
       # ... more items
-  
+
   # Footer navigation
   footer:
     enabled: true
-    
+
     # Social media links
     social:
       - platform: 'github'
@@ -357,7 +372,7 @@ navigation:
       - platform: 'email'
         url: 'mailto:hello@seez.eu'
         icon: 'mail'
-    
+
     # Legal pages
     legal:
       - text: 'Privacy Policy'
@@ -367,12 +382,14 @@ navigation:
 ```
 
 **Effects on Application:**
+
 - Controls header/footer content and behavior
 - Sets navigation menu items
 - Configures social media links
 - Enables/disables navigation features
 
 **Used in Components:**
+
 - `src/components/core/layout/Header.astro` - Main navigation
 - `src/components/core/layout/Footer.astro` - Footer links
 - `src/navigation.ts` - Navigation utilities
@@ -385,30 +402,32 @@ navigation:
 ```yaml
 features:
   # Content features
-  enableComments: false       # Show comment sections
-  enableShare: true          # Show social sharing buttons
-  enablePrint: true          # Show print buttons
-  enableSearch: true         # Enable site search
-  enableTags: true           # Show tag navigation
-  
+  enableComments: false # Show comment sections
+  enableShare: true # Show social sharing buttons
+  enablePrint: true # Show print buttons
+  enableSearch: true # Enable site search
+  enableTags: true # Show tag navigation
+
   # Translation features
-  enableAutoTranslation: true     # AI translation pipeline
-  enableTranslationHooks: true    # Git hooks for translations
-  showTranslationMetadata: true   # Show translation info
-  
+  enableAutoTranslation: true # AI translation pipeline
+  enableTranslationHooks: true # Git hooks for translations
+  showTranslationMetadata: true # Show translation info
+
   # Performance features
-  enableImageOptimization: true   # Optimize images
-  enableMinification: true        # Minify output
-  enableCompression: true         # Compress assets
+  enableImageOptimization: true # Optimize images
+  enableMinification: true # Minify output
+  enableCompression: true # Compress assets
 ```
 
 **Effects on Application:**
+
 - Enables/disables entire features
 - Controls performance optimizations
 - Manages translation pipeline
 - Fine-tunes user experience
 
 **Used in Components:**
+
 - `src/utils/config.ts` - FeatureFlags utilities
 - `src/components/content/SocialShare.astro` - Sharing features
 - `src/components/Search.astro` - Search functionality
@@ -422,19 +441,20 @@ features:
 # Legacy blog configuration (kept for compatibility)
 apps:
   blog:
-    isEnabled: false         # Disable blog functionality
+    isEnabled: false # Disable blog functionality
     # ... other blog settings
 
 analytics:
   vendors:
     googleAnalytics:
-      id: null              # Google Analytics ID (or "G-XXXXXXXXXX")
+      id: null # Google Analytics ID (or "G-XXXXXXXXXX")
 
 ui:
-  theme: 'system'           # Theme preference: system/light/dark
+  theme: 'system' # Theme preference: system/light/dark
 ```
 
 **Effects on Application:**
+
 - Maintains backward compatibility
 - Controls analytics integration
 - Sets default theme preference
@@ -454,8 +474,8 @@ ui:
 
 ```typescript
 // Configuration types are defined in:
-src/types/config.ts                    // Complete type definitions
-vendor/integration/utils/configBuilder.ts  // Build-time processing
+src / types / config.ts; // Complete type definitions
+vendor / integration / utils / configBuilder.ts; // Build-time processing
 
 // Usage in components:
 import { SITE, METADATA, I18N } from 'astrowind:config';
@@ -498,12 +518,14 @@ ThemeUtils.applyThemeColors(config.theme.colors);
 ### Step-by-Step Process
 
 1. **Clone Repository**
+
    ```bash
    git clone https://github.com/PatrickBziuk/seez.git my-new-site
    cd my-new-site
    ```
 
 2. **Edit Configuration**
+
    ```bash
    # Edit src/config.yaml with your site details
    code src/config.yaml
@@ -522,6 +544,7 @@ ThemeUtils.applyThemeColors(config.theme.colors);
    - `integrations.contact.endpoint` - Your contact form
 
 4. **Set Up Environment**
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your API keys
@@ -539,15 +562,15 @@ Your site should now be running with your configuration!
 
 ## 📊 Configuration Impact Map
 
-| Configuration Section | Affects Components | Build Process | Runtime Behavior |
-|----------------------|-------------------|---------------|------------------|
-| `site.*` | Header, Footer, SEO | Sitemap, robots.txt | URL generation |
-| `theme.colors` | All components | CSS generation | Theme switching |
-| `i18n.*` | All pages | Route generation | Language routing |
-| `integrations.*` | Search, Contact | Feature bundling | API connections |
-| `content.collections` | Navigation, Pages | Route creation | Content loading |
-| `navigation.*` | Header, Footer | Menu generation | Link behavior |
-| `features.*` | Conditional features | Bundle optimization | Feature availability |
+| Configuration Section | Affects Components   | Build Process       | Runtime Behavior     |
+| --------------------- | -------------------- | ------------------- | -------------------- |
+| `site.*`              | Header, Footer, SEO  | Sitemap, robots.txt | URL generation       |
+| `theme.colors`        | All components       | CSS generation      | Theme switching      |
+| `i18n.*`              | All pages            | Route generation    | Language routing     |
+| `integrations.*`      | Search, Contact      | Feature bundling    | API connections      |
+| `content.collections` | Navigation, Pages    | Route creation      | Content loading      |
+| `navigation.*`        | Header, Footer       | Menu generation     | Link behavior        |
+| `features.*`          | Conditional features | Bundle optimization | Feature availability |
 
 ---
 

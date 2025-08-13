@@ -39,17 +39,9 @@ const metadata = {
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {
-        filteredProjects.map((item) => (
-          <ContentCard item={item} lang={lang} basePath="projects" />
-        ))
-      }
+      {filteredProjects.map((item) => <ContentCard item={item} lang={lang} basePath="projects" />)}
     </div>
 
-    {
-      filteredProjects.length === 0 && (
-        <ComingSoon language={lang} section="Projects" />
-      )
-    }
+    {filteredProjects.length === 0 && <ComingSoon language={lang} section="Projects" />}
   </section>
 </Layout>

@@ -1,12 +1,12 @@
 ---
-title: About me  
-description: Why I build things the way I do.  
-language: en  
-tags:  
-  - programming  
-  - software  
-  - philosophy  
-  - digital-sovereignty  
+title: About me
+description: Why I build things the way I do.
+language: en
+tags:
+  - programming
+  - software
+  - philosophy
+  - digital-sovereignty
 ---
 
 Here I call myself **Seez**, but many also know me as **deinanker**, **zeilenliebe**, **destny** – or simply **Patrick**.
@@ -60,12 +60,14 @@ I’ve decided to build the first kind.
 ## My projects
 
 ### 🧠 Cosensai
+
 This is personally my main project, because my goal is to bring order to my own thinking and not have to rely on a VC-funded platform to structure my knowledge and thoughts. It’s about **personal AI**, with **privacy**, **sovereignty**, and **memory architecture** at the center.  
 A system that **supports your knowledge** and **your thoughts** without monetizing them. Not for nothing has OpenAI just announced a partnership with Shopify ([**Seriously, check it out**](https://www.reuters.com/business/openai-working-payment-checkout-system-within-chatgpt-ft-reports-2025-07-16/)).
 
 I wanted an digital sparring partner that **reflects your knowledge** instead of exploiting it. And if it starts just mirroring you, then it’s a system that’s supposed to help you recognize that and create new perspectives. _Not like the current chatbots, which always give users exactly what they most likely want to hear._
 
 ### 🫂 circles.
+
 A social network that deliberately works **without algorithmic manipulation**.  
 Realness instead of reach. Relationships instead of click optimization.  
 For people who want to communicate **for real** again. Based on the Dunbar number theory, that a normal person can only maintain about 150 relationships at once. Chat and exchange ideas without worrying that Big Tech is watching everything.
@@ -73,12 +75,14 @@ For people who want to communicate **for real** again. Based on the Dunbar numbe
 Ever been messaged by bots? Annoying, right? Unless you just bought yourself a few thousand followers for your Insta, go for it. But you can’t do that here by design. There’s the Proof of Realness mechanism, but a clever person could crack it – but I make it extra hard for them.
 
 ### 👕 marken.
+
 Sustainable **fashion label** as a proof of concept for transparent supply chains,  
 QR-based origin tracking and **NFTs with everyday value**, without crypto hype. It would be nice if we could go back to a world where brands aren’t interchangeable, but actually stand for values and ideals. In the end, it’s almost irrelevant whether I buy Nike or Adidas shoes, because in the worst case, they’re made in the same factory.
 
 When brands lose their identity for the sake of maximizing profit, it gets hard to convey and keep real values. That’s why **marken.** should be a place where values and identity matter again, and **marken.** itself is always just the proof of concept that in industry X, it’s absolutely possible to create a fair and sustainable offering that benefits both consumers and producers. _(And, by the way, the environment and the planet)_
 
 ### 🎮 leagueoffun
+
 A playground for web games and interactive tools to test new technologies in practice  
 and try out ideas in a small, controlled setting. In this context, I developed Blamegame as my first game, mainly to get a feel for building a progressive web app. I learned a lot about React, Tailwindcss, and i18n.
 
@@ -106,6 +110,7 @@ I want to **build digital spaces where you can breathe**.
 - Spaces that don’t milk your attention.
 - Spaces where **understanding is worth it again**.
 - Spaces that are **sustainable**.
+
 ---
 
 If you want to know more, just contact me – maybe I’ll reply.

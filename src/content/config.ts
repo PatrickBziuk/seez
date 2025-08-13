@@ -5,7 +5,7 @@ const sharedSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   slug: z.string().optional(),
-  
+
   // Enhanced publication metadata
   publishDate: z
     .string()
@@ -23,7 +23,7 @@ const sharedSchema = z.object({
     .string()
     .transform((s) => new Date(s))
     .optional(), // Git-based modification date
-  
+
   // Publication status and workflow
   publicationStatus: z.enum(['draft', 'published', 'archived']).default('draft'),
   changeLog: z
@@ -37,7 +37,7 @@ const sharedSchema = z.object({
       })
     )
     .optional(),
-  
+
   tags: z.array(z.string()).default([]),
   language: z.enum(['en', 'de']).default('en'),
   status: z
@@ -291,26 +291,26 @@ const authorSchema = z.object({
   capabilities: z.array(z.string()).optional(),
 });
 
-// Temporarily disabled collections due to empty directories
-// const books = defineCollection({
-//   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/books' }),
-//   schema: extendedSchema,
-// });
+// Uncomment collections as directories get populated
+const books = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/books' }),
+  schema: extendedSchema,
+});
 
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
   schema: extendedSchema,
 });
 
-// const lab = defineCollection({
-//   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/lab' }),
-//   schema: extendedSchema,
-// });
+const lab = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/lab' }),
+  schema: extendedSchema,
+});
 
-// const life = defineCollection({
-//   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/life' }),
-//   schema: extendedSchema,
-// });
+const life = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/life' }),
+  schema: extendedSchema,
+});
 
 const post = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/data/post' }),
@@ -328,10 +328,10 @@ const authors = defineCollection({
 });
 
 export const collections = {
-  // books,
+  books,
   projects,
-  // lab,
-  // life,
+  lab,
+  life,
   post,
   pages,
   authors,

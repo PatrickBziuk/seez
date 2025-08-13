@@ -8,29 +8,34 @@
 ### ✅ Implementation Tasks Completed
 
 #### **Phase 1: Enhanced Content Schema**
+
 - [x] **T34-001**: Extended content schema with publication metadata (firstPublishDate, lastChangeDate, publicationStatus, changeLog)
 - [x] **T34-002**: Updated all content collections to support new metadata fields
 - [x] **T34-003**: Added TypeScript interfaces for metadata validation
 
 #### **Phase 2: Metadata Detection & Injection Scripts**
+
 - [x] **T34-004**: Created `detect-metadata-changes.ts` for pre-commit analysis
 - [x] **T34-005**: Built `inject-metadata.ts` for automatic metadata injection
 - [x] **T34-006**: Implemented change log management with semantic content analysis
 - [x] **T34-007**: Added publication status workflow (draft→published→archived)
 
 #### **Phase 3: Pre-commit Integration**
+
 - [x] **T34-008**: Enhanced `.husky/pre-commit` with metadata-first workflow
 - [x] **T34-009**: Integrated automatic file staging for metadata updates
 - [x] **T34-010**: Added orchestration with existing translation pipeline
 - [x] **T34-011**: Created comprehensive content analysis workflow
 
 #### **Phase 4: UI Components & Display**
+
 - [x] **T34-012**: Enhanced `ContentMetadata.astro` with publication timeline
 - [x] **T34-013**: Added status badges for publication workflow
 - [x] **T34-014**: Extended `Badge.astro` with new variants (draft, published, archived)
 - [x] **T34-015**: Implemented collapsible change log display
 
 #### **Phase 5: Validation & Type Safety**
+
 - [x] **T34-016**: Created `validate-publication-metadata.ts` for consistency checks
 - [x] **T34-017**: Fixed TypeScript compilation errors in Badge component
 - [x] **T34-018**: Updated frontmatter type definitions with new fields
@@ -39,6 +44,7 @@
 ### Results Achieved
 
 **Core Features Delivered**:
+
 - ✅ **Automatic Publish Dates**: Content gets firstPublishDate when transitioning from draft to published
 - ✅ **Change Date Tracking**: lastChangeDate automatically updated when published content is modified
 - ✅ **Publication Status Workflow**: draft → published → archived with visual indicators
@@ -47,12 +53,14 @@
 - ✅ **Metadata-First Workflow**: Metadata detection runs first, then triggers other scripts based on needs
 
 **Author Display Enhancement**:
+
 - ✅ **Proper Author Attribution**: System correctly shows actual author names (Echo, Seez) when specified
 - ✅ **AI+Human Collaboration**: Both authors displayed for collaborative content
 - ✅ **Fallback to Status**: Only shows "Human/AI" when no specific authors are defined
 - ✅ **Clickable Author Links**: Author names remain clickable as previously implemented
 
 **Technical Implementation**:
+
 - ✅ **Enhanced Content Schema**: firstPublishDate, lastChangeDate, publicationStatus, changeLog fields
 - ✅ **Pre-commit Scripts**: detect-metadata-changes.ts → inject-metadata.ts → auto-stage files
 - ✅ **UI Components**: Enhanced Badge variants, publication timeline display, collapsible change history
@@ -60,6 +68,7 @@
 - ✅ **Integration Flow**: Metadata detection → TL;DR/tags analysis → translation pipeline
 
 **Workflow Integration**:
+
 - ✅ **Metadata-First Pipeline**: Pre-commit hook runs metadata detection first
 - ✅ **Conditional Processing**: Only runs TL;DR/tag/translation scripts based on detected needs
 - ✅ **Auto-commit Integration**: Updated files automatically staged and committed
@@ -86,28 +95,33 @@
 ### ✅ Implementation Tasks Completed
 
 #### **Phase 1: Safe Removals**
+
 - [x] **T32-001**: Remove development log files (`stderr.log`)
 - [x] **T32-002**: Remove empty test files (`test_translation_tasks_small.json`, `translation_tasks_debug.json`)
 - [x] **T32-003**: Remove development test scripts (`test-i18n.mjs`, `test-reading-stats.js`, `test-urls.js`)
 - [x] **T32-004**: Remove completed migration script (`update-imports.mjs`)
 
-#### **Phase 2: File Relocations**  
+#### **Phase 2: File Relocations**
+
 - [x] **T32-005**: Move `vscode.tailwind.json` to `.vscode/tailwind.json`
 - [x] **T32-006**: Update `.vscode/settings.json` to reference new location
 - [x] **T32-007**: Move `translation_tasks.json` to `data/translation_tasks.json`
 - [x] **T32-008**: Update script references in `content-sync-manager.ts`
 
 #### **Phase 3: Configuration Evaluation**
+
 - [x] **T32-009**: Remove unused `sandbox.config.json` (no CodeSandbox integration found)
 - [x] **T32-010**: Verify no dependencies on removed files
 
 #### **Phase 4: Prevention Measures**
+
 - [x] **T32-011**: Update `.gitignore` with cleanup patterns to prevent future clutter
 - [x] **T32-012**: Test build and deployment after cleanup (successful)
 
 ### Results Achieved
 
 **Files Removed** (8 files):
+
 - ✅ `stderr.log` - Development log output
 - ✅ `test_translation_tasks_small.json` - Empty test file
 - ✅ `translation_tasks_debug.json` - Empty debug file
@@ -118,15 +132,18 @@
 - ✅ `sandbox.config.json` - Unused CodeSandbox configuration
 
 **Files Relocated** (2 files):
+
 - ✅ `vscode.tailwind.json` → `.vscode/tailwind.json`
 - ✅ `translation_tasks.json` → `data/translation_tasks.json`
 
 **Configuration Updates**:
+
 - ✅ Updated `.vscode/settings.json` to reference new tailwind.json location
 - ✅ Updated `scripts/content/content-sync-manager.ts` for moved translation_tasks.json
 - ✅ Enhanced `.gitignore` with patterns to prevent future root directory clutter
 
 **Validation Results**:
+
 - ✅ Build passes successfully (no errors)
 - ✅ All dependencies verified (no broken references)
 - ✅ VS Code integration still works properly
@@ -154,8 +171,9 @@
 **Transform article endings from messy accumulation to scannable, honest, and user-friendly experience**
 
 **New Structure (Priority Order)**:
+
 1. **Share & Follow** - Single row with icons + labels (most engaged readers)
-2. **Article Facts** - Compact line + details toggle (word count, dates, language switcher)  
+2. **Article Facts** - Compact line + details toggle (word count, dates, language switcher)
 3. **AI Usage & Environmental Impact** - Default collapsed, transparent methodology
 4. **Tags** - Moved to top of article under deck/summary (discovery-focused)
 5. **License & Timestamp** - Tiny footer line
@@ -163,29 +181,35 @@
 ### 📋 Implementation Phases
 
 #### **Phase 1: Enhanced Remark Plugins (Days 1-2)**
+
 - [ ] **T31-001**: Word Count & Reading Time Plugin (auto-inject via remark)
 - [ ] **T31-002**: Git-Based Last Modified Plugin (remark with Git log fallback)
 - [ ] **T31-003**: Astro Config Plugin Integration (wire into existing pipeline)
 
-#### **Phase 2: AI Metrics & Environmental Impact (Days 3-4)**  
+#### **Phase 2: AI Metrics & Environmental Impact (Days 3-4)**
+
 - [ ] **T31-004**: AI Metrics JSON Structure (`src/data/ai-metrics.json` with canonical IDs)
 - [ ] **T31-005**: Enhanced AI Impact Utilities (transparent range-based calculations)
 - [ ] **T31-006**: AIImpact Component (collapsible, honest environmental display)
 
 #### **Phase 3: Article Facts & Metadata Consolidation (Days 5-6)**
+
 - [ ] **T31-007**: Enhanced ArticleFacts Component (unified metadata display)
 - [ ] **T31-008**: Language Counterpart Detection (canonical ID system integration)
 - [ ] **T31-009**: Social Share Enhancement (prominent top placement)
 
 #### **Phase 4: New ArticleFooter Component (Days 7-8)**
+
 - [ ] **T31-010**: Complete ArticleFooter Rewrite (new ordered structure)
 - [ ] **T31-011**: Footer Integration & Testing (wire into all layouts)
 
-#### **Phase 5: Tags Repositioning & Enhancement (Days 9-10)**  
+#### **Phase 5: Tags Repositioning & Enhancement (Days 9-10)**
+
 - [ ] **T31-012**: Tags Section Relocation (move to top under title/deck)
 - [ ] **T31-013**: Enhanced Tags Design (discovery-focused presentation)
 
 #### **Phase 6: Integration & Polish (Days 11-12)**
+
 - [ ] **T31-014**: Complete Layout Integration (all content types)
 - [ ] **T31-015**: Testing & Validation (comprehensive testing)
 
@@ -202,6 +226,7 @@
 **Target**: Achieve >95% test success rate across all test suites
 
 **Performance Targets**:
+
 - CSS Bundle: 144KB → 100KB (-30%)
 - Page Weight: 2.3MB → 2MB (-13%)
 - FID: 200-300ms → <100ms (-50-67%)
@@ -209,30 +234,35 @@
 ### 📋 Implementation Phases
 
 #### **Phase 1: Navigation & Mobile Fixes (Days 1-2)**
+
 - [ ] **T30-001**: Fix Mobile Navigation Visibility (`hidden md:flex` → responsive alternatives)
 - [ ] **T30-002**: Fix Language Switcher Component (mobile responsive design)
 - [ ] **T30-003**: Add missing `target="_blank"` to social links
 - [ ] **T30-004**: Test responsive navigation patterns
 
 #### **Phase 2: Performance Optimization (Days 3-5)**
+
 - [ ] **T30-005**: CSS Bundle Size Optimization (144KB→100KB)
 - [ ] **T30-006**: Page Weight Optimization (2.3MB→2MB)
 - [ ] **T30-007**: Image optimization and lazy loading
 - [ ] **T30-008**: Font loading optimization
 
 #### **Phase 3: Test Configuration Improvements (Days 6-7)**
+
 - [ ] **T30-009**: Update Performance Budgets (realistic targets)
 - [ ] **T30-010**: Improve Test Selectors (responsive design compatibility)
 - [ ] **T30-011**: Enhanced Mobile Test Coverage
 - [ ] **T30-012**: Cross-browser consistency improvements
 
 #### **Phase 4: FID & Interaction Optimization (Days 8-9)**
+
 - [ ] **T30-013**: JavaScript Bundle Optimization
 - [ ] **T30-014**: Third-party Script Optimization
 - [ ] **T30-015**: Critical CSS Inlining
 - [ ] **T30-016**: Interaction delay reduction
 
 #### **Phase 5: Monitoring & Reporting (Day 10)**
+
 - [ ] **T30-017**: Enhanced Performance Dashboard
 - [ ] **T30-018**: Regression Detection Improvements
 - [ ] **T30-019**: Test Result Analytics
@@ -241,17 +271,20 @@
 ### 🔧 Technical Focus Areas
 
 **Immediate Fixes**:
+
 - Mobile navigation visibility (`hidden md:flex` pattern)
 - Language switcher responsive behavior
 - Social link accessibility (`target="_blank"`)
 
 **Performance Optimization**:
+
 - CSS tree shaking and minification
 - Image compression and format optimization
 - JavaScript code splitting and lazy loading
 - Font display optimization
 
 **Test Framework Enhancement**:
+
 - Realistic performance budget thresholds
 - Responsive-aware test selectors
 - Enhanced mobile testing patterns
@@ -259,6 +292,7 @@
 ### 📊 Test Results Analysis (from Plan 10029 execution)
 
 **Issues Identified for Optimization**:
+
 - 🔧 **CSS Bundle Size**: 144KB vs 100KB target (40% oversized)
 - 🔧 **Page Weight**: 2.3MB vs 2MB target (13% oversized)
 - 🔧 **FID Performance**: 200-300ms vs 100ms target (50-67% slower)
@@ -267,8 +301,9 @@
 - 🔧 **Social Links**: Missing `target="_blank"` attributes
 
 **Framework Success Rates**:
+
 - ✅ **Performance Monitoring**: 79/80 tests passed (98.75% success rate)
-- ✅ **Component Testing**: 1157/1240 tests passed (93% success rate)  
+- ✅ **Component Testing**: 1157/1240 tests passed (93% success rate)
 - ✅ **Core Web Vitals**: 128/180 tests passed (71% success rate)
 
 ---
@@ -288,23 +323,28 @@
 ### 📋 Implementation Tasks
 
 #### **Phase 1: Content Pipeline Testing (Week 1)**
+
 - [ ] **T29-001**: Translation Quality Validation (`scripts/ci/test-translation-quality.ts`)
 - [ ] **T29-002**: Content Structure Validation (`scripts/ci/test-content-structure.ts`)
 - [ ] **T29-003**: AI Pipeline Health Check (`scripts/ci/test-ai-pipeline.ts`)
 
 #### **Phase 2: Core Functionality Testing (Week 1)**
+
 - [ ] **T29-004**: Enhanced E2E Testing Suite (Language switching, Dark mode, RSS feeds)
 - [ ] **T29-005**: Cross-Browser Compatibility (Chrome, Firefox, Safari + Mobile)
 
 #### **Phase 3: UI Component Testing (Week 2)**
+
 - [ ] **T29-006**: Interactive Component Testing (TLDR, Metadata, Social share)
 - [ ] **T29-007**: Responsive Design Validation (Mobile, tablet, desktop layouts)
 
 #### **Phase 4: Performance & Monitoring (Week 2)**
+
 - [ ] **T29-008**: Performance Testing (Bundle analysis, Core Web Vitals)
 - [ ] **T29-009**: SEO & Accessibility Monitoring (Meta tags, hreflang, WCAG)
 
 #### **Phase 5: CI/CD Integration (Week 3)**
+
 - [ ] **T29-010**: Non-blocking GitHub Actions workflow integration
 - [ ] **T29-011**: Test report generation and issue creation system
 - [ ] **T29-012**: Package.json script organization and documentation
@@ -312,12 +352,14 @@
 ### 🔧 Technical Architecture
 
 **4-Tier Testing Strategy**:
+
 1. **Tier 1**: Content & Pipeline Validation (Pre-commit + CI)
-2. **Tier 2**: Core Site Functionality (Every CI run)  
+2. **Tier 2**: Core Site Functionality (Every CI run)
 3. **Tier 3**: UI Component & Interaction Testing (Every CI run)
 4. **Tier 4**: Performance & SEO Monitoring (Daily + major deployments)
 
 **Key Features**:
+
 - ✅ All tests create GitHub issues on failure (never block deployment)
 - ✅ Comprehensive reporting with actionable recommendations
 - ✅ Cross-browser and responsive testing

@@ -11,24 +11,26 @@
 <!-- T30-015: Critical CSS inlining for improved First Contentful Paint -->
 <style is:inline data-critical>
   /* Critical CSS for above-the-fold content */
-  
+
   /* Reset and base styles */
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
   }
-  
+
   html {
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
   }
-  
+
   body {
     margin: 0;
     font-family: var(--aw-font-sans, ui-sans-serif, system-ui, sans-serif);
     background-color: var(--aw-color-bg-page, #ffffff);
     color: var(--aw-color-text-default, #000000);
   }
-  
+
   /* Header critical styles */
   header {
     position: relative;
@@ -37,85 +39,92 @@
     width: 100%;
     transition: opacity 0.3s ease-in-out;
   }
-  
+
   /* Navigation critical styles */
   nav {
     display: flex;
     align-items: center;
   }
-  
+
   /* Button and link critical styles */
-  a, button {
+  a,
+  button {
     color: inherit;
     text-decoration: none;
     outline: 2px solid transparent;
     outline-offset: 2px;
   }
-  
-  a:focus-visible, button:focus-visible {
+
+  a:focus-visible,
+  button:focus-visible {
     outline: 2px solid var(--aw-color-primary, #3b82f6);
     outline-offset: 2px;
   }
-  
+
   /* Typography critical styles */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin: 0;
     font-weight: 700;
     line-height: 1.2;
     color: var(--aw-color-text-heading, #000000);
   }
-  
+
   h1 {
     font-size: 2.25rem;
     line-height: 2.5rem;
   }
-  
+
   @media (min-width: 768px) {
     h1 {
       font-size: 3rem;
       line-height: 1;
     }
   }
-  
+
   /* Grid and flexbox critical utilities */
   .flex {
     display: flex;
   }
-  
+
   .items-center {
     align-items: center;
   }
-  
+
   .justify-between {
     justify-content: space-between;
   }
-  
+
   .hidden {
     display: none;
   }
-  
+
   /* Responsive utilities for mobile navigation */
   @media (min-width: 768px) {
     .md\\:flex {
       display: flex;
     }
-    
+
     .md\\:hidden {
       display: none;
     }
   }
-  
+
   /* Loading and transition critical styles */
   .antialiased {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   /* Color mode critical styles */
   .dark {
     color-scheme: dark;
   }
-  
+
   @media (prefers-color-scheme: dark) {
     .dark {
       --aw-color-bg-page: rgb(10 10 10);

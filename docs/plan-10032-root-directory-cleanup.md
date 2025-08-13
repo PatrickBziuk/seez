@@ -6,6 +6,7 @@
 ## Current Root Directory Analysis
 
 ### Files Present in Root:
+
 ```
 astro.config.ts              ✅ KEEP - Essential config
 CNAME                        ✅ KEEP - GitHub Pages config
@@ -37,13 +38,14 @@ vscode.tailwind.json        🔧 MOVE - VS Code specific, move to .vscode/
 ## Cleanup Strategy
 
 ### Phase 1: Safe Removals (Immediate)
+
 Files that can be safely deleted without breaking anything:
 
 1. **Development/Debug Files**:
    - `stderr.log` - Development log output
    - `test_translation_tasks_small.json` - Empty test file
    - `test-i18n.mjs` - Development test script
-   - `test-reading-stats.js` - Development test script  
+   - `test-reading-stats.js` - Development test script
    - `test-urls.js` - Development test script
    - `translation_tasks_debug.json` - Empty debug file
 
@@ -51,6 +53,7 @@ Files that can be safely deleted without breaking anything:
    - `update-imports.mjs` - Component restructuring script (completed)
 
 ### Phase 2: File Relocations
+
 Files that should be moved to more appropriate locations:
 
 1. **VS Code Configuration**:
@@ -62,6 +65,7 @@ Files that should be moved to more appropriate locations:
    - This is generated content that belongs with other data files
 
 ### Phase 3: Evaluation & Decision
+
 Files that need careful evaluation:
 
 1. **CodeSandbox Configuration**:
@@ -69,6 +73,7 @@ Files that need careful evaluation:
    - Can be removed if CodeSandbox integration not used
 
 ### Phase 4: .gitignore Updates
+
 Add patterns to prevent future clutter:
 
 ```ignore
@@ -86,22 +91,26 @@ test-*.mjs
 ## Implementation Tasks
 
 ### Phase 1: Safe Removals
+
 - [ ] **T32-001**: Remove development log files (`stderr.log`)
 - [ ] **T32-002**: Remove empty test files (`test_translation_tasks_small.json`, `translation_tasks_debug.json`)
 - [ ] **T32-003**: Remove development test scripts (`test-*.js`, `test-*.mjs`)
 - [ ] **T32-004**: Remove completed migration script (`update-imports.mjs`)
 
-### Phase 2: File Relocations  
+### Phase 2: File Relocations
+
 - [ ] **T32-005**: Move `vscode.tailwind.json` to `.vscode/tailwind.json`
 - [ ] **T32-006**: Update `.vscode/settings.json` to reference new location
 - [ ] **T32-007**: Move `translation_tasks.json` to `data/translation_tasks.json`
 - [ ] **T32-008**: Update any scripts that reference moved files
 
 ### Phase 3: Configuration Evaluation
+
 - [ ] **T32-009**: Evaluate `sandbox.config.json` usage and remove if unused
 - [ ] **T32-010**: Verify no dependencies on removed files
 
 ### Phase 4: Prevention Measures
+
 - [ ] **T32-011**: Update `.gitignore` with cleanup patterns
 - [ ] **T32-012**: Add documentation about root directory organization
 - [ ] **T32-013**: Test build and deployment after cleanup
@@ -109,15 +118,18 @@ test-*.mjs
 ## Risk Assessment
 
 ### Low Risk (Safe to Remove)
+
 - All development log and test files
 - Empty JSON debug files
 - Completed migration scripts
 
 ### Medium Risk (Move/Relocate)
+
 - `vscode.tailwind.json` - Only affects VS Code, easy to fix
 - `translation_tasks.json` - Generated file, can be regenerated
 
 ### High Risk (Evaluate Carefully)
+
 - `sandbox.config.json` - May be used by CodeSandbox integration
 
 ## Expected Benefits
@@ -131,6 +143,7 @@ test-*.mjs
 ## Rollback Plan
 
 If issues arise:
+
 1. All removed files are available in git history
 2. Moved files can be moved back if needed
 3. Updated references can be reverted

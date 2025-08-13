@@ -2,7 +2,7 @@
 
 /**
  * TLDR Generation Pipeline Script
- * 
+ *
  * Features:
  * - Uses registry-based canonical ID system for content tracking
  * - Generates AI-powered TLDR for content files
@@ -10,7 +10,7 @@
  * - Content integrity checks with SHA validation
  * - Supports both English and German content
  * - Progressive state saving with resume capability
- * 
+ *
  * Usage:
  *   pnpm run tldr:generate
  *   pnpm run tldr:generate --force  # Regenerate existing TLDRs
@@ -28,7 +28,7 @@ const envPath = path.join(process.cwd(), '.env.local');
 if (fs.existsSync(envPath)) {
   const envContent = fs.readFileSync(envPath, 'utf8');
   const envLines = envContent.split('\n');
-  
+
   for (const line of envLines) {
     const trimmed = line.trim();
     if (trimmed && !trimmed.startsWith('#')) {
@@ -134,15 +134,15 @@ function calculateTokenMetrics(
 } {
   // OpenAI pricing (as of 2024/2025)
   const pricing: Record<string, { input: number; output: number }> = {
-    'gpt-4.1-nano': { input: 0.10 / 1000000, output: 0.40 / 1000000 }, // $0.10/$0.40 per 1M tokens - Fastest, most cost-effective!
+    'gpt-4.1-nano': { input: 0.1 / 1000000, output: 0.4 / 1000000 }, // $0.10/$0.40 per 1M tokens - Fastest, most cost-effective!
     'gpt-4o-mini': { input: 0.15 / 1000000, output: 0.6 / 1000000 }, // $0.15/$0.60 per 1M tokens
     'gpt-4o': { input: 2.5 / 1000000, output: 10 / 1000000 }, // $2.50/$10.00 per 1M tokens
     'gpt-4': { input: 30 / 1000000, output: 60 / 1000000 }, // $30/$60 per 1M tokens
   };
 
   const rates = pricing[model] || pricing['gpt-4.1-nano'];
-  const cost = (inputTokens * rates.input) + (outputTokens * rates.output);
-  
+  const cost = inputTokens * rates.input + outputTokens * rates.output;
+
   // Rough CO2 estimation: ~0.5g CO2 per 1000 tokens (conservative estimate)
   const co2Impact = ((inputTokens + outputTokens) / 1000) * 0.5;
 
@@ -162,7 +162,7 @@ function trackTokenUsage(
   category?: string
 ): TokenUsageEntry {
   const { cost, co2Impact } = calculateTokenMetrics(model, inputTokens, outputTokens);
-  
+
   const entry: TokenUsageEntry = {
     id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     timestamp: new Date().toISOString(),
@@ -175,7 +175,7 @@ function trackTokenUsage(
     cost,
     co2Impact,
     language,
-    category
+    category,
   };
 
   // Load existing token usage data
@@ -220,7 +220,7 @@ function loadContentRegistry(): ContentRegistry {
  */
 function loadExistingTLDRData(): Map<string, TLDRMetadata> {
   const tldrs = new Map<string, TLDRMetadata>();
-  
+
   if (!fs.existsSync(TLDR_DATA_DIR)) {
     fs.mkdirSync(TLDR_DATA_DIR, { recursive: true });
     return tldrs;
@@ -259,9 +259,10 @@ async function generateTLDR(task: TLDRTask): Promise<TLDRMetadata> {
   const { content } = matter(fileContent);
 
   // Create TLDR generation prompt
-  const languageInstructions = task.language === 'en' 
-    ? 'Generate a concise TLDR summary in English'
-    : 'Generiere eine prägnante TLDR-Zusammenfassung auf Deutsch';
+  const languageInstructions =
+    task.language === 'en'
+      ? 'Generate a concise TLDR summary in English'
+      : 'Generiere eine prägnante TLDR-Zusammenfassung auf Deutsch';
 
   const prompt = `${languageInstructions} for the following article.
 
@@ -318,8 +319,8 @@ TLDR:`;
         inputTokens: usage?.prompt_tokens || 0,
         outputTokens: usage?.completion_tokens || 0,
         cost: tokenUsageEntry.cost,
-        co2Impact: tokenUsageEntry.co2Impact
-      }
+        co2Impact: tokenUsageEntry.co2Impact,
+      },
     };
 
     // Save TLDR data to file
@@ -331,7 +332,6 @@ TLDR:`;
     console.log(`💰 Cost: $${tokenUsageEntry.cost.toFixed(6)}, CO2: ${tokenUsageEntry.co2Impact.toFixed(3)}g`);
 
     return tldruData;
-
   } catch (error) {
     console.error(`❌ Failed to generate TLDR: ${error}`);
     throw error;
@@ -348,7 +348,7 @@ async function main() {
   // Parse command line arguments
   const args = process.argv.slice(2);
   const forceRegenerate = args.includes('--force');
-  const langFilter = args.find(arg => arg.startsWith('--lang='))?.split('=')[1] as 'en' | 'de' | undefined;
+  const langFilter = args.find((arg) => arg.startsWith('--lang='))?.split('=')[1] as 'en' | 'de' | undefined;
 
   // Load content registry
   const registry = loadContentRegistry();
@@ -363,7 +363,7 @@ async function main() {
 
   // Apply language filter if specified
   if (langFilter) {
-    eligibleEntries = eligibleEntries.filter(entry => entry.language === langFilter);
+    eligibleEntries = eligibleEntries.filter((entry) => entry.language === langFilter);
     console.log(`🔍 Filtered to ${langFilter.toUpperCase()} content: ${eligibleEntries.length} entries`);
   }
 
@@ -372,7 +372,7 @@ async function main() {
 
   for (const entry of eligibleEntries) {
     const existingTLDR = existingTLDRs.get(entry.canonicalId);
-    
+
     // Skip if TLDR exists and force regeneration is not requested
     if (existingTLDR && !forceRegenerate) {
       // Check if content has changed
@@ -390,7 +390,7 @@ async function main() {
       title: entry.title,
       language: entry.language,
       contentSha: entry.contentSha,
-      category: entry.category
+      category: entry.category,
     });
   }
 
@@ -424,7 +424,7 @@ async function main() {
       console.error(`❌ Error details:`, {
         message: error instanceof Error ? error.message : String(error),
         canonicalId: task.canonicalId,
-        contentPath: task.contentPath
+        contentPath: task.contentPath,
       });
       failed++;
       console.log(`❌ Task ${i + 1} failed, continuing to next task...\n`);

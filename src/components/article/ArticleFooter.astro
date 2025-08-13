@@ -54,9 +54,8 @@ const {
   licenseText,
 } = Astro.props;
 
-const defaultLicenseText = language === 'de' 
-  ? 'Dieser Inhalt steht unter CC BY-SA 4.0 Lizenz'
-  : 'This content is licensed under CC BY-SA 4.0';
+const defaultLicenseText =
+  language === 'de' ? 'Dieser Inhalt steht unter CC BY-SA 4.0 Lizenz' : 'This content is licensed under CC BY-SA 4.0';
 
 const currentYear = new Date().getFullYear();
 ---
@@ -64,12 +63,7 @@ const currentYear = new Date().getFullYear();
 <footer class="article-footer mt-12 space-y-8">
   <!-- 1. Share & Follow - Most engaged readers -->
   <section aria-label={language === 'de' ? 'Artikel teilen und folgen' : 'Share article and follow updates'}>
-    <SocialShareFooter 
-      text={title}
-      url={url}
-      language={language}
-      tags={tags}
-    />
+    <SocialShareFooter text={title} url={url} language={language} tags={tags} />
   </section>
 
   <!-- 2. Article Facts - Compact metadata with details toggle -->
@@ -88,17 +82,18 @@ const currentYear = new Date().getFullYear();
 
   <!-- 3. AI Usage & Environmental Impact - Default collapsed, transparent methodology -->
   <section aria-label={language === 'de' ? 'KI-Umweltauswirkung' : 'AI environmental impact'}>
-    <AIImpact
-      canonicalId={canonicalId}
-    />
+    <AIImpact canonicalId={canonicalId} />
   </section>
 
   <!-- 4. License & Timestamp - Tiny footer line -->
-  <section aria-label={language === 'de' ? 'Lizenz und Urheberrecht' : 'License and copyright'} class="border-t border-gray-200 dark:border-gray-700 pt-4">
+  <section
+    aria-label={language === 'de' ? 'Lizenz und Urheberrecht' : 'License and copyright'}
+    class="border-t border-gray-200 dark:border-gray-700 pt-4"
+  >
     <div class="text-xs text-gray-500 dark:text-gray-500 space-y-2">
       <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
         <div>
-          <a 
+          <a
             href={licenseUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -112,18 +107,13 @@ const currentYear = new Date().getFullYear();
         </div>
       </div>
       <div class="text-center sm:text-left">
-        {language === 'de' 
-          ? 'Erstellt mit Astro, gehostet auf Cloudflare Pages'
-          : 'Built with Astro, hosted on Cloudflare Pages'
+        {
+          language === 'de'
+            ? 'Erstellt mit Astro, gehostet auf Cloudflare Pages'
+            : 'Built with Astro, hosted on Cloudflare Pages'
         }
-        {canonicalId && (
-          <span class="mx-2">•</span>
-        )}
-        {canonicalId && (
-          <span class="font-mono">
-            {canonicalId}
-          </span>
-        )}
+        {canonicalId && <span class="mx-2">•</span>}
+        {canonicalId && <span class="font-mono">{canonicalId}</span>}
       </div>
     </div>
   </section>
@@ -133,11 +123,11 @@ const currentYear = new Date().getFullYear();
   .article-footer {
     margin-top: 3rem;
   }
-  
+
   .article-footer section {
     scroll-margin-top: 2rem;
   }
-  
+
   @media (max-width: 640px) {
     .article-footer {
       margin-top: 2rem;

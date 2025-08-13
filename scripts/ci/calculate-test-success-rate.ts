@@ -2,13 +2,13 @@
 
 /**
  * Test Success Rate Calculator and Deployment Decision Script
- * 
+ *
  * This script analyzes test results and determines if deployment should proceed
  * based on an 80% overall success rate threshold.
- * 
+ *
  * Usage:
  *   npx tsx scripts/ci/calculate-test-success-rate.ts [--threshold=80] [--verbose]
- * 
+ *
  * Exit codes:
  *   0: Tests meet threshold, deployment allowed
  *   1: Tests below threshold, deployment blocked
@@ -58,27 +58,27 @@ class TestSuccessRateCalculator {
     const phases: TestPhaseResult[] = [
       {
         name: 'Validation Tests',
-        success: process.env.VALIDATION_SUCCESS === 'true'
+        success: process.env.VALIDATION_SUCCESS === 'true',
       },
       {
-        name: 'E2E Tests', 
-        success: process.env.E2E_SUCCESS === 'true'
+        name: 'E2E Tests',
+        success: process.env.E2E_SUCCESS === 'true',
       },
       {
         name: 'Component Tests',
-        success: process.env.COMPONENT_SUCCESS === 'true'
+        success: process.env.COMPONENT_SUCCESS === 'true',
       },
       {
         name: 'Accessibility Tests',
-        success: process.env.ACCESSIBILITY_SUCCESS === 'true'
+        success: process.env.ACCESSIBILITY_SUCCESS === 'true',
       },
       {
         name: 'Performance Tests',
-        success: process.env.PERFORMANCE_SUCCESS === 'true'
-      }
+        success: process.env.PERFORMANCE_SUCCESS === 'true',
+      },
     ];
 
-    const passedPhases = phases.filter(phase => phase.success).length;
+    const passedPhases = phases.filter((phase) => phase.success).length;
     const totalPhases = phases.length;
     const overallSuccessRate = (passedPhases / totalPhases) * 100;
     const meetsThreshold = overallSuccessRate >= this.threshold;
@@ -89,7 +89,7 @@ class TestSuccessRateCalculator {
       passedPhases,
       totalPhases,
       meetsThreshold,
-      threshold: this.threshold
+      threshold: this.threshold,
     };
   }
 
@@ -99,15 +99,15 @@ class TestSuccessRateCalculator {
   calculateFromResults(testResults: Array<{ name: string; passed: number; total: number }>): OverallTestResult {
     this.log('📊 Calculating test success rate from provided results...');
 
-    const phases: TestPhaseResult[] = testResults.map(result => ({
+    const phases: TestPhaseResult[] = testResults.map((result) => ({
       name: result.name,
-      success: (result.passed / result.total) >= 0.5, // Individual test considered successful if >= 50%
+      success: result.passed / result.total >= 0.5, // Individual test considered successful if >= 50%
       passed: result.passed,
       total: result.total,
-      successRate: (result.passed / result.total) * 100
+      successRate: (result.passed / result.total) * 100,
     }));
 
-    const passedPhases = phases.filter(phase => phase.success).length;
+    const passedPhases = phases.filter((phase) => phase.success).length;
     const totalPhases = phases.length;
     const overallSuccessRate = (passedPhases / totalPhases) * 100;
     const meetsThreshold = overallSuccessRate >= this.threshold;
@@ -118,7 +118,7 @@ class TestSuccessRateCalculator {
       passedPhases,
       totalPhases,
       meetsThreshold,
-      threshold: this.threshold
+      threshold: this.threshold,
     };
   }
 
@@ -127,32 +127,32 @@ class TestSuccessRateCalculator {
    */
   generateReport(result: OverallTestResult): string {
     let report = '';
-    
+
     report += '# 🧪 Test Success Rate Report\n\n';
     report += `**Overall Success Rate**: ${result.overallSuccessRate.toFixed(1)}%\n`;
     report += `**Threshold**: ${result.threshold}%\n`;
     report += `**Status**: ${result.meetsThreshold ? '✅ DEPLOYMENT ALLOWED' : '❌ DEPLOYMENT BLOCKED'}\n\n`;
-    
+
     report += '## Test Phase Results\n\n';
     report += '| Phase | Status | Success Rate |\n';
     report += '|-------|--------|-------------|\n';
-    
+
     for (const phase of result.phases) {
       const status = phase.success ? '✅ Passed' : '❌ Failed';
       const rate = phase.successRate ? `${phase.successRate.toFixed(1)}%` : 'N/A';
       report += `| ${phase.name} | ${status} | ${rate} |\n`;
     }
-    
+
     report += '\n';
     report += `**Summary**: ${result.passedPhases}/${result.totalPhases} test phases passed\n\n`;
-    
+
     if (result.meetsThreshold) {
       report += '🚀 **Deployment Decision**: Tests meet the minimum threshold for deployment.\n';
     } else {
       report += '🚫 **Deployment Decision**: Tests do not meet the minimum threshold. ';
       report += 'GitHub issues will be created for failed tests, but deployment is blocked.\n';
     }
-    
+
     return report;
   }
 
@@ -161,7 +161,7 @@ class TestSuccessRateCalculator {
    */
   outputGitHubSummary(result: OverallTestResult): void {
     const summary = this.generateReport(result);
-    
+
     // Write to GitHub Actions step summary if available
     const summaryFile = process.env.GITHUB_STEP_SUMMARY;
     if (summaryFile) {
@@ -172,7 +172,7 @@ class TestSuccessRateCalculator {
         this.log(`⚠️ Failed to write GitHub summary: ${error}`);
       }
     }
-    
+
     // Also output to console
     console.log(summary);
   }
@@ -186,7 +186,7 @@ class TestSuccessRateCalculator {
       `success-rate=${result.overallSuccessRate.toFixed(1)}`,
       `passed-phases=${result.passedPhases}`,
       `total-phases=${result.totalPhases}`,
-      `threshold=${result.threshold}`
+      `threshold=${result.threshold}`,
     ];
 
     const outputFile = process.env.GITHUB_OUTPUT;
@@ -203,18 +203,18 @@ class TestSuccessRateCalculator {
 
     // Also output to console for debugging
     this.log('GitHub Outputs:');
-    outputs.forEach(output => this.log(`  ${output}`));
+    outputs.forEach((output) => this.log(`  ${output}`));
   }
 }
 
 // CLI interface
 async function main() {
   const args = process.argv.slice(2);
-  
+
   // Parse arguments
   let threshold = 80;
   let verbose = false;
-  
+
   for (const arg of args) {
     if (arg.startsWith('--threshold=')) {
       threshold = parseInt(arg.split('=')[1], 10);
@@ -251,13 +251,13 @@ Exit Codes:
   try {
     const calculator = new TestSuccessRateCalculator(threshold, verbose);
     const result = calculator.calculateFromEnvironment();
-    
+
     // Generate and output report
     calculator.outputGitHubSummary(result);
     calculator.setGitHubOutputs(result);
-    
+
     console.log(`\n📊 Final Result: ${result.overallSuccessRate.toFixed(1)}% success rate`);
-    
+
     if (result.meetsThreshold) {
       console.log('✅ Deployment allowed - threshold met');
       process.exit(0);
@@ -265,7 +265,6 @@ Exit Codes:
       console.log(`❌ Deployment blocked - below ${threshold}% threshold`);
       process.exit(1);
     }
-    
   } catch (error) {
     console.error('❌ Error calculating test success rate:', error);
     process.exit(2);

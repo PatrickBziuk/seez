@@ -7,6 +7,7 @@
 ## 🎯 Vision & Requirements
 
 **Current Problems**:
+
 - Tags buried at bottom like footnotes nobody reads
 - Article facts scattered across different components
 - AI impact hidden or presented like greenwashing theatre
@@ -14,6 +15,7 @@
 - Inconsistent ordering across content types
 
 **New Structure (Priority Order)**:
+
 1. **Share & Follow** - Single row with icons + labels (most engaged readers)
 2. **Article Facts** - Compact line + details toggle (word count, dates, language switcher)
 3. **AI Usage & Environmental Impact** - Default collapsed, transparent methodology
@@ -25,14 +27,16 @@
 ### Phase 1: Enhanced Remark Plugins (Days 1-2)
 
 #### **T31-001**: Word Count & Reading Time Plugin
+
 - **Goal**: Automatic word count/reading time injection via remark
-- **Implementation**: 
+- **Implementation**:
   - Extend existing `readingTimeRemarkPlugin` to also inject `wordCount`
   - Use existing `getWordCount()` and `getReadingTime()` utilities
   - Auto-inject into frontmatter for layout consumption
 - **Output**: `frontmatter.wordCount` and `frontmatter.readingMinutes`
 
-#### **T31-002**: Git-Based Last Modified Plugin  
+#### **T31-002**: Git-Based Last Modified Plugin
+
 - **Goal**: remark plugin for automatic last modified dates
 - **Implementation**:
   - Create `remarkModifiedTime()` plugin using Git log commands
@@ -41,6 +45,7 @@
 - **Output**: `frontmatter.lastModified` (ISO string)
 
 #### **T31-003**: Astro Config Plugin Integration
+
 - **Goal**: Wire new plugins into astro.config.ts
 - **Implementation**:
   - Add new plugins to existing `remarkPlugins` array
@@ -50,6 +55,7 @@
 ### Phase 2: AI Metrics & Environmental Impact (Days 3-4)
 
 #### **T31-004**: AI Metrics JSON Structure
+
 - **Goal**: Central AI usage storage following your proposed schema
 - **Implementation**:
   - Create `src/data/ai-metrics.json` with canonical ID keys
@@ -58,6 +64,7 @@
 - **Integration**: Import in layouts, reference by canonical ID
 
 #### **T31-005**: Enhanced AI Impact Utilities
+
 - **Goal**: Transparent, range-based environmental calculations
 - **Implementation**:
   - Extend existing `src/utils/aiImpact.ts` with your ranges approach
@@ -67,6 +74,7 @@
 - **Features**: Uncertainty ranges, methodology transparency
 
 #### **T31-006**: AIImpact Component (Astro v5 Compatible)
+
 - **Goal**: Collapsible, honest environmental impact display
 - **Implementation**:
   - Replace/enhance existing token stats with new AIImpact component
@@ -78,6 +86,7 @@
 ### Phase 3: Article Facts & Metadata Consolidation (Days 5-6)
 
 #### **T31-007**: Enhanced ArticleFacts Component
+
 - **Goal**: Single component for all article metadata
 - **Implementation**:
   - Consolidate word count, reading time, publish/modified dates
@@ -87,6 +96,7 @@
 - **Design**: Compact single line + details toggle
 
 #### **T31-008**: Language Counterpart Detection
+
 - **Goal**: Intelligent detection of translated content
 - **Implementation**:
   - Use existing canonical ID system from Plan 10024
@@ -95,6 +105,7 @@
 - **Features**: EN ↔ DE switching when available
 
 #### **T31-009**: Social Share Enhancement
+
 - **Goal**: Prominent, well-designed sharing at article top
 - **Implementation**:
   - Enhance existing `SocialShare.astro` component
@@ -105,6 +116,7 @@
 ### Phase 4: New ArticleFooter Component (Days 7-8)
 
 #### **T31-010**: Complete ArticleFooter Rewrite
+
 - **Goal**: Replace existing footer with new ordered structure
 - **Implementation**:
   - Create new `src/components/article/ArticleFooter.astro`
@@ -113,6 +125,7 @@
   - Clean, scannable design with consistent spacing
 
 #### **T31-011**: Footer Integration & Testing
+
 - **Goal**: Wire new footer into all content layouts
 - **Implementation**:
   - Update `MarkdownLayout.astro` to use new ArticleFooter
@@ -123,6 +136,7 @@
 ### Phase 5: Tags Repositioning & Enhancement (Days 9-10)
 
 #### **T31-012**: Tags Section Relocation
+
 - **Goal**: Move tags from footer to top of article
 - **Implementation**:
   - Update `MarkdownLayout.astro` to show tags under title/subtitle
@@ -131,6 +145,7 @@
 - **Placement**: Under article deck/summary, before content
 
 #### **T31-013**: Enhanced Tags Design
+
 - **Goal**: Discovery-focused tag presentation
 - **Implementation**:
   - Larger, more prominent tag styling for top placement
@@ -141,6 +156,7 @@
 ### Phase 6: Integration & Polish (Days 11-12)
 
 #### **T31-014**: Complete Layout Integration
+
 - **Goal**: Full integration across all content types
 - **Implementation**:
   - Update all collection layouts ([slug].astro files)
@@ -149,6 +165,7 @@
   - Validate SEO and canonical URL integration
 
 #### **T31-015**: Testing & Validation
+
 - **Goal**: Comprehensive testing of new article structure
 - **Implementation**:
   - Test reading time/word count accuracy
@@ -160,6 +177,7 @@
 ## 🔧 Technical Architecture
 
 ### Component Structure
+
 ```
 src/components/article/
 ├── ArticleFooter.astro          # New unified footer
@@ -176,6 +194,7 @@ src/data/
 ```
 
 ### Data Flow
+
 1. **Remark plugins** inject automatic metadata (word count, reading time, last modified)
 2. **AI metrics JSON** provides token usage data by canonical ID
 3. **Content registry** enables language counterpart detection
@@ -183,6 +202,7 @@ src/data/
 5. **Tags** move to top via layout restructuring
 
 ### Integration Points
+
 - **Existing systems**: Content registry, SEO components, i18n utilities
 - **New plugins**: Integrate with existing remark pipeline
 - **Layout updates**: MarkdownLayout.astro becomes orchestrator
@@ -191,16 +211,19 @@ src/data/
 ## 🎨 Design Principles
 
 ### Scannable Structure
+
 - **Visual hierarchy**: Share buttons → Facts → Impact → License
 - **Progressive disclosure**: Compact → Details toggle → Full breakdown
 - **Clear separation**: Distinct sections with appropriate spacing
 
 ### Honest Transparency
+
 - **AI ranges**: Present uncertainty, not fake precision
 - **Methodology**: Clear explanation of assumptions
 - **Environmental note**: Honest about impact calculation limitations
 
 ### User-Focused UX
+
 - **Share prominence**: Most engaged readers see sharing first
 - **Facts accessibility**: Easy access to article metadata
 - **Discovery tags**: Tags positioned for content discovery
@@ -208,17 +231,20 @@ src/data/
 ## 🔍 Testing Strategy
 
 ### Automated Tests
+
 - Remark plugin functionality (word count, dates)
 - AI impact calculations (ranges, costs, CO₂)
 - Component rendering with various prop combinations
 
 ### Manual Validation
+
 - Cross-browser footer layout and responsiveness
 - Social sharing functionality across platforms
 - Language switching and counterpart detection
 - Mobile user experience and accessibility
 
 ### Performance Validation
+
 - Build time impact of new remark plugins
 - Bundle size with new components
 - Runtime performance of footer calculations
@@ -226,17 +252,20 @@ src/data/
 ## 📊 Success Metrics
 
 ### User Experience
+
 - Improved engagement with share buttons (top position)
 - Reduced bounce rate from better content discovery (tags at top)
 - Clearer understanding of AI usage (transparent metrics)
 
 ### Technical Quality
+
 - ✅ All content types use consistent footer structure
 - ✅ Accurate automatic metadata (word count, dates)
 - ✅ Honest environmental impact ranges
 - ✅ Accessible, responsive design across devices
 
 ### Content Management
+
 - Automated metadata reduces manual work
 - Transparent AI metrics support editorial decisions
 - Clear content relationships via language switching
@@ -244,16 +273,19 @@ src/data/
 ## 🚧 Implementation Notes
 
 ### Astro v5 Compatibility
+
 - Use new content collections API for counterpart detection
 - Leverage existing i18n routing for language switching
 - Integrate with current SEO and canonical URL systems
 
 ### Backward Compatibility
+
 - Maintain existing frontmatter schema
 - Graceful degradation when AI metrics unavailable
 - Preserve current tag functionality while enhancing placement
 
 ### Performance Considerations
+
 - Lazy load AI metrics data only when needed
 - Optimize remark plugins for build performance
 - Minimize bundle impact of new components

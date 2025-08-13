@@ -2,7 +2,7 @@ import type { MiddlewareHandler } from 'astro';
 
 export const onRequest: MiddlewareHandler = (context, next) => {
   const { url, redirect } = context;
-  
+
   if (import.meta.env.DEV) {
     console.log('🌐 Middleware hit:', url.pathname);
   }

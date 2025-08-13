@@ -21,21 +21,23 @@ astrowind:config (Virtual module available to components)
 ### 1. Site Configuration (`site.*`)
 
 **Used by:**
+
 - `src/components/core/meta/SiteVerification.astro`
+
   ```astro
-  import { SITE } from 'astrowind:config';
-  {SITE.googleSiteVerificationId && (
-    <meta name="google-site-verification" content={SITE.googleSiteVerificationId} />
-  )}
+  import {SITE} from 'astrowind:config';
+  {SITE.googleSiteVerificationId && <meta name="google-site-verification" content={SITE.googleSiteVerificationId} />}
   ```
 
 - `src/pages/sitemap.xml.ts`
+
   ```typescript
   import { SITE } from 'astrowind:config';
   // Uses SITE.site for canonical URLs in sitemap
   ```
 
 - `src/pages/rss.xml.ts`
+
   ```typescript
   import { SITE, METADATA } from 'astrowind:config';
   // Uses SITE.site and SITE.title for RSS feed generation
@@ -48,35 +50,40 @@ astrowind:config (Virtual module available to components)
   ```
 
 **Astro Config Impact:**
+
 ```typescript
 // In vendor/integration/index.ts
 updateConfig({
-  site: SITE.site,           // Sets Astro.site
-  base: SITE.base,           // Sets Astro.base
-  trailingSlash: SITE.trailingSlash ? 'always' : 'never'
+  site: SITE.site, // Sets Astro.site
+  base: SITE.base, // Sets Astro.base
+  trailingSlash: SITE.trailingSlash ? 'always' : 'never',
 });
 ```
 
 ### 2. Theme Configuration (`theme.*`)
 
 **CSS Custom Properties Generated:**
+
 - Theme colors are applied globally via CSS custom properties
 - Processed in build step and available to all components
 - Handled by `src/utils/config.ts` ThemeUtils
 
 **Usage Pattern:**
+
 ```typescript
 import { ThemeUtils } from '~/utils/config';
 ThemeUtils.applyThemeColors(config.theme.colors);
 ```
 
 **Affected Components:**
+
 - All components inherit theme colors through CSS custom properties
 - Dark/light mode switching via theme variants
 
 ### 3. Metadata Configuration (`metadata.*`)
 
 **Used by:**
+
 - `src/pages/rss.xml.ts`
 - Components in `src/components/core/meta/` directory
 - SEO components for Open Graph and Twitter Card generation
@@ -84,7 +91,9 @@ ThemeUtils.applyThemeColors(config.theme.colors);
 ### 4. I18n Configuration (`i18n.*`)
 
 **Used by:**
+
 - `src/utils/utils.ts`
+
   ```typescript
   import { I18N } from 'astrowind:config';
   // Uses I18N.language for date formatting and locale handling
@@ -97,6 +106,7 @@ ThemeUtils.applyThemeColors(config.theme.colors);
   ```
 
 **Runtime Effects:**
+
 - Language routing in `src/middleware.ts`
 - Translation pipeline configuration
 - Locale-aware date formatting
@@ -104,13 +114,16 @@ ThemeUtils.applyThemeColors(config.theme.colors);
 ### 5. Blog Configuration (`apps.blog.*`)
 
 **Used by:**
+
 - `src/utils/blog.ts`
+
   ```typescript
   import { APP_BLOG } from 'astrowind:config';
   // Uses APP_BLOG for pagination, permalinks, and blog settings
   ```
 
 - `src/utils/permalinks.ts`
+
   ```typescript
   import { APP_BLOG } from 'astrowind:config';
   // Uses APP_BLOG.post.permalink and APP_BLOG.list.pathname
@@ -124,7 +137,9 @@ ThemeUtils.applyThemeColors(config.theme.colors);
 ### 6. UI Configuration (`ui.*`)
 
 **Used by:**
+
 - `src/components/core/layout/ToggleTheme.astro`
+
   ```typescript
   import { UI } from 'astrowind:config';
   // Uses UI.theme for default theme preference
@@ -136,6 +151,7 @@ ThemeUtils.applyThemeColors(config.theme.colors);
 ### 7. Analytics Configuration (`analytics.*`)
 
 **Used by:**
+
 - `src/components/core/meta/Analytics.astro`
   ```typescript
   import { ANALYTICS } from 'astrowind:config';
@@ -193,10 +209,10 @@ ThemeUtils.applyThemeColors(config.theme.colors);
 ```typescript
 // From src/utils/config.ts
 class ConfigUtils {
-  static getOpenAIKey(): string | null           // OPENAI_API_KEY
-  static getTranslationQualityThreshold(): number // TRANSLATION_QUALITY_THRESHOLD  
-  static getFormspreeEndpoint(): string | null   // FORMSPREE_ENDPOINT
-  static getGoogleAnalyticsId(): string | null   // GOOGLE_ANALYTICS_ID
+  static getOpenAIKey(): string | null; // OPENAI_API_KEY
+  static getTranslationQualityThreshold(): number; // TRANSLATION_QUALITY_THRESHOLD
+  static getFormspreeEndpoint(): string | null; // FORMSPREE_ENDPOINT
+  static getGoogleAnalyticsId(): string | null; // GOOGLE_ANALYTICS_ID
 }
 ```
 
@@ -207,8 +223,8 @@ class ConfigUtils {
 ```typescript
 // From src/utils/config.ts
 class FeatureFlags {
-  static isEnabled(feature: string, config?: object): boolean
-  
+  static isEnabled(feature: string, config?: object): boolean;
+
   // Available flags:
   static readonly DEFAULTS = {
     enableSearch: true,
@@ -222,24 +238,24 @@ class FeatureFlags {
     enableImageOptimization: true,
     enableMinification: true,
     enableCompression: true,
-  }
+  };
 }
 ```
 
 ### Theme Management
 
 ```typescript
-// From src/utils/config.ts  
+// From src/utils/config.ts
 class ThemeUtils {
   static readonly CSS_VARS = {
     PRIMARY: '--color-primary',
     SECONDARY: '--color-secondary',
     // ... all theme CSS variables
-  }
-  
-  static getCSSVar(name: string): string
-  static setCSSVar(name: string, value: string): void
-  static applyThemeColors(colors: Record<string, string>): void
+  };
+
+  static getCSSVar(name: string): string;
+  static setCSSVar(name: string, value: string): void;
+  static applyThemeColors(colors: Record<string, string>): void;
 }
 ```
 
@@ -248,9 +264,9 @@ class ThemeUtils {
 ```typescript
 // From src/utils/config.ts
 class NavigationUtils {
-  static buildUrl(path: string, lang: string = 'en'): string
-  static getCurrentLanguage(url: string = ''): string
-  static getCleanPath(path: string): string
+  static buildUrl(path: string, lang: string = 'en'): string;
+  static getCurrentLanguage(url: string = ''): string;
+  static getCleanPath(path: string): string;
 }
 ```
 
@@ -261,13 +277,13 @@ class NavigationUtils {
 class ContentUtils {
   static readonly COLLECTION_ICONS = {
     books: '📚',
-    projects: '🚀', 
+    projects: '🚀',
     lab: '🧪',
     life: '🌱',
-  }
-  
-  static getCollectionIcon(collection: string): string
-  static getCollectionTitle(collection: string): string
+  };
+
+  static getCollectionIcon(collection: string): string;
+  static getCollectionTitle(collection: string): string;
 }
 ```
 
@@ -276,12 +292,14 @@ class ContentUtils {
 ### Build-Time Configuration
 
 **Processed during build:**
+
 - Site URL and base path (affects route generation)
 - Feature flags (affects bundle size via tree-shaking)
 - Theme colors (generates CSS custom properties)
 - Content collections (affects static route generation)
 
 **Files involved:**
+
 - `astro.config.ts` - Core Astro configuration
 - `vendor/integration/index.ts` - Configuration loading
 - `src/pages/sitemap.xml.ts` - Sitemap generation
@@ -290,6 +308,7 @@ class ContentUtils {
 ### Runtime Configuration
 
 **Used at runtime:**
+
 - Theme switching
 - Language routing
 - Feature flag checking
@@ -297,6 +316,7 @@ class ContentUtils {
 - Content display
 
 **Files involved:**
+
 - `src/middleware.ts` - Language routing
 - `src/utils/config.ts` - Runtime utilities
 - All component files - Feature flags and display
@@ -328,6 +348,7 @@ class ContentUtils {
 ### Bundle Size
 
 **Factors affecting bundle size:**
+
 - Feature flags (tree-shaking eliminates disabled features)
 - Theme configuration (CSS custom properties generation)
 - Blog configuration (affects blog-related component inclusion)
@@ -335,6 +356,7 @@ class ContentUtils {
 ### Build Time
 
 **Factors affecting build time:**
+
 - Content collection configuration (affects route generation)
 - Image optimization settings
 - Minification and compression settings
@@ -342,6 +364,7 @@ class ContentUtils {
 ### Runtime Performance
 
 **Factors affecting runtime:**
+
 - Language detection and routing
 - Theme switching
 - Search functionality
@@ -374,14 +397,14 @@ class ContentUtils {
 ```yaml
 # Minimum required configuration
 site:
-  name: "Site Name"        # Required
-  site: "https://..."      # Required for sitemap
-  
+  name: 'Site Name' # Required
+  site: 'https://...' # Required for sitemap
+
 i18n:
-  locales: ["en", "de"]    # Required for routing
+  locales: ['en', 'de'] # Required for routing
 
 content:
-  collections:             # At least one collection required
+  collections: # At least one collection required
     projects:
       enabled: true
 ```
@@ -390,16 +413,16 @@ content:
 
 ```yaml
 theme:
-  colors:                  # Recommended for consistent theming
-    primary: "#..."
-    
+  colors: # Recommended for consistent theming
+    primary: '#...'
+
 metadata:
-  title:                   # Recommended for SEO
-    default: "..."
-    template: "%s | ..."
-    
+  title: # Recommended for SEO
+    default: '...'
+    template: '%s | ...'
+
 integrations:
-  search:                  # Recommended for user experience
+  search: # Recommended for user experience
     enabled: true
 ```
 

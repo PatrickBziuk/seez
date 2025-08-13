@@ -7,3 +7,22 @@ node_modules
 src/components/content/metadata/ContentMetadata.astro
 *.bak
 test_translation_tasks*.json
+
+# Documentation files with code snippets that cause Prettier parse errors
+docs/plan-10030-advanced-implementation-summary.md
+docs/reference/implementation.md
+docs/reference/knowledge.md
+docs/reference/technical-spec.md
+docs/workflows/content-review-workflow.md
+docs/workflows/metadata-automation-system.md
+scripts/README.md
+
+# Astro components with inline scripts (Prettier has trouble with mixed HTML/JS)
+src/components/article/AIImpact.astro
+src/components/article/SocialShareFooter.astro
+src/components/content/media/Image.astro
+src/components/core/performance/PerformanceMonitor.astro
+
+# MDX files with complex frontmatter/template literals
+src/content/projects/de/meine-musik-root.mdx
+src/content/projects/en/meine-musik-root.mdx

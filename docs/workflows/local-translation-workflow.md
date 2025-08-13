@@ -5,12 +5,14 @@ This document explains how the local translation generation works with Husky git
 ## Setup
 
 1. **Environment Configuration**:
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local and add your OpenAI API key
    ```
 
 2. **Install Dependencies**:
+
    ```bash
    pnpm install
    ```
@@ -25,12 +27,14 @@ This document explains how the local translation generation works with Husky git
 **Triggers**: When you commit changes to Markdown/MDX files in `src/content/`
 
 **Process**:
+
 1. **Content Validation**: Validates content structure and updates registry
 2. **Translation Detection**: Checks for missing/stale translations using the canonical ID system
 3. **Translation Generation**: If needed, generates translations using OpenAI API
 4. **Auto-staging**: Automatically stages generated translation files
 
 **Example Workflow**:
+
 ```bash
 # Edit a content file
 vim src/content/projects/en/my-project.mdx
@@ -55,10 +59,10 @@ git commit -m "Add new project content"
 
 ### Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `OPENAI_API_KEY` | Required | Your OpenAI API key |
-| `TRANSLATION_QUALITY_THRESHOLD` | 70 | Minimum quality score for auto-acceptance |
+| Variable                        | Default  | Description                               |
+| ------------------------------- | -------- | ----------------------------------------- |
+| `OPENAI_API_KEY`                | Required | Your OpenAI API key                       |
+| `TRANSLATION_QUALITY_THRESHOLD` | 70       | Minimum quality score for auto-acceptance |
 
 ### Quality Control
 
@@ -70,19 +74,22 @@ git commit -m "Add new project content"
 
 ### Common Issues
 
-1. **Hook doesn't run**: 
+1. **Hook doesn't run**:
+
    ```bash
    # Reinstall hooks
    pnpm prepare
    ```
 
 2. **API key not working**:
+
    ```bash
    # Verify .env.local exists and has correct key
    cat .env.local | grep OPENAI_API_KEY
    ```
 
 3. **Permission errors on Windows**:
+
    ```bash
    # Ensure WSL or Git Bash is used for hooks
    git config core.hooksPath .husky

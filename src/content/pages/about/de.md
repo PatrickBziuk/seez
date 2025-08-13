@@ -1,18 +1,18 @@
 ---
-title: Über mich  
-description: Warum ich Dinge baue, wie ich sie baue.  
-language: de  
-tags:  
-  - programming  
-  - software  
-  - philosophy  
-  - digital-sovereignty  
+title: Über mich
+description: Warum ich Dinge baue, wie ich sie baue.
+language: de
+tags:
+  - programming
+  - software
+  - philosophy
+  - digital-sovereignty
 ---
 
 Hier nenne ich mich **Seez**, viele kennen mich aber auch als **deinanker**, **zeilenliebe**, **destny** – oder einfach nur **Patrick**.
 
 Ich entwickle Software, Systeme und Konzepte, weil mich stört, wie vieles heute funktioniert:  
-**Intransparent**, **abhängig von großen Plattformen** – und oft so gestaltet, dass Nutzer*innen möglichst wenig Kontrolle haben.
+**Intransparent**, **abhängig von großen Plattformen** – und oft so gestaltet, dass Nutzer\*innen möglichst wenig Kontrolle haben.
 
 Für mich ist Technik ein Werkzeug.  
 Ein Werkzeug, das **den Menschen gehören sollte, die es benutzen** – nicht den Firmen, die es verkaufen.
@@ -60,24 +60,28 @@ Ich habe mich entschieden, die erste Variante zu bauen.
 ## Meine Projekte
 
 ### 🧠 Cosensai
+
 Das ist für mich persönlich mein Hauptprojekt, da mein Ziel damit es ist mein eigenes Denken in geordnete Bahnen zu lenken und nicht mehr auf eine mit VC-Geld finanzierte Plattform angewiesen zu sein um mein Wissen und Denken zu strukturieren. Es geht um **persönliche KI**, bei der **Privatsphäre**, **Souveränität** und **Gedächtnisarchitektur** im Zentrum stehen.  
 Ein System, das **dein Wissen** und **deine Gedanken** unterstützt, ohne sie zu monetarisieren. Nicht umsonst hat gerade OpenAI eine Partnerschaft mit Shopify angekündigt ([**Wirklich wahr, schau nach**](https://www.reuters.com/business/openai-working-payment-checkout-system-within-chatgpt-ft-reports-2025-07-16/)).
 Ein digitaler Sparringspartner, der dein Wissen **reflektiert** statt es auszubeuten. Und wenn es anfängt dich nur noch zu spiegeln, dann ist es ein System welches das Erkennen und eine neue Perspektive schaffen soll. _Nicht so wie die aktuellen Chatbots, die ihren Usern immer genau das geben, was der User gerade am wahrscheinlichsten hören will._
 
 ### 🫂 circles
+
 Ein soziales Netzwerk, das bewusst **ohne algorithmische Manipulation** funktioniert.  
 Realness statt Reichweite. Beziehungen statt Klickoptimierung.  
-Für Menschen, die wieder **echter** kommunizieren wollen. Ganz nach der Theorie der Dunbar Zahl, dass ein normaler Mensch nur ungefähr 150 Beziehungen gleichzeitig pflegen kann. Chatten und sich austauschen, ohne Angst haben zu müssen, dass Big Tech alles mitbekommt. 
+Für Menschen, die wieder **echter** kommunizieren wollen. Ganz nach der Theorie der Dunbar Zahl, dass ein normaler Mensch nur ungefähr 150 Beziehungen gleichzeitig pflegen kann. Chatten und sich austauschen, ohne Angst haben zu müssen, dass Big Tech alles mitbekommt.
 
-Schon mal von Bots angeschrieben worden? Nervig oder? Außer, du hast dir gerade selbst für deinen Insta ein paar tausende Follower gekauft, gönn dir. Kannst du hier aber by Design nicht. Dafür gibt's den Mechanismus des Proof of Realness, aber jemand spitzfindiges könnte auch den Knacken, aber den jenigen mache ich es extra schwer. 
+Schon mal von Bots angeschrieben worden? Nervig oder? Außer, du hast dir gerade selbst für deinen Insta ein paar tausende Follower gekauft, gönn dir. Kannst du hier aber by Design nicht. Dafür gibt's den Mechanismus des Proof of Realness, aber jemand spitzfindiges könnte auch den Knacken, aber den jenigen mache ich es extra schwer.
 
 ### 👕 marken.
+
 Nachhaltiges **Modelabel** als Proof of Concept für transparente Lieferketten,  
-QR-basierte Herkunftsnachweise und **NFTs mit Alltagswert**, ohne Krypto-Hype. Es wäre schön, wenn wir zu einer Welt zurückkehren in der Marken nicht austauschbar sind, sondern auch Werte transportieren und Ideale haben. Im Endeffekt ist es fast egal, ob ich jetzt Nike oder Adidas Schuhe kaufe, denn es wird im Worst Case in der selben Fabrik produziert. 
+QR-basierte Herkunftsnachweise und **NFTs mit Alltagswert**, ohne Krypto-Hype. Es wäre schön, wenn wir zu einer Welt zurückkehren in der Marken nicht austauschbar sind, sondern auch Werte transportieren und Ideale haben. Im Endeffekt ist es fast egal, ob ich jetzt Nike oder Adidas Schuhe kaufe, denn es wird im Worst Case in der selben Fabrik produziert.
 
 Denn wenn Marken zugunsten von Profitmaximierung ihre Identität verlieren, wird es schwierig, echte Werte zu vermitteln und diese auch beizubehalten. Daher soll **marken.** ein Ort sein, an dem Werte und Identität wieder eine Rolle spielen und **marken.** selbst eigentlich immer nur der Proof of Concept ist, dass in Branche X es durchaus möglich ist ein faires und nachhaltiges Angebot zu schaffen, was Vorteile sowohl für den Verbraucher als auch für die Produzenten bringt. _(Und ganz nebenbei für die Umwelt und den Planeten)_
 
 ### 🎮 leagueoffun
+
 Experimentierfeld für Webgames und interaktive Tools, um neue Technologien praxisnah zu testen  
 und Ideen in einem kleinen, kontrollierten Rahmen auszuprobieren. In diesem Rahmen habe ich Blamegame als erstes Spiel entwickelt, um generell ein Gefühl für die Entwicklung einer progressiven Web App zu bekommen. Dabei habe ich viel über React, Tailwindcss und auch i18n gelernt.
 
@@ -105,8 +109,9 @@ Ich will **digitale Räume bauen, in denen man atmen kann**.
 - Räume, die deine Aufmerksamkeit nicht melken.
 - Räume, in denen sich **Verstehen wieder lohnt**.
 - Räume, die **nachhaltig sind**.
+
 ---
 
-Wenn du mehr wissen willst, dann kontaktiere mich doch einfach, vielleicht antworte ich dir. 
+Wenn du mehr wissen willst, dann kontaktiere mich doch einfach, vielleicht antworte ich dir.
 
 > Du findest mich überall an den unterschiedlichsten Stellen im Internet, ich habe Spuren hinterlassen, wirst du sie alle finden?

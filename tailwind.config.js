@@ -30,7 +30,7 @@ export default {
       'social-links',
       // Theme toggle classes
       'theme-toggle',
-    ]
+    ],
   },
   theme: {
     extend: {

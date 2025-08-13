@@ -21,20 +21,15 @@ const { lang } = Astro.params as { lang: SupportedLanguage };
 const t = await getTranslations(lang);
 
 // Get all content from all collections
-const [books, projects, lab, life] = await Promise.all([
-  getCollection('books'),
-  getCollection('projects'),
-  getCollection('lab'),
-  getCollection('life'),
-]);
+const projects = await getCollection('projects');
 
 // Combine all content and filter by language
-const allContent = [...books, ...projects, ...lab, ...life].filter((item) => item.data.language === lang);
+const allContent = [...projects].filter((item) => item.data.language === lang);
 
 // Extract unique tags
 const tagCounts = new Map<string, number>();
 allContent.forEach((item) => {
-  item.data.tags?.forEach((tag) => {
+  item.data.tags?.forEach((tag: string) => {
     tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
   });
 });

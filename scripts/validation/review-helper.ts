@@ -149,8 +149,7 @@ function showReviewStatus(filePath: string): void {
     const isTranslation = parsed.data.translationOf && parsed.data.sourceLanguage;
     const translationReviewed = review?.translation === true;
 
-    const publishReady =
-      !isDraft && contentReviewed && (!isTranslation || translationReviewed);
+    const publishReady = !isDraft && contentReviewed && (!isTranslation || translationReviewed);
 
     console.log(`   📊 Publication ready: ${publishReady ? '✅ YES' : '❌ NO'}`);
 

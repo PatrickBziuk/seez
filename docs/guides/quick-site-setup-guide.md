@@ -44,23 +44,23 @@ Open `src/config.yaml` and change these **required** values:
 ```yaml
 # Change these to your site details
 site:
-  name: 'Your Site Name'                    # ← Your site name
-  site: 'https://yoursite.com'              # ← Your domain
-  title: 'Your Site - Your Tagline'         # ← Your site title
-  description: 'Your site description'      # ← SEO description
-  author: 'Your Name'                       # ← Your name
-  
+  name: 'Your Site Name' # ← Your site name
+  site: 'https://yoursite.com' # ← Your domain
+  title: 'Your Site - Your Tagline' # ← Your site title
+  description: 'Your site description' # ← SEO description
+  author: 'Your Name' # ← Your name
+
   # Update logo path (or keep default)
   logo:
-    src: '~/assets/images/logo.svg'          # ← Your logo file
-    alt: 'Your Site Logo'                   # ← Logo alt text
+    src: '~/assets/images/logo.svg' # ← Your logo file
+    alt: 'Your Site Logo' # ← Logo alt text
 
 # Update colors to match your brand
 theme:
   colors:
-    primary: '#your-brand-color'             # ← Your primary color
-    secondary: '#your-secondary-color'       # ← Your secondary color
-    accent: '#your-accent-color'             # ← Your accent color
+    primary: '#your-brand-color' # ← Your primary color
+    secondary: '#your-secondary-color' # ← Your secondary color
+    accent: '#your-accent-color' # ← Your accent color
     # Keep other colors or customize as needed
 
 # Update navigation
@@ -68,14 +68,14 @@ navigation:
   footer:
     social:
       - platform: 'github'
-        url: 'https://github.com/yourusername'  # ← Your GitHub
-      - platform: 'email'  
-        url: 'mailto:your@email.com'           # ← Your email
+        url: 'https://github.com/yourusername' # ← Your GitHub
+      - platform: 'email'
+        url: 'mailto:your@email.com' # ← Your email
 
 # Update contact form
 integrations:
   contact:
-    endpoint: 'https://formspree.io/f/YOUR_ID'  # ← Your Formspree endpoint
+    endpoint: 'https://formspree.io/f/YOUR_ID' # ← Your Formspree endpoint
 ```
 
 ### Step 3: Content Customization
@@ -86,18 +86,18 @@ integrations:
 content:
   collections:
     books:
-      enabled: true/false        # ← Keep or remove books section
-      title: 'Your Books Title'  # ← Customize section name
-      
+      enabled: true/false # ← Keep or remove books section
+      title: 'Your Books Title' # ← Customize section name
+
     projects:
-      enabled: true             # ← Usually keep this
-      title: 'Your Projects'    # ← Customize section name
-      
+      enabled: true # ← Usually keep this
+      title: 'Your Projects' # ← Customize section name
+
     lab:
-      enabled: true/false       # ← Keep or remove experiments section
-      
+      enabled: true/false # ← Keep or remove experiments section
+
     life:
-      enabled: true/false       # ← Keep or remove personal blog
+      enabled: true/false # ← Keep or remove personal blog
 ```
 
 **Customize homepage:**
@@ -105,12 +105,12 @@ content:
 ```yaml
 homepage:
   hero:
-    title: 'Welcome to Your Site'           # ← Your hero title
-    subtitle: 'Your compelling subtitle'    # ← Your hero subtitle
+    title: 'Welcome to Your Site' # ← Your hero title
+    subtitle: 'Your compelling subtitle' # ← Your hero subtitle
     cta:
       primary:
-        text: 'See My Work'                 # ← Your call-to-action
-        url: '/en/projects'                 # ← Where it links to
+        text: 'See My Work' # ← Your call-to-action
+        url: '/en/projects' # ← Where it links to
 ```
 
 ### Step 4: Test Your Site
@@ -127,6 +127,7 @@ Your site should now show your branding and content!
 ### Step 5: Add Your Content
 
 1. **Remove example content:**
+
    ```bash
    # Remove example files (optional)
    rm -rf src/content/*/en/example-*
@@ -145,6 +146,7 @@ Your site should now show your branding and content!
 ### Step 6: Deploy
 
 **For Netlify:**
+
 ```bash
 # Build your site
 pnpm run build
@@ -154,6 +156,7 @@ pnpm run build
 ```
 
 **For Vercel:**
+
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -169,6 +172,7 @@ vercel --prod
 ### Theme Colors
 
 Your brand colors will automatically apply to:
+
 - Buttons and links
 - Navigation elements
 - Badges and tags
@@ -177,10 +181,10 @@ Your brand colors will automatically apply to:
 ```yaml
 theme:
   colors:
-    primary: '#2563eb'      # Main brand color
-    secondary: '#7c3aed'    # Secondary brand color
-    accent: '#f59e0b'       # Accent color for highlights
-    
+    primary: '#2563eb' # Main brand color
+    secondary: '#7c3aed' # Secondary brand color
+    accent: '#f59e0b' # Accent color for highlights
+
     # Keep semantic colors for consistency
     success: '#10b981'
     warning: '#f59e0b'
@@ -193,13 +197,13 @@ theme:
 ```yaml
 navigation:
   header:
-    showLogo: true           # Show/hide logo
-    showThemeToggle: true    # Show/hide dark mode toggle
+    showLogo: true # Show/hide logo
+    showThemeToggle: true # Show/hide dark mode toggle
     showLanguageSwitch: true # Show/hide language switcher
-    showSearch: true         # Show/hide search button
-    
+    showSearch: true # Show/hide search button
+
     items:
-      - text: 'Portfolio'    # Your navigation items
+      - text: 'Portfolio' # Your navigation items
         href: '/projects'
         icon: '🚀'
       - text: 'About'
@@ -212,26 +216,26 @@ navigation:
 
 ```yaml
 features:
-  enableSearch: true         # Site search functionality
-  enableShare: true          # Social sharing buttons
-  enableTags: true           # Tag-based navigation
-  enableComments: false      # Comment system (not implemented yet)
-  
+  enableSearch: true # Site search functionality
+  enableShare: true # Social sharing buttons
+  enableTags: true # Tag-based navigation
+  enableComments: false # Comment system (not implemented yet)
+
   # Translation features
-  enableAutoTranslation: true    # AI-powered translation
-  showTranslationMetadata: true  # Show translation info
+  enableAutoTranslation: true # AI-powered translation
+  showTranslationMetadata: true # Show translation info
 ```
 
 ### Multilingual Setup
 
 ```yaml
 i18n:
-  locales: ['en', 'de']      # Languages you support
+  locales: ['en', 'de'] # Languages you support
   # Add more languages: ['en', 'de', 'es', 'fr']
-  
+
   translations:
-    autoGenerate: true       # AI translation enabled
-    qualityThreshold: 70     # Minimum translation quality
+    autoGenerate: true # AI translation enabled
+    qualityThreshold: 70 # Minimum translation quality
 ```
 
 ---
@@ -241,21 +245,23 @@ i18n:
 ### 1. Change Color Scheme
 
 **Dark & Professional:**
+
 ```yaml
 theme:
   colors:
-    primary: '#1f2937'       # Dark gray
-    secondary: '#6366f1'     # Indigo
-    accent: '#f59e0b'        # Amber
+    primary: '#1f2937' # Dark gray
+    secondary: '#6366f1' # Indigo
+    accent: '#f59e0b' # Amber
 ```
 
 **Bright & Creative:**
+
 ```yaml
 theme:
   colors:
-    primary: '#ec4899'       # Pink
-    secondary: '#8b5cf6'     # Purple
-    accent: '#06b6d4'        # Cyan
+    primary: '#ec4899' # Pink
+    secondary: '#8b5cf6' # Purple
+    accent: '#06b6d4' # Cyan
 ```
 
 ### 2. Portfolio-Only Site
@@ -266,11 +272,11 @@ content:
     projects:
       enabled: true
     books:
-      enabled: false         # Disable books
+      enabled: false # Disable books
     lab:
-      enabled: false         # Disable experiments
+      enabled: false # Disable experiments
     life:
-      enabled: false         # Disable blog
+      enabled: false # Disable blog
 
 navigation:
   header:
@@ -290,7 +296,7 @@ content:
   collections:
     life:
       enabled: true
-      title: 'Blog'          # Rename to "Blog"
+      title: 'Blog' # Rename to "Blog"
     projects:
       enabled: false
     books:
@@ -301,7 +307,7 @@ content:
 homepage:
   featured:
     sections:
-      - type: 'life'         # Feature blog posts
+      - type: 'life' # Feature blog posts
         title: 'Latest Posts'
         limit: 5
 ```
@@ -310,7 +316,7 @@ homepage:
 
 ```yaml
 i18n:
-  locales: ['en', 'de', 'es']  # Add Spanish
+  locales: ['en', 'de', 'es'] # Add Spanish
 
 navigation:
   header:
@@ -383,6 +389,7 @@ Before going live:
 ## 📚 What You Get Out of the Box
 
 **Automatically included:**
+
 - ✅ Responsive design (mobile-first)
 - ✅ Dark/light mode toggle
 - ✅ SEO optimization
@@ -396,6 +403,7 @@ Before going live:
 - ✅ Accessibility features
 
 **Content management:**
+
 - ✅ Markdown/MDX support
 - ✅ Automatic image optimization
 - ✅ Code syntax highlighting
@@ -403,6 +411,7 @@ Before going live:
 - ✅ Related content suggestions
 
 **Developer experience:**
+
 - ✅ TypeScript support
 - ✅ Hot reload development
 - ✅ Automated builds
@@ -414,21 +423,25 @@ Before going live:
 ## 💡 Tips for Success
 
 ### 1. Start Simple
+
 - Begin with just the essential configuration changes
 - Add one content section at a time
 - Test frequently during development
 
 ### 2. Content Strategy
+
 - Write in your primary language first
 - Let AI handle translations automatically
 - Focus on clear, engaging content
 
 ### 3. Branding
+
 - Choose 2-3 main colors and stick to them
 - Ensure good contrast for accessibility
 - Keep navigation simple and intuitive
 
 ### 4. Performance
+
 - Optimize images before adding them
 - Use the built-in features rather than adding plugins
 - Test on mobile devices
@@ -438,24 +451,28 @@ Before going live:
 ## 🆘 Troubleshooting
 
 ### Configuration Not Applying
+
 ```bash
 # Restart development server
 pnpm run dev
 ```
 
 ### Build Errors
+
 ```bash
 # Check configuration syntax
 pnpm run check
 ```
 
 ### Missing Translations
+
 ```bash
 # Translations are generated automatically
 # Add OPENAI_API_KEY to .env.local
 ```
 
 ### Styling Issues
+
 - Check that colors are valid hex codes
 - Ensure YAML indentation is correct
 - Clear browser cache

@@ -62,16 +62,16 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 // Helper function to check if a navigation link is active
 const isLinkActive = (href: string) => {
   if (!href) return false;
-  
+
   // Handle root/home page
   if (href === `/${safeLocale}` || href === '/') {
     return currentPath === `/${safeLocale}` || currentPath === '/';
   }
-  
+
   // For category pages like /en/books, /en/projects, etc.
   const normalizedHref = href.replace(/^\//, '').replace(/\/$/, '');
   const normalizedPath = currentPath.replace(/^\//, '').replace(/\/$/, '');
-  
+
   // Check if current path starts with the href (for category pages)
   return normalizedPath.startsWith(normalizedHref);
 };
@@ -201,7 +201,7 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
                   aria-label={text}
                   class:list={[
                     'nav-link hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap',
-                    { 'active': isLinkActive(href || '') },
+                    { active: isLinkActive(href || '') },
                   ]}
                   href={href}
                 >
@@ -213,7 +213,7 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
         }
       </ul>
     </nav>
-    
+
     <!-- Mobile Navigation -->
     <nav
       aria-label={locale === 'de' ? 'Mobile Navigation' : 'Mobile navigation'}
@@ -242,7 +242,10 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
                           aria-label={text2}
                           class:list={[
                             'block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600',
-                            { 'active bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400': href2 === currentPath },
+                            {
+                              'active bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400':
+                                href2 === currentPath,
+                            },
                           ]}
                           href={href2}
                         >
@@ -257,7 +260,10 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
                   aria-label={text}
                   class:list={[
                     'block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 border-l-4 border-transparent',
-                    { 'active bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400 border-blue-500': isLinkActive(href || '') },
+                    {
+                      'active bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400 border-blue-500':
+                        isLinkActive(href || ''),
+                    },
                   ]}
                   href={href}
                 >
@@ -312,21 +318,21 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
   document.addEventListener('DOMContentLoaded', () => {
     const toggleButton = document.querySelector('[data-aw-toggle-menu]');
     const mobileNav = document.getElementById('mobile-navigation');
-    
+
     if (toggleButton && mobileNav) {
       toggleButton.addEventListener('click', () => {
         const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
-        
+
         // Toggle mobile nav visibility
         mobileNav.classList.toggle('hidden');
-        
+
         // Update button state
         toggleButton.setAttribute('aria-expanded', !isExpanded ? 'true' : 'false');
         toggleButton.classList.toggle('expanded');
-        
+
         // Handle mobile dropdown toggles
         const mobileDropdowns = mobileNav.querySelectorAll('.mobile-dropdown button');
-        mobileDropdowns.forEach(button => {
+        mobileDropdowns.forEach((button) => {
           button.addEventListener('click', (e) => {
             e.preventDefault();
             const submenu = button.nextElementSibling;
@@ -337,7 +343,7 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
           });
         });
       });
-      
+
       // Close mobile nav when clicking outside
       document.addEventListener('click', (e) => {
         if (!mobileNav.contains(e.target as Node) && !toggleButton.contains(e.target as Node)) {

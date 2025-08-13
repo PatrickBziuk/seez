@@ -14,7 +14,7 @@
 ### Key Features Delivered
 
 1. **✅ Automatic Publish Dates**: Content gets `firstPublishDate` when transitioning from draft to published
-2. **✅ Change Date Tracking**: `lastChangeDate` automatically updated when published content is modified  
+2. **✅ Change Date Tracking**: `lastChangeDate` automatically updated when published content is modified
 3. **✅ Publication Status Workflow**: draft → published → archived with visual indicators
 4. **✅ Change Log Management**: Automatic tracking of content modifications with semantic analysis
 5. **✅ Pre-commit Automation**: Metadata updates happen automatically and files are staged for commit
@@ -42,12 +42,14 @@
 ## 🎯 Original Vision & Requirements (ACHIEVED)
 
 **Automatic Metadata Management**:
+
 - **Publish Date**: Automatically added when content is first committed (when moving from draft to published)
 - **Change Date**: Automatically updated when published content is modified
 - **Auto-Commit**: Files updated with metadata during pre-commit are automatically added to the commit
 - **Enhanced Display**: Proper metadata visualization in UI components
 
 **Integration Points**:
+
 - Pre-commit hooks with automatic file staging
 - Content registry system for tracking publication status
 - Enhanced UI components for metadata display
@@ -58,26 +60,44 @@
 ### Phase 1: Enhanced Content Schema & Validation (Days 1-2)
 
 #### **T34-001**: Update Content Schema for New Metadata Fields
+
 - **Goal**: Extend schema to support enhanced publication tracking
 - **Implementation**:
   ```typescript
   // Extend schema in src/content/config.ts
   const metadataSchema = z.object({
-    publishDate: z.string().transform((s) => new Date(s)).optional(),
-    firstPublishDate: z.string().transform((s) => new Date(s)).optional(), // Never changes
-    lastChangeDate: z.string().transform((s) => new Date(s)).optional(),   // Updated on changes
-    modifiedDate: z.string().transform((s) => new Date(s)).optional(),     // Git-based
+    publishDate: z
+      .string()
+      .transform((s) => new Date(s))
+      .optional(),
+    firstPublishDate: z
+      .string()
+      .transform((s) => new Date(s))
+      .optional(), // Never changes
+    lastChangeDate: z
+      .string()
+      .transform((s) => new Date(s))
+      .optional(), // Updated on changes
+    modifiedDate: z
+      .string()
+      .transform((s) => new Date(s))
+      .optional(), // Git-based
     publicationStatus: z.enum(['draft', 'published', 'archived']).default('draft'),
-    changeLog: z.array(z.object({
-      date: z.string(),
-      description: z.string(),
-      author: z.string().optional(),
-      type: z.enum(['content', 'metadata', 'structure']).default('content')
-    })).optional()
+    changeLog: z
+      .array(
+        z.object({
+          date: z.string(),
+          description: z.string(),
+          author: z.string().optional(),
+          type: z.enum(['content', 'metadata', 'structure']).default('content'),
+        })
+      )
+      .optional(),
   });
   ```
 
 #### **T34-002**: Create Publication Status Validation
+
 - **Goal**: Validate publication workflow and metadata consistency
 - **File**: `scripts/validation/validate-publication-metadata.ts`
 - **Features**:
@@ -89,9 +109,11 @@
 ### Phase 2: Pre-Commit Metadata Automation (Days 3-4)
 
 #### **T34-003**: Create Metadata Detection Script
+
 - **Goal**: Detect which files need publish dates or change dates
 - **File**: `scripts/utils/detect-metadata-changes.ts`
 - **Logic**:
+
   ```typescript
   interface MetadataChange {
     filePath: string;
@@ -101,7 +123,7 @@
     needsChangeDate: boolean;
     changeDescription?: string;
   }
-  
+
   export async function detectMetadataChanges(): Promise<MetadataChange[]> {
     // 1. Get staged content files
     // 2. Check current publication status
@@ -111,6 +133,7 @@
   ```
 
 #### **T34-004**: Create Automatic Metadata Injection Script
+
 - **Goal**: Automatically inject metadata into content files
 - **File**: `scripts/utils/inject-metadata.ts`
 - **Features**:
@@ -120,60 +143,63 @@
   - Preserve existing metadata
 
 #### **T34-005**: Enhanced Pre-Commit Hook Integration
+
 - **Goal**: Integrate metadata automation into existing pre-commit workflow
 - **File**: `.husky/pre-commit` (modify existing)
 - **Process**:
+
   ```bash
   # 1. Existing content validation
   # 2. NEW: Detect metadata changes
   tsx scripts/utils/detect-metadata-changes.ts > metadata-changes.json
-  
+
   # 3. NEW: Inject metadata if needed
   if [ -s metadata-changes.json ]; then
     tsx scripts/utils/inject-metadata.ts
-    
+
     # 4. NEW: Auto-add updated files to commit
     while read -r file; do
       git add "$file"
       echo "✅ Auto-added updated metadata for: $file"
     done < updated-files.txt
   fi
-  
+
   # 5. Continue with existing translation workflow
   ```
 
 ### Phase 3: Enhanced Metadata Display Components (Days 5-6)
 
 #### **T34-006**: Enhanced ContentMetadata Component
+
 - **Goal**: Display comprehensive publication metadata
 - **File**: `src/components/content/metadata/ContentMetadata.astro`
 - **Features**:
+
   ```astro
-  <!-- Publication Timeline -->
-  {firstPublishDate && (
-    <div class="flex items-center gap-1.5">
-      <Icon name="tabler:calendar-plus" class="w-3.5 h-3.5" />
-      <span class="text-xs">
-        Published {formatDate(firstPublishDate)}
-        {lastChangeDate && lastChangeDate !== firstPublishDate && (
-          <span class="text-slate-500 dark:text-slate-400">
-            • Updated {formatDate(lastChangeDate)}
-          </span>
-        )}
-      </span>
-    </div>
-  )}
-  
+  <!-- Publication Timeline -->{
+    firstPublishDate && (
+      <div class="flex items-center gap-1.5">
+        <Icon name="tabler:calendar-plus" class="w-3.5 h-3.5" />
+        <span class="text-xs">
+          Published {formatDate(firstPublishDate)}
+          {lastChangeDate && lastChangeDate !== firstPublishDate && (
+            <span class="text-slate-500 dark:text-slate-400">• Updated {formatDate(lastChangeDate)}</span>
+          )}
+        </span>
+      </div>
+    )
+  }
+
   <!-- Publication Status Badge -->
-  {publicationStatus && (
-    <Badge 
-      text={publicationStatus} 
-      variant={publicationStatus === 'published' ? 'success' : 'warning'} 
-    />
-  )}
+  {
+    publicationStatus && (
+      <Badge text={publicationStatus} variant={publicationStatus === 'published' ? 'success' : 'warning'} />
+    )
+  }
   ```
 
-#### **T34-007**: Enhanced ArticleFacts Component  
+#### **T34-007**: Enhanced ArticleFacts Component
+
 - **Goal**: Detailed publication history and metadata
 - **File**: `src/components/article/ArticleFacts.astro`
 - **Features**:
@@ -183,6 +209,7 @@
   - Metadata source indicators (auto vs manual)
 
 #### **T34-008**: New PublicationTimeline Component
+
 - **Goal**: Visual timeline of content lifecycle
 - **File**: `src/components/content/metadata/PublicationTimeline.astro`
 - **Features**:
@@ -199,6 +226,7 @@
 ### Phase 4: Auto-Commit Enhanced Integration (Days 7-8)
 
 #### **T34-009**: Smart File Tracking System
+
 - **Goal**: Track which files get updated during pre-commit
 - **File**: `scripts/utils/track-file-updates.ts`
 - **Features**:
@@ -208,17 +236,19 @@
   - Create descriptive commit message additions
 
 #### **T34-010**: Enhanced Pre-Commit Auto-Add Logic
+
 - **Goal**: Sophisticated auto-commit with safety checks
 - **Implementation**:
+
   ```bash
   # Safety checks before auto-adding
   echo "📋 Checking files updated during pre-commit..."
-  
+
   # Only auto-add files that:
   # 1. Are in src/content/ directory
   # 2. Have metadata-only changes
   # 3. Pass validation after update
-  
+
   for file in $(cat updated-files.txt); do
     if [[ "$file" =~ ^src/content/ ]]; then
       # Validate the updated file
@@ -235,6 +265,7 @@
   ```
 
 #### **T34-011**: Commit Message Enhancement
+
 - **Goal**: Automatic commit message updates for metadata changes
 - **File**: `scripts/utils/enhance-commit-message.ts`
 - **Features**:
@@ -246,6 +277,7 @@
 ### Phase 5: Advanced Features & Integration (Days 9-10)
 
 #### **T34-012**: Content Registry Integration
+
 - **Goal**: Integrate with existing content registry system
 - **File**: `scripts/content/content-sync-manager.ts` (enhance existing)
 - **Features**:
@@ -255,6 +287,7 @@
   - Support canonical ID-based publication tracking
 
 #### **T34-013**: Publication Analytics & Monitoring
+
 - **Goal**: Track publication patterns and metadata health
 - **File**: `scripts/utils/publication-analytics.ts`
 - **Features**:
@@ -264,6 +297,7 @@
   - Detect metadata inconsistencies
 
 #### **T34-014**: Rollback & Recovery System
+
 - **Goal**: Safe rollback of automatic metadata changes
 - **File**: `scripts/utils/metadata-rollback.ts`
 - **Features**:
@@ -275,16 +309,19 @@
 ## 🔄 Integration with Existing Systems
 
 ### Content Registry System
+
 - Publication status tracking in `content-registry.json`
 - Canonical ID correlation with metadata
 - Translation pipeline publication coordination
 
 ### Translation System
+
 - Coordinate publication dates across languages
 - Handle translation-specific change dates
 - Maintain publication consistency in translations
 
 ### Validation System
+
 - Extend existing validation scripts
 - Add metadata-specific validation rules
 - Integrate with publication workflow validation

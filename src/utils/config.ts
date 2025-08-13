@@ -1,6 +1,6 @@
 /**
  * Simple Configuration Access Utilities
- * 
+ *
  * This module provides practical utilities for accessing the centralized
  * configuration defined in src/config.yaml throughout the application.
  */
@@ -110,9 +110,7 @@ export class ThemeUtils {
    */
   static getCSSVar(name: string): string {
     if (typeof document !== 'undefined') {
-      return getComputedStyle(document.documentElement)
-        .getPropertyValue(name)
-        .trim();
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     }
     return '';
   }
@@ -183,7 +181,7 @@ export class NavigationUtils {
   static buildUrl(path: string, lang: string = 'en'): string {
     // Remove leading slash if present
     const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-    
+
     // Return language-prefixed URL
     return `/${lang}/${cleanPath}`.replace(/\/+/g, '/');
   }
@@ -195,7 +193,7 @@ export class NavigationUtils {
     if (typeof window !== 'undefined' && !url) {
       url = window.location.pathname;
     }
-    
+
     const match = url.match(/^\/([a-z]{2})\//);
     return match ? match[1] : 'en';
   }
@@ -248,22 +246,22 @@ export class DevUtils {
     if (!ConfigUtils.isDevelopment()) return;
 
     console.group('⚙️ Configuration System Status');
-    
+
     // Environment config
     ConfigUtils.logEnvironmentConfig();
-    
+
     // Feature flags
     console.group('🎛️ Feature Flags (Defaults)');
     Object.entries(FeatureFlags.DEFAULTS).forEach(([key, value]) => {
       console.log(`${value ? '✅' : '❌'} ${key}`);
     });
     console.groupEnd();
-    
+
     // Theme status
     console.group('🎨 Theme System');
     console.log('CSS Variables:', Object.values(ThemeUtils.CSS_VARS).join(', '));
     console.groupEnd();
-    
+
     console.groupEnd();
   }
 }

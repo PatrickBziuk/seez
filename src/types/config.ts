@@ -1,10 +1,10 @@
 /**
  * Configuration Types for Seez
- * 
+ *
  * This file defines TypeScript interfaces for the centralized configuration
  * system defined in src/config.yaml. This ensures type safety when accessing
  * configuration values throughout the application.
- * 
+ *
  * Last updated: 2025-08-09
  * Matches config.yaml structure completely
  */
@@ -273,7 +273,7 @@ export interface UIConfig {
 
 /**
  * Main Configuration Interface
- * 
+ *
  * This represents the complete structure of the config.yaml file
  */
 export interface AppConfig {
@@ -298,9 +298,7 @@ export interface AppConfig {
  */
 export type ConfigPath<T = AppConfig> = T extends object
   ? {
-      [K in keyof T]: T[K] extends object
-        ? K | `${K & string}.${ConfigPath<T[K]> & string}`
-        : K;
+      [K in keyof T]: T[K] extends object ? K | `${K & string}.${ConfigPath<T[K]> & string}` : K;
     }[keyof T]
   : never;
 
@@ -310,11 +308,11 @@ export type ConfigPath<T = AppConfig> = T extends object
 export type ConfigValue<T extends string> = T extends keyof AppConfig
   ? AppConfig[T]
   : T extends `${infer K}.${infer Rest}`
-  ? K extends keyof AppConfig
-    ? ConfigValue<Rest> extends string
-      ? AppConfig[K] extends object
-        ? ConfigValue<Rest>
+    ? K extends keyof AppConfig
+      ? ConfigValue<Rest> extends string
+        ? AppConfig[K] extends object
+          ? ConfigValue<Rest>
+          : never
         : never
       : never
-    : never
-  : never;
+    : never;

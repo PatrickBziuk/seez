@@ -9,13 +9,13 @@ import fs from 'fs';
 export const readingTimeRemarkPlugin: RemarkPlugin = () => {
   return function (tree, file) {
     const textOnPage = toString(tree);
-    
+
     // Use existing reading-time library for backward compatibility
     const readingTime = Math.ceil(getReadingTime(textOnPage).minutes);
-    
+
     // Add word count using our utility function
     const wordCount = getWordCount(textOnPage);
-    
+
     // Also calculate reading time using our utility for more detailed info
     const readingTimeDetails = getReadingTimeUtil(wordCount);
 
@@ -35,19 +35,19 @@ function getGitLastModified(filePath: string): Date | null {
   try {
     // Get the last commit date for this file
     const gitCommand = `git log -1 --format=%cI "${filePath}"`;
-    const result = execSync(gitCommand, { 
-      encoding: 'utf8', 
+    const result = execSync(gitCommand, {
+      encoding: 'utf8',
       cwd: process.cwd(),
-      stdio: ['pipe', 'pipe', 'ignore'] // Suppress stderr
+      stdio: ['pipe', 'pipe', 'ignore'], // Suppress stderr
     }).trim();
-    
+
     if (result) {
       return new Date(result);
     }
   } catch {
     // Git command failed, fallback to filesystem mtime
   }
-  
+
   return null;
 }
 
@@ -66,18 +66,18 @@ function getFilesystemModified(filePath: string): Date | null {
 export const remarkModifiedTime: RemarkPlugin = () => {
   return function (tree, file) {
     if (!file.history || file.history.length === 0) return;
-    
+
     const filePath = file.history[0];
     if (!filePath) return;
-    
+
     // Try to get last modified from Git first
     let lastModified = getGitLastModified(filePath);
-    
+
     // Fallback to filesystem mtime if Git fails
     if (!lastModified) {
       lastModified = getFilesystemModified(filePath);
     }
-    
+
     if (lastModified && typeof file?.data?.astro?.frontmatter !== 'undefined') {
       file.data.astro.frontmatter.lastModified = lastModified.toISOString();
     }

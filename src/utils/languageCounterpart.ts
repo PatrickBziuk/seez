@@ -104,12 +104,14 @@ function convertPathToUrl(contentPath: string, language: string): string {
 /**
  * Get all available languages for content
  */
-export async function getAvailableLanguages(canonicalId: string): Promise<{
-  language: string;
-  url: string;
-  status: 'current' | 'outdated' | 'missing';
-  isOriginal: boolean;
-}[]> {
+export async function getAvailableLanguages(canonicalId: string): Promise<
+  {
+    language: string;
+    url: string;
+    status: 'current' | 'outdated' | 'missing';
+    isOriginal: boolean;
+  }[]
+> {
   const registry = await loadContentRegistry();
   if (!registry) return [];
 

@@ -29,12 +29,14 @@ TRANSLATION_QUALITY_THRESHOLD=70
 ### 3. Verify Setup
 
 **Local verification:**
+
 ```bash
 # Check if your local environment is working
 node -e "console.log('API Key:', process.env.OPENAI_API_KEY ? 'Set ✅' : 'Missing ❌')"
 ```
 
 **GitHub verification:**
+
 - Go to Actions tab in your repository
 - Manual workflow dispatch should work after adding the secret
 
@@ -61,6 +63,7 @@ seez/
 ## Usage Examples
 
 **Local development:**
+
 ```bash
 # Hooks will automatically use .env.local
 git add src/content/projects/en/my-project.mdx
@@ -73,6 +76,7 @@ pnpm run translations:generate-registry
 ```
 
 **GitHub Actions:**
+
 ```bash
 # Manual regeneration workflow
 # → Uses secrets.OPENAI_API_KEY from repository settings
@@ -81,11 +85,13 @@ pnpm run translations:generate-registry
 ## Troubleshooting
 
 **"API key not found" locally:**
+
 1. Ensure `.env.local` exists in project root
 2. Check file contains `OPENAI_API_KEY=sk-proj-...`
 3. Restart your terminal/IDE
 
 **GitHub Actions failing:**
+
 1. Verify secret is added in repository settings
 2. Secret name must be exactly `OPENAI_API_KEY`
 3. Check Actions logs for specific error messages

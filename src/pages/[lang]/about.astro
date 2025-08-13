@@ -11,8 +11,7 @@ import type { SupportedLanguage } from '../../utils/i18n';
 import type { MetaData } from '~/types';
 
 // Build-time constants
-export const getStaticPaths = () =>
-  SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
+export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 const t = await getTranslations(lang);
@@ -27,9 +26,10 @@ const Content = rendered?.Content ?? null;
 // Build canonical + hreflang alternates
 const baseUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://seez.eu';
 const canonical = `${baseUrl}/${lang}/about`;
-const alternates = SUPPORTED_LANGUAGES
-  .filter((l) => l !== lang)
-  .map((l) => ({ lang: l, url: `${baseUrl}/${l}/about` }));
+const alternates = SUPPORTED_LANGUAGES.filter((l) => l !== lang).map((l) => ({
+  lang: l,
+  url: `${baseUrl}/${l}/about`,
+}));
 
 // Metadata
 const title = pageEntry?.data.title || t.navigation.About || (lang === 'de' ? 'Über' : 'About');
@@ -51,7 +51,6 @@ const metadata: MetaData = {
     cardType: 'summary_large_image',
   },
 };
-
 ---
 
 <Layout metadata={metadata}>
@@ -66,46 +65,43 @@ const metadata: MetaData = {
     </header>
 
     <div class="prose prose-lg dark:prose-invert mx-auto">
-      {Content ? (
-        <Content />
-      ) : (
-        <div class="rounded-xl border border-dashed border-gray-300/60 p-6 text-gray-600 dark:border-gray-700 dark:text-gray-300">
-          <p class="mb-2">
-            {lang === 'de'
-              ? 'Kein Inhalt gefunden. Lege in der Content-Collection eine Datei unter'
-              : 'No content found. Create a file in the content collection at'}{' '}
-            <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">
-              src/content/pages/about/{lang}.mdx
-            </code>{' '}
-            {lang === 'de' ? 'oder' : 'or'}{' '}
-            <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">
-              src/content/pages/about/{lang}.md
-            </code>
-            .
-          </p>
-          <p class="mt-2">
-            {lang === 'de'
-              ? 'Danach neu bauen. Ich weiß, es ist nervig. Willkommen im Web.'
-              : 'Then rebuild. Yes, it’s annoying. Welcome to the web.'}
-          </p>
-        </div>
-      )}
+      {
+        Content ? (
+          <Content />
+        ) : (
+          <div class="rounded-xl border border-dashed border-gray-300/60 p-6 text-gray-600 dark:border-gray-700 dark:text-gray-300">
+            <p class="mb-2">
+              {lang === 'de'
+                ? 'Kein Inhalt gefunden. Lege in der Content-Collection eine Datei unter'
+                : 'No content found. Create a file in the content collection at'}{' '}
+              <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">src/content/pages/about/{lang}.mdx</code>{' '}
+              {lang === 'de' ? 'oder' : 'or'}{' '}
+              <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">src/content/pages/about/{lang}.md</code>.
+            </p>
+            <p class="mt-2">
+              {lang === 'de'
+                ? 'Danach neu bauen. Ich weiß, es ist nervig. Willkommen im Web.'
+                : 'Then rebuild. Yes, it’s annoying. Welcome to the web.'}
+            </p>
+          </div>
+        )
+      }
     </div>
     <div class="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
       <div class="text-sm text-gray-500 dark:text-gray-400">
-        {lang === 'de'
-          ? 'Auch verfügbar auf:'
-          : 'Also available in:'}
+        {lang === 'de' ? 'Auch verfügbar auf:' : 'Also available in:'}
       </div>
       <div class="flex items-center gap-3">
-        {alternates.map((a) => (
-          <a
-            href={a.url}
-            class="text-sm underline underline-offset-2 hover:no-underline text-gray-700 dark:text-gray-200"
-          >
-            {a.lang.toUpperCase()}
-          </a>
-        ))}
+        {
+          alternates.map((a) => (
+            <a
+              href={a.url}
+              class="text-sm underline underline-offset-2 hover:no-underline text-gray-700 dark:text-gray-200"
+            >
+              {a.lang.toUpperCase()}
+            </a>
+          ))
+        }
       </div>
     </div>
   </section>

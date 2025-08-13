@@ -93,8 +93,8 @@ const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
           <ul class="flex items-center gap-4">
             {socialLinks.map(({ ariaLabel, href, text, icon }: Link) => (
               <li>
-                <a 
-                  href={href} 
+                <a
+                  href={href}
                   aria-label={ariaLabel || text}
                   target="_blank"
                   rel="noopener noreferrer"

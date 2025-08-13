@@ -2,12 +2,12 @@
 
 /**
  * validate-no-drafts.ts - Draft State Validation (BLOCKING)
- * 
+ *
  * Purpose: Ensure no content has `draft: true` in frontmatter before commits
- * 
+ *
  * This script prevents draft content from being committed to the repository.
  * It scans all content files and blocks commits if any draft content is found.
- * 
+ *
  * @blocking This validation BLOCKS commits until all issues are resolved
  * @dependencies gray-matter, glob
  */
@@ -34,55 +34,55 @@ interface ValidationResult {
  */
 async function validateNoDrafts(): Promise<ValidationResult> {
   console.log('🔍 Validating that no content is in draft state...');
-  
+
   const errors: ValidationError[] = [];
   const warnings: ValidationError[] = [];
-  
+
   try {
     // Find all content files across collections
     const contentFiles = await glob('src/content/{books,projects,lab,life,pages}/**/*.{md,mdx}', {
       cwd: process.cwd(),
-      absolute: true
+      absolute: true,
     });
-    
+
     console.log(`📄 Found ${contentFiles.length} content files to validate`);
-    
+
     for (const filePath of contentFiles) {
       try {
         const content = readFileSync(filePath, 'utf-8');
         const { data: frontmatter } = matter(content);
-        
+
         // Check for draft status
         if (frontmatter.draft === true) {
           errors.push({
             file: filePath.replace(process.cwd(), '.'),
             issue: 'Content marked as draft: true',
-            severity: 'critical'
+            severity: 'critical',
           });
         }
-        
+
         // Check for missing review status on AI-generated content
         if (frontmatter.status?.authoring === 'AI' || frontmatter.status?.authoring === 'AI+Human') {
           if (!frontmatter.status?.reviewed || frontmatter.status?.reviewed !== true) {
             errors.push({
               file: filePath.replace(process.cwd(), '.'),
               issue: 'AI-generated content not marked as human-reviewed',
-              severity: 'critical'
+              severity: 'critical',
             });
           }
         }
-        
+
         // Check for missing translation review status
         if (frontmatter.status?.translation === 'AI') {
           if (!frontmatter.status?.translationReviewed || frontmatter.status?.translationReviewed !== true) {
             errors.push({
               file: filePath.replace(process.cwd(), '.'),
               issue: 'AI-translated content not marked as human-reviewed',
-              severity: 'critical'
+              severity: 'critical',
             });
           }
         }
-        
+
         // Check for required metadata completeness
         const requiredFields = ['title', 'language'];
         for (const field of requiredFields) {
@@ -90,51 +90,51 @@ async function validateNoDrafts(): Promise<ValidationResult> {
             errors.push({
               file: filePath.replace(process.cwd(), '.'),
               issue: `Missing required field: ${field}`,
-              severity: 'critical'
+              severity: 'critical',
             });
           }
         }
-        
+
         // Warning for missing tags
         if (!frontmatter.tags || !Array.isArray(frontmatter.tags) || frontmatter.tags.length === 0) {
           warnings.push({
             file: filePath.replace(process.cwd(), '.'),
             issue: 'Content has no tags assigned',
-            severity: 'warning'
+            severity: 'warning',
           });
         }
-        
       } catch (fileError) {
         errors.push({
           file: filePath.replace(process.cwd(), '.'),
           issue: `Failed to parse file: ${(fileError as Error).message}`,
-          severity: 'critical'
+          severity: 'critical',
         });
       }
     }
-    
+
     const passed = errors.length === 0;
-    const summary = passed 
+    const summary = passed
       ? `✅ All ${contentFiles.length} content files are ready for publication`
       : `❌ Found ${errors.length} critical issues that must be resolved before commit`;
-    
+
     return {
       passed,
       errors,
       warnings,
-      summary
+      summary,
     };
-    
   } catch (error) {
     return {
       passed: false,
-      errors: [{
-        file: 'validation-system',
-        issue: `Validation failed: ${(error as Error).message}`,
-        severity: 'critical'
-      }],
+      errors: [
+        {
+          file: 'validation-system',
+          issue: `Validation failed: ${(error as Error).message}`,
+          severity: 'critical',
+        },
+      ],
       warnings: [],
-      summary: '❌ Draft validation system encountered an error'
+      summary: '❌ Draft validation system encountered an error',
     };
   }
 }
@@ -144,7 +144,7 @@ async function validateNoDrafts(): Promise<ValidationResult> {
  */
 function reportResults(result: ValidationResult): void {
   console.log('\n' + result.summary);
-  
+
   if (result.errors.length > 0) {
     console.log('\n🚨 CRITICAL ISSUES (must be fixed before commit):');
     result.errors.forEach((error, index) => {
@@ -157,7 +157,7 @@ function reportResults(result: ValidationResult): void {
     console.log('   • Add translationReviewed: true to status for AI-translated content');
     console.log('   • Ensure all required metadata fields are present');
   }
-  
+
   if (result.warnings.length > 0) {
     console.log('\n⚠️  WARNINGS (recommended fixes):');
     result.warnings.forEach((warning, index) => {
@@ -165,7 +165,7 @@ function reportResults(result: ValidationResult): void {
       console.log(`     ${warning.issue}`);
     });
   }
-  
+
   if (result.passed) {
     console.log('\n🎉 All validations passed! Content is ready for commit.');
     process.exit(0);

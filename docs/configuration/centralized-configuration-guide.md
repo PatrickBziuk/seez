@@ -1,10 +1,11 @@
-/**
- * Centralized Configuration System Documentation
- * 
- * This document explains the new centralized configuration system for Seez,
- * which consolidates all site settings, secrets, theme configuration, and
- * feature flags into a single, manageable structure.
- */
+/\*\*
+
+- Centralized Configuration System Documentation
+-
+- This document explains the new centralized configuration system for Seez,
+- which consolidates all site settings, secrets, theme configuration, and
+- feature flags into a single, manageable structure.
+  \*/
 
 # Centralized Configuration System
 
@@ -39,14 +40,14 @@ site:
 # Theme & Design System
 theme:
   colors:
-    primary: '#2563eb'        # Your brand primary color
-    secondary: '#7c3aed'      # Your brand secondary color
+    primary: '#2563eb' # Your brand primary color
+    secondary: '#7c3aed' # Your brand secondary color
     # ... more colors
-    light:                    # Light mode colors
+    light: # Light mode colors
       background: '#ffffff'
       text:
         primary: '#0f172a'
-    dark:                     # Dark mode colors
+    dark: # Dark mode colors
       background: '#0f172a'
       text:
         primary: '#f8fafc'
@@ -74,6 +75,7 @@ features:
 Sensitive information like API keys should be stored in environment variables:
 
 ### Local Development (`.env.local`)
+
 ```env
 # OpenAI API Key for translations
 OPENAI_API_KEY=sk-proj-your-openai-key-here
@@ -89,7 +91,9 @@ GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
 ```
 
 ### Production (GitHub Secrets)
+
 For production deployment, add these as GitHub repository secrets:
+
 - `OPENAI_API_KEY`
 - `FORMSPREE_ENDPOINT` (optional)
 - `GOOGLE_ANALYTICS_ID` (optional)
@@ -119,10 +123,10 @@ Customize your brand colors in the `theme.colors` section:
 ```yaml
 theme:
   colors:
-    primary: '#your-primary-color'     # Main brand color
+    primary: '#your-primary-color' # Main brand color
     secondary: '#your-secondary-color' # Secondary brand color
-    accent: '#your-accent-color'       # Accent color for highlights
-    
+    accent: '#your-accent-color' # Accent color for highlights
+
     # Light mode colors
     light:
       background: '#ffffff'
@@ -130,7 +134,7 @@ theme:
       text:
         primary: '#0f172a'
         secondary: '#475569'
-    
+
     # Dark mode colors
     dark:
       background: '#0f172a'
@@ -184,11 +188,11 @@ Enable or disable features:
 
 ```yaml
 features:
-  enableSearch: true          # Site-wide search
-  enableComments: false       # Comment system
-  enableShare: true           # Social sharing
-  enableTranslation: true     # Auto-translation
-  enableTags: true           # Content tagging
+  enableSearch: true # Site-wide search
+  enableComments: false # Comment system
+  enableShare: true # Social sharing
+  enableTranslation: true # Auto-translation
+  enableTags: true # Content tagging
 ```
 
 ## Environment Setup
@@ -196,6 +200,7 @@ features:
 ### 1. Set up your OpenAI API Key
 
 For local development:
+
 1. Create `.env.local` in the project root
 2. Add your OpenAI API key:
    ```env
@@ -203,6 +208,7 @@ For local development:
    ```
 
 For production:
+
 1. Go to your GitHub repository settings
 2. Navigate to "Secrets and variables" > "Actions"
 3. Add `OPENAI_API_KEY` as a repository secret
@@ -210,6 +216,7 @@ For production:
 ### 2. Configure Contact Form (Optional)
 
 If you want to use the contact form:
+
 1. Sign up at [Formspree](https://formspree.io)
 2. Create a new form and get your endpoint URL
 3. Update the `integrations.contact.endpoint` in `config.yaml`
@@ -251,16 +258,19 @@ If you're upgrading from the old configuration system:
 ## Troubleshooting
 
 ### Configuration not loading
+
 - Ensure `config.yaml` syntax is valid
 - Check that all required sections are present
 - Verify environment variables are set correctly
 
 ### API keys not working
+
 - Check that `.env.local` exists and contains your keys
 - Ensure keys are not quoted in the environment file
 - Verify the key format is correct (OpenAI keys start with `sk-`)
 
 ### Theme colors not applying
+
 - Clear your browser cache
 - Check that color values are valid CSS colors
 - Ensure the theme system is properly configured

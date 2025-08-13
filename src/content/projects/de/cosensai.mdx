@@ -19,7 +19,7 @@ canonicalId: slug-20250812-6f8d704e
 
 ## Cosensai – Der Spiegel, der zurückguckt und widerspricht
 
-*"Ich habe keine Lust, mir mein Denken mieten zu müssen."*
+_"Ich habe keine Lust, mir mein Denken mieten zu müssen."_
 
 Das ist der Kern von Cosensai. Während jede große KI-Plattform heute denselben Kurs verfolgt – maximale Bindung, maximale Datenauswertung, minimale Transparenz – soll Cosensai das Gegenteil sein: ein persönlicher, souveräner KI-Raum, der dir gehört und der dich nicht nur bestätigt, sondern auch herausfordert.
 
@@ -28,6 +28,7 @@ Das ist der Kern von Cosensai. Während jede große KI-Plattform heute denselben
 Viele Kreative arbeiten nicht linear, sondern in Zyklen. Ich selbst rotieren etwa einmal pro Woche zwischen Projekten – oft radikal unterschiedlich in Thema, Tech-Stack und Tonfall. Diese Arbeitsweise bringt frische Perspektiven und verhindert kreative Sackgassen.
 
 **Die Vorteile der Rotation:**
+
 - **Minimaler Kontextverlust als Strategie:** Durch die permanente Rotation gibt es immer eine neue Perspektive die man einnimmt, ohne dabei zu viel Kontext der einzelnen Projekte zu verlieren
 - **Konzentrierte Arbeit in Inseln:** Vollständige Fokussierung auf das aktuelle Projekt ohne parallele Ablenkungen
 - **Kreuzpollination:** Erkenntnisse aus einem Projekt können in anderen wertvoll werden
@@ -64,7 +65,7 @@ Das System modelliert zwei Profile:
 Bei wichtigen Entscheidungen stellt Cosensai beide Perspektiven nebeneinander. Das bedeutet praktisch:
 
 - Widerspruch bei einseitiger Argumentation
-- Alternative Erklärungsmodelle, auch wenn sie unwahrscheinlich erscheinen  
+- Alternative Erklärungsmodelle, auch wenn sie unwahrscheinlich erscheinen
 - Erinnerung an frühere Erkenntnisse, die dem aktuellen Mindset widersprechen
 
 ## Technische Architektur
@@ -72,16 +73,19 @@ Bei wichtigen Entscheidungen stellt Cosensai beide Perspektiven nebeneinander. D
 Cosensai besteht aus mehreren eng verzahnten Schichten, die vollständige Datenkontrolle ermöglichen:
 
 ### Selbstbestimmte Infrastruktur
+
 - **Self-host first:** Läuft auf eigener Hardware _(Ich weiß nicht jeder hat ne H100 Zuhause)_ oder wahlweise EU-basierter Cloud-Infrastruktur
 - **Modell-Flexibilität:** Keine Bindung an externe APIs – OpenAI, Anthropic, lokale LLMs frei wählbar
 - **Datensouveränität:** Alle Daten bleiben dort, wo du sie haben willst
 
 ### Persistentes Gedächtnis
+
 - **PostgreSQL + pgvector:** Vektorbasierte Speicherstrukturen für semantische Suche und Kontextrekonstruktion
-- **Rich Metadata:** Jede Interaktion wird mit Zeitstempel, Themen, Emotionen           **(Vorsicht AI ACT!)** und Quellen versehen
+- **Rich Metadata:** Jede Interaktion wird mit Zeitstempel, Themen, Emotionen **(Vorsicht AI ACT!)** und Quellen versehen
 - **Unbegrenzte Threads:** Gespräche können sich über Monate entwickeln, ohne Informationsverlust
 
 ### Kontext-Engine
+
 - **Model Context Protocol (MCP):** Anbindung externer Quellen wie E-Mails, Kalender, Dokumente und APIs
 - **Intelligente Selektion:** Kleinere LLMs wählen relevante Erinnerungen für Haupt-LLM-Calls aus
   - **Kontextualisierung:** Relevante Informationen werden automatisch hervorgehoben
@@ -89,11 +93,13 @@ Cosensai besteht aus mehreren eng verzahnten Schichten, die vollständige Datenk
 - **Effizienz:** Optimale Nutzung der Kontextfenster ohne Informationsverlust
 
 ### Agenten-Architektur
+
 - **Spezialisierte Agenten:** Jeder Agent arbeitet auf langfristige Ziele hin
 - **Individuelle Identitäten:** Jeder Agent kann unabhängig reflektieren und bietet unterschiedliche Perspektiven
 - **Strukturierte Zusammenarbeit:** Agenten kommunizieren über interne Protokolle, nicht über losen Chat
 
 ### Universeller Input/Output
+
 - **Breite Formatunterstützung:** Import aller gängigen Dateiformate mit automatischer Themen- und Aufgabenverknüpfung
 - **Markdown-first:** Maximale Portabilität und einfache externe Bearbeitung
 
@@ -101,30 +107,34 @@ Cosensai besteht aus mehreren eng verzahnten Schichten, die vollständige Datenk
 
 Die Unterschiede gehen weit über andere Serverstandorte oder hübschere UIs hinaus. Es ist ein grundlegend anderes Verhältnis zwischen Nutzer und KI:
 
-| Aspekt | ChatGPT | Cosensai |
-|--------|---------|----------|
-| **Betriebsmodell** | Vollständig bei OpenAI gehostet, zentral kontrolliert | Self-host-first, optionale EU-Cloud, volle Datenkontrolle |
-| **Datenhoheit** | OpenAI verwaltet Daten, begrenzte Transparenz | Alle Daten in deiner Hand: Speicherung, Backup, Löschung |
-| **Gedächtnis** | Zentral verwaltete "Memory"-Funktion, eingeschränkt | Persistentes, durchsuchbares Langzeitgedächtnis mit Metadaten |
-| **Kontextintegration** | Nur im aktiven Chat | Automatisches Einbinden relevanter Erinnerungen aus allen Projekten |
-| **Perspektiven** | Eine einheitliche Modell-Persönlichkeit | Mehrere Agenten inkl. "Gegenidentität" für alternative Sichtweisen |
-| **Erweiterbarkeit** | Beschränkte Plugins im OpenAI-Ökosystem | Offene Schnittstellen, beliebig erweiterbar ohne Vendor-Lock-in |
-| **Zielgruppe** | Massenmarkt, schnelle Antworten | Power-User, langfristige Arbeit, Tiefgang und Souveränität |
+| Aspekt                 | ChatGPT                                               | Cosensai                                                            |
+| ---------------------- | ----------------------------------------------------- | ------------------------------------------------------------------- |
+| **Betriebsmodell**     | Vollständig bei OpenAI gehostet, zentral kontrolliert | Self-host-first, optionale EU-Cloud, volle Datenkontrolle           |
+| **Datenhoheit**        | OpenAI verwaltet Daten, begrenzte Transparenz         | Alle Daten in deiner Hand: Speicherung, Backup, Löschung            |
+| **Gedächtnis**         | Zentral verwaltete "Memory"-Funktion, eingeschränkt   | Persistentes, durchsuchbares Langzeitgedächtnis mit Metadaten       |
+| **Kontextintegration** | Nur im aktiven Chat                                   | Automatisches Einbinden relevanter Erinnerungen aus allen Projekten |
+| **Perspektiven**       | Eine einheitliche Modell-Persönlichkeit               | Mehrere Agenten inkl. "Gegenidentität" für alternative Sichtweisen  |
+| **Erweiterbarkeit**    | Beschränkte Plugins im OpenAI-Ökosystem               | Offene Schnittstellen, beliebig erweiterbar ohne Vendor-Lock-in     |
+| **Zielgruppe**         | Massenmarkt, schnelle Antworten                       | Power-User, langfristige Arbeit, Tiefgang und Souveränität          |
 
 **Metaphorisch:** ChatGPT ist ein fähiger Berater in einem riesen Beratungsunternehmen – Cosensai ist dein eigener Mitarbeiter, der deine Ordner kennt und dir ehrlich widerspricht.
 
 ## Praktische Anwendung
 
 ### Mein zentrales Gedächtnis
+
 Alle Informationen – Ideen, Dokumente, Chatverläufe, Recherchen – landen in einem strukturierten, durchsuchbaren Gedächtnis mit automatischen Querverweisen zwischen Projekten.
 
-### Mein Reflexionspartner  
+### Mein Reflexionspartner
+
 Nicht nur responsive Assistenz, sondern aktiver Widerspruch. Cosensai erinnert an frühere Einsichten, auch wenn sie der aktuellen Stimmung widersprechen.
 
 ### Mein Projekt-Katalysator
+
 Automatische Erkennung von Aufgaben, Themen und Zusammenhängen aus allen Eingaben. Direkte Verknüpfung von Kontexten zwischen verschiedenen Projekten.
 
 ### Mein Filter gegen Überladung
+
 Cosensai entscheidet mit meiner Hilfe, was wichtig ist, und bereitet Informationen entscheidungsreif auf – ohne kognitiven Overkill oder doppelte Prüfschleifen.
 
 ## Warum jetzt?
@@ -132,8 +142,9 @@ Cosensai entscheidet mit meiner Hilfe, was wichtig ist, und bereitet Information
 Je länger wir warten, desto mehr gewöhnen sich Menschen daran, dass "KI" gleichbedeutend mit "Cloud-Blackbox von Konzern X" ist. Eine nutzbare, mächtige und unabhängige Alternative muss parallel zu dieser Gewöhnungskurve entstehen.
 
 **Cosensai soll der frühe Beweis sein:**
+
 - KI kann dir gehören
-- KI kann dich widerspiegeln und gleichzeitig aus der Komfortzone holen  
+- KI kann dich widerspiegeln und gleichzeitig aus der Komfortzone holen
 - KI kann langfristig denken, ohne dich langfristig zu binden
 
 ## Das größere Ziel

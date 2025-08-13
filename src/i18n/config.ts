@@ -9,7 +9,7 @@ export const i18nConfig = {
   defaultLocale: DEFAULT_LANGUAGE,
   locales: [...SUPPORTED_LANGUAGES],
   fallbackLocale: DEFAULT_LANGUAGE,
-  
+
   // Route patterns for language-specific URLs
   routes: [
     { pattern: '/en/:path*', locale: 'en' },
@@ -22,7 +22,7 @@ export const i18nConfig = {
  */
 export async function loadTranslations(locale: string): Promise<Record<string, unknown>> {
   const language = locale as SupportedLanguage;
-  
+
   try {
     const translations = await import(`../locales/${language}.json`);
     return translations.default;
@@ -43,7 +43,7 @@ export function formatMessage(
 ): string {
   const keys = key.split('.');
   let message: unknown = translations;
-  
+
   for (const k of keys) {
     if (message && typeof message === 'object' && message !== null && k in message) {
       message = (message as Record<string, unknown>)[k];
@@ -52,12 +52,12 @@ export function formatMessage(
       return key; // Return key as fallback
     }
   }
-  
+
   if (typeof message !== 'string') {
     console.warn(`Translation value is not a string: ${key}`);
     return key;
   }
-  
+
   // Simple parameter replacement
   if (params) {
     return Object.entries(params).reduce(
@@ -65,7 +65,7 @@ export function formatMessage(
       message
     );
   }
-  
+
   return message;
 }
 
@@ -76,7 +76,7 @@ export type TranslationFunction = (key: string, params?: Record<string, string |
  */
 export async function createTranslationFunction(locale: string): Promise<TranslationFunction> {
   const translations = await loadTranslations(locale);
-  
+
   return (key: string, params?: Record<string, string | number>) => {
     return formatMessage(translations, key, params);
   };

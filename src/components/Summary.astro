@@ -17,7 +17,7 @@ const { content, language = 'en' } = Astro.props as Props;
 // Simple translation without complex i18n for now
 const labels: Record<'en' | 'de', { title: string; toggleHint: string }> = {
   en: { title: '📋 Summary', toggleHint: 'Click to collapse/expand' },
-  de: { title: '📋 Zusammenfassung', toggleHint: 'Klicken zum Ein-/Ausklappen' }
+  de: { title: '📋 Zusammenfassung', toggleHint: 'Klicken zum Ein-/Ausklappen' },
 };
 
 const label = labels[language as 'en' | 'de'] || labels.en;
@@ -25,15 +25,15 @@ const label = labels[language as 'en' | 'de'] || labels.en;
 
 <section class="prose summary mb-6" aria-label={label.title}>
   <details open class="bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-    <summary 
+    <summary
       class="cursor-pointer p-4 font-semibold text-lg text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg transition-colors duration-200"
       title={label.toggleHint}
     >
       {label.title}
     </summary>
-    <div 
+    <div
       class="px-4 pb-4 text-gray-700 dark:text-gray-300 prose prose-sm max-w-none dark:prose-invert"
-      set:html={content} 
+      set:html={content}
     />
   </details>
 </section>
@@ -43,52 +43,52 @@ const label = labels[language as 'en' | 'de'] || labels.en;
   .summary details[open] summary {
     border-bottom: 1px solid theme('colors.gray.200');
   }
-  
+
   .dark .summary details[open] summary {
     border-bottom-color: theme('colors.gray.700');
   }
-  
+
   /* Smooth transition for details opening/closing */
   .summary details summary {
     transition: background-color 0.2s ease;
   }
-  
+
   /* Focus styles for accessibility */
   .summary details summary:focus {
     outline: 2px solid theme('colors.blue.500');
     outline-offset: 2px;
   }
-  
+
   /* Custom marker styling */
   .summary details summary::marker {
     color: theme('colors.gray.500');
   }
-  
+
   .dark .summary details summary::marker {
     color: theme('colors.gray.400');
   }
-  
+
   /* Prose styling adjustments */
   .summary .prose {
     font-size: 0.95rem;
     line-height: 1.6;
   }
-  
+
   .summary .prose p {
     margin-bottom: 0.75rem;
   }
-  
+
   .summary .prose p:last-child {
     margin-bottom: 0;
   }
-  
+
   /* Ensure lists and other elements fit well */
   .summary .prose ul,
   .summary .prose ol {
     margin: 0.5rem 0;
     padding-left: 1.25rem;
   }
-  
+
   .summary .prose li {
     margin: 0.25rem 0;
   }

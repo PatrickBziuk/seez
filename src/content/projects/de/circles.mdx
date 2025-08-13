@@ -16,6 +16,7 @@ status:
   translation: AI
 canonicalId: slug-20250812-b8f5ef54
 ---
+
 ## circles – Soziale Nähe sichtbar machen
 
 Digitale Kommunikation hat unser Miteinander grundlegend verändert: Wir sind ständig vernetzt, aber echte Nähe geht oft verloren. Messenger und Social-Media-Plattformen binden unsere Aufmerksamkeit, doch sie helfen uns kaum, Beziehungen bewusst zu pflegen. Zwischen endlosen Kontaktlisten und algorithmisch sortierten Feeds verschwimmen echte Bindungen mit flüchtigen Interaktionen.
@@ -26,11 +27,11 @@ Digitale Kommunikation hat unser Miteinander grundlegend verändert: Wir sind st
 
 ### Die Idee hinter circles
 
-Jeder Mensch bewegt sich in sozialen Kreisen: Familie, Freunde, Bekannte, Kolleg*innen. Im echten Leben spüren wir, wie nah uns jemand steht – abhängig von der Intensität und Häufigkeit der Interaktion. Digitale Plattformen verwischen diese Unterschiede. circles macht sie sichtbar und veränderbar.
+Jeder Mensch bewegt sich in sozialen Kreisen: Familie, Freunde, Bekannte, Kolleg\*innen. Im echten Leben spüren wir, wie nah uns jemand steht – abhängig von der Intensität und Häufigkeit der Interaktion. Digitale Plattformen verwischen diese Unterschiede. circles macht sie sichtbar und veränderbar.
 
-**Das Prinzip:** Kontakte werden als Bubbles auf Kreisen um dein Profilbild angeordnet. Je häufiger und bedeutungsvoller du mit jemandem interagierst, desto näher rückt er an dein Profilbild. Lässt der Kontakt nach, vergrößert sich der Abstand. Keine manipulative Timeline, kein Like-Button – sondern ein direktes, visuelles Feedback über den Zustand deiner Beziehungen. 
+**Das Prinzip:** Kontakte werden als Bubbles auf Kreisen um dein Profilbild angeordnet. Je häufiger und bedeutungsvoller du mit jemandem interagierst, desto näher rückt er an dein Profilbild. Lässt der Kontakt nach, vergrößert sich der Abstand. Keine manipulative Timeline, kein Like-Button – sondern ein direktes, visuelles Feedback über den Zustand deiner Beziehungen.
 
-**Wieso habe ich es also gebaut?** Ich kriege oft mehrmals am Tag Nachrichten von Leuten, die sich dann gegenseitig überlagern und oft schaffe ich am Tag nicht allen zu antworten. Also kam mir die Idee eines visuellen Indikators, und so ist die Idee von circles entstanden. 
+**Wieso habe ich es also gebaut?** Ich kriege oft mehrmals am Tag Nachrichten von Leuten, die sich dann gegenseitig überlagern und oft schaffe ich am Tag nicht allen zu antworten. Also kam mir die Idee eines visuellen Indikators, und so ist die Idee von circles entstanden.
 
 ---
 
@@ -92,10 +93,11 @@ Identität ist online oft nur eine Selbstauskunft. circles setzt auf echte Begeg
 Um diese Proof-of-Realness-Ereignisse manipulationssicher zu speichern, setzen wir auf eine dezentrale Blockchain-Infrastruktur. Wir nutzen hier nicht die Blockchain als Buzzword, sondern aus einem sehr konkreten Grund: Die Verifikation soll auch dann vertrauenswürdig bleiben, wenn circles selbst nicht mehr existiert oder betrieben wird.
 
 **Unsere Architektur im Überblick:**
+
 - Jeder Proof-of-Realness-Event wird als kleiner, unveränderbarer Eintrag auf der Solana-Blockchain gespeichert.
 - Die Datenmenge ist minimal – nur die Schlüsselpaare, der Zeitstempel und eine anonyme Event-ID.
 - Wer diese Daten später prüfen möchte, kann das unabhängig von unserer Plattform tun, weil sie öffentlich zugänglich sind.
-- Das gibt Nutzer*innen die Sicherheit, dass ihre sozialen Vertrauensnetzwerke nicht an eine zentrale Datenbank gebunden sind, die jederzeit von einem Unternehmen umgebaut, verkauft oder abgeschaltet werden könnte.
+- Das gibt Nutzer\*innen die Sicherheit, dass ihre sozialen Vertrauensnetzwerke nicht an eine zentrale Datenbank gebunden sind, die jederzeit von einem Unternehmen umgebaut, verkauft oder abgeschaltet werden könnte.
 
 ---
 
@@ -103,9 +105,9 @@ Um diese Proof-of-Realness-Ereignisse manipulationssicher zu speichern, setzen w
 
 Unter der Haube ist circles ein bewusst offenes System:
 
-- **Matrix-Protokoll:** Offener Standard für sichere, föderierte Kommunikation. Nutzer*innen könnten sogar ihren eigenen Server betreiben, ohne von unserer Infrastruktur abhängig zu sein.
+- **Matrix-Protokoll:** Offener Standard für sichere, föderierte Kommunikation. Nutzer\*innen könnten sogar ihren eigenen Server betreiben, ohne von unserer Infrastruktur abhängig zu sein.
 - **Passkeys:** Phishing-sicher, keine zentrale Speicherung sensibler Login-Daten. Passkeys nutzen asymmetrische Kryptographie und erfordern keine zentrale Speicherung von sensiblen Login-Daten. Das passt zu unserem Grundprinzip: So wenig wie möglich über die Nutzer speichern – und so viel wie möglich in deren Kontrolle belassen.
-- **Modulare Proof-of-Realness-Funktion:** Funktioniert mit oder ohne Blockchain. Sie kann sowohl mit der Blockchain-Integration als auch rein lokal funktionieren, wenn Nutzer*innen keine On-Chain-Daten wollen.
+- **Modulare Proof-of-Realness-Funktion:** Funktioniert mit oder ohne Blockchain. Sie kann sowohl mit der Blockchain-Integration als auch rein lokal funktionieren, wenn Nutzer\*innen keine On-Chain-Daten wollen.
 - **Reputation & Vertrauen:** Optional, auf Proofs basierend. Die Reputation- und Vertrauensfunktionen bauen auf diesen Proofs auf, sind aber optional. Wer nur chatten möchte, kann circles nutzen, ohne sich mit Blockchain oder Kryptographie zu beschäftigen.
 - **Smartphone-first Frontend:** Optimiert für gezielte Interaktion und Themenräume. Die UI ist darauf optimiert, dass man nicht in einer Chatflut untergeht, sondern gezielt und bewusst interagiert. Themenräume („Topics“) sind technisch gesehen Matrix-Räume, können aber visuell und funktional anders dargestellt werden – zum Beispiel als thematische Inseln, die man betritt und verlässt.
 
@@ -121,4 +123,3 @@ circles gibt dir die Kontrolle über deine sozialen Beziehungen zurück. Kein Al
 
 **Warum das wichtig ist:**  
 Die meisten Plattformen optimieren darauf, dass du möglichst lange bleibst. Wir optimieren darauf, dass du bewusst entscheidest, mit wem du Zeit verbringst – und dass diese Zeit wirklich zählt. Proof of Realness und die Blockchain-Anbindung sind dabei keine Spielereien, sondern das Fundament für ein System, in dem Vertrauen, Authentizität und Besitz an den eigenen sozialen Daten wieder dir gehören.
-

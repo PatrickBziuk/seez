@@ -1,4 +1,3 @@
-
 /**
  * Registry-Based Translation Generation Script
  * Features:
@@ -186,7 +185,7 @@ function calculateTokenMetrics(
 } {
   // OpenAI pricing (as of 2024/2025)
   const pricing: Record<string, { input: number; output: number }> = {
-    'gpt-4.1-nano': { input: 0.10 / 1000000, output: 0.40 / 1000000 }, // $0.10/$0.40 per 1M tokens - Fastest, most cost-effective!
+    'gpt-4.1-nano': { input: 0.1 / 1000000, output: 0.4 / 1000000 }, // $0.10/$0.40 per 1M tokens - Fastest, most cost-effective!
     'gpt-4o-mini': { input: 0.15 / 1000000, output: 0.6 / 1000000 }, // $0.15/$0.60 per 1M tokens
     'gpt-4o': { input: 2.5 / 1000000, output: 10 / 1000000 }, // $2.50/$10.00 per 1M tokens
     'gpt-4': { input: 30 / 1000000, output: 60 / 1000000 }, // $30/$60 per 1M tokens
@@ -391,7 +390,9 @@ async function processTranslationTask(
   console.log(`📖 Reading source file...`);
   const sourceContent = fs.readFileSync(task.sourcePath, 'utf-8');
   const { data: sourceFrontmatter, content: sourceMarkdown } = matter(sourceContent);
-  console.log(`✅ Source file parsed - Content length: ${sourceMarkdown.length} chars, Title: "${sourceFrontmatter.title}"`);
+  console.log(
+    `✅ Source file parsed - Content length: ${sourceMarkdown.length} chars, Title: "${sourceFrontmatter.title}"`
+  );
 
   try {
     // Generate translation
@@ -402,7 +403,9 @@ async function processTranslationTask(
       sourceMarkdown,
       sourceFrontmatter.title
     );
-    console.log(`✅ Translation completed - Content length: ${translatedContent.length} chars, Title: "${translatedTitle}"`);
+    console.log(
+      `✅ Translation completed - Content length: ${translatedContent.length} chars, Title: "${translatedTitle}"`
+    );
 
     // Prepare target frontmatter
     console.log(`📋 Preparing target frontmatter...`);
@@ -499,7 +502,9 @@ async function main(): Promise<void> {
   // Log all tasks that will be processed
   console.log('\n📋 Tasks to process:');
   tasks.forEach((task, index) => {
-    console.log(`  ${index + 1}. ${task.canonicalId}: ${task.sourcePath} → ${task.outputPath} (${task.sourceLanguage} → ${task.targetLang})`);
+    console.log(
+      `  ${index + 1}. ${task.canonicalId}: ${task.sourcePath} → ${task.outputPath} (${task.sourceLanguage} → ${task.targetLang})`
+    );
   });
   console.log('');
 
@@ -526,7 +531,7 @@ async function main(): Promise<void> {
     console.log(`📄 Target: ${task.outputPath}`);
     console.log(`🌐 Language: ${task.sourceLanguage} → ${task.targetLang}`);
     console.log(`🔄 Reason: ${task.reason}`);
-    
+
     try {
       console.log(`⏳ Starting translation process...`);
       await processTranslationTask(openai, task, registry);
@@ -541,7 +546,6 @@ async function main(): Promise<void> {
       console.log(`✅ Translation ${i + 1}/${tasks.length} completed successfully!`);
       console.log(`📝 Created: ${task.outputPath}`);
       console.log(`� Status: Draft (requires human review before publication)`);
-      
     } catch (error) {
       console.error(`❌ Failed to process task ${i + 1}:`, error);
       console.error(`❌ Error details:`, {
@@ -549,12 +553,12 @@ async function main(): Promise<void> {
         stack: error instanceof Error ? error.stack : undefined,
         taskId: task.canonicalId,
         sourcePath: task.sourcePath,
-        targetPath: task.outputPath
+        targetPath: task.outputPath,
       });
       failed++;
       console.log(`❌ Task ${i + 1} failed, continuing to next task...\n`);
     }
-    
+
     console.log(`📊 Progress: ${processed} completed, ${failed} failed, ${tasks.length - i - 1} remaining\n`);
   }
 
@@ -579,7 +583,7 @@ async function main(): Promise<void> {
     console.log(`💡 Check the error logs above for details on failed translations`);
     console.log(`🔄 You can run the script again to retry failed translations`);
   }
-  
+
   if (processed > 0) {
     console.log(`\n🎯 All translations are marked as draft for your review!`);
     process.exit(0); // Exit with success when translations are generated

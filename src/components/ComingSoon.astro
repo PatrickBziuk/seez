@@ -22,37 +22,39 @@ const messages: Record<'en' | 'de', { title: string; message: string; sectionMes
     title: 'Coming Soon',
     message: 'This section is currently being built. Check back soon for new content!',
     sectionMessage: `The ${section} section is currently being built. Check back soon for new content!`,
-    emoji: '🚧'
+    emoji: '🚧',
   },
   de: {
     title: 'Demnächst verfügbar',
     message: 'Dieser Bereich wird gerade aufgebaut. Schau später wieder vorbei!',
     sectionMessage: `Der Bereich ${section} wird gerade aufgebaut. Schau später wieder vorbei!`,
-    emoji: '🚧'
-  }
+    emoji: '🚧',
+  },
 };
 
 const msg = messages[language] || messages.en;
 const displayMessage = section ? msg.sectionMessage : msg.message;
 ---
 
-<section class="prose max-w-none opacity-80 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg p-8 text-center border border-gray-200 dark:border-gray-700">
+<section
+  class="prose max-w-none opacity-80 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg p-8 text-center border border-gray-200 dark:border-gray-700"
+>
   <div class="flex flex-col items-center space-y-4">
     <!-- Visual Icon -->
     <div class="text-6xl mb-2">
       {msg.emoji}
     </div>
-    
+
     <!-- Title -->
     <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">
       {msg.title}
     </h2>
-    
+
     <!-- Message -->
     <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
       {displayMessage}
     </p>
-    
+
     <!-- Optional decorative element -->
     <div class="flex items-center space-x-2 text-gray-500 dark:text-gray-500 mt-4">
       <Icon name="tabler:clock" class="w-4 h-4" />
@@ -68,16 +70,17 @@ const displayMessage = section ? msg.sectionMessage : msg.message;
   section {
     animation: subtle-pulse 3s ease-in-out infinite;
   }
-  
+
   @keyframes subtle-pulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0.8;
     }
     50% {
       opacity: 0.9;
     }
   }
-  
+
   /* Reduce motion for users who prefer it */
   @media (prefers-reduced-motion: reduce) {
     section {

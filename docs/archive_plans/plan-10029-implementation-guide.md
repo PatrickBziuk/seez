@@ -10,100 +10,91 @@ This document provides a complete guide to the implemented Plan 10029 comprehens
 ✅ **Phase 2: E2E & Component Testing** - Complete  
 ✅ **Phase 3: Cross-browser & Accessibility Testing** - Complete  
 ✅ **Phase 4: Performance Monitoring** - Complete  
-✅ **CI Integration with Non-blocking Issue Creation** - Complete  
+✅ **CI Integration with Non-blocking Issue Creation** - Complete
 
 ## 📋 Testing Framework Architecture
 
 ### Phase 1: Content Pipeline Validation
+
 **Location**: `tests/validation/`
 
 - **Content Validation** (`content-validation.spec.ts`)
   - Validates all content files exist and are properly structured
   - Checks for required frontmatter fields
   - Ensures proper file organization
-  
 - **Frontmatter Validation** (`frontmatter-validation.spec.ts`)
   - Validates YAML frontmatter syntax
   - Checks required metadata fields
   - Ensures consistent schema across content types
-  
 - **Translation Validation** (`translation-validation.spec.ts`)
   - Validates translation consistency across languages
   - Checks for missing translations
   - Ensures proper locale structure
-  
 - **Metadata Validation** (`metadata-validation.spec.ts`)
   - Validates SEO metadata completeness
   - Checks social media tags
   - Ensures proper structured data
 
 ### Phase 2: E2E Testing
+
 **Location**: `tests/e2e/`
 
 - **Navigation Tests** (`navigation.spec.ts`)
   - Tests main navigation functionality
   - Validates breadcrumb navigation
   - Checks responsive navigation behavior
-  
 - **Content Tests** (`content.spec.ts`)
   - Tests content loading and rendering
   - Validates dynamic content generation
   - Checks content accessibility
-  
 - **Search Tests** (`search.spec.ts`)
   - Tests search functionality
   - Validates search results accuracy
   - Checks search performance
-  
 - **Language Switching** (`language-switching.spec.ts`)
   - Tests language switcher functionality
   - Validates URL structure for different languages
   - Checks content translation switching
-  
 - **Multilingual Tests** (`multilingual.spec.ts`)
   - Tests multilingual content delivery
   - Validates language-specific routing
   - Checks content localization
 
 ### Phase 2: Component Testing
+
 **Location**: `tests/components/`
 
 - **TLDR Component** (`tldr-component.spec.ts`)
   - Tests TLDR summary generation
   - Validates component rendering
   - Checks responsive behavior
-  
 - **Metadata Component** (`metadata-component.spec.ts`)
   - Tests metadata display
   - Validates dynamic metadata updates
   - Checks structured data output
-  
 - **Social Share** (`social-share-component.spec.ts`)
   - Tests social sharing functionality
   - Validates share URLs
   - Checks social media integration
-  
 - **GitHub Integration** (`github-integration-component.spec.ts`)
   - Tests GitHub API integration
   - Validates repository data display
   - Checks authentication flows
-  
 - **Language Switcher** (`language-switcher-component.spec.ts`)
   - Tests language selection UI
   - Validates language persistence
   - Checks URL updates
-  
 - **Search Component** (`search-component.spec.ts`)
   - Tests search UI components
   - Validates search input handling
   - Checks result display
-  
 - **Navigation Component** (`navigation-component.spec.ts`)
   - Tests navigation component rendering
   - Validates responsive behavior
   - Checks accessibility features
 
 ### Phase 3: Accessibility Testing
+
 **Location**: `tests/accessibility/`
 
 - **Accessibility Tests** (`accessibility.spec.ts`)
@@ -114,6 +105,7 @@ This document provides a complete guide to the implemented Plan 10029 comprehens
   - Focus management testing
 
 ### Phase 4: Performance Monitoring
+
 **Location**: `tests/performance/`
 
 - **Core Web Vitals** (`core-web-vitals.spec.ts`)
@@ -121,19 +113,16 @@ This document provides a complete guide to the implemented Plan 10029 comprehens
   - Cumulative Layout Shift (CLS) tracking
   - First Input Delay (FID) measurement
   - Performance budget validation
-  
 - **SEO Monitoring** (`seo.spec.ts`)
   - Meta tag validation
   - OpenGraph data checking
   - Structured data validation
   - URL optimization
-  
 - **Performance Tests** (`performance.spec.ts`)
   - Page load time measurement
   - Resource optimization validation
   - Memory leak detection
   - Network performance analysis
-  
 - **Site Monitoring** (`monitoring.spec.ts`)
   - Comprehensive health dashboard
   - Cross-browser performance tracking
@@ -145,12 +134,14 @@ This document provides a complete guide to the implemented Plan 10029 comprehens
 **Location**: `playwright.config.ts`
 
 ### Browser Coverage
+
 - **Desktop Browsers**: Chrome, Firefox, Safari, Edge
 - **Mobile Devices**: iPad, iPhone 13, Samsung Galaxy
 - **Large Screens**: 1920x1080 for desktop testing
 - **Accessibility**: Dedicated project with native Playwright capabilities
 
 ### Key Features
+
 - TypeScript/TSX execution environment
 - Comprehensive reporter configuration
 - Global setup and teardown
@@ -160,6 +151,7 @@ This document provides a complete guide to the implemented Plan 10029 comprehens
 ## 📦 Package.json Script Organization
 
 ### Validation Tests
+
 ```bash
 pnpm run test:validation           # Run all validation tests
 pnpm run test:validation:content   # Content validation only
@@ -169,6 +161,7 @@ pnpm run test:validation:metadata  # Metadata validation
 ```
 
 ### E2E Tests
+
 ```bash
 pnpm run test:e2e                 # Run all E2E tests
 pnpm run test:e2e:navigation      # Navigation tests
@@ -179,6 +172,7 @@ pnpm run test:e2e:multilingual    # Multilingual content
 ```
 
 ### Component Tests
+
 ```bash
 pnpm run test:components          # Run all component tests
 pnpm run test:components:tldr     # TLDR component
@@ -191,11 +185,13 @@ pnpm run test:components:navigation # Navigation component
 ```
 
 ### Accessibility Tests
+
 ```bash
 pnpm run test:accessibility       # Comprehensive accessibility testing
 ```
 
 ### Performance Tests
+
 ```bash
 pnpm run test:performance         # Run all performance tests
 pnpm run test:performance:vitals  # Core Web Vitals
@@ -205,6 +201,7 @@ pnpm run test:performance:monitoring # Site health monitoring
 ```
 
 ### Cross-Browser Tests
+
 ```bash
 pnpm run test:browsers            # Multi-browser testing
 pnpm run test:mobile              # Mobile device testing
@@ -216,6 +213,7 @@ pnpm run test:responsive          # Responsive design testing
 **Location**: `.github/workflows/comprehensive-testing.yml`
 
 ### Workflow Structure
+
 1. **Build Phase**: Builds the site for testing
 2. **Phase 1**: Content validation (non-blocking)
 3. **Phase 2a**: E2E functionality tests (non-blocking)
@@ -225,13 +223,16 @@ pnpm run test:responsive          # Responsive design testing
 7. **Cross-Browser**: Multi-browser compatibility (non-blocking)
 
 ### Non-blocking Strategy
+
 - All test phases use `continue-on-error: true`
 - Failures trigger automated GitHub issue creation
 - Deployments proceed regardless of test results
 - Test artifacts are preserved for analysis
 
 ### Automated Issue Creation
+
 When tests fail, the system automatically creates GitHub issues with:
+
 - Detailed failure analysis
 - Test execution context
 - Links to test artifacts
@@ -241,6 +242,7 @@ When tests fail, the system automatically creates GitHub issues with:
 ## 📊 Test Artifacts & Reporting
 
 ### Artifact Collection
+
 - **Validation Results**: Test logs and validation reports
 - **E2E Results**: Playwright reports and screenshots
 - **Component Results**: Component test outputs
@@ -248,6 +250,7 @@ When tests fail, the system automatically creates GitHub issues with:
 - **Performance Results**: Core Web Vitals data and dashboards
 
 ### Retention Periods
+
 - Standard test results: 7 days
 - Performance data: 30 days (for trend analysis)
 - Build artifacts: 1 day
@@ -255,27 +258,32 @@ When tests fail, the system automatically creates GitHub issues with:
 ## 🛠️ Dependencies
 
 ### Core Testing Framework
+
 - **Playwright**: E2E and component testing
 - **TypeScript**: Type-safe test development
 - **tsx**: TypeScript execution for scripts
 
 ### Testing Utilities
+
 - **gray-matter**: Frontmatter parsing
 - **glob**: File pattern matching
 - **OpenAI API**: Content analysis (when configured)
 
 ### CI/CD Integration
+
 - **GitHub Actions**: Workflow execution
 - **GitHub CLI**: Automated issue creation
 
 ## 🔧 Configuration Files
 
 ### Primary Configuration
+
 - `playwright.config.ts`: Playwright test configuration
 - `tsconfig.json`: TypeScript configuration
 - `package.json`: Script organization and dependencies
 
 ### Testing Configuration
+
 - `tests/global-setup.ts`: Global test setup
 - `tests/global-teardown.ts`: Global test cleanup
 - Individual test files with modular configuration
@@ -283,11 +291,13 @@ When tests fail, the system automatically creates GitHub issues with:
 ## 📈 Performance Budgets
 
 ### Core Web Vitals Thresholds
+
 - **LCP (Largest Contentful Paint)**: < 2.5s
 - **FID (First Input Delay)**: < 100ms
 - **CLS (Cumulative Layout Shift)**: < 0.1
 
 ### Performance Metrics
+
 - **Page Load Time**: < 3s
 - **Time to Interactive**: < 5s
 - **First Contentful Paint**: < 1.8s
@@ -295,6 +305,7 @@ When tests fail, the system automatically creates GitHub issues with:
 ## 🚨 Issue Management
 
 ### Automated Labels
+
 - `testing`: General testing issues
 - `e2e`: End-to-end test failures
 - `components`: Component test failures
@@ -306,6 +317,7 @@ When tests fail, the system automatically creates GitHub issues with:
 - `plan-10029`: Issues from this testing strategy
 
 ### Issue Triage
+
 1. **Critical**: Performance regressions, accessibility violations
 2. **High**: E2E test failures, component failures
 3. **Medium**: Validation failures, SEO issues
@@ -314,12 +326,14 @@ When tests fail, the system automatically creates GitHub issues with:
 ## 🔍 Troubleshooting
 
 ### Common Issues
+
 1. **Test Timeouts**: Increase timeout values in Playwright config
 2. **Browser Installation**: Run `pnpm exec playwright install --with-deps`
 3. **TypeScript Errors**: Ensure `tsx` is installed and configured
 4. **CI Failures**: Check GitHub Actions permissions and secrets
 
 ### Debug Commands
+
 ```bash
 # Run tests in debug mode
 pnpm exec playwright test --debug
@@ -334,18 +348,21 @@ pnpm exec playwright show-report
 ## 📚 Best Practices
 
 ### Test Development
+
 1. Use Page Object Model for reusable components
 2. Implement proper wait strategies
 3. Use data-testid attributes for reliable selectors
 4. Write descriptive test names and documentation
 
 ### Performance Testing
+
 1. Test on realistic network conditions
 2. Use performance budgets consistently
 3. Monitor trends over time
 4. Test both desktop and mobile scenarios
 
 ### Accessibility Testing
+
 1. Test with keyboard navigation
 2. Validate screen reader compatibility
 3. Check color contrast ratios
@@ -364,12 +381,14 @@ pnpm exec playwright show-report
 ## 🔄 Maintenance
 
 ### Regular Tasks
+
 1. Update performance budgets based on user data
 2. Review and triage automated issues weekly
 3. Update browser versions in Playwright config
 4. Monitor test execution times and optimize as needed
 
 ### Quarterly Reviews
+
 1. Analyze test coverage and effectiveness
 2. Update testing strategy based on site changes
 3. Review and update performance budgets

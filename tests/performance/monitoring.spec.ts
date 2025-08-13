@@ -4,10 +4,10 @@ import path from 'path';
 
 /**
  * Comprehensive Monitoring Tests for Plan 10029
- * 
- * High-level monitoring that combines all testing aspects and 
+ *
+ * High-level monitoring that combines all testing aspects and
  * generates reports for tracking site health over time.
- * 
+ *
  * Tests cover:
  * - Site availability and uptime
  * - Cross-browser compatibility
@@ -45,7 +45,7 @@ test.describe('Site Health Monitoring', () => {
       seo: { hasTitle: false, hasDescription: false, hasCanonical: false },
       accessibility: { hasMainLandmark: false, hasHeadingHierarchy: false, hasAltText: false },
       errors: [],
-      warnings: []
+      warnings: [],
     };
 
     try {
@@ -62,9 +62,12 @@ test.describe('Site Health Monitoring', () => {
               resolve(lastEntry.startTime);
               observer.disconnect();
             });
-            
+
             observer.observe({ entryTypes: ['largest-contentful-paint'] });
-            setTimeout(() => { observer.disconnect(); resolve(0); }, 5000);
+            setTimeout(() => {
+              observer.disconnect();
+              resolve(0);
+            }, 5000);
           });
         });
         healthMetrics.performance.lcp = lcpValue;
@@ -78,18 +81,21 @@ test.describe('Site Health Monitoring', () => {
             let clsValue = 0;
             const observer = new PerformanceObserver((list) => {
               for (const entry of list.getEntries()) {
-                const layoutShift = entry as PerformanceEntry & { 
-                  hadRecentInput?: boolean; 
-                  value?: number; 
+                const layoutShift = entry as PerformanceEntry & {
+                  hadRecentInput?: boolean;
+                  value?: number;
                 };
                 if (!layoutShift.hadRecentInput && layoutShift.value) {
                   clsValue += layoutShift.value;
                 }
               }
             });
-            
+
             observer.observe({ entryTypes: ['layout-shift'] });
-            setTimeout(() => { observer.disconnect(); resolve(clsValue); }, 3000);
+            setTimeout(() => {
+              observer.disconnect();
+              resolve(clsValue);
+            }, 3000);
           });
         });
         healthMetrics.performance.cls = clsValue;
@@ -109,13 +115,13 @@ test.describe('Site Health Monitoring', () => {
 
       // Accessibility Health
       const main = page.locator('main');
-      healthMetrics.accessibility.hasMainLandmark = await main.count() > 0;
+      healthMetrics.accessibility.hasMainLandmark = (await main.count()) > 0;
 
       const h1 = page.locator('h1');
-      healthMetrics.accessibility.hasHeadingHierarchy = await h1.count() === 1;
+      healthMetrics.accessibility.hasHeadingHierarchy = (await h1.count()) === 1;
 
       const images = page.locator('img');
-      if (await images.count() > 0) {
+      if ((await images.count()) > 0) {
         const firstImage = images.first();
         const alt = await firstImage.getAttribute('alt');
         healthMetrics.accessibility.hasAltText = !!alt;
@@ -151,7 +157,7 @@ test.describe('Site Health Monitoring', () => {
       }
 
       const metricsFile = path.join(metricsDir, `health-${new Date().toISOString().split('T')[0]}.json`);
-      
+
       let existingMetrics: HealthMetrics[] = [];
       if (fs.existsSync(metricsFile)) {
         try {
@@ -169,7 +175,6 @@ test.describe('Site Health Monitoring', () => {
       expect(healthMetrics.errors.length).toBe(0);
       expect(healthMetrics.seo.hasTitle).toBe(true);
       expect(healthMetrics.accessibility.hasMainLandmark).toBe(true);
-
     } catch (error) {
       healthMetrics.errors.push(`Health monitoring failed: ${error}`);
       throw error;
@@ -179,37 +184,37 @@ test.describe('Site Health Monitoring', () => {
   test('should monitor error rates across pages', async ({ page }) => {
     const pages = ['/', '/en', '/de'];
     const errorCounts: { [key: string]: number } = {};
-    
+
     for (const pagePath of pages) {
       let errorCount = 0;
-      
+
       page.on('pageerror', () => {
         errorCount++;
       });
-      
+
       page.on('console', (msg) => {
         if (msg.type() === 'error') {
           errorCount++;
         }
       });
-      
+
       try {
         await page.goto(pagePath);
         await page.waitForLoadState('networkidle');
-        
+
         // Wait for any async errors
         await page.waitForTimeout(2000);
-        
+
         errorCounts[pagePath] = errorCount;
       } catch {
         errorCounts[pagePath] = errorCount + 1;
       }
     }
-    
+
     // Assert no critical errors
     for (const [pagePath, count] of Object.entries(errorCounts)) {
       expect(count).toBeLessThanOrEqual(2); // Allow minor non-critical errors
-      
+
       if (count > 0) {
         console.warn(`${count} errors detected on page ${pagePath}`);
       }
@@ -220,29 +225,29 @@ test.describe('Site Health Monitoring', () => {
     let failedResources = 0;
     let totalResources = 0;
     const failedUrls: string[] = [];
-    
+
     page.on('response', (response) => {
       totalResources++;
-      
+
       if (response.status() >= 400) {
         failedResources++;
         failedUrls.push(response.url());
       }
     });
-    
+
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    
+
     const failureRate = totalResources > 0 ? (failedResources / totalResources) * 100 : 0;
-    
+
     // Resource failure rate should be under 5%
     expect(failureRate).toBeLessThan(5);
-    
+
     // Log failed resources for debugging
     if (failedUrls.length > 0) {
       console.warn('Failed resources:', failedUrls);
     }
-    
+
     // Should have loaded some resources
     expect(totalResources).toBeGreaterThan(0);
   });
@@ -250,7 +255,7 @@ test.describe('Site Health Monitoring', () => {
   test('should monitor uptime and availability', async ({ page }) => {
     const urls = ['/', '/en', '/de', '/robots.txt'];
     const uptimeResults: { [key: string]: boolean } = {};
-    
+
     for (const url of urls) {
       try {
         const response = await page.goto(url);
@@ -259,11 +264,11 @@ test.describe('Site Health Monitoring', () => {
         uptimeResults[url] = false;
       }
     }
-    
+
     // All URLs should be accessible
     for (const [url, isUp] of Object.entries(uptimeResults)) {
       expect(isUp).toBe(true);
-      
+
       if (!isUp) {
         console.error(`${url} is not accessible`);
       }
@@ -276,21 +281,21 @@ test.describe('Cross-Browser Compatibility Monitoring', () => {
     const userAgents = [
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0'
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
     ];
-    
+
     for (const userAgent of userAgents) {
       await page.setExtraHTTPHeaders({
-        'User-Agent': userAgent
+        'User-Agent': userAgent,
       });
-      
+
       await page.goto('/');
       await page.waitForLoadState('domcontentloaded');
-      
+
       // Basic functionality should work
       const title = await page.title();
       expect(title.length).toBeGreaterThan(0);
-      
+
       const main = page.locator('main');
       await expect(main).toBeVisible();
     }
@@ -298,21 +303,21 @@ test.describe('Cross-Browser Compatibility Monitoring', () => {
 
   test('should handle different viewport sizes', async ({ page }) => {
     const viewports = [
-      { width: 375, height: 667 },   // Mobile
-      { width: 768, height: 1024 },  // Tablet
+      { width: 375, height: 667 }, // Mobile
+      { width: 768, height: 1024 }, // Tablet
       { width: 1920, height: 1080 }, // Desktop
-      { width: 2560, height: 1440 }  // Large Desktop
+      { width: 2560, height: 1440 }, // Large Desktop
     ];
-    
+
     for (const viewport of viewports) {
       await page.setViewportSize(viewport);
       await page.goto('/');
       await page.waitForLoadState('domcontentloaded');
-      
+
       // Page should render properly at all sizes
       const main = page.locator('main');
       await expect(main).toBeVisible();
-      
+
       // Should not have horizontal scroll (except for large content)
       const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
       expect(bodyWidth).toBeLessThanOrEqual(viewport.width + 50); // Allow small tolerance
@@ -323,26 +328,26 @@ test.describe('Cross-Browser Compatibility Monitoring', () => {
 test.describe('Performance Regression Detection', () => {
   test('should detect performance regressions', async ({ page }) => {
     await page.goto('/');
-    
+
     const performanceMetrics = await page.evaluate(() => {
       const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      
+
       return {
         domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
         loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
         firstByte: navigation.responseStart - navigation.requestStart,
-        resourceCount: performance.getEntriesByType('resource').length
+        resourceCount: performance.getEntriesByType('resource').length,
       };
     });
-    
+
     // Save metrics for regression analysis
     const metricsDir = path.join(process.cwd(), 'test-results', 'performance-history');
     if (!fs.existsSync(metricsDir)) {
       fs.mkdirSync(metricsDir, { recursive: true });
     }
-    
+
     const metricsFile = path.join(metricsDir, 'performance-history.json');
-    
+
     let history: Array<{ timestamp: string; metrics: typeof performanceMetrics }> = [];
     if (fs.existsSync(metricsFile)) {
       try {
@@ -351,37 +356,40 @@ test.describe('Performance Regression Detection', () => {
         history = [];
       }
     }
-    
+
     const currentEntry = {
       timestamp: new Date().toISOString(),
-      metrics: performanceMetrics
+      metrics: performanceMetrics,
     };
-    
+
     history.push(currentEntry);
-    
+
     // Keep only last 50 entries
     if (history.length > 50) {
       history = history.slice(-50);
     }
-    
+
     fs.writeFileSync(metricsFile, JSON.stringify(history, null, 2));
-    
+
     // Check for regressions if we have historical data
     if (history.length > 1) {
       const recent = history.slice(-5); // Last 5 entries
-      const avgDomContentLoaded = recent.reduce((sum, entry) => sum + entry.metrics.domContentLoaded, 0) / recent.length;
-      
+      const avgDomContentLoaded =
+        recent.reduce((sum, entry) => sum + entry.metrics.domContentLoaded, 0) / recent.length;
+
       // Current performance should not be significantly worse than recent average
       const regressionThreshold = avgDomContentLoaded * 1.5; // 50% slower is a regression
-      
+
       if (performanceMetrics.domContentLoaded > regressionThreshold) {
-        console.warn(`Performance regression detected: DOM content loaded in ${performanceMetrics.domContentLoaded}ms vs ${avgDomContentLoaded}ms average`);
+        console.warn(
+          `Performance regression detected: DOM content loaded in ${performanceMetrics.domContentLoaded}ms vs ${avgDomContentLoaded}ms average`
+        );
       }
-      
+
       // Don't fail test for regressions, just warn
       // expect(performanceMetrics.domContentLoaded).toBeLessThan(regressionThreshold);
     }
-    
+
     // Basic performance thresholds
     expect(performanceMetrics.domContentLoaded).toBeLessThan(3000);
     expect(performanceMetrics.firstByte).toBeLessThan(1000);
@@ -391,24 +399,24 @@ test.describe('Performance Regression Detection', () => {
 test.describe('Health Dashboard Generation', () => {
   test('should generate health dashboard', async ({ page }) => {
     await page.goto('/');
-    
+
     // Collect comprehensive health data
     const healthData = {
       timestamp: new Date().toISOString(),
       url: page.url(),
       viewport: await page.viewportSize(),
       userAgent: await page.evaluate(() => navigator.userAgent),
-      
+
       // Performance
       performance: await page.evaluate(() => {
         const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
         return {
           domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
           loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
-          firstByte: navigation.responseStart - navigation.requestStart
+          firstByte: navigation.responseStart - navigation.requestStart,
         };
       }),
-      
+
       // SEO
       seo: {
         title: await page.title(),
@@ -416,9 +424,9 @@ test.describe('Health Dashboard Generation', () => {
         canonical: await page.getAttribute('link[rel="canonical"]', 'href'),
         h1Count: await page.locator('h1').count(),
         imageCount: await page.locator('img').count(),
-        linkCount: await page.locator('a').count()
+        linkCount: await page.locator('a').count(),
       },
-      
+
       // Accessibility
       accessibility: {
         mainLandmarks: await page.locator('main').count(),
@@ -426,19 +434,19 @@ test.describe('Health Dashboard Generation', () => {
         headingStructure: {
           h1: await page.locator('h1').count(),
           h2: await page.locator('h2').count(),
-          h3: await page.locator('h3').count()
-        }
+          h3: await page.locator('h3').count(),
+        },
       },
-      
+
       // Technical
       technical: {
         hasServiceWorker: await page.evaluate(() => 'serviceWorker' in navigator),
         hasLocalStorage: await page.evaluate(() => typeof Storage !== 'undefined'),
         protocol: await page.evaluate(() => location.protocol),
-        resourceCount: await page.evaluate(() => performance.getEntriesByType('resource').length)
-      }
+        resourceCount: await page.evaluate(() => performance.getEntriesByType('resource').length),
+      },
     };
-    
+
     // Generate HTML dashboard
     const dashboardHtml = `
 <!DOCTYPE html>
@@ -512,21 +520,21 @@ test.describe('Health Dashboard Generation', () => {
     </div>
 </body>
 </html>`;
-    
+
     // Save dashboard
     const dashboardDir = path.join(process.cwd(), 'test-results', 'dashboard');
     if (!fs.existsSync(dashboardDir)) {
       fs.mkdirSync(dashboardDir, { recursive: true });
     }
-    
+
     const dashboardFile = path.join(dashboardDir, 'health-dashboard.html');
     fs.writeFileSync(dashboardFile, dashboardHtml);
-    
+
     // Basic health checks
     expect(healthData.seo.title).toBeTruthy();
     expect(healthData.accessibility.mainLandmarks).toBeGreaterThan(0);
     expect(healthData.performance.domContentLoaded).toBeLessThan(5000);
-    
+
     console.log(`Health dashboard generated: ${dashboardFile}`);
   });
 });

@@ -13,11 +13,7 @@ import type { SupportedLanguage } from '../../../utils/i18n';
 import type { CollectionEntry } from 'astro:content';
 import ContentMetadata from '../../../components/content/metadata/ContentMetadata.astro';
 
-type ContentEntry =
-  | CollectionEntry<'books'>
-  | CollectionEntry<'projects'>
-  | CollectionEntry<'lab'>
-  | CollectionEntry<'life'>;
+type ContentEntry = CollectionEntry<'projects'>;
 
 export async function getStaticPaths() {
   const paths: Array<{
@@ -27,17 +23,10 @@ export async function getStaticPaths() {
 
   for (const lang of SUPPORTED_LANGUAGES) {
     // Get all content from all collections
-    const [books, projects, lab, life] = await Promise.all([
-      getCollection('books'),
-      getCollection('projects'),
-      getCollection('lab'),
-      getCollection('life'),
-    ]);
+    const projects = await getCollection('projects');
 
     // Combine all content and filter by language
-    const allContent: ContentEntry[] = [...books, ...projects, ...lab, ...life].filter(
-      (item) => item.data.language === lang
-    );
+    const allContent: ContentEntry[] = [...projects].filter((item) => item.data.language === lang);
 
     // Extract unique tags for this language
     const tags = new Set<string>();

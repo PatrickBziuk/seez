@@ -7,6 +7,7 @@ This document outlines the new lean CI/CD approach with local translation genera
 **Goal**: Keep CI lean (build/test/release only), shift translation generation to local development, deploy only from release branch.
 
 **Benefits**:
+
 - ✅ Faster CI pipelines (no translation overhead)
 - ✅ Local translation feedback during development
 - ✅ Better quality control through release branch gating
@@ -25,8 +26,9 @@ release branch  →  Build + Deploy to production
 ### Workflow Details
 
 #### Main Branch (`main`)
+
 - **Purpose**: Development integration, testing, validation
-- **CI Actions**: 
+- **CI Actions**:
   - ✅ Build validation
   - ✅ Type checking
   - ✅ Code quality checks (ESLint, Prettier)
@@ -37,6 +39,7 @@ release branch  →  Build + Deploy to production
   - ❌ GitHub Pages upload
 
 #### Release Branch (`release`)
+
 - **Purpose**: Production deployment
 - **CI Actions**:
   - ✅ Full build with optimizations
@@ -64,6 +67,7 @@ release branch  →  Build + Deploy to production
 #### Husky Hook Integration
 
 **Pre-commit Hook** (`.husky/pre-commit`):
+
 - Triggers on changes to `src/content/**/*.{md,mdx}`
 - Validates content structure
 - Detects missing/stale translations
@@ -71,6 +75,7 @@ release branch  →  Build + Deploy to production
 - Stages generated files
 
 **Pre-push Hook** (`.husky/pre-push`):
+
 - Optional safety net for missed translations
 - Creates additional commit if needed
 
@@ -96,12 +101,14 @@ git push origin my-feature
 ### Translation Quality Control
 
 #### Registry-Based System
+
 - **Content Registry**: `data/content-registry.json`
 - **Canonical IDs**: Unique identifiers for content tracking
 - **Hash Validation**: Prevents translation loops
 - **Quality Scores**: AI confidence ratings
 
 #### Quality Thresholds
+
 - **Auto-accept**: Quality score ≥ 70%
 - **Manual review**: Quality score < 70%
 - **Flagging**: Content requiring human attention
@@ -111,6 +118,7 @@ git push origin my-feature
 #### Emergency Manual Regeneration
 
 **Via GitHub Actions** (Manual Dispatch):
+
 ```yaml
 # Access via: Actions → Manual Translation Regeneration → Run workflow
 inputs:
@@ -120,12 +128,14 @@ inputs:
 ```
 
 **Via PR Labels**:
+
 ```bash
 # Add 'regen-needed' label to any PR
 # Triggers automatic regeneration on that branch
 ```
 
 **Local Emergency Bypass**:
+
 ```bash
 # Skip hooks for emergency commits
 git commit --no-verify -m "emergency fix"
@@ -140,6 +150,7 @@ pnpm run translations:generate-registry
 ### Lean CI Principles
 
 **Main Branch CI** (`ci-cd.yml`):
+
 - Multi-version Node.js testing (18, 20, 22)
 - Build validation
 - Code quality checks (allow failures)
@@ -147,6 +158,7 @@ pnpm run translations:generate-registry
 - **No translation generation**
 
 **Release Branch CI** (`release.yml`):
+
 - Single Node.js version (20)
 - Production build
 - Content validation
@@ -155,12 +167,14 @@ pnpm run translations:generate-registry
 ### Removed Components
 
 **Disabled**:
+
 - ❌ Automatic translation triggering from main branch
 - ❌ Translation pipeline job chaining
 - ❌ GitHub Pages deployment from main branch
 - ❌ Translation branch creation from CI
 
 **Preserved**:
+
 - ✅ Manual regeneration workflows
 - ✅ Error reporting and issue creation
 - ✅ Release branch synchronization
@@ -169,17 +183,20 @@ pnpm run translations:generate-registry
 ## Migration Benefits
 
 ### Performance Improvements
+
 - **CI Runtime**: Reduced by ~5-10 minutes per main branch push
 - **API Costs**: Translation API calls only during local development
 - **Pipeline Complexity**: Simplified linear workflows
 
 ### Developer Experience
+
 - **Immediate Feedback**: Translation status known before pushing
 - **Local Control**: Generate translations when convenient
 - **Quality Assurance**: Review translations before committing
 - **Emergency Bypasses**: Multiple escape hatches available
 
 ### Operational Benefits
+
 - **Predictable Deployments**: Only from release branch
 - **Content Completeness**: Enforced by release branch requirements
 - **Reduced CI Failures**: Fewer moving parts in CI
@@ -190,6 +207,7 @@ pnpm run translations:generate-registry
 ### Common Scenarios
 
 #### "Hooks not running"
+
 ```bash
 # Reinstall Husky hooks
 pnpm prepare
@@ -199,6 +217,7 @@ git config core.hooksPath .husky
 ```
 
 #### "Translation generation failed"
+
 ```bash
 # Check API key
 grep OPENAI_API_KEY .env.local
@@ -208,6 +227,7 @@ pnpm run translations:generate-registry
 ```
 
 #### "Emergency deployment needed"
+
 ```bash
 # Direct push to release branch (bypass main)
 git checkout release
@@ -217,6 +237,7 @@ git push origin release
 ```
 
 #### "Local hooks too slow"
+
 ```bash
 # Skip for quick commits
 git commit --no-verify -m "quick fix"
@@ -228,11 +249,13 @@ pnpm run translations:check-registry
 ### Monitoring and Alerts
 
 **GitHub Actions Notifications**:
+
 - Build failures create GitHub issues
 - Failed manual regeneration creates recovery issues
 - Translation conflicts flagged for review
 
 **Local Development Feedback**:
+
 - Hook execution time displayed
 - Translation quality scores shown
 - Registry conflicts reported immediately
@@ -241,33 +264,38 @@ pnpm run translations:check-registry
 
 ### Environment Variables
 
-| Variable | Location | Purpose |
-|----------|----------|---------|
-| `OPENAI_API_KEY` | `.env.local` | Local translation generation |
-| `TRANSLATION_QUALITY_THRESHOLD` | Workflows | Auto-acceptance threshold |
+| Variable                        | Location     | Purpose                      |
+| ------------------------------- | ------------ | ---------------------------- |
+| `OPENAI_API_KEY`                | `.env.local` | Local translation generation |
+| `TRANSLATION_QUALITY_THRESHOLD` | Workflows    | Auto-acceptance threshold    |
 
 ### Repository Settings
 
 **Required Secrets**:
+
 - `OPENAI_API_KEY`: OpenAI API access for manual workflows
 
 **Branch Protection**:
+
 - `main`: Require PR reviews, status checks
 - `release`: Direct push allowed for emergency deployments
 
 **GitHub Pages**:
+
 - Source: GitHub Actions
 - Deploy from: `release` branch only
 
 ## Future Enhancements
 
 ### Potential Improvements
+
 - **Translation caching**: Cache API responses for identical content
 - **Quality learning**: Improve thresholds based on review feedback
 - **Batch optimization**: Group translation requests for efficiency
 - **Preview deployments**: Temporary deployments for PR reviews
 
 ### Migration Monitoring
+
 - **Track CI performance**: Measure speed improvements
 - **Monitor translation quality**: Compare local vs CI-generated translations
 - **Cost analysis**: Measure API usage reduction
