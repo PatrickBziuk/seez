@@ -7,6 +7,8 @@ tags:
   - software
   - philosophy
   - digital-sovereignty
+firstPublishDate: '2025-08-13T13:03:08.408Z'
+publishDate: '2025-08-13T13:03:08.408Z'
 ---
 
 Here I call myself **Seez**, but many also know me as **deinanker**, **zeilenliebe**, **destny** – or simply **Patrick**.

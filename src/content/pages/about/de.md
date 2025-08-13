@@ -1,12 +1,14 @@
 ---
 title: Über mich
-description: Warum ich Dinge baue, wie ich sie baue.
+description: 'Warum ich Dinge baue, wie ich sie baue.'
 language: de
 tags:
   - programming
   - software
   - philosophy
   - digital-sovereignty
+firstPublishDate: '2025-08-13T13:03:08.408Z'
+publishDate: '2025-08-13T13:03:08.408Z'
 ---
 
 Hier nenne ich mich **Seez**, viele kennen mich aber auch als **deinanker**, **zeilenliebe**, **destny** – oder einfach nur **Patrick**.
