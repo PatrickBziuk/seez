@@ -16,15 +16,16 @@ site:
   description: 'A multilingual platform for sharing projects, thoughts, and creative endeavors.'
   author: 'Patrick Bziuk'
   lang: 'en' # Default language
-
+  
   # Logo and branding assets
   logo:
     src: '~/assets/images/logo.svg' # Path to your logo
     alt: 'Seez Logo'
     width: 132
     height: 32
-
+  
   # SEO verification
+  # Only Activate if you want to use Google as a Service Provider
   googleSiteVerificationId: xxxxxxxxxxxxxxxxxx # Google Search Console verification ID
 
 # -----------------------------------------------------------------------------
@@ -34,37 +35,37 @@ theme:
   # Color palette (CSS custom properties)
   colors:
     # Brand colors
-    primary: '#2563eb' # Blue-600
-    primaryDark: '#1d4ed8' # Blue-700
-    secondary: '#7c3aed' # Violet-600
-    accent: '#f59e0b' # Amber-500
-
+    primary: '#2563eb'        # Blue-600
+    primaryDark: '#1d4ed8'    # Blue-700
+    secondary: '#7c3aed'      # Violet-600
+    accent: '#f59e0b'         # Amber-500
+    
     # Semantic colors
-    success: '#10b981' # Emerald-500
-    warning: '#f59e0b' # Amber-500
-    error: '#ef4444' # Red-500
-    info: '#3b82f6' # Blue-500
-
+    success: '#10b981'        # Emerald-500
+    warning: '#f59e0b'        # Amber-500
+    error: '#ef4444'          # Red-500
+    info: '#3b82f6'           # Blue-500
+    
     # Neutral colors (light mode)
     light:
-      background: '#ffffff' # White
-      surface: '#f8fafc' # Slate-50
-      border: '#e2e8f0' # Slate-200
+      background: '#ffffff'   # White
+      surface: '#f8fafc'      # Slate-50
+      border: '#e2e8f0'       # Slate-200
       text:
-        primary: '#0f172a' # Slate-900
-        secondary: '#475569' # Slate-600
-        muted: '#64748b' # Slate-500
-
+        primary: '#0f172a'    # Slate-900
+        secondary: '#475569'  # Slate-600
+        muted: '#64748b'      # Slate-500
+    
     # Neutral colors (dark mode)
     dark:
-      background: '#0f172a' # Slate-900
-      surface: '#1e293b' # Slate-800
-      border: '#334155' # Slate-700
+      background: '#0f172a'   # Slate-900
+      surface: '#1e293b'      # Slate-800
+      border: '#334155'       # Slate-700
       text:
-        primary: '#f8fafc' # Slate-50
-        secondary: '#cbd5e1' # Slate-300
-        muted: '#94a3b8' # Slate-400
-
+        primary: '#f8fafc'    # Slate-50
+        secondary: '#cbd5e1'  # Slate-300
+        muted: '#94a3b8'      # Slate-400
+  
   # Typography configuration
   typography:
     fontFamily:
@@ -100,14 +101,14 @@ i18n:
   language: 'en'
   textDirection: 'ltr'
   locales: ['en', 'de']
-
+  
   # Translation settings
   translations:
     autoGenerate: true
     qualityThreshold: 70
     provider: 'openai'
     model: 'gpt-4o'
-
+    
     # Cost and environmental tracking
     tracking:
       enabled: true
@@ -125,13 +126,13 @@ integrations:
     model: 'gpt-4o'
     maxTokens: 2000
     temperature: 0.3
-
+  
   # Contact form (Formspree)
   contact:
     enabled: true
     provider: 'formspree'
     endpoint: 'https://formspree.io/f/mwkgbkkp'
-
+  
   # Search functionality
   search:
     enabled: true
@@ -149,19 +150,19 @@ content:
       title: 'Books'
       description: 'Literary works and creative writing'
       icon: '📚'
-
+    
     projects:
       enabled: true
       title: 'Projects'
       description: 'Software projects and technical endeavors'
       icon: '🚀'
-
+    
     lab:
       enabled: true
       title: 'Lab'
       description: 'Experiments and technical explorations'
       icon: '🧪'
-
+    
     life:
       enabled: true
       title: 'Life'
@@ -178,7 +179,7 @@ homepage:
     title: 'Welcome to Seez'
     subtitle: 'A multilingual platform for sharing projects, thoughts, and creative endeavors.'
     showImage: true
-
+    
     # Call-to-action buttons
     cta:
       primary:
@@ -189,7 +190,7 @@ homepage:
         text: 'Read About Me'
         url: '/en/about'
         style: 'secondary'
-
+  
   # Featured sections
   featured:
     enabled: true
@@ -198,7 +199,7 @@ homepage:
         title: 'Latest Projects'
         limit: 3
         showMore: true
-
+      
       - type: 'books'
         title: 'Recent Writing'
         limit: 2
@@ -214,7 +215,7 @@ navigation:
     showThemeToggle: true
     showLanguageSwitch: true
     showSearch: true
-
+    
     # Main navigation items
     items:
       - text: 'Projects'
@@ -235,11 +236,11 @@ navigation:
       - text: 'Contact'
         href: '/contact'
         icon: '📧'
-
+  
   # Footer navigation
   footer:
     enabled: true
-
+    
     # Social links
     social:
       - platform: 'github'
@@ -248,7 +249,7 @@ navigation:
       - platform: 'email'
         url: 'mailto:hello@seez.eu'
         icon: 'mail'
-
+    
     # Legal pages
     legal:
       - text: 'Privacy Policy'
@@ -266,12 +267,12 @@ features:
   enablePrint: true
   enableSearch: true
   enableTags: true
-
+  
   # Translation features
   enableAutoTranslation: true
   enableTranslationHooks: true
   showTranslationMetadata: true
-
+  
   # Performance features
   enableImageOptimization: true
   enableMinification: true
