@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-13T07:09:09.852Z",
+  "lastUpdated": "2025-08-13T07:11:40.372Z",
   "entries": {
     "slug-20250805-d90c95e9": {
       "canonicalId": "slug-20250805-d90c95e9",
@@ -77,8 +77,8 @@
         "en": {
           "path": "src/content/projects/en/cosensai.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-13T07:08:17.907Z",
-          "translationHash": "3a779ffb2eea3bbc035a304c8eb5b591eec0cbbbabd7c3a9406202c9b68bebed"
+          "lastTranslated": "2025-08-13T07:10:50.298Z",
+          "translationHash": "43bfa8b4b339a517fddbb037b503edbb4cd743bdc7280d0200fefe8c9cc73bb4"
         }
       }
     },
@@ -93,8 +93,8 @@
         "en": {
           "path": "src/content/projects/en/meine-musik-root.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-13T07:09:09.852Z",
-          "translationHash": "e1c4a7bce9f9146ce89d70299f14e871f442a64752c76769a850e0e85bc817d9"
+          "lastTranslated": "2025-08-13T07:11:40.371Z",
+          "translationHash": "3d11a447ac5a10813cae3f0343f65ea1f48c876192885dac1e925a6f18e13b7e"
         }
       }
     },
