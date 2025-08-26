@@ -28,14 +28,12 @@ interface Links {
 export interface Props {
   links: Array<Links>;
   secondaryLinks: Array<Link>;
-  socialLinks: Array<Link>;
   theme?: string;
   locale?: 'en' | 'de';
   footNote?: string;
 }
 
 const {
-  socialLinks = [],
   secondaryLinks = [],
   links = [],
   theme = 'light',
@@ -74,37 +72,22 @@ const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
             <div class="dark:text-gray-300 font-medium mb-2">{title}</div>
             {links && Array.isArray(links) && links.length > 0 && (
               <ul class="space-y-1">
-                {links.map(({ text, href, ariaLabel }) => (
+                {links.map(({ text, href, ariaLabel, icon }) => (
                   <li>
-                    <a href={href} aria-label={ariaLabel || text} class="text-sm text-muted hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+                    <a 
+                      href={href} 
+                      aria-label={ariaLabel || text} 
+                      class="text-sm text-muted hover:text-gray-900 dark:hover:text-gray-100 transition-colors inline-flex items-center gap-2"
+                      target={href?.startsWith('http') ? '_blank' : undefined}
+                      rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    >
+                      {icon && <Icon name={icon} class="w-4 h-4" />}
                       {text}
                     </a>
                   </li>
                 ))}
               </ul>
             )}
-            {/* Add social links to the Contact section */}
-            {title === 'Contact' || title === 'Kontakt' ? (
-              socialLinks?.length > 0 && (
-                <ul class="flex items-center gap-3 mt-4">
-                  {socialLinks.map(({ ariaLabel, href, text, icon }: Link) => (
-                    <li>
-                      <a
-                        href={href}
-                        aria-label={ariaLabel || text}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="inline-flex items-center gap-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
-                        title={ariaLabel || text}
-                      >
-                        {icon && <Icon name={icon} class="w-4 h-4" />}
-                        <span class="sr-only">{text}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )
-            ) : null}
           </div>
         ))
       }
