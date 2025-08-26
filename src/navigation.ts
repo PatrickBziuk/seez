@@ -5,6 +5,7 @@ export const getHeaderData = (locale: SupportedLanguage = 'en') => ({
   links: [
     { text: locale === 'de' ? 'Bücher' : 'Books', href: getLocalizedUrl('/books', locale) },
     { text: locale === 'de' ? 'Projekte' : 'Projects', href: getLocalizedUrl('/projects', locale) },
+    { text: locale === 'de' ? 'Musik' : 'Music', href: getLocalizedUrl('/music', locale) },
     { text: 'Lab', href: getLocalizedUrl('/lab', locale) },
     { text: locale === 'de' ? 'Leben' : 'Life', href: getLocalizedUrl('/life', locale) },
     { text: locale === 'de' ? 'Über' : 'About', href: getLocalizedUrl('/about', locale) },
@@ -26,6 +27,13 @@ export const getFooterData = (locale: SupportedLanguage = 'en') => ({
         { text: locale === 'de' ? 'Blog' : 'Blog', href: getLocalizedUrl('/blog', locale) },
       ],
     },
+    {
+      title: locale === 'de' ? 'Kontakt' : 'Contact',
+      links: [
+        { text: 'info@seez.eu', href: 'mailto:info@seez.eu' },
+        { text: locale === 'de' ? 'Kontaktformular' : 'Contact Form', href: getLocalizedUrl('/contact', locale) },
+      ],
+    },
   ],
   secondaryLinks: [
     {
@@ -40,6 +48,24 @@ export const getFooterData = (locale: SupportedLanguage = 'en') => ({
       href: 'https://github.com/PatrickBziuk/seez',
       icon: 'tabler:brand-github',
       ariaLabel: 'GitHub',
+    },
+    {
+      text: locale === 'de' ? 'Art, Musik & Schreibt' : 'Art, Music & Writing',
+      href: 'https://www.instagram.com/seezerino/',
+      icon: 'tabler:brand-instagram',
+      ariaLabel: locale === 'de' ? 'Art, Musik & Schreibt (Instagram)' : 'Art, Music & Writing (Instagram)',
+    },
+    {
+      text: locale === 'de' ? 'Art, Musik & Schreibt' : 'Art, Music & Writing',
+      href: 'https://www.tiktok.com/@seezerino',
+      icon: 'tabler:brand-tiktok',
+      ariaLabel: locale === 'de' ? 'Art, Musik & Schreibt (TikTok)' : 'Art, Music & Writing (TikTok)',
+    },
+    {
+      text: locale === 'de' ? 'Dein Anker' : 'Your safe harbor',
+      href: 'https://www.instagram.com/deinanker/',
+      icon: 'tabler:brand-instagram',
+      ariaLabel: locale === 'de' ? 'Dein Anker (Instagram)' : 'Your safe harbor (Instagram)',
     },
   ],
   footNote: locale === 'de' ? 'Mit Leidenschaft und Neugier erstellt' : 'Built with passion and curiosity',
