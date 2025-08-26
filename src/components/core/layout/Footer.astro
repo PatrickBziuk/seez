@@ -49,8 +49,8 @@ const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
   <div
     class="relative max-w-7xl mx-auto px-4 sm:px-6 dark:text-slate-300 intersect-once intersect-quarter intercept-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
   >
-    <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
-      <div class="col-span-12 lg:col-span-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
+      <div class="lg:col-span-1">
         <div class="mb-2">
           <a class="inline-block font-bold text-xl" href={getLocalizedUrl('/', safeLocale)}>{siteInfo.name}</a>
         </div>
@@ -68,7 +68,7 @@ const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
       </div>
       {
         links.map(({ title, links }: Links) => (
-          <div>
+          <div class="lg:col-span-1">
             <div class="dark:text-gray-300 font-medium mb-2">{title}</div>
             {links && Array.isArray(links) && links.length > 0 && (
               <ul class="space-y-1">
