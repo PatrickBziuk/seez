@@ -73,44 +73,43 @@ const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
           <div>
             <div class="dark:text-gray-300 font-medium mb-2">{title}</div>
             {links && Array.isArray(links) && links.length > 0 && (
-              <ul>
+              <ul class="space-y-1">
                 {links.map(({ text, href, ariaLabel }) => (
                   <li>
-                    <a href={href} aria-label={ariaLabel || text}>
+                    <a href={href} aria-label={ariaLabel || text} class="text-sm text-muted hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
                       {text}
                     </a>
                   </li>
                 ))}
               </ul>
             )}
+            {/* Add social links to the Contact section */}
+            {title === 'Contact' || title === 'Kontakt' ? (
+              socialLinks?.length > 0 && (
+                <ul class="flex items-center gap-3 mt-4">
+                  {socialLinks.map(({ ariaLabel, href, text, icon }: Link) => (
+                    <li>
+                      <a
+                        href={href}
+                        aria-label={ariaLabel || text}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-1 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
+                        title={ariaLabel || text}
+                      >
+                        {icon && <Icon name={icon} class="w-4 h-4" />}
+                        <span class="sr-only">{text}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )
+            ) : null}
           </div>
         ))
       }
     </div>
     <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
-      {
-        socialLinks?.length ? (
-          <ul class="flex items-center gap-4">
-            {socialLinks.map(({ ariaLabel, href, text, icon }: Link) => (
-              <li>
-                <a
-                  href={href}
-                  aria-label={ariaLabel || text}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
-                >
-                  {icon && <Icon name={icon} class="w-5 h-5" />}
-                  {text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          ''
-        )
-      }
-
       <div class="text-sm mr-4 dark:text-muted">
         {footNote}
       </div>
