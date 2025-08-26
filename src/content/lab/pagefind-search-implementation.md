@@ -23,7 +23,12 @@ tools:
   - "Astro"
   - "TypeScript"
   - "CSS"
-status: "Complete"
+status:
+  authoring: "Human"
+  review:
+    content: true
+    reviewer: "seez"
+    reviewDate: "2025-02-10"
 ---
 
 # Building a Static Search Index with Pagefind

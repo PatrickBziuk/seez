@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test.describe('Search Error Detection Debug', () => {
   test('should analyze the exact error path', async ({ page }) => {
@@ -48,9 +48,10 @@ test.describe('Search Error Detection Debug', () => {
     
     // Try to manually check if window.pagefind exists
     const pagefindExists = await page.evaluate(() => {
+      const win = window as unknown as { pagefind?: unknown };
       return {
-        windowPagefind: typeof (window as any).pagefind !== 'undefined',
-        pagefindObject: (window as any).pagefind,
+        windowPagefind: typeof win.pagefind !== 'undefined',
+        pagefindObject: win.pagefind ?? null,
         windowKeys: Object.keys(window).filter(key => key.includes('pagefind'))
       };
     });

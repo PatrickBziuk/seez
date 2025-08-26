@@ -27,6 +27,7 @@ on:
           - 'e2e'
 
 permissions:
+  # Default to read; specific jobs may override
   contents: read
   issues: write
   pull-requests: write
@@ -37,10 +38,74 @@ env:
   PLAYWRIGHT_BROWSERS_PATH: 0
 
 jobs:
+  # Phase 0: Self-healing content validation before anything else
+  self-healing-validation:
+    name: Phase 0 - Self-Healing Content Validation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      schema-valid: ${{ steps.schema-check.outputs.schema-valid }}
+      fixes-applied: ${{ steps.schema-fix.outputs.fixes-applied }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 2
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔍 Content Schema Validation (Dry Run)
+        id: schema-check
+        continue-on-error: true
+        run: |
+          if pnpm run validate:schema:dry; then
+            echo "schema-valid=true" >> $GITHUB_OUTPUT
+          else
+            echo "schema-valid=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🔧 Auto-fix Content Schema Issues
+        id: schema-fix
+        # Only apply and commit fixes on direct pushes to main to avoid PR noise/loops
+        if: steps.schema-check.outputs.schema-valid == 'false' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          if pnpm run validate:schema:fix; then
+            if git diff --quiet; then
+              echo "fixes-applied=false" >> $GITHUB_OUTPUT
+            else
+              echo "fixes-applied=true" >> $GITHUB_OUTPUT
+              git config --global user.name 'github-actions[bot]'
+              git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+              git add -A
+              git commit -m "chore(ci): auto-fix content schema issues [skip ci]"
+              git push
+            fi
+          else
+            echo "fixes-applied=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🔄 Re-validate after fixes
+        if: steps.schema-fix.outputs.fixes-applied == 'true'
+        run: pnpm run validate:schema:dry
   # Phase 1: Pre-commit Validation Tests
   validation-tests:
     name: Phase 1 - Validation Tests
     runs-on: ubuntu-latest
+    needs: self-healing-validation
     continue-on-error: true
     outputs:
       validation-success: ${{ steps.validation-status.outputs.success }}

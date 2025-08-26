@@ -29,7 +29,7 @@ test.describe('Direct Search Debug', () => {
     // Step 2: Manually load pagefind and see what happens
     console.log('=== MANUAL PAGEFIND LOADING TEST ===');
     
-    const manualLoadResult = await page.evaluate(async () => {
+  const manualLoadResult = await page.evaluate(async () => {
       console.log('Starting manual pagefind load test...');
       
       try {
@@ -69,15 +69,18 @@ test.describe('Direct Search Debug', () => {
         let attempts = 0;
         while (attempts < 50) {
           attempts++;
-          console.log(`Attempt ${attempts}: window.pagefind exists?`, typeof (window as any).pagefind !== 'undefined');
+          const win = window as unknown as { pagefind?: unknown };
+          console.log(`Attempt ${attempts}: window.pagefind exists?`, typeof win.pagefind !== 'undefined');
           
-          if ((window as any).pagefind) {
+          if (win.pagefind) {
             console.log('Found pagefind object!');
             return {
               success: true,
               attempts: attempts,
-              pagefindType: typeof (window as any).pagefind,
-              pagefindKeys: Object.keys((window as any).pagefind || {})
+              pagefindType: typeof win.pagefind,
+              pagefindKeys: typeof win.pagefind === 'object' && win.pagefind
+                ? Object.keys(win.pagefind as Record<string, unknown>)
+                : []
             };
           }
           

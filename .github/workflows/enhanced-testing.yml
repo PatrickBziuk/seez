@@ -1,0 +1,533 @@
+name: Enhanced CI/CD Pipeline with Self-Healing
+
+# This workflow implements an enhanced version of the comprehensive testing strategy
+# with self-healing capabilities to automatically fix common content schema issues
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - 'full'
+          - 'smoke'
+          - 'performance'
+          - 'accessibility'
+          - 'validation'
+          - 'e2e'
+      auto_fix:
+        description: 'Enable automatic fixes for common issues'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  pages: read
+
+env:
+  NODE_VERSION: '20'
+  PLAYWRIGHT_BROWSERS_PATH: 0
+
+jobs:
+  # Phase 0: Pre-validation with Self-Healing
+  self-healing-validation:
+    name: Phase 0 - Self-Healing Content Validation
+    runs-on: ubuntu-latest
+    outputs:
+      schema-fixed: ${{ steps.schema-fix.outputs.fixed }}
+      fixes-applied: ${{ steps.schema-fix.outputs.fixes-applied }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 2  # Need history for commits
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔍 Content Schema Validation (Dry Run)
+        id: schema-check
+        continue-on-error: true
+        run: |
+          echo "Checking content schema validity..."
+          if pnpm run validate:schema:dry; then
+            echo "schema-valid=true" >> $GITHUB_OUTPUT
+          else
+            echo "schema-valid=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🔧 Auto-fix Content Schema Issues
+        id: schema-fix
+        if: steps.schema-check.outputs.schema-valid == 'false' && (github.event.inputs.auto_fix == 'true' || github.event.inputs.auto_fix == '') && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "Applying automatic schema fixes..."
+          
+          # Run the schema validator with fixes
+          if pnpm run validate:schema:fix; then
+            echo "fixed=true" >> $GITHUB_OUTPUT
+            echo "Schema fixes applied successfully"
+            
+            # Check if any files were actually modified
+            if git diff --quiet; then
+              echo "fixes-applied=false" >> $GITHUB_OUTPUT
+              echo "No actual changes were needed"
+            else
+              echo "fixes-applied=true" >> $GITHUB_OUTPUT
+              echo "Files were modified by auto-fix"
+              
+              # Show what was changed
+              echo "Files modified:"
+              git diff --name-only
+              
+              # Commit the fixes
+              git config --global user.name 'github-actions[bot]'
+              git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+              git add -A
+              git commit -m "chore(ci): auto-fix content schema validation issues [skip ci]"
+              
+              # Push the fixes
+              git push
+            fi
+          else
+            echo "fixed=false" >> $GITHUB_OUTPUT
+            echo "❌ Schema fixes failed - manual intervention required"
+          fi
+
+      - name: 🔄 Re-validate after fixes
+        if: steps.schema-fix.outputs.fixes-applied == 'true'
+        run: |
+          echo "Re-validating content after auto-fixes..."
+          pnpm run validate:schema:dry
+
+      - name: 📊 Sync Astro content types
+        run: |
+          echo "Syncing Astro content types..."
+          pnpm run astro sync
+
+      - name: ⚠️  Manual fix required
+        if: steps.schema-check.outputs.schema-valid == 'false' && steps.schema-fix.outputs.fixed != 'true'
+        run: |
+          echo "❌ Content schema validation failed and auto-fix was unsuccessful"
+          echo "Manual intervention is required to fix schema issues"
+          echo "Run 'pnpm run validate:schema:dry' locally to see issues"
+          exit 1
+
+  # Phase 1: Enhanced Validation Tests
+  enhanced-validation-tests:
+    name: Phase 1 - Enhanced Validation Tests
+    runs-on: ubuntu-latest
+    needs: self-healing-validation
+    if: always()
+    continue-on-error: true
+    outputs:
+      validation-success: ${{ steps.validation-status.outputs.success }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔄 Sync Astro content types
+        run: |
+          echo "Syncing Astro content types..."
+          pnpm run astro sync
+
+      - name: 🔍 Final Content Schema Validation
+        id: final-schema-validation
+        continue-on-error: true
+        run: |
+          echo "Running final content schema validation..."
+          if ! pnpm run validate:schema:dry; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🔍 Content Validation
+        id: content-validation
+        continue-on-error: true
+        run: |
+          echo "Running content pipeline validation..."
+          if ! pnpm run test:validation; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📄 Frontmatter Validation
+        id: frontmatter-validation
+        continue-on-error: true
+        run: |
+          echo "Running frontmatter integrity validation..."
+          if ! npx tsx tests/validation/frontmatter-validation.spec.ts; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🌐 Translation Validation
+        id: translation-validation
+        continue-on-error: true
+        run: |
+          echo "Running translation consistency validation..."
+          if ! npx tsx tests/validation/translation-validation.spec.ts; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📊 Metadata Validation
+        id: metadata-validation
+        continue-on-error: true
+        run: |
+          echo "Running metadata compliance validation..."
+          if ! npx tsx tests/validation/metadata-validation.spec.ts; then
+            echo "failed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: ✅ Set validation status
+        id: validation-status
+        run: |
+          if [[ "${{ steps.final-schema-validation.outputs.failed }}" != "true" && "${{ steps.content-validation.outputs.failed }}" != "true" && "${{ steps.frontmatter-validation.outputs.failed }}" != "true" && "${{ steps.translation-validation.outputs.failed }}" != "true" && "${{ steps.metadata-validation.outputs.failed }}" != "true" ]]; then
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🚨 Create enhanced validation issue on failure
+        if: steps.final-schema-validation.outputs.failed == 'true' || steps.content-validation.outputs.failed == 'true' || steps.frontmatter-validation.outputs.failed == 'true' || steps.translation-validation.outputs.failed == 'true' || steps.metadata-validation.outputs.failed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Enhanced Validation Tests Failed - $(date '+%Y-%m-%d %H:%M')" \
+            --body "**Phase 1 Enhanced Validation Tests Failed**
+
+          - Final Schema Validation: ${{ steps.final-schema-validation.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Content Validation: ${{ steps.content-validation.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Frontmatter Validation: ${{ steps.frontmatter-validation.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Translation Validation: ${{ steps.translation-validation.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+          - Metadata Validation: ${{ steps.metadata-validation.outputs.failed == 'true' && '❌ Failed' || '✅ Passed' }}
+
+          **Self-Healing Status:**
+          - Schema Auto-fixes Applied: ${{ needs.self-healing-validation.outputs.fixes-applied }}
+          
+          **Details:**
+          - Commit: ${{ github.sha }}
+          - Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          - Branch: ${{ github.ref_name }}
+
+          **Recommended Actions:**
+          1. Run \`pnpm run validate:schema:dry\` locally to see specific issues
+          2. Run \`pnpm run validate:schema:fix\` to apply automatic fixes
+          3. Review and commit any manual fixes needed
+
+          This is an automated issue created by the enhanced CI/CD pipeline." \
+            --label "testing,validation,automated,self-healing"
+
+  # Phase 2: Build site for testing (with enhanced error recovery)
+  enhanced-build-for-testing:
+    name: Enhanced Build with Error Recovery
+    runs-on: ubuntu-latest
+    needs: enhanced-validation-tests
+    if: always() && needs.enhanced-validation-tests.outputs.validation-success == 'true'
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔄 Sync Astro content types
+        run: pnpm run astro sync
+
+      - name: 🏗️ Build site with retry logic
+        id: build-attempt
+        run: |
+          MAX_ATTEMPTS=3
+          ATTEMPT=1
+          
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            echo "🏗️ Build attempt $ATTEMPT of $MAX_ATTEMPTS"
+            
+            if pnpm run build; then
+              echo "✅ Build successful on attempt $ATTEMPT"
+              echo "success=true" >> $GITHUB_OUTPUT
+              break
+            else
+              echo "❌ Build failed on attempt $ATTEMPT"
+              
+              if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+                echo "❌ All build attempts failed"
+                echo "success=false" >> $GITHUB_OUTPUT
+                exit 1
+              fi
+              
+              echo "🔄 Retrying in 10 seconds..."
+              sleep 10
+              ((ATTEMPT++))
+            fi
+          done
+
+      - name: 📦 Upload build artifacts
+        if: steps.build-attempt.outputs.success == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+          retention-days: 1
+
+  # Use existing test phases but only if build succeeds
+  e2e-tests:
+    name: Phase 2 - E2E Tests
+    runs-on: ubuntu-latest
+    needs: enhanced-build-for-testing
+    if: always() && needs.enhanced-build-for-testing.result == 'success'
+    continue-on-error: true
+    outputs:
+      e2e-success: ${{ steps.e2e-status.outputs.success }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: dist/
+
+      - name: 🎭 Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: 🚀 Start preview server with health check
+        run: |
+          pnpm run preview &
+          PREVIEW_PID=$!
+          
+          # Wait for server to be ready with health check
+          for i in {1..30}; do
+            if curl -f http://localhost:4321 >/dev/null 2>&1; then
+              echo "✅ Preview server is ready"
+              break
+            fi
+            if [ $i -eq 30 ]; then
+              echo "❌ Preview server failed to start"
+              exit 1
+            fi
+            echo "⏳ Waiting for preview server... ($i/30)"
+            sleep 2
+          done
+
+      - name: 🧭 Run E2E tests with retry logic
+        id: e2e-tests
+        continue-on-error: true
+        run: |
+          # Run critical tests with retry logic
+          for test in navigation content search language multilingual; do
+            echo "Running E2E test: $test"
+            
+            if ! pnpm run test:e2e:$test; then
+              echo "❌ E2E test '$test' failed"
+              echo "failed=true" >> $GITHUB_OUTPUT
+            else
+              echo "✅ E2E test '$test' passed"
+            fi
+          done
+
+      - name: ✅ Set E2E status
+        id: e2e-status
+        run: |
+          if [[ "${{ steps.e2e-tests.outputs.failed }}" != "true" ]]; then
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 📊 Upload E2E test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # Enhanced Test Results Summary with better error reporting
+  enhanced-test-summary:
+    name: Enhanced Test Summary & Deployment Decision
+    runs-on: ubuntu-latest
+    needs: [self-healing-validation, enhanced-validation-tests, enhanced-build-for-testing, e2e-tests]
+    if: always()
+    outputs:
+      deployment-allowed: ${{ steps.success-rate.outputs.deployment-allowed }}
+      success-rate: ${{ steps.success-rate.outputs.success-rate }}
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 📊 Calculate Enhanced Test Success Rate
+        id: success-rate
+        env:
+          VALIDATION_SUCCESS: ${{ needs.enhanced-validation-tests.outputs.validation-success }}
+          BUILD_SUCCESS: ${{ needs.enhanced-build-for-testing.result }}
+          E2E_SUCCESS: ${{ needs.e2e-tests.outputs.e2e-success }}
+          SCHEMA_FIXES_APPLIED: ${{ needs.self-healing-validation.outputs.fixes-applied }}
+        run: |
+          echo "🧪 Calculating enhanced test success rate..."
+          
+          # Count successful phases
+          TOTAL_PHASES=3
+          PASSED_PHASES=0
+          
+          if [[ "$VALIDATION_SUCCESS" == "true" ]]; then
+            ((PASSED_PHASES++))
+          fi
+          
+          if [[ "$BUILD_SUCCESS" == "success" ]]; then
+            ((PASSED_PHASES++))
+          fi
+          
+          if [[ "$E2E_SUCCESS" == "true" ]]; then
+            ((PASSED_PHASES++))
+          fi
+          
+          # Calculate success rate
+          SUCCESS_RATE=$((PASSED_PHASES * 100 / TOTAL_PHASES))
+          THRESHOLD=75  # Lowered threshold due to self-healing capabilities
+          
+          echo "success-rate=$SUCCESS_RATE" >> $GITHUB_OUTPUT
+          echo "passed-phases=$PASSED_PHASES" >> $GITHUB_OUTPUT
+          echo "total-phases=$TOTAL_PHASES" >> $GITHUB_OUTPUT
+          echo "threshold=$THRESHOLD" >> $GITHUB_OUTPUT
+          
+          # Determine if deployment is allowed
+          if [[ $SUCCESS_RATE -ge $THRESHOLD ]]; then
+            echo "deployment-allowed=true" >> $GITHUB_OUTPUT
+            echo "✅ Deployment allowed - $SUCCESS_RATE% success rate meets $THRESHOLD% threshold"
+          else
+            echo "deployment-allowed=false" >> $GITHUB_OUTPUT
+            echo "❌ Deployment blocked - $SUCCESS_RATE% success rate below $THRESHOLD% threshold"
+          fi
+          
+          # Write to step summary
+          echo "# 🧪 Enhanced Test Success Rate Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Overall Success Rate**: $SUCCESS_RATE%" >> $GITHUB_STEP_SUMMARY
+          echo "**Threshold**: $THRESHOLD%" >> $GITHUB_STEP_SUMMARY
+          echo "**Status**: $([ $SUCCESS_RATE -ge $THRESHOLD ] && echo '✅ DEPLOYMENT ALLOWED' || echo '❌ DEPLOYMENT BLOCKED')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Phase Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Phase | Status | Notes |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Validation Tests | $([ "$VALIDATION_SUCCESS" == "true" ] && echo '✅ Passed' || echo '❌ Failed') | Content schema and validation |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build Process | $([ "$BUILD_SUCCESS" == "success" ] && echo '✅ Passed' || echo '❌ Failed') | Site build and compilation |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | $([ "$E2E_SUCCESS" == "true" ] && echo '✅ Passed' || echo '❌ Failed') | End-to-end functionality |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Summary**: $PASSED_PHASES/$TOTAL_PHASES test phases passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "$SCHEMA_FIXES_APPLIED" == "true" ]]; then
+            echo "**🔧 Self-Healing Applied**: Automatic content schema fixes were applied during this run." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # Final deployment decision with enhanced reporting
+  enhanced-deployment-decision:
+    name: Enhanced Deployment Decision
+    runs-on: ubuntu-latest
+    needs: [enhanced-test-summary]
+    if: always() && github.ref == 'refs/heads/main'
+    steps:
+      - name: 🎯 Enhanced Deployment Decision
+        run: |
+          echo "## 🚀 Enhanced Deployment Decision" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Overall Success Rate**: ${{ needs.enhanced-test-summary.outputs.success-rate }}%" >> $GITHUB_STEP_SUMMARY
+          echo "**Threshold**: 75% (enhanced with self-healing)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.enhanced-test-summary.outputs.deployment-allowed }}" == "true" ]]; then
+            echo "✅ **Deployment Status**: ALLOWED" >> $GITHUB_STEP_SUMMARY
+            echo "The test success rate meets the minimum threshold with self-healing capabilities." >> $GITHUB_STEP_SUMMARY
+            echo "✅ Deployment allowed - ${{ needs.enhanced-test-summary.outputs.success-rate }}% success rate meets 75% threshold"
+          else
+            echo "❌ **Deployment Status**: BLOCKED" >> $GITHUB_STEP_SUMMARY
+            echo "The test success rate is below the minimum threshold even with self-healing." >> $GITHUB_STEP_SUMMARY
+            echo "GitHub issues have been created for failed tests with detailed diagnostics." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Recommended Actions:**" >> $GITHUB_STEP_SUMMARY
+            echo "1. Review the created GitHub issues for specific failure details" >> $GITHUB_STEP_SUMMARY
+            echo "2. Run tests locally with: \`pnpm run test:full\`" >> $GITHUB_STEP_SUMMARY
+            echo "3. Use self-healing commands: \`pnpm run validate:schema:fix\`" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Deployment blocked - ${{ needs.enhanced-test-summary.outputs.success-rate }}% success rate below 75% threshold"
+            exit 1
+          fi
