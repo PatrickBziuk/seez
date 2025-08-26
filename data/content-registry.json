@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-26T08:38:55.754Z",
+  "lastUpdated": "2025-08-26T17:48:45.946Z",
   "entries": {
     "slug-20250805-d90c95e9": {
       "canonicalId": "slug-20250805-d90c95e9",
@@ -77,8 +77,8 @@
         "en": {
           "path": "src/content/projects/en/cosensai.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-13T13:20:14.970Z",
-          "translationHash": "2ad95bb0b95cb16d7dca6f6fb79b05871be77f81c879f1aab939d9d76d155fd0"
+          "lastTranslated": "2025-08-26T17:48:45.946Z",
+          "translationHash": "7bc8ccc994776f6a64e8bb9add02d85e584868c9e8d7b25046d3dd6a44f9b7b6"
         }
       }
     },
