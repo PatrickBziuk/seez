@@ -85,7 +85,30 @@ const currentYear = new Date().getFullYear();
     <AIImpact canonicalId={canonicalId} />
   </section>
 
-  <!-- 4. License & Timestamp - Tiny footer line -->
+  <!-- 4. Tech Stack CTA - Inspiring call-to-action for similar projects -->
+  <section aria-label={language === 'de' ? 'Tech Stack' : 'Tech Stack'} class="text-center py-6">
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        {language === 'de' ? 'Möchtest du etwas Ähnliches bauen?' : 'Want to build something similar?'}
+      </h3>
+      <p class="text-gray-600 dark:text-gray-400 mb-4">
+        {language === 'de' 
+          ? 'Entdecke die Technologien, Frameworks und Prinzipien hinter diesem Projekt.'
+          : 'Discover the technologies, frameworks, and principles behind this project.'}
+      </p>
+      <a
+        href={language === 'de' ? '/de/tech-stack' : '/en/tech-stack'}
+        class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+      >
+        {language === 'de' ? 'Tech Stack ansehen' : 'View Tech Stack'}
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- 5. License & Timestamp - Tiny footer line -->
   <section
     aria-label={language === 'de' ? 'Lizenz und Urheberrecht' : 'License and copyright'}
     class="border-t border-gray-200 dark:border-gray-700 pt-4"
@@ -109,11 +132,9 @@ const currentYear = new Date().getFullYear();
       <div class="text-center sm:text-left">
         {
           language === 'de'
-            ? 'Erstellt mit Astro, gehostet auf Cloudflare Pages'
-            : 'Built with Astro, hosted on Cloudflare Pages'
+            ? 'Erstellt mit Astro, gehostet auf GitHub Pages & Codeberg Pages'
+            : 'Built with Astro, hosted on GitHub Pages & Codeberg Pages'
         }
-        {canonicalId && <span class="mx-2">•</span>}
-        {canonicalId && <span class="font-mono">{canonicalId}</span>}
       </div>
     </div>
   </section>

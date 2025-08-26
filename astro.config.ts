@@ -37,7 +37,16 @@ export default defineConfig({
     tailwind({
       applyBaseStyles: false,
     }),
-    sitemap(),
+    sitemap({
+      // T36-003: Locale-aware sitemap with xhtml:link alternates
+      i18n: {
+        defaultLocale: 'en',
+        locales: {
+          en: 'en',
+          de: 'de',
+        },
+      },
+    }),
     mdx(),
     icon({
       include: {

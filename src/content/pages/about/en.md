@@ -1,13 +1,18 @@
 ---
 title: About me
-description: Why I build things the way I do.
 language: en
+authors:
+  - authors/seez
 tags:
   - programming
   - software
   - philosophy
   - digital-sovereignty
-firstPublishDate: '2025-08-13T13:03:08.408Z'
+publicationStatus: draft
+draft: true
+canonicalId: 01k2jajdmvq8mn9ckpav7jsd6c
+firstPublishedAt: '2025-08-13T13:03:08.408Z'
+description: Why I build things the way I do.
 publishDate: '2025-08-13T13:03:08.408Z'
 ---
 

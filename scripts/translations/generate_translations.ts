@@ -16,6 +16,7 @@ import { execSync } from 'child_process';
 import matter from 'gray-matter';
 import OpenAI from 'openai';
 import { type TranslationTask, createTranslationHistoryEntry } from '../../src/utils/translation';
+import { logTranslation } from '../log-ai-usage.js';
 
 /**
  * Configuration constants
@@ -394,6 +395,20 @@ Output exactly one JSON object:
 
       const content = response.choices?.[0]?.message?.content || '';
       console.log(`📤 AI response length: ${content.length} characters`);
+
+      // Log to AI ledger system (Pass 2 enhancement)
+      if (response.usage && parsed.data.canonicalId) {
+        const sourceLanguage = parsed.data.language as 'en' | 'de';
+        const targetLanguage = targetLang as 'en' | 'de';
+        logTranslation(
+          parsed.data.canonicalId,
+          'gpt-4o-mini',
+          response.usage.prompt_tokens || 0,
+          response.usage.completion_tokens || 0,
+          sourceLanguage,
+          targetLanguage
+        );
+      }
 
       if (!content.trim()) {
         console.error('❌ Empty AI response');

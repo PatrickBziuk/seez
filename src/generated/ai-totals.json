@@ -1,0 +1,25 @@
+{
+  "total_tokens": 4450,
+  "total_usd": 0.0024549999999999997,
+  "total_co2_g": 4.3165000000000004,
+  "total_operations": 2,
+  "operations_by_type": {
+    "tldr": 1,
+    "translation": 1
+  },
+  "models_used": {
+    "gpt-4o-mini": 2
+  },
+  "updated_at": "2025-08-13T19:13:07.516Z",
+  "grid_intensity": {
+    "g_co2_per_kwh": 485,
+    "zone": "EU",
+    "updated_at": "2025-08-13T19:13:07.515Z",
+    "source": "EU average (EEA 2024)"
+  },
+  "sources": [
+    "https://openai.com/pricing",
+    "https://www.anthropic.com/pricing",
+    "EEA Greenhouse Gas Emissions"
+  ]
+}

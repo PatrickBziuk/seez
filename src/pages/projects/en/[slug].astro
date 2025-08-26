@@ -16,8 +16,17 @@ const entry = (await getEntry('projects', `en/${slug}.mdx`)) || (await getEntry(
 if (!entry) throw new Error(`Project not found: en/${slug}`);
 
 const { Content } = await render(entry);
+
+// Convert string dates to Date objects for MarkdownLayout compatibility
+const frontmatterWithDateObjects = {
+  ...entry.data,
+  publishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
+  firstPublishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
+  modifiedDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+  lastChangeDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+};
 ---
 
-<MarkdownLayout frontmatter={entry.data}>
+<MarkdownLayout frontmatter={frontmatterWithDateObjects}>
   <Content />
 </MarkdownLayout>

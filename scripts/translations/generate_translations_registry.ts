@@ -417,6 +417,7 @@ async function processTranslationTask(
       translationOf: task.canonicalId,
       sourceLanguage: task.sourceLanguage,
       draft: true, // Set as draft initially - requires human review
+      publicationStatus: 'draft', // New Plan 10035 field
       status: {
         ...sourceFrontmatter.status,
         translation: 'AI',
@@ -430,9 +431,18 @@ async function processTranslationTask(
       },
       ai_metadata: {
         ...(sourceFrontmatter.ai_metadata || {}),
+        translation: {
+          model: 'gpt-4o-mini',
+          at: new Date().toISOString(),
+          sourceLanguage: task.sourceLanguage,
+          targetLanguage: task.targetLang,
+          tokens: tokenUsageMetadata.total.tokens,
+          cost: tokenUsageMetadata.total.cost,
+          co2: tokenUsageMetadata.total.co2,
+        },
         tokenUsage: tokenUsageMetadata,
         generationDate: new Date().toISOString(),
-        model: 'gpt-4.1-nano',
+        model: 'gpt-4o-mini',
         translationQuality: 'pending_review',
       },
     };

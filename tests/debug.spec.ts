@@ -1,43 +1,57 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test.describe('Debug Navigation Issues', () => {
-  test('check middleware debug logs for /en/', async ({ page }) => {
-    // This will help us see if middleware is being called
-    const response = await page.goto('/en/', { waitUntil: 'networkidle' });
+/**
+ * Streamlined Debug Tests
+ * Quick diagnostic tests for development debugging
+ */
+
+test.describe('Debug - Core Navigation', () => {
+  test('verify /en route works correctly', async ({ page }) => {
+    const response = await page.goto('/en', { waitUntil: 'networkidle' });
 
     console.log('Response status:', response?.status());
     console.log('Final URL:', page.url());
-
-    // Check page content to see what's actually being served
-    const content = await page.content();
     console.log('Page title:', await page.title());
 
-    // Check if it's a 404 page
-    const is404 = content.includes('404') || content.includes('Page not found');
-    console.log('Is 404 page:', is404);
+    // Verify successful response
+    expect(response?.status()).toBe(200);
+    expect(page.url()).toContain('/en');
+    await expect(page).not.toHaveTitle(/404|Not Found/);
   });
 
-  test('check logo href value', async ({ page }) => {
+  test('check navigation links generation', async ({ page }) => {
     await page.goto('/en');
 
+    // Test logo navigation
     const logo = page.locator('a').filter({ has: page.locator('span:has-text("seez")') });
-    const href = await logo.getAttribute('href');
+    const logoHref = await logo.getAttribute('href');
+    console.log('Logo href:', logoHref);
+    expect(logoHref).toBe('/en');
 
-    console.log('Logo href value:', href);
-    console.log('Expected: /en');
-    console.log('Actual matches expected:', href === '/en');
-  });
-
-  test('test getLocalizedUrl function output', async ({ page }) => {
-    // Navigate to a page and check if the function works correctly
-    await page.goto('/en');
-
-    // Check what links are actually generated in the navigation
+    // Test main navigation links
     const navLinks = await page.locator('nav a').all();
-    for (const link of navLinks) {
+    const linkData = [];
+    
+    for (const link of navLinks.slice(0, 6)) { // Limit to first 6 to prevent timeout
       const href = await link.getAttribute('href');
       const text = await link.textContent();
-      console.log(`Nav link "${text}": ${href}`);
+      linkData.push({ text: text?.trim(), href });
+      console.log(`Nav link "${text?.trim()}": ${href}`);
     }
+
+    // Verify links are properly localized
+    const localizedLinks = linkData.filter(link => link.href?.startsWith('/en/'));
+    expect(localizedLinks.length).toBeGreaterThan(0);
+  });
+
+  test('verify German route accessibility', async ({ page }) => {
+    const response = await page.goto('/de', { waitUntil: 'networkidle' });
+
+    console.log('DE Response status:', response?.status());
+    console.log('DE Final URL:', page.url());
+    console.log('DE Page title:', await page.title());
+
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'de');
   });
 });

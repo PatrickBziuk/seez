@@ -8,8 +8,7 @@
  */
 
 import Layout from '~/layouts/PageLayout.astro';
-import SEO from '~/components/core/SEO.astro';
-import CanonicalSEO from '~/components/core/CanonicalSEO.astro';
+import Metadata from '~/components/core/meta/Metadata.astro';
 import ContentMetadata from '~/components/content/metadata/ContentMetadata.astro';
 import ArticleFooter from '~/components/article/ArticleFooter.astro';
 import ContentFallbackNotice from '~/components/content/metadata/ContentFallbackNotice.astro';
@@ -17,6 +16,7 @@ import { getTranslations, detectLanguage } from '~/utils/i18n';
 import { getEntry } from 'astro:content';
 
 import type { MetaData, Status } from '~/types';
+import type { ReferenceDataEntry } from 'astro:content';
 
 export interface Props {
   frontmatter: {
@@ -40,8 +40,8 @@ export interface Props {
     tags?: string[];
     ai_tldr?: string;
     draft?: boolean;
-    // Author system
-    authors?: string[];
+    // Author system - supporting both reference format and legacy string format
+    authors?: ReferenceDataEntry<'authors'>[] | string[];
     translators?: string[];
     // Sources and references
     sources?: Array<{
@@ -57,8 +57,18 @@ export interface Props {
     originalLanguage?: 'en' | 'de';
     translationOf?: string;
     sourceLanguage?: 'en' | 'de';
-    // AI metadata with token usage
+    // AI metadata with new schema structure
     ai_metadata?: {
+      translation?: {
+        model?: string;
+        at: string;
+        sourceLanguage: 'en' | 'de';
+        targetLanguage: 'en' | 'de';
+        tokens?: number;
+        cost?: number;
+        co2?: number;
+      };
+      // Legacy support
       canonicalId?: string;
       translationOf?: string;
       tokenUsage?: {
@@ -150,16 +160,16 @@ const filePath = entry ? `src/content/${entry.collection}/${entry.id}` : '';
 const gitData = gitMetadata[filePath];
 
 // Combine frontmatter dates with git dates
-const publishDate = frontmatter.publishDate || (gitData?.publishDate ? new Date(gitData.publishDate) : undefined);
-const modifiedDate = frontmatter.modifiedDate || (gitData?.modifiedDate ? new Date(gitData.modifiedDate) : undefined);
+const publishDate = frontmatter.publishDate ? new Date(frontmatter.publishDate) : (gitData?.publishDate ? new Date(gitData.publishDate) : undefined);
+const modifiedDate = frontmatter.modifiedDate ? new Date(frontmatter.modifiedDate) : (gitData?.modifiedDate ? new Date(gitData.modifiedDate) : undefined);
 
-// Generate alternate language URLs
+// Generate alternate language URLs using canonical ID format
 const alternateLocales = [];
-if (entry) {
+if (entry && frontmatter.canonicalId) {
   if (frontmatter.language === 'de') {
-    alternateLocales.push({ locale: 'en', url: `https://seez.eu/en/${entry.collection}/${entry.slug}/` });
+    alternateLocales.push({ locale: 'en', url: `https://seez.eu/en/${entry.collection}/${entry.slug}-${frontmatter.canonicalId}` });
   } else {
-    alternateLocales.push({ locale: 'de', url: `https://seez.eu/de/${entry.collection}/${entry.slug}/` });
+    alternateLocales.push({ locale: 'de', url: `https://seez.eu/de/${entry.collection}/${entry.slug}-${frontmatter.canonicalId}` });
   }
 }
 
@@ -170,29 +180,11 @@ const metadata: MetaData = {
 ---
 
 <Layout metadata={metadata}>
-  {
-    frontmatter.canonicalId ? (
-      <CanonicalSEO
-        canonicalId={frontmatter.canonicalId}
-        title={frontmatter.title || 'Untitled'}
-        description={frontmatter.description}
-        language={frontmatter.language}
-        publishDate={publishDate}
-        modifiedDate={modifiedDate}
-        type="article"
-      />
-    ) : (
-      <SEO
-        title={frontmatter.title || 'Untitled'}
-        description={frontmatter.description}
-        locale={frontmatter.language}
-        alternateLocales={alternateLocales}
-        publishDate={publishDate}
-        modifiedDate={modifiedDate}
-        type="article"
-      />
-    )
-  }
+  <Metadata
+    canonicalId={frontmatter.canonicalId}
+    title={frontmatter.title || 'Untitled'}
+    description={frontmatter.description}
+  />
 
   <section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-4xl">
     <div class="mb-6">

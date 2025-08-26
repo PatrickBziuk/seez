@@ -4,7 +4,7 @@
  * @props {item: CollectionEntry, lang: SupportedLanguage, basePath: string}
  * @behavior Shows title, TLDR summary, date, and collapsible tags section
  * @dependencies Icon (astro-icon), getTranslations, date formatting utilities
- * @usedBy Category index pages (books, projects, lab, life)
+ * @usedBy Category index pages (books, projects, lab, life, music)
  */
 import { Icon } from 'astro-icon/components';
 import { getTranslations } from '~/utils/i18n';
@@ -12,7 +12,7 @@ import type { SupportedLanguage } from '~/utils/i18n';
 import type { CollectionEntry } from 'astro:content';
 
 export interface Props {
-  item: CollectionEntry<'books' | 'projects' | 'lab' | 'life'>;
+  item: CollectionEntry<'books' | 'projects' | 'lab' | 'life' | 'music'>;
   lang: SupportedLanguage;
   basePath: string;
 }
@@ -23,6 +23,20 @@ const translations = await getTranslations(lang);
 // Helper function to extract clean slug from content ID
 const getCleanSlug = (id: string) => {
   return id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+};
+
+// Generate new canonical URL format: slug-canonicalId
+const generateItemUrl = (item: CollectionEntry<'books' | 'projects' | 'lab' | 'life' | 'music'>, lang: string, basePath: string) => {
+  const cleanSlug = getCleanSlug(item.id);
+  const canonicalId = item.data.canonicalId;
+  
+  if (canonicalId) {
+    // New canonical URL format
+    return `/${lang}/${basePath}/${cleanSlug}-${canonicalId}`;
+  } else {
+    // Fallback to old format if no canonical ID (backwards compatibility)
+    return `/${lang}/${basePath}/${cleanSlug}`;
+  }
 };
 
 // Format dates
@@ -43,7 +57,7 @@ const publishDate = formatDate(item.data.publishDate || item.data.timestamp);
   class="flex flex-col min-h-80 p-6 rounded-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition-all duration-200"
 >
   <!-- Title -->
-  <a href={`/${lang}/${basePath}/${getCleanSlug(item.id)}`} class="group">
+  <a href={generateItemUrl(item, lang, basePath)} class="group">
     <h2
       class="text-xl font-semibold mb-3 font-heading dark:text-gray-200 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-2"
     >

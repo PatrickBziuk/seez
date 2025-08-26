@@ -1,0 +1,46 @@
+---
+import Layout from '../../../layouts/PageLayout.astro';
+import ContentCard from '../../../components/content/cards/ContentCard.astro';
+import ComingSoon from '../../../components/ComingSoon.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+
+export const getStaticPaths = () => {
+  return SUPPORTED_LANGUAGES.map((lang) => ({
+    params: { lang },
+  }));
+};
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+// Get all music content and filter by language
+const allMusic = (await getCollection('music')) as CollectionEntry<'music'>[];
+const filteredMusic = allMusic.filter(
+  (item) => !item.data.draft && (item.data.language === lang || (!item.data.language && lang === 'en'))
+);
+
+const metadata = {
+  title: lang === 'de' ? 'Musik' : 'Music',
+  description: lang === 'de' ? 'Songs, Texte und musikalische Experimente' : 'Songs, lyrics and musical experiments',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <header class="text-center mb-12">
+      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
+        🎵 {lang === 'de' ? 'Musik' : 'Music'}
+      </h1>
+      <p class="text-xl text-muted dark:text-slate-400">
+        {lang === 'de' ? 'Songs, Texte und musikalische Experimente' : 'Songs, lyrics and musical experiments'}
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {filteredMusic.map((item) => <ContentCard item={item} lang={lang} basePath="music" />)}
+    </div>
+
+    {filteredMusic.length === 0 && <ComingSoon language={lang} section={lang === 'de' ? 'Musik' : 'Music'} />}
+  </section>
+</Layout>

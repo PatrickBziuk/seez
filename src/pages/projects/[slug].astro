@@ -12,10 +12,19 @@ const entry = await getEntry('projects', slug);
 if (!entry) throw new Error('Project not found');
 
 const { Content } = await render(entry);
+
+// Convert string dates to Date objects for MarkdownLayout compatibility
+const frontmatterWithDateObjects = {
+  ...entry.data,
+  publishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
+  firstPublishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
+  modifiedDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+  lastChangeDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+};
 ---
 
 <MarkdownLayout
-  frontmatter={entry.data}
+  frontmatter={frontmatterWithDateObjects}
   entry={{ collection: 'projects', slug: entry.id.replace(/\.mdx?$/, ''), id: entry.id }}
 >
   <Content />

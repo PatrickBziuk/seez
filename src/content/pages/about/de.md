@@ -1,13 +1,18 @@
 ---
 title: Über mich
-description: 'Warum ich Dinge baue, wie ich sie baue.'
 language: de
+authors:
+  - authors/seez-de
 tags:
   - programming
   - software
   - philosophy
   - digital-sovereignty
-firstPublishDate: '2025-08-13T13:03:08.408Z'
+publicationStatus: draft
+draft: true
+canonicalId: 01k2jajdmz449kdjbvjg7dsx0g
+firstPublishedAt: '2025-08-13T13:03:08.408Z'
+description: 'Warum ich Dinge baue, wie ich sie baue.'
 publishDate: '2025-08-13T13:03:08.408Z'
 ---
 

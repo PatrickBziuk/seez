@@ -1,6 +1,8 @@
 ---
 title: 'Portique: European FOSS Jamstack Platform'
-subtitle: 'Self-hosted or Managed Static Hosting – same stack, full sovereignty'
+language: de
+authors:
+  - authors/seez-de
 tags:
   - Portique
   - FOSS
@@ -12,19 +14,12 @@ tags:
   - Digital Sovereignty
   - programming
   - software
+publicationStatus: published
 draft: false
-language: de
-status:
-  authoring: Human
-ai_tldr: >-
-  Portique ist eine offene, europäische Alternative zu proprietären
-  Jamstack-Hosts, die entweder von einem europäischen Anbieter verwaltet oder
-  selbst gehostet werden können. Es bietet eine transparente, FOSS-basierte
-  Technologie, die sich auf Leistung, GDPR-konformes Datenbesitz und
-  Benutzerfreundlichkeit für kleine und mittelständische Unternehmen sowie NGOs
-  konzentriert. Die Plattform ermöglicht eine einfache Integration statischer
-  und dynamischer Funktionen und fördert die Unabhängigkeit der Benutzer.
 canonicalId: slug-20250805-05e93b2e
+subtitle: 'Self-hosted or Managed Static Hosting – same stack, full sovereignty'
+firstPublishedAt: '2025-08-13T13:03:08.408Z'
+publishDate: '2025-08-13T13:03:08.408Z'
 translationHistory:
   - language: de
     translator: AI (gpt-4o-mini)
@@ -44,13 +39,19 @@ translationHistory:
     sourceSha: 8dc525ebcd10c97be0bbaee11f4757fff01f5a5bb4ac2f7dc12360ca043e432e
     timestamp: '2025-08-05T19:07:17.449Z'
     status: ai-translated
+ai_tldr: >-
+  Portique ist eine offene, europäische Alternative zu proprietären
+  Jamstack-Hosts, die entweder von einem europäischen Anbieter verwaltet oder
+  selbst gehostet werden können. Es bietet eine transparente, FOSS-basierte
+  Technologie, die sich auf Leistung, GDPR-konformes Datenbesitz und
+  Benutzerfreundlichkeit für kleine und mittelständische Unternehmen sowie NGOs
+  konzentriert. Die Plattform ermöglicht eine einfache Integration statischer
+  und dynamischer Funktionen und fördert die Unabhängigkeit der Benutzer.
 ai_textscore:
   translationQuality: 95
   originalClarity: 90
   timestamp: '2025-08-05T19:06:28.202Z'
   notes: []
-firstPublishDate: '2025-08-13T13:03:08.408Z'
-publishDate: '2025-08-13T13:03:08.408Z'
 ---
 
 import Note from '../../../components/marketing/content/Note.astro';
@@ -132,7 +133,7 @@ pipeline:
 
 ### Caddyfile (Ursprung + Proxy)
 
-```caddyfile
+```txt
 example.com {
     root * /var/www/example.com
     file_server

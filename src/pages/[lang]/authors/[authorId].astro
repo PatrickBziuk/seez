@@ -41,8 +41,8 @@ const frontmatter = {
 
 const entry = {
   collection: 'authors',
-  slug: author.data.id,
-  id: `${author.data.id}.mdx`,
+  slug: author.data.id || author.id || 'unknown',
+  id: `${author.data.id || author.id || 'unknown'}.mdx`,
 };
 ---
 
@@ -75,10 +75,10 @@ const entry = {
         <div class="flex items-center gap-3">
           <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-lg">
             <span class="text-base">
-              {author.data.status.authoring === 'Human' ? '👤' : author.data.status.authoring === 'AI' ? '🤖' : '🤝'}
+              {author.data.status?.authoring === 'Human' ? '👤' : author.data.status?.authoring === 'AI' ? '🤖' : '🤝'}
             </span>
             <span class="text-sm font-medium text-slate-700 dark:text-slate-200">
-              {author.data.status.authoring}
+              {author.data.status?.authoring || 'Human'}
             </span>
           </div>
 

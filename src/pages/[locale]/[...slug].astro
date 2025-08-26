@@ -43,8 +43,17 @@ export async function getStaticPaths() {
 
 const { entry, entryData } = Astro.props;
 const { Content } = await render(entry);
+
+// Convert string dates to Date objects for MarkdownLayout compatibility
+const frontmatterWithDateObjects = {
+  ...entry.data,
+  publishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
+  firstPublishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
+  modifiedDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+  lastChangeDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+};
 ---
 
-<Layout frontmatter={entry.data} entry={entryData}>
+<Layout frontmatter={frontmatterWithDateObjects} entry={entryData}>
   <Content />
 </Layout>

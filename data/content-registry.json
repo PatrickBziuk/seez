@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-13T13:17:22.833Z",
+  "lastUpdated": "2025-08-26T08:38:55.754Z",
   "entries": {
     "slug-20250805-d90c95e9": {
       "canonicalId": "slug-20250805-d90c95e9",
@@ -77,8 +77,8 @@
         "en": {
           "path": "src/content/projects/en/cosensai.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-13T13:17:07.297Z",
-          "translationHash": "a1c813611fbe16b699e420feb7e02cc4c8f5a1388895abb8e0455c966e866098"
+          "lastTranslated": "2025-08-13T13:20:14.970Z",
+          "translationHash": "2ad95bb0b95cb16d7dca6f6fb79b05871be77f81c879f1aab939d9d76d155fd0"
         }
       }
     },
@@ -93,8 +93,8 @@
         "en": {
           "path": "src/content/projects/en/meine-musik-root.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-13T13:17:22.831Z",
-          "translationHash": "4d877fd8aff45f3d01f4dc3f47fb75c14735b82c507427270986f5f5713d37d0"
+          "lastTranslated": "2025-08-13T13:20:43.657Z",
+          "translationHash": "5ae7b4e6297608475a3431850afc6dccb851bdbba354126dab716e8cb685c2d2"
         }
       }
     },
@@ -221,6 +221,33 @@
       "title": "Cosensai",
       "lastModified": "2025-08-12T20:42:36.857Z",
       "contentHash": "d75def78cebf05738a841b3b5ff463d22bd71eadb520cbbd6a663793a86a9185",
+      "translations": {}
+    },
+    "slug-20250826-e2c88084": {
+      "canonicalId": "slug-20250826-e2c88084",
+      "originalPath": "books/sample-book.md",
+      "originalLanguage": "en",
+      "title": "Sample Book",
+      "lastModified": "2025-08-26T08:38:55.744Z",
+      "contentHash": "6c945b4907eb8e0c3085fa08409a97fe9ceb3ba455ae75fe52ed47afcc24dfde",
+      "translations": {}
+    },
+    "slug-20250826-7e341032": {
+      "canonicalId": "slug-20250826-7e341032",
+      "originalPath": "lab/sample-lab.md",
+      "originalLanguage": "en",
+      "title": "Sample Lab Experiment",
+      "lastModified": "2025-08-26T08:38:55.752Z",
+      "contentHash": "00796fb6010a2772ea808ccbdb9d88739ecfa55e351769066fbe9a01a6d508ec",
+      "translations": {}
+    },
+    "slug-20250826-015cc099": {
+      "canonicalId": "slug-20250826-015cc099",
+      "originalPath": "life/en/trumps-coup.mdx",
+      "originalLanguage": "en",
+      "title": "What would happen when Trump lands a coup.",
+      "lastModified": "2025-08-26T08:38:55.754Z",
+      "contentHash": "8bb285828609d8a19d73ff8cbd5d4b963938ef65e3dca45edcd96ba72bf0b03f",
       "translations": {}
     }
   }

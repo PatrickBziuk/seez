@@ -8,9 +8,9 @@ on:
     branches: [main]
   push:
     branches: [main]
-  schedule:
-    # Run daily at 2 AM UTC for monitoring
-    - cron: '0 2 * * *'
+  # Note: Daily scheduled testing removed per feedback
+  # schedule:
+  #   - cron: '0 2 * * *'
   workflow_dispatch:
     inputs:
       test_suite:

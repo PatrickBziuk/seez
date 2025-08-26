@@ -1,12 +1,14 @@
 ---
 /**
  * About – Multilingual, content-driven About page with proper metadata, alt links,
- * JSON-LD, reading stats, graceful fallbacks, and a clean source link.
+ * JSON-LD, reading stats, graceful fallbacks, related projects, and a clean source link.
  * @route /[lang]/about
  */
 import Layout from '../../layouts/PageLayout.astro';
 import { getEntry, render } from 'astro:content';
 import { SUPPORTED_LANGUAGES, getTranslations } from '../../utils/i18n';
+import RelatedProjects from '../../components/content/RelatedProjects.astro';
+import { extractMentionedProjects, getProjectLinks, type ProjectLink } from '../../utils/content/projectLinks';
 import type { SupportedLanguage } from '../../utils/i18n';
 import type { MetaData } from '~/types';
 
@@ -51,6 +53,13 @@ const metadata: MetaData = {
     cardType: 'summary_large_image',
   },
 };
+
+// Extract mentioned projects from content and get their links
+let relatedProjects: ProjectLink[] = [];
+if (pageEntry?.body) {
+  const mentionedProjectNames = extractMentionedProjects(pageEntry.body);
+  relatedProjects = await getProjectLinks(mentionedProjectNames, lang);
+}
 ---
 
 <Layout metadata={metadata}>
@@ -87,6 +96,17 @@ const metadata: MetaData = {
         )
       }
     </div>
+
+    <!-- Related Projects Section -->
+    {relatedProjects.length > 0 && (
+      <div class="mt-12">
+        <RelatedProjects 
+          projects={relatedProjects} 
+          title={lang === 'de' ? 'Erwähnte Projekte' : 'Mentioned Projects'}
+        />
+      </div>
+    )}
+
     <div class="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
       <div class="text-sm text-gray-500 dark:text-gray-400">
         {lang === 'de' ? 'Auch verfügbar auf:' : 'Also available in:'}

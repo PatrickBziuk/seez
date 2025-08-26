@@ -397,7 +397,7 @@ function validateTranslationQuality(original: string, translated: string): Quali
 
 ---
 
-## Component Architecture Specification
+## Component Architecture Specification [UPDATED August 16, 2025]
 
 ### Directory Structure
 
@@ -410,9 +410,10 @@ src/components/
 │   │   ├── LanguageSwitcher.astro # Language selection dropdown
 │   │   ├── ToggleMenu.astro  # Mobile menu toggle
 │   │   └── ToggleTheme.astro # Dark/light mode toggle
-│   ├── meta/                 # SEO and analytics
-│   │   ├── SEO.astro         # Basic SEO meta tags
-│   │   ├── CanonicalSEO.astro # Advanced SEO with canonical URLs
+│   ├── meta/                 # SEO and analytics [CONSOLIDATED]
+│   │   ├── Metadata.astro    # ✅ PRIMARY: Single source of truth for SEO
+│   │   ├── SEO.astro         # ⚠️  DEPRECATED: Use Metadata.astro instead
+│   │   ├── CanonicalSEO.astro # ⚠️  DEPRECATED: Use Metadata.astro instead
 │   │   ├── Analytics.astro   # Analytics integration
 │   │   └── CommonMeta.astro  # Common meta tags
 │   └── brand/                # Brand and identity
@@ -547,15 +548,81 @@ interface TokenStatsProps {
 
 ## SEO & Structured Data Specification
 
-### CanonicalSEO.astro Component
+### Metadata.astro Component [PRIMARY SEO COMPONENT]
 
-**Purpose**: Comprehensive SEO optimization with canonical URLs, hreflang tags, and structured data.
+**Purpose**: Single source of truth for all SEO metadata, canonical URLs, and hreflang tags.
+
+**Status**: ✅ Active - Enhanced with canonical ID support  
+**Migration**: Replaces SEO.astro and CanonicalSEO.astro
+
+**Interface**:
+```typescript
+export interface Props extends MetaData {
+  dontUseTitleTemplate?: boolean;
+  alternateLanguages?: Array<{ href: string; hreflang: string }>;
+  canonicalId?: string; // NEW: Canonical ID support
+}
+```
 
 **Features**:
 
-**Canonical URL Generation**:
+**Environment-Aware Canonical URL Resolution**:
+```typescript
+// Handle canonical ID if provided
+let finalCanonical = canonical;
+let hreflangLinks: Array<{ href: string; hreflang: string }> = alternateLanguages;
+
+if (canonicalId) {
+  try {
+    const canonicalUrl = getCanonicalUrl(canonicalId);
+    if (canonicalUrl) {
+      finalCanonical = canonicalUrl;
+    }
+    
+    const hreflangData = getHreflangData(canonicalId);
+    if (hreflangData && hreflangData.length > 0) {
+      hreflangLinks = hreflangData;
+    }
+  } catch (error) {
+    console.warn('Error processing canonical ID:', canonicalId, error);
+  }
+}
+```
+
+**Enhanced Hreflang Implementation**:
+```astro
+<!-- T36-010: Hreflang alternate language tags for SEO (with canonical ID support) -->
+{hreflangLinks.map(({ href, hreflang }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
+{hreflangLinks.length > 0 && <link rel="alternate" hreflang="x-default" href={finalCanonical} />}
+```
+
+**Usage**:
+```astro
+<!-- Simple usage -->
+<Metadata title="Page Title" description="Page description" />
+
+<!-- With canonical ID support -->
+<Metadata 
+  canonicalId="01JDXH2J3K9T7M8Z6B4V5Q1N9P"
+  title="Page Title" 
+  description="Page description" 
+/>
+```
+
+### ~~CanonicalSEO.astro Component~~ [DEPRECATED]
+
+**Status**: ⚠️ **DEPRECATED** - Use Metadata.astro with canonicalId prop instead  
+**Migration Path**: Replace with `<Metadata canonicalId={canonicalId} ... />`  
+**Deprecation**: Shows warning in development mode
+
+**Purpose**: ~~Comprehensive SEO optimization with canonical URLs, hreflang tags, and structured data.~~
+
+**Legacy Features** (now in Metadata.astro):
+
+~~**Canonical URL Generation**~~:
 
 ```typescript
+// MOVED TO: utils/canonical-urls.ts
 function generateCanonicalUrl(canonicalId: string, language: string): string {
   const registry = loadContentRegistry();
   const entry = registry.entries[canonicalId];
@@ -569,10 +636,10 @@ function generateCanonicalUrl(canonicalId: string, language: string): string {
 }
 ```
 
-**Hreflang Implementation**:
+~~**Hreflang Implementation**~~:
 
 ```astro
-<!-- Automatic alternate language generation -->{
+<!-- REPLACED BY: Metadata.astro enhanced hreflang -->{
   canonicalId &&
     Object.entries(registry.entries[canonicalId]?.translations || {}).map(
       ([lang, translation]) =>

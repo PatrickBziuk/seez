@@ -285,6 +285,15 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
         <div class="header-icons flex items-center gap-2 md:gap-4" style="position:relative;">
           {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
           <LanguageSwitcher currentLanguage={safeLocale} />
+          <!-- Search Button -->
+          <button
+            id="search-button"
+            class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+            aria-label="Search"
+            title="Search (Press / to open)"
+          >
+            <Icon name="tabler:search" class="w-5 h-5" />
+          </button>
           {
             showRssFeed && (
               <a
@@ -313,9 +322,47 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
   </div>
 </header>
 
+<!-- Search Modal -->
+<div 
+  id="search-modal" 
+  class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden"
+  style="display: none;"
+>
+  <div class="flex items-start justify-center min-h-screen pt-16 px-4">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl">
+      <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Search</h2>
+        <button 
+          id="search-close"
+          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          aria-label="Close"
+        >
+          <Icon name="tabler:x" class="w-6 h-6" />
+        </button>
+      </div>
+      <div id="search-container" class="min-h-[200px]">
+        <!-- Search content will be loaded here -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   // Mobile navigation toggle functionality
   document.addEventListener('DOMContentLoaded', () => {
+    // Minimal Pagefind typings to avoid using `any` and satisfy ESLint
+    type PagefindResultData = {
+      url: string;
+      excerpt?: string;
+      meta: { title?: string };
+    };
+    type PagefindResultItem = { data(): Promise<PagefindResultData> };
+    type PagefindSearchResponse = { results: PagefindResultItem[] };
+    interface PagefindGlobal {
+      search: (query: string) => Promise<PagefindSearchResponse>;
+    }
+    const getPagefind = (): PagefindGlobal | undefined =>
+      (window as unknown as { pagefind?: PagefindGlobal }).pagefind;
     const toggleButton = document.querySelector('[data-aw-toggle-menu]');
     const mobileNav = document.getElementById('mobile-navigation');
 
@@ -353,5 +400,282 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
         }
       });
     }
+
+    // Search modal functionality
+    const searchButton = document.getElementById('search-button');
+    const searchModal = document.getElementById('search-modal');
+    const searchModalClose = document.getElementById('search-close');
+    const searchContainer = document.getElementById('search-container');
+
+    let searchInitialized = false;
+
+    const openSearchModal = async () => {
+      if (searchModal) {
+        searchModal.style.display = 'block';
+        searchModal.classList.remove('hidden');
+        
+        // Initialize search if not already done
+        if (!searchInitialized && searchContainer) {
+          await initializeSearch();
+          searchInitialized = true;
+        }
+        
+        // Focus the search input if available
+        setTimeout(() => {
+          const searchInput = searchContainer?.querySelector('input[type="search"]') as HTMLInputElement;
+          if (searchInput) {
+            searchInput.focus();
+          }
+        }, 100);
+      }
+    };
+
+    const closeSearchModal = () => {
+      if (searchModal) {
+        searchModal.style.display = 'none';
+        searchModal.classList.add('hidden');
+      }
+    };
+
+    const initializeSearch = async () => {
+      if (!searchContainer) return;
+
+      console.log('Search: Initializing search functionality...');
+      
+      try {
+        // Try to load Pagefind directly
+        console.log('Search: Attempting to load Pagefind...');
+        await loadPagefind();
+        
+      } catch (error) {
+        console.log('Search: Failed to initialize search:', error);
+        
+        // Check if we're likely in development mode
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.log('Search error details:', errorMessage);
+        
+        // More specific development mode detection
+  // Determine environment by checking asset availability rather than relying on ports
+  const isDevelopment = errorMessage.includes('404') || 
+           errorMessage.includes('Failed to load') || 
+           errorMessage.includes('timeout') ||
+           errorMessage.includes('net::ERR');
+        
+        if (isDevelopment) {
+          console.log('Search: Likely development mode detected');
+          searchContainer.innerHTML = `
+            <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+              <div class="mb-4">
+                <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+              <p class="text-sm mb-2 font-medium">🔍 Search in Development Mode</p>
+              <p class="text-xs mb-3">Search requires a production build to generate the search index.</p>
+              <div class="bg-gray-50 dark:bg-gray-700 rounded p-3 text-xs">
+                <p class="font-mono mb-1">pnpm run build</p>
+                <p class="font-mono">pnpm run preview</p>
+              </div>
+            </div>
+          `;
+        } else {
+          searchContainer.innerHTML = `
+            <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+              <div class="mb-4">
+                <svg class="w-12 h-12 mx-auto mb-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+              </div>
+              <p class="text-sm mb-2 font-medium">Search Unavailable</p>
+              <p class="text-xs">Unable to load search functionality. Please try again later.</p>
+            </div>
+          `;
+        }
+      }
+    };
+
+    // Helper function to load and initialize Pagefind
+    const loadPagefind = async () => {
+      try {
+        console.log('Loading pagefind script...');
+        
+        // Quick preflight: verify the script exists (works in preview/build; will fail in dev)
+        try {
+          const headResp = await fetch('/pagefind/pagefind.js', { method: 'HEAD' });
+          if (!headResp.ok) {
+            throw new Error(`pagefind.js not reachable: status ${headResp.status}`);
+          }
+        } catch (preflightErr) {
+          throw new Error(`Preflight check failed for Pagefind: ${preflightErr instanceof Error ? preflightErr.message : String(preflightErr)}`);
+        }
+
+        // Load the Pagefind script
+        const script = document.createElement('script');
+        script.src = '/pagefind/pagefind.js';
+        script.type = 'text/javascript';
+        
+        await new Promise<void>((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            reject(new Error('Script loading timeout after 10 seconds'));
+          }, 10000); // Increased timeout to 10 seconds
+          
+          script.onload = () => {
+            clearTimeout(timeout);
+            console.log('Pagefind script loaded successfully');
+            resolve();
+          };
+          script.onerror = () => {
+            clearTimeout(timeout);
+            reject(new Error('Failed to load pagefind.js'));
+          };
+          document.head.appendChild(script);
+        });
+        
+        // Wait for Pagefind to be available with longer timeout
+        console.log('Waiting for pagefind to be available...');
+        let attempts = 0;
+        while (attempts < 25 && !getPagefind()) {
+          await new Promise(resolve => setTimeout(resolve, 200));
+          attempts++;
+          if (attempts % 5 === 0) {
+            console.log(`Still waiting for pagefind... attempt ${attempts}/25`);
+          }
+        }
+        
+        if (!getPagefind()) {
+          console.error('Pagefind object not found on window after script load');
+          console.log('Window keys containing "pagefind":', Object.keys(window).filter(k => k.toLowerCase().includes('pagefind')));
+          throw new Error(`Pagefind not available after ${attempts} attempts (${attempts * 200}ms)`);
+        }
+
+        console.log('Pagefind is ready and available on window object');
+        
+      } catch (error) {
+        console.error('Failed to load pagefind:', error);
+        throw error;
+      }
+
+      // Initialize the search UI
+      if (!searchContainer) return;
+      
+      searchContainer.innerHTML = `
+        <div class="p-4">
+          <div class="relative mb-4">
+            <input 
+              type="search" 
+              id="pagefind-search" 
+              placeholder="Search content..." 
+              class="w-full px-4 py-3 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              autocomplete="off"
+            />
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div id="search-results" class="min-h-[100px] max-h-[400px] overflow-y-auto"></div>
+        </div>
+      `;
+
+      // Set up search functionality
+      const searchInput = document.getElementById('pagefind-search') as HTMLInputElement;
+      const resultsContainer = document.getElementById('search-results')!;
+      
+      let debounceTimer: number;
+      
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = window.setTimeout(async () => {
+          const query = (e.target as HTMLInputElement).value.trim();
+          
+          if (query.length < 2) {
+            resultsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-sm text-center py-4">Type at least 2 characters to search...</p>';
+            return;
+          }
+
+          try {
+            resultsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-sm text-center py-4">Searching...</p>';
+            
+            const pf = getPagefind();
+            if (!pf) {
+              throw new Error('Pagefind not initialized');
+            }
+            const search = await pf.search(query);
+            
+            if (search.results.length === 0) {
+              resultsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-sm text-center py-4">No results found</p>';
+              return;
+            }
+
+            const resultsHtml = await Promise.all(
+              search.results.slice(0, 8).map(async (result: PagefindResultItem) => {
+                const data = await result.data();
+                return `
+                  <div class="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg border-b border-gray-100 dark:border-gray-600 last:border-b-0">
+                    <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                      <a href="${data.url}" class="hover:text-blue-600 dark:hover:text-blue-400">${data.meta.title || 'Untitled'}</a>
+                    </h3>
+                    <p class="text-xs text-gray-600 dark:text-gray-300 mb-2">${data.excerpt}</p>
+                    <p class="text-xs text-gray-400">${data.url}</p>
+                  </div>
+                `;
+              })
+            );
+            
+            resultsContainer.innerHTML = resultsHtml.join('');
+            
+            // Add click handlers to close modal when clicking results
+            resultsContainer.querySelectorAll('a').forEach(link => {
+              link.addEventListener('click', () => {
+                closeSearchModal();
+              });
+            });
+            
+          } catch (error) {
+            console.error('Search error:', error);
+            resultsContainer.innerHTML = '<p class="text-red-500 text-sm text-center py-4">Search error occurred</p>';
+          }
+        }, 300);
+      });
+
+      console.log('Search: Pagefind initialized successfully');
+    };
+
+    // Event listeners
+    if (searchButton) {
+      searchButton.addEventListener('click', openSearchModal);
+    }
+
+    if (searchModalClose) {
+      searchModalClose.addEventListener('click', closeSearchModal);
+    }
+
+    // Close modal when clicking outside
+    if (searchModal) {
+      searchModal.addEventListener('click', (e) => {
+        if (e.target === searchModal) {
+          closeSearchModal();
+        }
+      });
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Open search with / key
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        // Don't trigger if user is typing in an input/textarea
+        const target = e.target as HTMLElement;
+        if (target && target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          openSearchModal();
+        }
+      }
+      
+      // Close search with Escape key
+      if (e.key === 'Escape') {
+        closeSearchModal();
+      }
+    });
   });
 </script>

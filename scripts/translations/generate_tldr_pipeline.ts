@@ -22,6 +22,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import OpenAI from 'openai';
+import { logTLDR } from '../log-ai-usage.js';
 
 // Load environment variables from .env.local if it exists
 const envPath = path.join(process.cwd(), '.env.local');
@@ -178,7 +179,12 @@ function trackTokenUsage(
     category,
   };
 
-  // Load existing token usage data
+  // Log to new AI ledger system (Pass 2 enhancement)
+  if (operation === 'tldr-generation') {
+    logTLDR(canonicalId, model, inputTokens, outputTokens, cost);
+  }
+
+  // Load existing token usage data (legacy system - maintain for compatibility)
   let tokenData: { entries: TokenUsageEntry[] } = { entries: [] };
   if (fs.existsSync(TOKEN_USAGE_PATH)) {
     try {
@@ -459,7 +465,7 @@ async function main() {
 }
 
 // Run the script
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch((error) => {
     console.error('❌ Fatal error:', error);
     process.exit(1);

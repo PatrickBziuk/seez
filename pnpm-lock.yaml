@@ -171,6 +171,9 @@ importers:
       typescript-eslint:
         specifier: ^8.30.1
         version: 8.35.1(eslint@9.30.0(jiti@1.21.7))(typescript@5.8.3)
+      ulid:
+        specifier: ^3.0.1
+        version: 3.0.1
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.0.0
@@ -3866,6 +3869,10 @@ packages:
 
   uint8arrays@3.0.0:
     resolution: {integrity: sha512-HRCx0q6O9Bfbp+HHSfQQKD7wU70+lydKVt4EghkdOvlK/NlrF90z+eXV34mUd48rNvVJXwkrMSPpCATkct8fJA==}
+
+  ulid@3.0.1:
+    resolution: {integrity: sha512-dPJyqPzx8preQhqq24bBG1YNkvigm87K8kVEHCD+ruZg24t6IFEFv00xMWfxcC4djmFtiTLdFuADn4+DOz6R7Q==}
+    hasBin: true
 
   ultrahtml@1.6.0:
     resolution: {integrity: sha512-R9fBn90VTJrqqLDwyMph+HGne8eqY1iPfYhPzZrvKpIfwkWZbcYlfpsb8B9dTvBfpy1/hqAD7Wi8EKfP9e8zdw==}
@@ -8719,6 +8726,8 @@ snapshots:
   uint8arrays@3.0.0:
     dependencies:
       multiformats: 9.9.0
+
+  ulid@3.0.1: {}
 
   ultrahtml@1.6.0: {}
 

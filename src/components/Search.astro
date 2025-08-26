@@ -1,47 +1,115 @@
----
+﻿---
 /**
  * Search - Pagefind site search component
- * @props - None required, all configuration handled via uiOptions
- * @behavior - Provides site-wide search functionality with keyboard shortcuts
- * @dependencies - astro-pagefind for search indexing and UI
- * @usedBy - Header component for site navigation
  */
 ---
 
 <div id="search" class="pagefind-ui"></div>
 
 <script is:inline>
-  // Search hotkey functionality - focus search on '/' or '.' key
-  window.addEventListener('keydown', (e) => {
-    // Only trigger if not already in an input field
-    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+  window.addEventListener('DOMContentLoaded', async () => {
+    console.log('Search: DOM loaded, initializing...');
+    
+    const searchContainer = document.getElementById('search');
+    if (!searchContainer) {
+      console.error('Search: Container not found');
       return;
     }
 
-    if (e.key === '/' || e.key === '.') {
-      e.preventDefault();
-      const searchInput = document.querySelector('#search input');
-      if (searchInput) {
-        searchInput.focus();
+    console.log('Search: Checking pagefind availability...');
+    console.log('Search: Current URL:', window.location.href);
+    
+    // Check if we're in development mode
+    const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    console.log('Search: Development mode detected:', isDev);
+    
+    if (isDev) {
+      console.log('Search: Dev mode detected, showing dev message');
+      searchContainer.innerHTML = `
+        <div class="p-4 text-center text-gray-500 dark:text-gray-400">
+          <p class="text-sm mb-2">🔍 Search available in production build</p>
+          <p class="text-xs">Run <code>pnpm run build && pnpm run preview</code> to test search functionality</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Production mode: check if pagefind is available by trying to fetch the script
+    console.log('Search: Production mode, checking pagefind availability...');
+    const pagefindResponse = await fetch('/pagefind/pagefind.js').catch((error) => {
+      console.error('Search: Fetch error:', error);
+      return null;
+    });
+    
+    const isPagefindAvailable = pagefindResponse && pagefindResponse.ok;
+    
+    if (!isPagefindAvailable) {
+      console.log('Search: Pagefind not available in production');
+      searchContainer.innerHTML = `
+        <div class="p-4 text-center text-gray-500 dark:text-gray-400">
+          <p class="text-sm mb-2">Search is currently unavailable</p>
+          <p class="text-xs">Please try again later</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Pagefind is available, proceed with initialization
+    try {
+      // Load pagefind script
+      console.log('Search: Loading pagefind script...');
+      const script = document.createElement('script');
+      script.src = '/pagefind/pagefind.js';
+      script.type = 'text/javascript';
+      
+      await new Promise((resolve, reject) => {
+        script.onload = resolve;
+        script.onerror = () => reject(new Error('Failed to load pagefind.js'));
+        document.head.appendChild(script);
+      });
+      
+      // Wait for pagefind to be available
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      if (!window.pagefind) {
+        throw new Error('window.pagefind not available');
       }
+      
+      // Initialize pagefind UI
+      await window.pagefind.options({
+        element: '#search',
+        showEmptyFilters: false,
+        showSubResults: true,
+        excerptLength: 30,
+        resetStyles: false,
+        bundlePath: '/pagefind/',
+        translations: {
+          placeholder: "Search...",
+          clear_search: "Clear",
+          load_more: "Load more results"
+        }
+      });
+      
+      console.log('Search: Initialized successfully');
+      
+    } catch (error) {
+      console.error('Search: Failed to initialize:', error);
+      
+      searchContainer.innerHTML = `
+        <div class="p-4 text-center text-gray-500 dark:text-gray-400">
+          <p class="mb-2">Search is currently unavailable</p>
+          <p class="text-sm">Please try refreshing the page.</p>
+        </div>
+      `;
     }
   });
 </script>
 
 <style>
-  /* Custom Pagefind styling to match site theme */
-  .pagefind-ui {
-    --pagefind-ui-primary: hsl(var(--color-primary));
-    --pagefind-ui-text: hsl(var(--color-text-default));
-    --pagefind-ui-background: hsl(var(--color-bg-page));
-    --pagefind-ui-border: hsl(var(--color-border));
-    --pagefind-ui-tag: hsl(var(--color-secondary));
-  }
-
   .pagefind-ui__search-input {
     @apply rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2;
     @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary;
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
   }
 
   .pagefind-ui__results {
@@ -55,19 +123,11 @@
   }
 
   .pagefind-ui__result-title {
-    @apply text-lg font-semibold text-primary hover:text-primary-darker;
+    @apply text-lg font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400;
     @apply mb-2 no-underline;
   }
 
   .pagefind-ui__result-excerpt {
-    @apply text-sm text-gray-600 dark:text-gray-300 line-clamp-2;
-  }
-
-  .pagefind-ui__result-tags {
-    @apply mt-2 flex flex-wrap gap-1;
-  }
-
-  .pagefind-ui__result-tag {
-    @apply px-2 py-1 text-xs rounded-full bg-secondary text-white;
+    @apply text-sm text-gray-600 dark:text-gray-300;
   }
 </style>

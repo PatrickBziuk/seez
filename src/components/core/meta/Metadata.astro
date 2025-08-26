@@ -14,8 +14,9 @@ import type { Props as AstroSeoProps } from '@astrolib/seo';
 import { getSiteInfo, getMetadataConfig, getI18nConfig } from '~/config/seez.config';
 import type { MetaData } from '~/types';
 import { getCanonical } from '~/utils/permalinks';
-
 import { adaptOpenGraphImages } from '~/utils/images';
+// T36-010: Add canonical ID support for SEO consolidation
+import { getCanonicalUrl, getHreflangData } from '~/utils/canonical-urls';
 
 const siteInfo = getSiteInfo();
 const metadataConfig = getMetadataConfig();
@@ -24,6 +25,8 @@ const i18nConfig = getI18nConfig();
 export interface Props extends MetaData {
   dontUseTitleTemplate?: boolean;
   alternateLanguages?: Array<{ href: string; hreflang: string }>;
+  // T36-010: Add canonical ID support for SEO consolidation
+  canonicalId?: string;
 }
 
 const {
@@ -35,18 +38,40 @@ const {
   openGraph = {},
   twitter = {},
   alternateLanguages = [],
+  // T36-010: Add canonical ID support for SEO consolidation
+  canonicalId,
 } = Astro.props;
+
+// T36-010: Handle canonical ID if provided
+let finalCanonical = canonical;
+let hreflangLinks: Array<{ href: string; hreflang: string }> = alternateLanguages;
+
+if (canonicalId) {
+  try {
+    const canonicalUrl = getCanonicalUrl(canonicalId);
+    if (canonicalUrl) {
+      finalCanonical = canonicalUrl;
+    }
+    
+    const hreflangData = getHreflangData(canonicalId);
+    if (hreflangData && hreflangData.length > 0) {
+      hreflangLinks = hreflangData; // Already in correct format
+    }
+  } catch (error) {
+    console.warn('T36-010: Error processing canonical ID:', canonicalId, error);
+  }
+}
 
 const seoProps: AstroSeoProps = merge(
   {
     title: '',
     titleTemplate: '%s',
-    canonical: canonical,
+    canonical: finalCanonical,
     noindex: true,
     nofollow: true,
     description: undefined,
     openGraph: {
-      url: canonical,
+      url: finalCanonical,
       site_name: siteInfo.name,
       images: [],
       locale: i18nConfig.defaultLanguage || 'en',
@@ -68,11 +93,11 @@ const seoProps: AstroSeoProps = merge(
   {
     title: title,
     titleTemplate: ignoreTitleTemplate ? '%s' : undefined,
-    canonical: canonical,
+    canonical: finalCanonical,
     noindex: typeof robots?.index !== 'undefined' ? !robots.index : undefined,
     nofollow: typeof robots?.follow !== 'undefined' ? !robots.follow : undefined,
     description: description,
-    openGraph: { url: canonical, ...openGraph },
+    openGraph: { url: finalCanonical, ...openGraph },
     twitter: twitter,
   }
 );
@@ -80,6 +105,6 @@ const seoProps: AstroSeoProps = merge(
 
 <AstroSeo {...{ ...seoProps, openGraph: await adaptOpenGraphImages(seoProps?.openGraph, Astro.site) }} />
 
-<!-- Hreflang alternate language tags for SEO -->
-{alternateLanguages.map(({ href, hreflang }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
-{alternateLanguages.length > 0 && <link rel="alternate" hreflang="x-default" href={canonical} />}
+<!-- T36-010: Hreflang alternate language tags for SEO (with canonical ID support) -->
+{hreflangLinks.map(({ href, hreflang }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
+{hreflangLinks.length > 0 && <link rel="alternate" hreflang="x-default" href={finalCanonical} />}

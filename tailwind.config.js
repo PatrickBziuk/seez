@@ -4,34 +4,28 @@ import typographyPlugin from '@tailwindcss/typography';
 
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,json,md,mdx,svelte,ts,tsx,vue}'],
-  // Enable CSS purging in production
-  purge: {
-    enabled: process.env.NODE_ENV === 'production',
-    content: ['./src/**/*.{astro,html,js,jsx,ts,tsx,vue,svelte}'],
-    // Safelist essential classes that might be dynamically generated
-    safelist: [
-      'dark',
-      'hidden',
-      'md:flex',
-      'md:hidden',
-      'active',
-      'current',
-      'aw-link-active',
-      // Animation classes
-      'fade',
-      'animate-fade',
-      // Mobile navigation classes
-      'mobile-nav',
-      'expanded',
-      // Language switcher classes
-      'language-switcher',
-      'language-dropdown',
-      // Social share classes
-      'social-links',
-      // Theme toggle classes
-      'theme-toggle',
-    ],
-  },
+  safelist: [
+    'dark',
+    'hidden',
+    'md:flex',
+    'md:hidden',
+    'active',
+    'current',
+    'aw-link-active',
+    // Animation classes
+    'fade',
+    'animate-fade',
+    // Mobile navigation classes
+    'mobile-nav',
+    'expanded',
+    // Language switcher classes
+    'language-switcher',
+    'language-dropdown',
+    // Social share classes
+    'social-links',
+    // Theme toggle classes
+    'theme-toggle',
+  ],
   theme: {
     extend: {
       colors: {

@@ -9,7 +9,7 @@
 import Badge from '../../ui/display/Badge.astro';
 import { Icon } from 'astro-icon/components';
 import { getTranslations, detectLanguage } from '~/utils/i18n';
-import { getCollection } from 'astro:content';
+import { getEntries } from 'astro:content';
 import { getReadingTime, getWordCount } from '~/utils/reading-stats';
 
 const { 
@@ -33,15 +33,52 @@ const {
 const currentLanguage = detectLanguage(Astro.url.pathname);
 const translations = await getTranslations(currentLanguage);
 
-// Get author data
-const allAuthors = await getCollection('authors');
-const authorData = authors?.map((authorId: string) => 
-  allAuthors.find(author => author.data.id === authorId)?.data
-).filter(Boolean) || [];
+// Types for better type safety
+interface AIUsageData {
+  total_tokens: number;
+  total_usd: number;
+  total_co2_g: number;
+  operations: string[];
+  models_used: string[];
+}
 
-const translatorData = translators?.map((translatorId: string) => 
-  allAuthors.find(author => author.data.id === translatorId)?.data
-).filter(Boolean) || [];
+interface AuthorEntry {
+  data: {
+    id: string;
+    name: string;
+    displayName: string;
+    status?: { authoring: string };
+    [key: string]: unknown;
+  };
+}
+
+// Resolve author references using new system (Pass 1 enhancement)
+let authorData: AuthorEntry['data'][] = [];
+if (authors && authors.length > 0) {
+  try {
+    const authorEntries = await getEntries(authors) as AuthorEntry[];
+    authorData = authorEntries.map((author: AuthorEntry) => author.data).filter(Boolean);
+  } catch (error) {
+    console.warn('Could not resolve authors:', error);
+    authorData = [];
+  }
+}
+
+// Legacy translator support (can be deprecated in future)
+const translatorData = translators || [];
+
+// Load AI usage data for this content (Pass 2 enhancement)
+let aiUsageData: AIUsageData | null = null;
+if (entry?.data?.canonicalId) {
+  try {
+    const aiByCanonical = await import('~/generated/ai-by-canonical.json');
+    const canonicalId = entry.data.canonicalId as string;
+    const data = aiByCanonical.default as Record<string, AIUsageData>;
+    aiUsageData = data[canonicalId] || null;
+  } catch (error) {
+    console.warn('Could not load AI usage data:', error);
+  }
+}
 
 const statusLabels: Record<'Human' | 'AI' | 'AI+Human', string> = {
   Human: translations?.badges?.human || 'Human',
@@ -124,7 +161,7 @@ interface AuthorData {
           <span class="text-base">👤</span>
           <span class="text-slate-600 dark:text-slate-300">{translations?.metadata?.authors || 'Authors'}:</span>
           <div class="flex items-center gap-1">
-            {authorData.map((author: AuthorData, index: number) => (
+            {authorData.map((author, index: number) => (
               <span class="flex items-center gap-1">
                 <a 
                   href={`/${currentLanguage}/authors/${author.id}`}
@@ -209,8 +246,25 @@ interface AuthorData {
         </div>
       )}
       
-      <!-- AI Token Usage (Compact) -->
-      {ai_metadata?.tokenUsage?.total && (
+      <!-- AI Token Usage from Ledger (Pass 2 Enhancement) -->
+      {aiUsageData && (
+        <div class="flex items-center gap-1.5">
+          <span class="text-base">🧠</span>
+          <span class="text-xs">
+            AI: {aiUsageData.total_tokens} tokens – 
+            ${aiUsageData.total_usd.toFixed(aiUsageData.total_usd < 0.01 ? 4 : 2)} – 
+            {aiUsageData.total_co2_g < 1 
+              ? `${Math.round(aiUsageData.total_co2_g * 1000)}mg` 
+              : `${aiUsageData.total_co2_g.toFixed(1)}g`} CO₂
+            {aiUsageData.operations.length > 1 && (
+              <span class="text-slate-500">({aiUsageData.operations.join(', ')})</span>
+            )}
+          </span>
+        </div>
+      )}
+      
+      <!-- Legacy AI Token Usage (for compatibility) -->
+      {!aiUsageData && ai_metadata?.tokenUsage?.total && (
         <div class="flex items-center gap-1.5">
           <span class="text-base">🧠</span>
           <span class="text-xs">

@@ -38,25 +38,31 @@ export const getFooterData = (locale: SupportedLanguage = 'en') => ({
       title: 'Socials',
       links: [
         {
-          text: 'GitHub',
+          text: locale === 'de' ? '@seez - Spotify' : '@seez - Spotify',
+          href: 'https://open.spotify.com/intl-de/artist/2i9qFi0ArJgbyYbRqqcOgq?si=dsY0gbxgTHKEEHGehupkww',
+          icon: 'tabler:brand-spotify',
+          ariaLabel: 'Spotify',
+        },
+        {
+          text: '@PatrickBziuk - GitHub',
           href: 'https://github.com/PatrickBziuk/seez',
           icon: 'tabler:brand-github',
           ariaLabel: 'GitHub',
         },
         {
-          text: locale === 'de' ? 'Art, Musik & Schreibt' : 'Art, Music & Writing',
+          text: locale === 'de' ? 'Art, Musik & Schreibt' : '@seezerino - Art, Music & Writing',
           href: 'https://www.instagram.com/seezerino/',
           icon: 'tabler:brand-instagram',
           ariaLabel: locale === 'de' ? 'Art, Musik & Schreibt (Instagram)' : 'Art, Music & Writing (Instagram)',
         },
         {
-          text: locale === 'de' ? 'Art, Musik & Schreibt' : 'Art, Music & Writing',
+          text: locale === 'de' ? 'Art, Musik & Schreibt' : '@seezerino - Art, Music & Writing',
           href: 'https://www.tiktok.com/@seezerino',
           icon: 'tabler:brand-tiktok',
           ariaLabel: locale === 'de' ? 'Art, Musik & Schreibt (TikTok)' : 'Art, Music & Writing (TikTok)',
         },
         {
-          text: locale === 'de' ? 'Dein Anker' : 'Your safe harbor',
+          text: locale === 'de' ? 'Dein Anker' : '@deinanker - Your safe harbor',
           href: 'https://www.instagram.com/deinanker/',
           icon: 'tabler:brand-instagram',
           ariaLabel: locale === 'de' ? 'Dein Anker (Instagram)' : 'Your safe harbor (Instagram)',

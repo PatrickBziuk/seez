@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../layouts/PageLayout.astro';
 import ContentCard from '../../../components/content/cards/ContentCard.astro';
+import ComingSoon from '../../../components/ComingSoon.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { SUPPORTED_LANGUAGES, getTranslations } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
@@ -41,12 +42,6 @@ const metadata = {
       {filteredBooks.map((item) => <ContentCard item={item} lang={lang} basePath="books" />)}
     </div>
 
-    {
-      filteredBooks.length === 0 && (
-        <div class="text-center py-12">
-          <p class="text-muted dark:text-slate-400">No content available in this language yet.</p>
-        </div>
-      )
-    }
+  {filteredBooks.length === 0 && <ComingSoon language={lang} section={t.navigation.Books} />}
   </section>
 </Layout>

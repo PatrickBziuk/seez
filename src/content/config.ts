@@ -1,65 +1,73 @@
-import { z, defineCollection } from 'astro:content';
+import { z, defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-const sharedSchema = z.object({
+// New simplified base schema according to Plan 10035
+const base = z.object({
   title: z.string(),
+  subtitle: z.string().optional(),
+  language: z.enum(['en','de']).default('en'),
+  authors: z.array(reference('authors')).min(1),
+  tags: z.array(z.string()).default([]),
+
+  // Single source of truth for publication state
+  publicationStatus: z.enum(['draft','published','archived']).default('draft'),
+  draft: z.boolean().optional(), // legacy compatibility
+
+  // Dates
+  firstPublishedAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
+
+  // Identity & i18n 
+  canonicalId: z.string().min(8).optional(), // Optional everywhere, auto-generated if missing
+  translationKey: z.string().optional(),
+
+  // Minimal AI metadata (optional)
+  ai_metadata: z.object({
+    translation: z.object({
+      model: z.string().optional(),
+      at: z.string().datetime(),
+      sourceLanguage: z.enum(['en','de']),
+      targetLanguage: z.enum(['en','de']),
+      tokens: z.number().optional(),
+      cost: z.number().optional(),
+      co2: z.number().optional(),
+    }).optional(),
+  }).optional(),
+
+  // Legacy fields for backward compatibility during migration
   description: z.string().optional(),
   slug: z.string().optional(),
-
-  // Enhanced publication metadata
-  publishDate: z
-    .string()
-    .transform((s) => new Date(s))
-    .optional(),
-  firstPublishDate: z
-    .string()
-    .transform((s) => new Date(s))
-    .optional(), // Never changes after first publication
-  lastChangeDate: z
-    .string()
-    .transform((s) => new Date(s))
-    .optional(), // Updated on content changes
-  modifiedDate: z
-    .string()
-    .transform((s) => new Date(s))
-    .optional(), // Git-based modification date
-
-  // Publication status and workflow
-  publicationStatus: z.enum(['draft', 'published', 'archived']).default('draft'),
+  publishDate: z.string().optional(), // Keep as string to avoid transformation issues
+  firstPublishDate: z.string().optional(), // Keep as string to avoid transformation issues
+  lastChangeDate: z.string().optional(), // Keep as string to avoid transformation issues
+  modifiedDate: z.string().optional(), // Keep as string to avoid transformation issues
   changeLog: z
     .array(
       z.object({
-        date: z.string(), // ISO 8601 timestamp
+        date: z.string(),
         description: z.string(),
-        author: z.string().optional(), // GitHub username
+        author: z.string().optional(),
         type: z.enum(['content', 'metadata', 'structure', 'translation']).default('content'),
-        automated: z.boolean().default(false), // Whether change was automated
+        automated: z.boolean().default(false),
       })
     )
     .optional(),
-
-  tags: z.array(z.string()).default([]),
-  language: z.enum(['en', 'de']).default('en'),
   status: z
     .object({
       authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
       translation: z.enum(['Human', 'AI', 'AI+Human']).optional(),
       review: z
         .object({
-          content: z.boolean().default(false), // Human review of content quality
-          translation: z.boolean().default(false), // Human review of translation quality
-          reviewer: z.string().nullable().optional(), // GitHub username of reviewer
-          reviewDate: z.string().nullable().optional(), // ISO 8601 timestamp
-          notes: z.string().optional(), // Review notes
+          content: z.boolean().default(false),
+          translation: z.boolean().default(false),
+          reviewer: z.string().nullable().optional(),
+          reviewDate: z.string().nullable().optional(),
+          notes: z.string().optional(),
         })
         .optional(),
     })
     .optional(),
-  // Author system
-  authors: z.array(z.string()).optional(), // Array of author IDs
-  translators: z.array(z.string()).optional(), // Array of translator IDs
-
-  // Sources and references
+  translators: z.array(z.string()).optional(),
   sources: z
     .array(
       z.object({
@@ -72,132 +80,14 @@ const sharedSchema = z.object({
       })
     )
     .optional(),
-});
 
-// Legacy fields for backward compatibility
-const extendedSchema = sharedSchema.extend({
-  subtitle: z.string().optional(),
+  // Additional legacy fields for compatibility
   date: z.date().optional(),
-  draft: z.boolean().optional().default(false),
-  timestamp: z.string().optional(), // ISO 8601
-  translationKey: z.string().optional(), // Unique identifier for pairing across languages
-  original: z.string().optional(), // Reference to source file for translations
-
-  // Canonical ID system for content integrity
-  canonicalId: z.string().optional(), // Format: slug-YYYYMMDD-hash8
-  originalLanguage: z.enum(['en', 'de']).optional(), // Language of original content
-  translationOf: z.string().optional(), // Canonical ID of source content
-  sourceLanguage: z.enum(['en', 'de']).optional(), // Language this was translated from
-
-  translationHistory: z
-    .array(
-      z.object({
-        language: z.string(),
-        translator: z.string(),
-        model: z.string().optional(),
-        sourceSha: z.string(),
-        timestamp: z.string(),
-        status: z.enum(['ai-translated', 'human-reviewed', 'ai+human']),
-        reviewer: z.string().optional(), // GitHub username if human touched it
-      })
-    )
-    .optional(),
-  // AI generated summary and quality metrics
-  ai_tldr: z.string().optional(),
-  ai_textscore: z
-    .object({
-      translationQuality: z.number().optional(),
-      originalClarity: z.number().optional(),
-      timestamp: z.string(),
-      notes: z.array(z.string()).optional(),
-    })
-    .optional(),
-  // AI metadata with token usage tracking
-  ai_metadata: z
-    .object({
-      canonicalId: z.string().optional(),
-      translationOf: z.string().optional(),
-      tokenUsage: z
-        .object({
-          translation: z
-            .object({
-              // New schema format
-              tokens: z.number().optional(),
-              cost: z.number().optional(),
-              co2: z.number().optional(),
-              // Legacy schema format - more detailed
-              operation: z.string().optional(),
-              canonicalId: z.string().optional(),
-              model: z.string().optional(),
-              inputTokens: z.number().optional(),
-              outputTokens: z.number().optional(),
-              totalTokens: z.number().optional(),
-              co2Impact: z.number().optional(),
-              timestamp: z.string().optional(),
-              sourceLanguage: z.string().optional(),
-              targetLanguage: z.string().optional(),
-            })
-            .optional(),
-          tldr: z
-            .object({
-              tokens: z.number().optional(),
-              cost: z.number().optional(),
-              co2: z.number().optional(),
-            })
-            .optional(),
-          total: z
-            .object({
-              tokens: z.number().optional(),
-              cost: z.number().optional(),
-              co2: z.number().optional(),
-            })
-            .optional(),
-        })
-        .optional(),
-    })
-    .optional(),
-});
-
-// Schema for blog posts (existing structure)
-const postSchema = z.object({
-  title: z.string(),
-  excerpt: z.string().optional(),
-  image: z.string().optional(),
-  category: z.string().optional(),
-  tags: z.array(z.string()),
-  publishDate: z.date(),
-  draft: z.boolean().optional().default(false),
-  // Extended metadata for multilingual support
-  language: z.enum(['en', 'de']).default('en'),
   timestamp: z.string().optional(),
-  status: z
-    .object({
-      authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
-      translation: z.enum(['Human', 'AI', 'AI+Human']).optional(),
-      review: z
-        .object({
-          content: z.boolean().default(false),
-          translation: z.boolean().default(false),
-          reviewer: z.string().optional(),
-          reviewDate: z.string().optional(),
-          notes: z.string().optional(),
-        })
-        .optional(),
-    })
-    .optional(),
-  // Author system
-  authors: z.array(z.string()).optional(),
-  translators: z.array(z.string()).optional(),
-  // Translation pipeline support
-  translationKey: z.string().optional(),
   original: z.string().optional(),
-
-  // Canonical ID system for content integrity
-  canonicalId: z.string().optional(),
   originalLanguage: z.enum(['en', 'de']).optional(),
   translationOf: z.string().optional(),
   sourceLanguage: z.enum(['en', 'de']).optional(),
-
   translationHistory: z
     .array(
       z.object({
@@ -220,119 +110,216 @@ const postSchema = z.object({
       notes: z.array(z.string()).optional(),
     })
     .optional(),
-  // AI metadata with token usage tracking
-  ai_metadata: z
+  tokenUsage: z
     .object({
-      canonicalId: z.string().optional(),
-      translationOf: z.string().optional(),
-      tokenUsage: z
+      translation: z
         .object({
-          translation: z
-            .object({
-              // New schema format
-              tokens: z.number().optional(),
-              cost: z.number().optional(),
-              co2: z.number().optional(),
-              // Legacy schema format - more detailed
-              operation: z.string().optional(),
-              canonicalId: z.string().optional(),
-              model: z.string().optional(),
-              inputTokens: z.number().optional(),
-              outputTokens: z.number().optional(),
-              totalTokens: z.number().optional(),
-              co2Impact: z.number().optional(),
-              timestamp: z.string().optional(),
-              sourceLanguage: z.string().optional(),
-              targetLanguage: z.string().optional(),
-            })
-            .optional(),
-          tldr: z
-            .object({
-              tokens: z.number().optional(),
-              cost: z.number().optional(),
-              co2: z.number().optional(),
-            })
-            .optional(),
-          total: z
-            .object({
-              tokens: z.number().optional(),
-              cost: z.number().optional(),
-              co2: z.number().optional(),
-            })
-            .optional(),
+          tokens: z.number().optional(),
+          cost: z.number().optional(),
+          co2: z.number().optional(),
+          operation: z.string().optional(),
+          canonicalId: z.string().optional(),
+          model: z.string().optional(),
+          inputTokens: z.number().optional(),
+          outputTokens: z.number().optional(),
+          totalTokens: z.number().optional(),
+          co2Impact: z.number().optional(),
+          timestamp: z.string().optional(),
+          sourceLanguage: z.string().optional(),
+          targetLanguage: z.string().optional(),
+        })
+        .optional(),
+      tldr: z
+        .object({
+          tokens: z.number().optional(),
+          cost: z.number().optional(),
+          co2: z.number().optional(),
+        })
+        .optional(),
+      total: z
+        .object({
+          tokens: z.number().optional(),
+          cost: z.number().optional(),
+          co2: z.number().optional(),
         })
         .optional(),
     })
     .optional(),
 });
 
-// Authors collection schema
-const authorSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  displayName: z.string(),
-  bio: z.string(),
-  avatar: z.string().optional(),
-  website: z.string().optional(),
-  social: z
-    .object({
-      github: z.string().optional(),
-      twitter: z.string().optional(),
-      linkedin: z.string().optional(),
-      mastodon: z.string().optional(),
-    })
-    .optional(),
-  language: z.enum(['en', 'de']).default('en'),
-  status: z.object({
-    authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
+// Authors collection schema (updated for Plan 10035)
+const authors = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/authors' }),
+  schema: z.object({
+    name: z.string(),
+    handle: z.string().optional(),
+    url: z.string().url().optional(),
+    avatar: z.string().optional(),
+    bio: z.string().optional(),
+    model: z.string().optional(), // for AI authors
+    capabilities: z.array(z.string()).optional(), // for AI authors
+    
+    // Legacy fields for compatibility
+    id: z.string().optional(),
+    displayName: z.string().optional(),
+    website: z.string().optional(),
+    social: z
+      .object({
+        github: z.string().optional(),
+        twitter: z.string().optional(),
+        linkedin: z.string().optional(),
+        mastodon: z.string().optional(),
+      })
+      .optional(),
+    language: z.enum(['en', 'de']).default('en'),
+    status: z.object({
+      authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
+    }).optional(),
+    firstPublishDate: z.string().optional(),
+    publishDate: z.string().optional(),
   }),
-  // AI-specific fields
-  model: z.string().optional(),
-  capabilities: z.array(z.string()).optional(),
 });
 
-// Uncomment collections as directories get populated
+// Content collections using the new base schema
 const books = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/books' }),
-  schema: extendedSchema,
+  schema: base,
 });
 
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
-  schema: extendedSchema,
+  schema: base,
 });
 
 const lab = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/lab' }),
-  schema: extendedSchema,
+  schema: base,
 });
 
 const life = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/life' }),
-  schema: extendedSchema,
+  schema: base,
 });
 
-const post = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/data/post' }),
-  schema: postSchema,
+const music = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/music' }),
+  schema: base,
 });
 
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
-  schema: extendedSchema,
+  schema: base,
 });
 
-const authors = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/authors' }),
-  schema: authorSchema,
+// Legacy blog post schema (keeping for compatibility)
+const post = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/data/post' }),
+  schema: z.object({
+    title: z.string(),
+    excerpt: z.string().optional(),
+    image: z.string().optional(),
+    category: z.string().optional(),
+    tags: z.array(z.string()),
+    publishDate: z.date(),
+    draft: z.boolean().optional().default(false),
+    language: z.enum(['en', 'de']).default('en'),
+    timestamp: z.string().optional(),
+    status: z
+      .object({
+        authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
+        translation: z.enum(['Human', 'AI', 'AI+Human']).optional(),
+        review: z
+          .object({
+            content: z.boolean().default(false),
+            translation: z.boolean().default(false),
+            reviewer: z.string().optional(),
+            reviewDate: z.string().optional(),
+            notes: z.string().optional(),
+          })
+          .optional(),
+      })
+      .optional(),
+    authors: z.array(z.string()).optional(),
+    translators: z.array(z.string()).optional(),
+    translationKey: z.string().optional(),
+    original: z.string().optional(),
+    canonicalId: z.string().optional(),
+    originalLanguage: z.enum(['en', 'de']).optional(),
+    translationOf: z.string().optional(),
+    sourceLanguage: z.enum(['en', 'de']).optional(),
+    translationHistory: z
+      .array(
+        z.object({
+          language: z.string(),
+          translator: z.string(),
+          model: z.string().optional(),
+          sourceSha: z.string(),
+          timestamp: z.string(),
+          status: z.enum(['ai-translated', 'human-reviewed', 'ai+human']),
+          reviewer: z.string().optional(),
+        })
+      )
+      .optional(),
+    ai_tldr: z.string().optional(),
+    ai_textscore: z
+      .object({
+        translationQuality: z.number().optional(),
+        originalClarity: z.number().optional(),
+        timestamp: z.string(),
+        notes: z.array(z.string()).optional(),
+      })
+      .optional(),
+    ai_metadata: z
+      .object({
+        canonicalId: z.string().optional(),
+        translationOf: z.string().optional(),
+        tokenUsage: z
+          .object({
+            translation: z
+              .object({
+                tokens: z.number().optional(),
+                cost: z.number().optional(),
+                co2: z.number().optional(),
+                operation: z.string().optional(),
+                canonicalId: z.string().optional(),
+                model: z.string().optional(),
+                inputTokens: z.number().optional(),
+                outputTokens: z.number().optional(),
+                totalTokens: z.number().optional(),
+                co2Impact: z.number().optional(),
+                timestamp: z.string().optional(),
+                sourceLanguage: z.string().optional(),
+                targetLanguage: z.string().optional(),
+              })
+              .optional(),
+            tldr: z
+              .object({
+                tokens: z.number().optional(),
+                cost: z.number().optional(),
+                co2: z.number().optional(),
+              })
+              .optional(),
+            total: z
+              .object({
+                tokens: z.number().optional(),
+                cost: z.number().optional(),
+                co2: z.number().optional(),
+              })
+              .optional(),
+          })
+          .optional(),
+      })
+      .optional(),
+  }),
 });
 
 export const collections = {
+  authors,
   books,
   projects,
   lab,
   life,
+  music,
   post,
   pages,
-  authors,
 };

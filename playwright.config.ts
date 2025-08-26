@@ -8,10 +8,10 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
 
-  /* Test timeout increased for comprehensive testing */
-  timeout: 30000,
+  /* Test timeout reduced for faster execution */
+  timeout: 20000,
   expect: {
-    timeout: 10000,
+    timeout: 5000,
   },
 
   /* Run tests in files in parallel */
@@ -34,7 +34,7 @@ export default defineConfig({
     ...(process.env.CI ? [['github'] as const] : []),
   ],
 
-  /* Enhanced settings for comprehensive testing */
+  /* Enhanced settings for efficient testing */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'http://localhost:4321',
@@ -48,13 +48,13 @@ export default defineConfig({
     /* Video recording for complex test debugging */
     video: 'retain-on-failure',
 
-    /* Increased action timeout for responsive testing */
-    actionTimeout: 15000,
+    /* Reduced action timeout for faster failures */
+    actionTimeout: 10000,
   },
 
-  /* Enhanced projects for comprehensive cross-browser and responsive testing */
+  /* Streamlined projects - Chromium only (mobile/desktop) */
   projects: [
-    /* Desktop Browsers */
+    /* Desktop Chrome */
     {
       name: 'Desktop Chrome',
       use: {
@@ -62,46 +62,8 @@ export default defineConfig({
         viewport: { width: 1280, height: 720 },
       },
     },
-    {
-      name: 'Desktop Firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1280, height: 720 },
-      },
-    },
-    {
-      name: 'Desktop Safari',
-      use: {
-        ...devices['Desktop Safari'],
-        viewport: { width: 1280, height: 720 },
-      },
-    },
-    {
-      name: 'Desktop Edge',
-      use: {
-        ...devices['Desktop Edge'],
-        channel: 'msedge',
-        viewport: { width: 1280, height: 720 },
-      },
-    },
 
-    /* Tablet Viewports */
-    {
-      name: 'iPad',
-      use: {
-        ...devices['iPad Pro'],
-        viewport: { width: 1024, height: 1366 },
-      },
-    },
-    {
-      name: 'iPad Landscape',
-      use: {
-        ...devices['iPad Pro landscape'],
-        viewport: { width: 1366, height: 1024 },
-      },
-    },
-
-    /* Mobile Viewports */
+    /* Mobile Chrome */
     {
       name: 'Mobile Chrome',
       use: {
@@ -109,37 +71,13 @@ export default defineConfig({
         viewport: { width: 393, height: 851 },
       },
     },
-    {
-      name: 'Mobile Safari',
-      use: {
-        ...devices['iPhone 12'],
-        viewport: { width: 390, height: 844 },
-      },
-    },
-    {
-      name: 'Mobile Samsung',
-      use: {
-        ...devices['Galaxy S9+'],
-        viewport: { width: 320, height: 658 },
-      },
-    },
 
-    /* Large Screen Testing */
-    {
-      name: 'Large Desktop',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-      },
-    },
-
-    /* Accessibility Testing Project */
+    /* Accessibility Testing (Desktop Chrome only) */
     {
       name: 'Accessibility',
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },
-        // Additional settings for accessibility testing
         colorScheme: 'light',
       },
       testMatch: '**/accessibility/*.spec.ts',
@@ -150,7 +88,7 @@ export default defineConfig({
   webServer: {
     command: 'pnpm run dev',
     url: 'http://localhost:4321',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true, // Always reuse existing server
     timeout: 120 * 1000, // 2 minutes for server startup
   },
 

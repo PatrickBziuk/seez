@@ -1,0 +1,84 @@
+---
+/**
+ * Canonical ID-based URL routes - Phase 3.1 Implementation
+ * URL Format: /:lang/:collection/:slug-:canonicalId
+ * 
+ * Examples:
+ * - /en/projects/seez-website-01j9xyz123
+ * - /de/lab/ai-experiment-01j8abc456
+ * 
+ * This provides:
+ * - SEO-friendly URLs with readable slugs
+ * - Unique identification via canonical IDs
+ * - Language-specific routing
+ * - Collection-based organization
+ */
+
+import { getCollection, render } from 'astro:content';
+import MarkdownLayout from '../../../layouts/MarkdownLayout.astro';
+
+export async function getStaticPaths() {
+  const collections = ['books', 'projects', 'lab', 'life', 'music']; // Only content collections, not authors
+  const allEntries = [];
+
+  // Collect all entries from content collections only
+  for (const collection of collections) {
+    try {
+      const entries = await getCollection(collection as 'books' | 'projects' | 'lab' | 'life' | 'music');
+      for (const entry of entries) {
+        // Skip drafts
+        if (entry.data.draft === true || entry.data.publicationStatus === 'draft') continue;
+        
+        // Extract clean slug from entry ID (remove language prefix and extension)
+        const cleanSlug = entry.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+        
+        // Ensure we have a canonical ID
+        if (!entry.data.canonicalId) {
+          console.warn(`Missing canonical ID for ${entry.id}`);
+          continue;
+        }
+
+        allEntries.push({
+          params: {
+            lang: entry.data.language,
+            collection: entry.collection,
+            slugId: `${cleanSlug}-${entry.data.canonicalId}`,
+          },
+          props: { 
+            entry,
+            collection: entry.collection,
+            cleanSlug,
+          },
+        });
+      }
+    } catch (error) {
+      console.warn(`Collection ${collection} not found or empty:`, error);
+    }
+  }
+
+  return allEntries;
+}
+
+const { entry, collection, cleanSlug } = Astro.props;
+const { Content } = await render(entry);
+
+// Convert string dates to Date objects for MarkdownLayout compatibility
+const frontmatterWithDateObjects = {
+  ...entry.data,
+  publishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
+  firstPublishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
+  modifiedDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+  lastChangeDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+};
+
+// Entry data for MarkdownLayout
+const entryData = {
+  collection: collection,
+  slug: cleanSlug,
+  id: entry.id,
+};
+---
+
+<MarkdownLayout frontmatter={frontmatterWithDateObjects} entry={entryData}>
+  <Content />
+</MarkdownLayout>

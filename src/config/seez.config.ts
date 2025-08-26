@@ -205,6 +205,7 @@ export const SEEZ_CONFIG: SeezConfig = {
       { name: 'projects', label: { en: 'Projects', de: 'Projekte' }, icon: 'tabler:code', enabled: true },
       { name: 'lab', label: { en: 'Lab', de: 'Labor' }, icon: 'tabler:flask', enabled: true },
       { name: 'life', label: { en: 'Life', de: 'Leben' }, icon: 'tabler:heart', enabled: true },
+      { name: 'music', label: { en: 'Music', de: 'Musik' }, icon: 'tabler:music', enabled: true },
     ],
     pagination: {
       defaultPageSize: 12,

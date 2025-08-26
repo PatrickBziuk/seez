@@ -1,0 +1,62 @@
+---
+/**
+ * Canonical ID Router - Redirects canonical IDs to human-readable URLs
+ * @props canonicalId - The canonical identifier to resolve
+ * @behavior Looks up canonical ID in registry and redirects to proper URL
+ * @dependencies canonical-urls.ts, content collections
+ * @usedBy Direct canonical ID links, content management systems
+ */
+
+import { getCollection } from 'astro:content';
+import { SUPPORTED_LANGUAGES } from '~/utils/i18n';
+import type { SupportedLanguage } from '~/utils/i18n';
+
+export async function getStaticPaths() {
+  const paths: Array<{
+    params: { lang: SupportedLanguage; collection: string; canonicalId: string };
+    props: { redirectUrl: string };
+  }> = [];
+
+  // Only generate canonical ID routes in production
+  if (import.meta.env.DEV) {
+    return [];
+  }
+
+  const collections = ['life', 'projects'] as const;
+  
+  for (const collection of collections) {
+    try {
+      const allItems = await getCollection(collection);
+      
+      for (const item of allItems) {
+        if (item.data.canonicalId) {
+          for (const lang of SUPPORTED_LANGUAGES) {
+            // Generate redirect to human-readable URL
+            const humanUrl = `/${lang}/${collection}/${item.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`;
+            
+            paths.push({
+              params: {
+                lang,
+                collection,
+                canonicalId: item.data.canonicalId,
+              },
+              props: {
+                redirectUrl: humanUrl,
+              },
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.warn(`Failed to process ${collection} collection for canonical routes:`, error);
+    }
+  }
+
+  return paths;
+}
+
+const { redirectUrl } = Astro.props;
+
+// Permanent redirect to human-readable URL
+return Astro.redirect(redirectUrl, 301);
+---

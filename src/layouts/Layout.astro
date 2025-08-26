@@ -10,6 +10,7 @@
 import '~/assets/styles/tailwind.css';
 
 import { getI18nConfig } from '~/config/seez.config';
+import { buildAlternates, shouldHaveAlternates } from '~/utils/seo/alternates';
 
 import CommonMeta from '~/components/core/meta/CommonMeta.astro';
 import Favicons from '~/components/core/meta/Favicons.astro';
@@ -34,22 +35,20 @@ export interface Props {
 }
 
 const { metadata = {} } = Astro.props;
-const { defaultLanguage: language, supportedLanguages } = i18nConfig;
+const { defaultLanguage, supportedLanguages } = i18nConfig;
+// Fix T36-001: Use actual page language from route params with fallback
+const currentLang = Astro.params.lang ?? defaultLanguage;
 const textDirection = 'ltr'; // Seez supports LTR languages
 
-// Compute alternateLanguages for hreflang SEO
+// Fix T36-002: Normalize route assumptions for alternates
 const availableLanguages = supportedLanguages;
-const pathname = String(Astro.url.pathname);
-const slugMatch = pathname.match(/(?:en|de)\/(.*)/);
-const slug = slugMatch ? slugMatch[1] : pathname.replace(/^\//, '');
-const alternateLanguages = availableLanguages.map((lang) => ({
-  hreflang: lang,
-  href: `/${lang}/${slug}`,
-}));
+const alternateLanguages = shouldHaveAlternates(Astro.url.pathname) 
+  ? buildAlternates(Astro, availableLanguages)
+  : [];
 ---
 
 <!doctype html>
-<html lang={language} dir={textDirection} class="2xl:text-[20px]">
+<html lang={currentLang} dir={textDirection} class="2xl:text-[20px]">
   <head>
     <CommonMeta />
     <Favicons />
