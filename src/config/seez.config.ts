@@ -115,6 +115,15 @@ export interface SeezConfig {
     enableDebug: boolean;
     showBuildInfo: boolean;
   };
+
+  // RSS Feed Settings
+  rss: {
+    enabled: boolean;
+    limit: number; // max items per feed
+    perLocale: boolean;
+    perCollection: boolean;
+    collections: Array<'books' | 'projects' | 'lab' | 'life' | 'music'>; // included collections
+  };
 }
 
 /**
@@ -223,6 +232,14 @@ export const SEEZ_CONFIG: SeezConfig = {
     enableDebug: false,
     showBuildInfo: true,
   },
+
+  rss: {
+    enabled: true,
+    limit: 50,
+    perLocale: true,
+    perCollection: true,
+    collections: ['books', 'projects', 'lab', 'life', 'music'],
+  },
 };
 
 /**
@@ -255,6 +272,7 @@ export const getMetadataConfig = () => ({
 export const getNavigationConfig = () => SEEZ_CONFIG.navigation;
 
 export const getContentConfig = () => SEEZ_CONFIG.content;
+export const getRssConfig = () => SEEZ_CONFIG.rss;
 
 /**
  * Generate page title using the configured template

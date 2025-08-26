@@ -11,7 +11,7 @@ import { AstroSeo } from '@astrolib/seo';
 
 import type { Props as AstroSeoProps } from '@astrolib/seo';
 
-import { getSiteInfo, getMetadataConfig, getI18nConfig } from '~/config/seez.config';
+import { getSiteInfo, getMetadataConfig, getI18nConfig, getNavigationConfig } from '~/config/seez.config';
 import type { MetaData } from '~/types';
 import { getCanonical } from '~/utils/permalinks';
 import { adaptOpenGraphImages } from '~/utils/images';
@@ -21,6 +21,7 @@ import { getCanonicalUrl, getHreflangData } from '~/utils/canonical-urls';
 const siteInfo = getSiteInfo();
 const metadataConfig = getMetadataConfig();
 const i18nConfig = getI18nConfig();
+const navigationConfig = getNavigationConfig();
 
 export interface Props extends MetaData {
   dontUseTitleTemplate?: boolean;
@@ -108,3 +109,8 @@ const seoProps: AstroSeoProps = merge(
 <!-- T36-010: Hreflang alternate language tags for SEO (with canonical ID support) -->
 {hreflangLinks.map(({ href, hreflang }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
 {hreflangLinks.length > 0 && <link rel="alternate" hreflang="x-default" href={finalCanonical} />}
+
+{/* Optional RSS feed link for autodiscovery */}
+{navigationConfig.header.showRssFeed && (
+  <link rel="alternate" type="application/rss+xml" title={`${siteInfo.name} RSS`} href="/rss.xml" />
+)}

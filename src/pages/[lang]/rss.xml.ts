@@ -1,9 +1,11 @@
 import { getRssString } from '@astrojs/rss';
 import { buildRssItems, getRssChannelMeta } from '~/utils/rss';
+import type { SupportedLanguage } from '~/utils/i18n';
 
-export const GET = async () => {
-  const { items, lastBuildDate } = await buildRssItems();
-  const meta = getRssChannelMeta();
+export const GET = async ({ params }: { params: { lang: SupportedLanguage } }) => {
+  const lang = params.lang;
+  const { items, lastBuildDate } = await buildRssItems({ language: lang });
+  const meta = getRssChannelMeta({ language: lang });
 
   const rss = await getRssString({
     title: meta.title,
