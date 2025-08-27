@@ -41,7 +41,7 @@
     "validate:schema:dry": "npx tsx scripts/ci/content-schema-validator.ts --dry-run",
     "validate:schema:fix": "npx tsx scripts/ci/content-schema-validator.ts --verbose",
     "test:e2e": "playwright test tests/e2e/",
-    "test:e2e:navigation": "playwright test tests/e2e/navigation.spec.ts",
+    "test:e2e:navigation": "playwright test tests/navigation.spec.ts",
     "test:e2e:content": "playwright test tests/e2e/content-loading.spec.ts",
     "test:e2e:search": "playwright test tests/e2e/search.spec.ts",
     "test:e2e:language": "playwright test tests/e2e/language-switching.spec.ts",
