@@ -1,6 +1,7 @@
 ---
 title: Tech Stack
 language: en
+description: "An overview of the technology stack used to build this website, including Astro, TypeScript, Tailwind CSS, and modern JAMstack deployment practices."
 authors:
   - authors/seez
 tags:

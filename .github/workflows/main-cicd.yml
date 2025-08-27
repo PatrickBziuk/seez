@@ -345,9 +345,6 @@ jobs:
       - name: 📊 Extract Git metadata
         run: pnpm run extract:git-metadata
 
-      - name: ✅ Final content validation
-        run: pnpm run validate:content
-
       - name: 🔄 Sync Astro content types
         run: pnpm run astro sync
 

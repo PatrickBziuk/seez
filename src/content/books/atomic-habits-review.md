@@ -1,6 +1,7 @@
 ---
 title: "Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones"
 language: en
+description: "A comprehensive review of James Clear's bestselling book on building good habits and breaking bad ones through small, incremental changes."
 authors:
   - seez
 tags:

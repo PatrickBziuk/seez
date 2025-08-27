@@ -1,6 +1,7 @@
 ---
 title: "The Pragmatic Programmer: Your Journey to Mastery (20th Anniversary Edition)"
 language: en
+description: "An in-depth review of the classic programming book by Andy Hunt and Dave Thomas, exploring timeless principles for software craftsmanship and developer growth."
 authors:
   - seez
 tags:

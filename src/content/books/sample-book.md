@@ -1,6 +1,7 @@
 ---
 title: Sample Book (Placeholder)
 language: en
+description: A placeholder book entry used during development to prevent build warnings and test content structure.
 authors:
   - seez
 publicationStatus: draft

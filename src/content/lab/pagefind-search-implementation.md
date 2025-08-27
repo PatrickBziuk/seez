@@ -1,6 +1,7 @@
 ---
 title: "Building a Static Search Index with Pagefind"
 language: en
+description: "A comprehensive guide to implementing fast, client-side search for static sites using Pagefind, including integration with Astro and performance optimization techniques."
 authors:
   - seez
 tags:
