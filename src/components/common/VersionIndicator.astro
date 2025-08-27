@@ -28,7 +28,7 @@ try {
   versionInfo = JSON.parse(versionData);
 } catch (error) {
   // File doesn't exist yet or other error, use fallback
-  console.warn('Could not load version info, using fallbacks:', error.message);
+  console.warn('Could not load version info, using fallbacks:', error instanceof Error ? error.message : String(error));
 }
 
 // Fallback values
