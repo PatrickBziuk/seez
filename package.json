@@ -11,6 +11,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "pnpm run generate:version && astro build",
+    "generate:version": "npx tsx scripts/utils/generate-version.ts",
     "postbuild": "pagefind --site dist/",
     "preview": "astro preview",
     "preview:search": "pnpm run build && pnpm run preview",

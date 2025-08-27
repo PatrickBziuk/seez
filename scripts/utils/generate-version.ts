@@ -60,6 +60,4 @@ function generateVersion(): VersionInfo {
 export { generateVersion, type VersionInfo };
 
 // Run if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  generateVersion();
-}
+generateVersion();

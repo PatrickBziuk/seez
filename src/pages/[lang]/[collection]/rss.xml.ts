@@ -4,6 +4,17 @@ import type { SupportedLanguage } from '~/utils/i18n';
 
 type CollectionName = 'books' | 'projects' | 'lab' | 'life' | 'music';
 
+export async function getStaticPaths() {
+  const languages: SupportedLanguage[] = ['en', 'de'];
+  const collections: CollectionName[] = ['books', 'projects', 'lab', 'life', 'music'];
+  
+  return languages.flatMap(lang => 
+    collections.map(collection => ({
+      params: { lang, collection }
+    }))
+  );
+}
+
 export const GET = async ({ params }: { params: { lang: SupportedLanguage; collection: CollectionName } }) => {
   const lang = params.lang;
   const collection = params.collection;
