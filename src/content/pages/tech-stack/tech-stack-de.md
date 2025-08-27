@@ -15,7 +15,6 @@ publicationStatus: published
 draft: false
 canonicalId: 01k2jadmvq8mn9ckpav7jsd6g
 firstPublishedAt: '2025-01-12T19:59:08.408Z'
-description: Die Technologien, Frameworks und Prinzipien hinter dieser Website und meinen Projekten.
 publishDate: '2025-01-12T19:59:08.408Z'
 ---
 
