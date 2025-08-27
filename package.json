@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "pnpm run generate:version && astro build",
     "postbuild": "pagefind --site dist/",
     "preview": "astro preview",
     "preview:search": "pnpm run build && pnpm run preview",
