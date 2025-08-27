@@ -26,3 +26,17 @@ src/components/core/performance/PerformanceMonitor.astro
 # MDX files with complex frontmatter/template literals
 src/content/projects/de/meine-musik-root.mdx
 src/content/projects/en/meine-musik-root.mdx
+
+# Additional documentation and content files with embedded code/yaml blocks that break Prettier parsing
+docs/archive_plans/plan-10030-advanced-implementation-summary.md
+docs/archive_plans/plan-10035-frontmatter-refactor-three-passes.md
+docs/ci-cd-pipeline-optimization-summary.md
+docs/guides/cicd-pipeline-guide.md
+docs/guides/environment-dependent-content-system.md
+docs/guides/rss-feeds-guide.md
+docs/plan-10041-header-navigation-bug-analysis.md
+docs/reference/rss.md
+src/content/lab/pagefind-search-implementation.md
+src/content/music/de/meine-musik.mdx
+src/content/music/en/my-music.mdx
+TESTING_RESULTS.md

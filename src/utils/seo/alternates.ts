@@ -22,11 +22,11 @@ export function buildAlternates(
   // Extract pathname without language prefix
   const pathname = astroAPI.url.pathname;
   const stripped = pathname.replace(/^\/(en|de)\//, '');
-  
+
   // Build alternates for all supported languages
-  return supportedLanguages.map(lang => ({
+  return supportedLanguages.map((lang) => ({
     hreflang: lang,
-    href: new URL(`/${lang}/${stripped}`, astroAPI.site || 'https://seez.eu').toString()
+    href: new URL(`/${lang}/${stripped}`, astroAPI.site || 'https://seez.eu').toString(),
   }));
 }
 
@@ -37,14 +37,7 @@ export function buildAlternates(
  * @returns Whether the page should have alternates
  */
 export function shouldHaveAlternates(pathname: string): boolean {
-  const excludePatterns = [
-    '/admin',
-    '/api',
-    '/404',
-    '/500',
-    '/robots.txt',
-    '/sitemap',
-  ];
-  
-  return !excludePatterns.some(pattern => pathname.startsWith(pattern));
+  const excludePatterns = ['/admin', '/api', '/404', '/500', '/robots.txt', '/sitemap'];
+
+  return !excludePatterns.some((pattern) => pathname.startsWith(pattern));
 }

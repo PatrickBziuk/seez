@@ -7,10 +7,10 @@ type CollectionName = 'books' | 'projects' | 'lab' | 'life' | 'music';
 export async function getStaticPaths() {
   const languages: SupportedLanguage[] = ['en', 'de'];
   const collections: CollectionName[] = ['books', 'projects', 'lab', 'life', 'music'];
-  
-  return languages.flatMap(lang => 
-    collections.map(collection => ({
-      params: { lang, collection }
+
+  return languages.flatMap((lang) =>
+    collections.map((collection) => ({
+      params: { lang, collection },
     }))
   );
 }

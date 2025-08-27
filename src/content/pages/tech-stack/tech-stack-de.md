@@ -1,7 +1,7 @@
 ---
 title: Tech Stack
 language: de
-description: "Eine Übersicht über den Technologie-Stack dieser Website, einschließlich Astro, TypeScript, Tailwind CSS und moderne JAMstack-Deployment-Praktiken."
+description: 'Eine Übersicht über den Technologie-Stack dieser Website, einschließlich Astro, TypeScript, Tailwind CSS und moderne JAMstack-Deployment-Praktiken.'
 authors:
   - authors/seez-de
 tags:

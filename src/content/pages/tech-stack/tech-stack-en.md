@@ -1,7 +1,7 @@
 ---
 title: Tech Stack
 language: en
-description: "An overview of the technology stack used to build this website, including Astro, TypeScript, Tailwind CSS, and modern JAMstack deployment practices."
+description: 'An overview of the technology stack used to build this website, including Astro, TypeScript, Tailwind CSS, and modern JAMstack deployment practices.'
 authors:
   - authors/seez
 tags:
@@ -169,7 +169,7 @@ This stack grows with my knowledge:
 If you're inspired by this approach and want to build something similar, here are the key decisions that made the biggest difference:
 
 1. **Start with Astro** if you need a content-heavy site with optional interactivity
-2. **Use Tailwind** if you want to move fast without CSS maintenance burden  
+2. **Use Tailwind** if you want to move fast without CSS maintenance burden
 3. **Choose static hosting** for performance, simplicity, and sovereignty
 4. **Plan for multilingual** from day one if you need it later
 5. **Implement search** with Pagefind for privacy-respecting site search

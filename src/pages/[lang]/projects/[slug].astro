@@ -47,6 +47,9 @@ const frontmatterWithDateObjects = {
 };
 ---
 
-<MarkdownLayout frontmatter={frontmatterWithDateObjects} entry={{ collection: 'projects', slug: cleanSlug, id: entry.id }}>
+<MarkdownLayout
+  frontmatter={frontmatterWithDateObjects}
+  entry={{ collection: 'projects', slug: cleanSlug, id: entry.id }}
+>
   <Content />
 </MarkdownLayout>

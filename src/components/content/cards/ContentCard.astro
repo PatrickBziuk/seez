@@ -26,10 +26,14 @@ const getCleanSlug = (id: string) => {
 };
 
 // Generate new canonical URL format: slug-canonicalId
-const generateItemUrl = (item: CollectionEntry<'books' | 'projects' | 'lab' | 'life' | 'music'>, lang: string, basePath: string) => {
+const generateItemUrl = (
+  item: CollectionEntry<'books' | 'projects' | 'lab' | 'life' | 'music'>,
+  lang: string,
+  basePath: string
+) => {
   const cleanSlug = getCleanSlug(item.id);
   const canonicalId = item.data.canonicalId;
-  
+
   if (canonicalId) {
     // New canonical URL format
     return `/${lang}/${basePath}/${cleanSlug}-${canonicalId}`;

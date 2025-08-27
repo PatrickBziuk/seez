@@ -8,6 +8,7 @@
  */
 import Layout from '../../layouts/PageLayout.astro';
 import { SUPPORTED_LANGUAGES, getTranslations } from '../../utils/i18n';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import type { SupportedLanguage } from '../../utils/i18n';
 
 export const getStaticPaths = () => {
@@ -28,55 +29,122 @@ const metadata = {
   ignoreTitleTemplate: true,
 };
 
-// Navigation sections with translations
+// Fetch a few latest items per section
+const [books, projects, lab, life] = await Promise.all([
+  getCollection('books'),
+  getCollection('projects'),
+  getCollection('lab'),
+  getCollection('life'),
+]);
+
+type Coll = 'books' | 'projects' | 'lab' | 'life';
+type Entry = CollectionEntry<Coll>;
+type EntryData = {
+  title: string;
+  description?: string;
+  firstPublishedAt?: string;
+  publishDate?: string;
+  date?: Date | string;
+  language?: 'en' | 'de';
+  draft?: boolean;
+  publicationStatus?: 'draft' | 'published' | 'archived';
+};
+
+function normalize(list: Entry[]) {
+  return list
+    .filter((e) => {
+      const d = e.data as unknown as EntryData;
+      return d.language === lang && !d.draft && d.publicationStatus !== 'draft';
+    })
+    .map((e) => {
+      const idNoExt = e.id.replace(/\.(md|mdx)$/i, '');
+      const cleanSlug = idNoExt.replace(/^[a-z]{2}\//, '');
+      const data = e.data as unknown as EntryData;
+      const d = data.firstPublishedAt || data.publishDate || data.date;
+      const date: Date = d instanceof Date ? d : d ? new Date(String(d)) : new Date(0);
+      return {
+        title: (data.title || '').toString(),
+        description: data.description,
+        url: `/${lang}/${e.collection}/${cleanSlug}`,
+        date,
+      };
+    })
+    .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .slice(0, 3);
+}
+
 const sections = [
+  { key: 'books', href: `/${lang}/books`, icon: '📚', title: t.navigation?.Books || 'Books', items: normalize(books) },
   {
-    href: `/${lang}/books`,
-    icon: '📚',
-    title: t.navigation?.Books || 'Books',
-    description: lang === 'de' ? 'Lektüre, Notizen und Buchrezensionen' : 'Reading, notes, and book reviews',
-  },
-  {
+    key: 'projects',
     href: `/${lang}/projects`,
     icon: '🛠️',
     title: t.navigation?.Projects || 'Projects',
-    description: lang === 'de' ? 'Persönliche und Open-Source-Projekte' : 'Personal and open source projects',
+    items: normalize(projects),
   },
-  {
-    href: `/${lang}/lab`,
-    icon: '🧪',
-    title: t.navigation?.Lab || 'Lab',
-    description: lang === 'de' ? 'Experimente, Code und Ideen' : 'Experiments, code, and ideas',
-  },
-  {
-    href: `/${lang}/life`,
-    icon: '🌱',
-    title: t.navigation?.Life || 'Life',
-    description: lang === 'de' ? 'Persönliche Notizen, Reflexionen und mehr' : 'Personal notes, reflections, and more',
-  },
+  { key: 'lab', href: `/${lang}/lab`, icon: '🧪', title: t.navigation?.Lab || 'Lab', items: normalize(lab) },
+  { key: 'life', href: `/${lang}/life`, icon: '🌱', title: t.navigation?.Life || 'Life', items: normalize(life) },
 ];
 ---
 
 <Layout metadata={metadata}>
-  <main class="min-h-screen flex flex-col items-center justify-center py-16">
-    <h1 class="text-4xl font-bold mb-10 text-center dark:text-white">
-      {lang === 'de' ? 'Willkommen bei seez.eu' : 'Welcome to seez.eu'}
-    </h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-5xl">
-      {
-        sections.map((section) => (
-          <a
-            href={section.href}
-            class="flex flex-col items-center p-8 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition shadow group"
-          >
-            <span class="text-5xl mb-4">{section.icon}</span>
-            <span class="text-xl font-semibold mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400">
-              {section.title}
-            </span>
-            <span class="text-gray-500 dark:text-gray-400 text-center">{section.description}</span>
-          </a>
-        ))
-      }
-    </div>
+  <main>
+    <section class="py-16 text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight dark:text-white">
+        {lang === 'de' ? 'Digitale Souveränität & Entwicklung' : 'Digital Sovereignty & Development'}
+      </h1>
+      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+        {
+          lang === 'de'
+            ? 'Projekte, Experimente und Gedanken – minimalistisch, schnell, unabhängig.'
+            : 'Projects, experiments and thoughts – minimalist, fast, independent.'
+        }
+      </p>
+      <div class="mt-6 flex items-center justify-center gap-3">
+        <a href={`/${lang}/projects`} class="px-5 py-2.5 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+          >{t.navigation?.Projects || 'Projects'}</a
+        >
+        <a
+          href={`/${lang}/about`}
+          class="px-5 py-2.5 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+          >{t.navigation?.About || (lang === 'de' ? 'Über' : 'About')}</a
+        >
+      </div>
+    </section>
+
+    <section class="px-6 sm:px-6 pb-16 max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        {
+          sections.map((s) => (
+            <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-5 bg-white dark:bg-gray-900">
+              <a href={s.href} class="inline-flex items-center gap-2 text-lg font-semibold">
+                <span class="text-2xl">{s.icon}</span>
+                {s.title}
+              </a>
+              <ul class="mt-4 space-y-3">
+                {s.items.map((it) => (
+                  <li>
+                    <a href={it.url} class="block group">
+                      <div class="text-sm text-gray-500 dark:text-gray-400">
+                        {new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(it.date)}
+                      </div>
+                      <div class="font-medium group-hover:text-blue-600 dark:group-hover:text-blue-400">{it.title}</div>
+                      {it.description && (
+                        <div class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{it.description}</div>
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <div class="mt-4">
+                <a href={s.href} class="text-sm underline underline-offset-2 hover:no-underline">
+                  {lang === 'de' ? 'Mehr' : 'More'}
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
   </main>
 </Layout>

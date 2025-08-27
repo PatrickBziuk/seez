@@ -1,7 +1,7 @@
 ---
 title: Sample Lab Experiment (Placeholder)
 language: en
-description: "A placeholder lab experiment entry used during development to test the lab collection structure and prevent build warnings."
+description: 'A placeholder lab experiment entry used during development to test the lab collection structure and prevent build warnings.'
 authors:
   - seez
 publicationStatus: draft

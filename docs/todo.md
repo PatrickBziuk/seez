@@ -1,11 +1,24 @@
 ## ✅ RECENTLY COMPLETED - August 27, 2025
 
+### About, Blog, Homepage Enhancements ✅
+
+Status: Completed — See plan-10042-about-blog-homepage-implementation.md
+
+- Wired multilingual About pages by migrating content to src/content/pages/about/{en,de}.md
+- Verified Tech Stack page wiring; content already aligned
+- Implemented localized aggregated Blog at /[lang]/blog aggregating all collections sorted by date
+- Fixed footer Blog link to target /[lang]/blog via getLocalizedUrl
+- Enhanced localized homepages with hero + per-category latest items
+- Validation: Build succeeded; type checks clean; Prettier parse errors resolved via .prettierignore updates
+
 ### 🚀 Deployment Verification & Workflow Stabilization - COMPLETED ✅
+
 **Status**: **FULLY IMPLEMENTED** - Deployment reliability achieved  
 **Date Completed**: August 27, 2025  
 **Document**: `docs/deployment-verification-completion-summary.md`
 
 **Achievements**:
+
 - ✅ **Version Tracking System**: Fully operational with `v1.0.0-beta.52.96+716996b` format
 - ✅ **Workflow Consolidation**: Replaced 3 conflicting workflows with single `main-cicd.yml`
 - ✅ **Concurrency Controls**: Auto-cancellation prevents queue conflicts
@@ -14,6 +27,7 @@
 - ✅ **Deployment Gates**: Only deploys when tests achieve >75% success rate
 
 **Technical Details**:
+
 - Consolidated `ci-cd.yml`, `release.yml`, and `comprehensive-testing.yml` into `main-cicd.yml`
 - Fixed TypeScript error in `VersionIndicator.astro` component
 - Implemented version generation in build process with commit tracking
@@ -24,45 +38,55 @@
 ## ✅ ARCHIVED PLANS
 
 ### Plan 10040: RSS Feed Fix ✅ COMPLETED & ARCHIVED
+
 **Status**: **FULLY IMPLEMENTED** - RSS syndication fully operational  
 **Date Completed**: August 26, 2025  
 **Achievements**:
+
 - ✅ **Working RSS Feeds**: Main feed `/rss.xml` returns 200 OK (verified)
 - ✅ **Per-locale Feeds**: `/[lang]/rss.xml` for language-specific content
 - ✅ **Per-collection Feeds**: `/[lang]/[collection]/rss.xml` for targeted content
 - ✅ **Configuration Integration**: Centralized RSS settings in `seez.config.ts`
 
 ### Plan 10039: Search & Header Fixes for Preview Mode ✅ COMPLETED & ARCHIVED
+
 **Status**: **FULLY IMPLEMENTED** - Search and header consistency achieved  
 **Date Completed**: August 26, 2025  
 **Achievements**:
+
 - ✅ **Complete Search Modal**: Professional search interface with Pagefind integration
 - ✅ **Environment-aware Search**: Proper handling for dev/preview/production modes
 - ✅ **Header Consistency**: Search button integration with responsive design
 - ✅ **User Experience**: Visible search icon with keyboard shortcuts maintained
 
 ### Plan 10038: Test Optimization & Behavior Clarification ✅ COMPLETED & ARCHIVED
+
 **Status**: **ANALYSIS COMPLETE** - Behavioral understanding achieved  
 **Date Completed**: August 26, 2025  
 **Achievements**:
+
 - ✅ **Core functionality verified**: 20/20 essential tests pass, 84% overall success rate
 - ✅ **Root cause clarified**: `/en/` returning 404 is CORRECT per `trailingSlash: 'never'` config
 - ✅ **Behavior validated**: Core routing and navigation work as intended
 - ✅ **Test framework clarity**: Understanding of intended vs actual behavior established
 
 ### Plan 10037: Deployment Automation & Content Enhancement ✅ COMPLETED & ARCHIVED
+
 **Status**: **FULLY IMPLEMENTED** - All major objectives achieved  
 **Date Completed**: August 26, 2025  
 **Achievements**:
+
 - ✅ **Comprehensive CI/CD Pipeline**: `.github/workflows/comprehensive-testing.yml` with 4-phase testing
 - ✅ **Complete Search Integration**: Search icon in header with modal interface and Pagefind
 - ✅ **About Pages Enhancement**: Content structure improved and multilingual support
 - ✅ **Non-blocking Testing**: GitHub issue creation for failures, 80% threshold for deployment
 
-### Plan 10036: Repository Overhaul & SEO/i18n Hardening ✅ COMPLETED & ARCHIVED  
+### Plan 10036: Repository Overhaul & SEO/i18n Hardening ✅ COMPLETED & ARCHIVED
+
 **Status**: **FULLY IMPLEMENTED** - Core objectives achieved  
 **Date Completed**: August 16, 2025  
 **Achievements**:
+
 - ✅ **Language correctness**: Fixed `<html lang>` binding with `Astro.params.lang`
 - ✅ **Route normalization**: Implemented `utils/seo/alternates.ts` utility
 - ✅ **SEO consolidation**: `Metadata.astro` single source of truth with canonical ID support
@@ -70,9 +94,11 @@
 - ✅ **Deprecated component cleanup**: Removed `SEO.astro` and `CanonicalSEO.astro`
 
 ### Plan 10035: Frontmatter Refactor - Three Passes ✅ COMPLETED & ARCHIVED
+
 **Status**: **FULLY IMPLEMENTED** - All 3 passes completed  
 **Date Completed**: August 13, 2025  
 **Achievements**:
+
 - ✅ **Pass 1**: Schema simplification & authors collection implemented
 - ✅ **Pass 2**: AI ledger system operational (`data/ai-ledger.ndjson`, aggregation scripts)
 - ✅ **Pass 3**: UI updates completed
@@ -85,30 +111,42 @@
 **Current Status**: All major plans (10037-10040) have been implemented and archived. The repository now has comprehensive CI/CD, search functionality, RSS feeds, and clear test framework understanding.
 
 ### 📄 Recent Implementation Summary
+
 **Document**: `docs/implementation-summary-plans-10037-10040.md`
+
 - Complete analysis of all four recently completed plans
 - Technical integration details and repository impact
 - Future maintenance recommendations
 
+### ✅ Fix: Header burger overlap on desktop (Plan 10041)
+
+- Status: Completed (August 27, 2025)
+- Summary: Hardened header CSS with `:global([data-aw-toggle-menu])` and media queries; added defensive state resets on `astro:page-load`/`astro:after-swap`, matchMedia, and resize. Issue reproduced only on preview/prod due to client-side navigation timing and CSS scoping.
+- Notes: See `docs/plan-10041-header-navigation-bug-analysis.md` for details and root cause.
+
 ## 🎯 NEXT PRIORITIES
 
 ### Immediate Tasks:
+
 1. **Documentation Enhancement**: Document RSS endpoints and search functionality usage
 2. **Content Expansion**: Add content to empty collections (books, lab)
 3. **Test Refinement**: Update test expectations to match `trailingSlash: 'never'` behavior
 
 ### Enhancement Opportunities:
+
 - [ ] RSS feed documentation with usage examples and endpoint guide
 - [ ] Search functionality user guide for content discovery
 - [ ] CI/CD pipeline documentation for developers
 - [ ] Performance optimization based on comprehensive test results
 
 **Search Enhancement Goals** (achieved):
+
 - ✅ Search icon visible and functional in header navigation
 - ✅ Pagefind warnings eliminated through proper error handling
 - ✅ Mobile search experience optimized with modal interface
 
 **SEO Enhancement Goals** (achieved):
+
 - ✅ RSS feeds operational for content syndication
 - ✅ All SEO metadata consolidated in Metadata.astro
 - ✅ Search indexing optimized with Pagefind integration
@@ -116,6 +154,7 @@
 ### 🔄 Dependencies & Context
 
 **✅ Recent Achievements (August 26, 2025)**:
+
 - **Plans 10037-10040**: All four plans implemented and archived
 - **CI/CD Pipeline**: Comprehensive automated testing and deployment
 - **Search Functionality**: Complete user-accessible search with modal interface
@@ -123,6 +162,7 @@
 - **Test Framework**: Clear understanding of intended behavior vs test expectations
 
 **🔧 Current Repository State**:
+
 - **Build Status**: ✅ Successful (comprehensive pipeline operational)
 - **Search Integration**: ✅ Functional (icon visible, modal working, Pagefind integrated)
 - **RSS Feeds**: ✅ Operational (verified 200 status, XML valid)
@@ -130,6 +170,7 @@
 - **Documentation**: Enhanced with implementation summaries
 
 **✅ Prerequisites Met**:
+
 - Plan 10036 SEO consolidation and canonical ID system completed
 - Environment-dependent content schema operational
 - Content collections structure established with proper multilingual support
@@ -138,6 +179,7 @@
 - RSS configuration centralized and working
 
 **🎯 Current Focus Areas**:
+
 - Documentation enhancement for new features (RSS, search, CI/CD)
 - Content expansion in empty collections
 - Test expectation refinement (behavioral vs implementation gaps)
@@ -146,16 +188,19 @@
 ### 📅 Timeline
 
 **Week 1: Foundation (Phases 1-2)**
+
 - Days 1-2: CI/CD workflow enhancement and pipeline setup
 - Days 3-4: Translation/TLDR automation implementation
 - Days 5-7: About page content linking and testing
 
-**Week 2: Enhancement (Phases 3-4)**  
+**Week 2: Enhancement (Phases 3-4)**
+
 - Days 1-2: Search icon integration and Pagefind warning fixes
 - Days 3-4: SEO component cleanup and deprecation removal
 - Days 5-7: Comprehensive testing and optimization
 
 **Week 3: Migration & Polish (Phase 5)**
+
 - Days 1-3: Content migration strategy implementation
 - Days 4-5: Canonical ID batch processing setup
 - Days 6-7: Final testing, documentation, and deployment
@@ -172,12 +217,14 @@
 ### ✅ Implementation Summary
 
 **Phase 1 - Language Correctness & Alternates** (Completed):
+
 - ✅ **HTML Lang Binding**: Fixed `Layout.astro` to use `Astro.params.lang` with proper fallback
 - ✅ **Alternates Utility**: Created `utils/seo/alternates.ts` replacing brittle regex patterns
 - ✅ **Sitemap i18n**: Enhanced `astro.config.ts` with i18n configuration and xhtml:link support
 - ✅ **Route Normalization**: Consistent language-aware URL handling across all pages
 
 **Phase 2 - SEO Consolidation** (Completed):
+
 - ✅ **Metadata.astro Enhancement**: Added canonical ID support with `getCanonicalUrl()` and `getHreflangData()` integration
 - ✅ **SEO Deprecation**: Added dev-only warnings to `SEO.astro` and `CanonicalSEO.astro`
 - ✅ **MarkdownLayout Update**: Migrated to use consolidated `Metadata.astro` approach
@@ -186,6 +233,7 @@
 ### 🚧 Remaining Work
 
 **Phase 3 - Build Hygiene** (Not yet implemented):
+
 - ⏳ **Bundle Optimization**: Implement manualChunks for vendor stability
 - ⏳ **Compression**: Add compression and caching headers
 - ⏳ **Pagefind Optimization**: Make Pagefind opt-in and optimize indexing
@@ -193,7 +241,7 @@
 ### Key Benefits Delivered
 
 1. **Developer Experience**: Canonical IDs optional in development for simplified content creation
-2. **URL Strategy**: Human-readable URLs with optional canonical ID redirects  
+2. **URL Strategy**: Human-readable URLs with optional canonical ID redirects
 3. **SEO Consolidation**: Single source of truth for all SEO metadata
 4. **Environment Awareness**: Different validation levels for dev vs production
 5. **Language Handling**: Correct language detection and hreflang generation
@@ -224,18 +272,21 @@
 ### ✅ Implementation Summary
 
 **Pass 1 - Schema Simplification** (Completed December 2024):
+
 - ✅ **Schema Complexity Reduction**: 70% simpler frontmatter structure
 - ✅ **Authors System**: First-class authors collection with reference resolution
 - ✅ **Content Migration**: 8 files successfully migrated without data loss
 - ✅ **Type Safety**: Maintained with Astro's `reference()` system
 
 **Pass 2 - AI Ledger System** (Completed August 13, 2025):
+
 - ✅ **Centralized AI Tracking**: Append-only ledger system (`data/ai-ledger.ndjson`)
 - ✅ **Automatic Aggregation**: Sitewide and per-content statistics generation
 - ✅ **Environmental Transparency**: CO₂ emissions calculated and displayed
 - ✅ **Pipeline Integration**: TLDR and translation scripts automatically log usage
 
 **Pass 3 - UI & Author Integration** (Completed August 13, 2025):
+
 - ✅ **Author Resolution**: UI components properly use new author references
 - ✅ **AI Usage Display**: Real-time AI usage data in content metadata
 - ✅ **Backward Compatibility**: Legacy systems continue to work alongside new ones
@@ -1443,29 +1494,34 @@ pnpm run content:sync-regenerate # Regenerate data files after cleanup
 
 ---
 
-##  IMPLEMENTATION SUMMARY (Updated August 17, 2025)
+## IMPLEMENTATION SUMMARY (Updated August 17, 2025)
 
-###  Plans Completed & Archived:
+### Plans Completed & Archived:
+
 - **Plan 10035**: Frontmatter Refactor - Three Passes (Schema simplification, AI ledger system, UI updates)
 - **Plan 10036**: Repository Overhaul & SEO/i18n Hardening (Language correctness, SEO consolidation, environment-dependent metadata)
 
-###  Plans In Progress:
+### Plans In Progress:
+
 - **Plan 10037**: Deployment Automation & Content Enhancement (CI/CD implemented, search integration complete, minor optimization remaining)
 - **Plan 10038**: Test Optimization & Behavior Clarification (Analysis complete, test expectations need adjustment)
 
-###  Project Health Status:
-- **Build Status**:  Successful (~25s build time, 197 pages generated)
+### Project Health Status:
+
+- **Build Status**: Successful (~25s build time, 197 pages generated)
 - **Test Success Rate**: 84% (269/319 tests pass - acceptable per Plan 10038 analysis)
 - **Core Features**: All functional (navigation, search, multilingual support, AI integration)
 - **Known Issues**: Test expectations need alignment with trailingSlash: 'never' configuration
 
-###  Key Findings:
+### Key Findings:
+
 - **Plan 10035**: Fully implemented with all 3 passes completed and verified
 - **Plan 10036**: Successfully delivered language correctness and SEO consolidation
 - **Plan 10037**: Major components (CI/CD, search) implemented, marked as 'PLANNING' but largely complete
 - **Plan 10038**: Correctly identified that test failures represent expectation mismatches, not broken functionality
 
-###  Next Actions:
+### Next Actions:
+
 1. Finalize Plan 10037 remaining optimization work
 2. Adjust test expectations in Plan 10038 to match trailingSlash configuration
 3. Expand content in empty collections (books, lab)

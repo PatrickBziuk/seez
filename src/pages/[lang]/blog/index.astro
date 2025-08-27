@@ -1,0 +1,124 @@
+---
+/**
+ * Unified Blog – Aggregates entries from all content collections and sorts by date.
+ * Route: /[lang]/blog
+ */
+import Layout from '../../../layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+
+export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+const collections = ['books', 'projects', 'lab', 'life', 'music', 'pages'] as const;
+
+type Coll = (typeof collections)[number];
+type Entry = Awaited<ReturnType<typeof getCollection<Coll>>>[number];
+type EntryData = {
+  title?: string;
+  description?: string;
+  language?: 'en' | 'de';
+  tags?: string[];
+  draft?: boolean;
+  publicationStatus?: 'draft' | 'published' | 'archived';
+  firstPublishedAt?: string;
+  publishDate?: string;
+  date?: Date | string;
+};
+
+function toDate(entry: Entry): Date | null {
+  const data = entry.data as unknown as EntryData;
+  const d = data.firstPublishedAt || data.publishDate || data.date;
+  if (!d) return null;
+  try {
+    return d instanceof Date ? d : new Date(d as string);
+  } catch {
+    return null;
+  }
+}
+
+function toUrl(entry: Entry): string {
+  const data = entry.data as unknown as EntryData;
+  const lang = data.language || 'en';
+  const idNoExt = entry.id.replace(/\.(md|mdx)$/i, '');
+  const cleanSlug = idNoExt.replace(/^[a-z]{2}\//, '');
+  if (entry.collection === 'pages') {
+    if (cleanSlug.startsWith('about/')) return `/${lang}/about`;
+    if (cleanSlug.startsWith('tech-stack/')) return `/${lang}/tech-stack`;
+  }
+  return `/${lang}/${entry.collection}/${cleanSlug}`;
+}
+
+// Load, filter by language and publication state, then sort
+const items = (await Promise.all(collections.map((c) => getCollection(c))))
+  .flat()
+  .filter((e) => {
+    const data = e.data as unknown as EntryData;
+    return data.language === lang && !data.draft && data.publicationStatus !== 'draft';
+  })
+  .map((e) => {
+    const data = e.data as unknown as EntryData;
+    return {
+      title: (data.title || '').toString(),
+      description: data.description,
+      url: toUrl(e),
+      date: toDate(e),
+      collection: e.collection,
+      tags: data.tags,
+    };
+  })
+  .filter((it) => !!it.date)
+  .sort((a, b) => b.date!.getTime() - a.date!.getTime());
+
+const metadata = {
+  title: lang === 'de' ? 'Blog' : 'Blog',
+  description:
+    lang === 'de'
+      ? 'Alle Artikel aus allen Kategorien – nach Datum sortiert.'
+      : 'All articles from all categories – sorted by date.',
+  openGraph: { type: 'blog' },
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <header class="mb-8 sm:mb-10">
+      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter font-heading dark:text-gray-200">
+        {lang === 'de' ? 'Blog' : 'Blog'}
+      </h1>
+      <p class="mt-3 text-base text-gray-600 dark:text-gray-400">
+        {
+          lang === 'de'
+            ? 'Alle Artikel aus allen Kategorien – nach Datum sortiert.'
+            : 'All articles from all categories – sorted by date.'
+        }
+      </p>
+    </header>
+
+    {
+      items.length === 0 ? (
+        <div class="rounded-xl border border-dashed border-gray-300/60 p-6 text-gray-600 dark:border-gray-700 dark:text-gray-300">
+          {lang === 'de' ? 'Noch keine veröffentlichten Beiträge.' : 'No published entries yet.'}
+        </div>
+      ) : (
+        <ul class="space-y-6">
+          {items.map((it) => (
+            <li class="group">
+              <a href={it.url} class="block">
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                  {new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(it.date!)} · {it.collection}
+                </div>
+                <h2 class="mt-1 text-xl font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                  {it.title}
+                </h2>
+                {it.description && <p class="mt-1 text-gray-600 dark:text-gray-400 line-clamp-2">{it.description}</p>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</Layout>

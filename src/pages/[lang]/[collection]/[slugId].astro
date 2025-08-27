@@ -2,11 +2,11 @@
 /**
  * Canonical ID-based URL routes - Phase 3.1 Implementation
  * URL Format: /:lang/:collection/:slug-:canonicalId
- * 
+ *
  * Examples:
  * - /en/projects/seez-website-01j9xyz123
  * - /de/lab/ai-experiment-01j8abc456
- * 
+ *
  * This provides:
  * - SEO-friendly URLs with readable slugs
  * - Unique identification via canonical IDs
@@ -28,10 +28,10 @@ export async function getStaticPaths() {
       for (const entry of entries) {
         // Skip drafts
         if (entry.data.draft === true || entry.data.publicationStatus === 'draft') continue;
-        
+
         // Extract clean slug from entry ID (remove language prefix and extension)
         const cleanSlug = entry.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
-        
+
         // Ensure we have a canonical ID
         if (!entry.data.canonicalId) {
           console.warn(`Missing canonical ID for ${entry.id}`);
@@ -44,7 +44,7 @@ export async function getStaticPaths() {
             collection: entry.collection,
             slugId: `${cleanSlug}-${entry.data.canonicalId}`,
           },
-          props: { 
+          props: {
             entry,
             collection: entry.collection,
             cleanSlug,

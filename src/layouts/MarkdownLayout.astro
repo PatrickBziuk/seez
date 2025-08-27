@@ -160,16 +160,30 @@ const filePath = entry ? `src/content/${entry.collection}/${entry.id}` : '';
 const gitData = gitMetadata[filePath];
 
 // Combine frontmatter dates with git dates
-const publishDate = frontmatter.publishDate ? new Date(frontmatter.publishDate) : (gitData?.publishDate ? new Date(gitData.publishDate) : undefined);
-const modifiedDate = frontmatter.modifiedDate ? new Date(frontmatter.modifiedDate) : (gitData?.modifiedDate ? new Date(gitData.modifiedDate) : undefined);
+const publishDate = frontmatter.publishDate
+  ? new Date(frontmatter.publishDate)
+  : gitData?.publishDate
+    ? new Date(gitData.publishDate)
+    : undefined;
+const modifiedDate = frontmatter.modifiedDate
+  ? new Date(frontmatter.modifiedDate)
+  : gitData?.modifiedDate
+    ? new Date(gitData.modifiedDate)
+    : undefined;
 
 // Generate alternate language URLs using canonical ID format
 const alternateLocales = [];
 if (entry && frontmatter.canonicalId) {
   if (frontmatter.language === 'de') {
-    alternateLocales.push({ locale: 'en', url: `https://seez.eu/en/${entry.collection}/${entry.slug}-${frontmatter.canonicalId}` });
+    alternateLocales.push({
+      locale: 'en',
+      url: `https://seez.eu/en/${entry.collection}/${entry.slug}-${frontmatter.canonicalId}`,
+    });
   } else {
-    alternateLocales.push({ locale: 'de', url: `https://seez.eu/de/${entry.collection}/${entry.slug}-${frontmatter.canonicalId}` });
+    alternateLocales.push({
+      locale: 'de',
+      url: `https://seez.eu/de/${entry.collection}/${entry.slug}-${frontmatter.canonicalId}`,
+    });
   }
 }
 

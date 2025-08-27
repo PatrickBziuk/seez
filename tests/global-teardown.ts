@@ -15,6 +15,12 @@ async function globalTeardown(_config: FullConfig) {
     // Generate test summary
     console.log('📊 Generating test summary...');
 
+    // Ensure output directory exists
+    const outputDir = 'test-results';
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+
     const testMetadataPath = 'test-results/test-metadata.json';
     const resultsPath = 'test-results/results.json';
 

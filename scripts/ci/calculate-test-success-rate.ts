@@ -63,7 +63,7 @@ class TestSuccessRateCalculator {
       process.env.COMPONENT_SUCCESS,
       process.env.ACCESSIBILITY_SUCCESS,
       process.env.PERFORMANCE_SUCCESS,
-    ].some(value => value !== undefined);
+    ].some((value) => value !== undefined);
 
     // If no environment variables are set, assume basic tests passed for deployment
     if (!envVarsSet) {
@@ -73,7 +73,7 @@ class TestSuccessRateCalculator {
         { name: 'Basic Validation', success: true },
         { name: 'Deployment Ready', success: true },
       ];
-      
+
       return {
         phases,
         overallSuccessRate: 100,

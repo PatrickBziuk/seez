@@ -23,17 +23,17 @@ export async function getStaticPaths() {
   }
 
   const collections = ['life', 'projects'] as const;
-  
+
   for (const collection of collections) {
     try {
       const allItems = await getCollection(collection);
-      
+
       for (const item of allItems) {
         if (item.data.canonicalId) {
           for (const lang of SUPPORTED_LANGUAGES) {
             // Generate redirect to human-readable URL
             const humanUrl = `/${lang}/${collection}/${item.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`;
-            
+
             paths.push({
               params: {
                 lang,

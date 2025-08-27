@@ -27,17 +27,21 @@ export interface BuildRssOptions {
   collection?: CollectionName;
 }
 
-export async function buildRssItems({ language, collection }: BuildRssOptions = {}): Promise<{ items: FeedItem[]; lastBuildDate: Date }>
-{
+export async function buildRssItems({ language, collection }: BuildRssOptions = {}): Promise<{
+  items: FeedItem[];
+  lastBuildDate: Date;
+}> {
   const rssConfig = getRssConfig();
 
   const collections = (collection ? [collection] : rssConfig.collections) as CollectionName[];
   const allEntries: Entry[] = (
     await Promise.all(
       collections.map((c) =>
-        getCollection(c).then((arr) => arr as Entry[]).catch(() => {
-          return [] as Entry[];
-        })
+        getCollection(c)
+          .then((arr) => arr as Entry[])
+          .catch(() => {
+            return [] as Entry[];
+          })
       )
     )
   ).flat();

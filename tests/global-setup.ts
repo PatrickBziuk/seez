@@ -17,11 +17,23 @@ async function globalSetup(config: FullConfig) {
   const page = await browser.newPage();
 
   try {
-    // Verify server is running and responsive
+    // Verify server is running and responsive with retries
     console.log('🔍 Checking server health...');
-    const baseURL = config.projects[0].use.baseURL || 'http://localhost:4321';
+    const baseURL = config.projects[0].use.baseURL as string;
 
-    await page.goto(baseURL, { waitUntil: 'networkidle' });
+    const maxAttempts = 10;
+    let lastError: unknown = null;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        await page.goto(baseURL, { waitUntil: 'domcontentloaded', timeout: 5000 });
+        break; // success
+      } catch (err) {
+        lastError = err;
+        console.log(`⏳ Server not ready yet (attempt ${attempt}/${maxAttempts})...`);
+        await new Promise((r) => setTimeout(r, 1000));
+        if (attempt === maxAttempts) throw lastError;
+      }
+    }
 
     // Verify basic page structure is present
     const title = await page.title();

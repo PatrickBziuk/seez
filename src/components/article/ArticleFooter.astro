@@ -92,9 +92,11 @@ const currentYear = new Date().getFullYear();
         {language === 'de' ? 'Möchtest du etwas Ähnliches bauen?' : 'Want to build something similar?'}
       </h3>
       <p class="text-gray-600 dark:text-gray-400 mb-4">
-        {language === 'de' 
-          ? 'Entdecke die Technologien, Frameworks und Prinzipien hinter diesem Projekt.'
-          : 'Discover the technologies, frameworks, and principles behind this project.'}
+        {
+          language === 'de'
+            ? 'Entdecke die Technologien, Frameworks und Prinzipien hinter diesem Projekt.'
+            : 'Discover the technologies, frameworks, and principles behind this project.'
+        }
       </p>
       <a
         href={language === 'de' ? '/de/tech-stack' : '/en/tech-stack'}

@@ -3,10 +3,7 @@ import { buildRssItems, getRssChannelMeta } from '~/utils/rss';
 import type { SupportedLanguage } from '~/utils/i18n';
 
 export async function getStaticPaths() {
-  return [
-    { params: { lang: 'en' } },
-    { params: { lang: 'de' } },
-  ];
+  return [{ params: { lang: 'en' } }, { params: { lang: 'de' } }];
 }
 
 export const GET = async ({ params }: { params: { lang: SupportedLanguage } }) => {

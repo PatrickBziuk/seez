@@ -21,14 +21,14 @@ export function ensureCanonicalId(frontmatter: { canonicalId?: string; title?: s
   if (frontmatter.canonicalId) {
     return frontmatter.canonicalId;
   }
-  
+
   // In development, auto-generate if missing
   if (import.meta.env.DEV) {
     const devId = generateDevCanonicalId();
     console.log(`🔧 Auto-generated canonical ID for "${frontmatter.title}": ${devId}`);
     return devId;
   }
-  
+
   // In production, this should not happen due to schema validation
   throw new Error(`Missing canonical ID for content: ${frontmatter.title}`);
 }

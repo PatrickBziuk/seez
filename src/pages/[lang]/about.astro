@@ -98,14 +98,16 @@ if (pageEntry?.body) {
     </div>
 
     <!-- Related Projects Section -->
-    {relatedProjects.length > 0 && (
-      <div class="mt-12">
-        <RelatedProjects 
-          projects={relatedProjects} 
-          title={lang === 'de' ? 'Erwähnte Projekte' : 'Mentioned Projects'}
-        />
-      </div>
-    )}
+    {
+      relatedProjects.length > 0 && (
+        <div class="mt-12">
+          <RelatedProjects
+            projects={relatedProjects}
+            title={lang === 'de' ? 'Erwähnte Projekte' : 'Mentioned Projects'}
+          />
+        </div>
+      )
+    }
 
     <div class="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
       <div class="text-sm text-gray-500 dark:text-gray-400">

@@ -42,6 +42,6 @@ const metadata = {
       {filteredLife.map((item) => <ContentCard item={item} lang={lang} basePath="life" />)}
     </div>
 
-  {filteredLife.length === 0 && <ComingSoon language={lang} section={t.navigation.Life} />}
+    {filteredLife.length === 0 && <ComingSoon language={lang} section={t.navigation.Life} />}
   </section>
 </Layout>

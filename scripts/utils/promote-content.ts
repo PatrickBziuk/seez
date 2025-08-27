@@ -36,16 +36,14 @@ interface ContentFile {
  * Discover all content files
  */
 async function discoverContentFiles(): Promise<string[]> {
-  const patterns = SUPPORTED_COLLECTIONS.map(collection => 
-    `${CONTENT_BASE_PATH}/${collection}/**/*.{md,mdx}`
-  );
-  
+  const patterns = SUPPORTED_COLLECTIONS.map((collection) => `${CONTENT_BASE_PATH}/${collection}/**/*.{md,mdx}`);
+
   const allFiles: string[] = [];
   for (const pattern of patterns) {
     const files = await glob(pattern);
     allFiles.push(...files);
   }
-  
+
   return allFiles;
 }
 
@@ -86,19 +84,19 @@ function promoteToPublished(filePath: string): void {
   try {
     const raw = fs.readFileSync(filePath, 'utf-8');
     const parsed = matter(raw);
-    
+
     // Update frontmatter
     parsed.data.publicationStatus = 'published';
     parsed.data.draft = false;
-    
+
     // Set first publication date if not already set
     if (!parsed.data.firstPublishedAt) {
       parsed.data.firstPublishedAt = new Date().toISOString();
     }
-    
+
     // Update publication date
     parsed.data.publishDate = new Date().toISOString();
-    
+
     // If it's a translation, mark it as reviewed
     if (parsed.data.translationOf || parsed.data.sourceLanguage) {
       parsed.data.status = {
@@ -112,11 +110,11 @@ function promoteToPublished(filePath: string): void {
         },
       };
     }
-    
+
     // Write back to file
     const newContent = matter.stringify(parsed.content, parsed.data);
     fs.writeFileSync(filePath, newContent, 'utf-8');
-    
+
     console.log(`✅ Promoted: ${path.basename(filePath)}`);
   } catch (error) {
     console.error(`❌ Error promoting ${filePath}:`, error);
@@ -129,20 +127,16 @@ function promoteToPublished(filePath: string): void {
 async function main() {
   const args = process.argv.slice(2);
   const FORCE_ALL = args.includes('--all');
-  const TARGET_FILE = args.find(arg => arg.startsWith('--file='))?.split('=')[1];
+  const TARGET_FILE = args.find((arg) => arg.startsWith('--file='))?.split('=')[1];
 
   console.log('📝 Content Promotion Tool');
   console.log('🔍 Scanning for draft content...\n');
 
   const contentFiles = await discoverContentFiles();
-  const parsedFiles = contentFiles
-    .map(parseContentFile)
-    .filter((file): file is ContentFile => file !== null);
+  const parsedFiles = contentFiles.map(parseContentFile).filter((file): file is ContentFile => file !== null);
 
   // Filter to draft content only
-  const draftFiles = parsedFiles.filter(file => 
-    file.publicationStatus === 'draft' || file.draft === true
-  );
+  const draftFiles = parsedFiles.filter((file) => file.publicationStatus === 'draft' || file.draft === true);
 
   if (draftFiles.length === 0) {
     console.log('🎉 No draft content found - everything is published!');
@@ -156,7 +150,7 @@ async function main() {
     const statusIndicators = [];
     if (file.isTranslation) statusIndicators.push('🌐 Translation');
     if (file.translationNeedsReview) statusIndicators.push('👀 Needs Review');
-    
+
     console.log(`${index + 1}. ${file.title} (${file.language.toUpperCase()})`);
     console.log(`   Path: ${file.filePath}`);
     if (statusIndicators.length > 0) {
@@ -167,11 +161,10 @@ async function main() {
 
   if (TARGET_FILE) {
     // Promote specific file
-    const targetFile = draftFiles.find(file => 
-      file.filePath.includes(TARGET_FILE) || 
-      file.canonicalId === TARGET_FILE
+    const targetFile = draftFiles.find(
+      (file) => file.filePath.includes(TARGET_FILE) || file.canonicalId === TARGET_FILE
     );
-    
+
     if (targetFile) {
       console.log(`🚀 Promoting specific file: ${targetFile.title}`);
       promoteToPublished(targetFile.filePath);
@@ -182,11 +175,11 @@ async function main() {
   } else if (FORCE_ALL) {
     // Promote all draft files
     console.log('🚀 Promoting ALL draft content to published status...\n');
-    
-    draftFiles.forEach(file => {
+
+    draftFiles.forEach((file) => {
       promoteToPublished(file.filePath);
     });
-    
+
     console.log(`\n✅ Promoted ${draftFiles.length} files to published status`);
   } else {
     // Interactive mode (would need readline for full implementation)

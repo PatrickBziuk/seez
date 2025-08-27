@@ -33,13 +33,7 @@ export interface Props {
   footNote?: string;
 }
 
-const {
-  secondaryLinks = [],
-  links = [],
-  theme = 'light',
-  locale = 'en',
-  footNote = '',
-} = Astro.props;
+const { secondaryLinks = [], links = [], theme = 'light', locale = 'en', footNote = '' } = Astro.props;
 // Ensure locale is 'en' or 'de'
 const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
 ---
@@ -74,9 +68,9 @@ const safeLocale: 'en' | 'de' = locale === 'de' ? 'de' : 'en';
               <ul class="space-y-1">
                 {links.map(({ text, href, ariaLabel, icon }) => (
                   <li>
-                    <a 
-                      href={href} 
-                      aria-label={ariaLabel || text} 
+                    <a
+                      href={href}
+                      aria-label={ariaLabel || text}
                       class="text-sm text-muted hover:text-gray-900 dark:hover:text-gray-100 transition-colors inline-flex items-center gap-2"
                       target={href?.startsWith('http') ? '_blank' : undefined}
                       rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}

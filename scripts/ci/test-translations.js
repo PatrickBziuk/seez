@@ -1,9 +1,13 @@
 // Translation key completeness test for CI
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const en = JSON.parse(fs.readFileSync(path.join(__dirname, '../src/locales/en.json'), 'utf8'));
-const de = JSON.parse(fs.readFileSync(path.join(__dirname, '../src/locales/de.json'), 'utf8'));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const en = JSON.parse(fs.readFileSync(path.join(__dirname, '../../src/locales/en.json'), 'utf8'));
+const de = JSON.parse(fs.readFileSync(path.join(__dirname, '../../src/locales/de.json'), 'utf8'));
 
 function flatten(obj, prefix = '') {
   return Object.keys(obj).reduce((acc, k) => {

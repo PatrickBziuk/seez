@@ -140,7 +140,7 @@ function detectFileMetadataChanges(filePath: string): MetadataChange | null {
     needsFirstPublishDate = !currentFrontmatter.firstPublishDate;
     changeDescription = 'New content published';
   }
-  
+
   // Check if published content is missing required metadata (independent of other conditions)
   if (currentStatus === 'published') {
     if (!currentFrontmatter.firstPublishDate || !currentFrontmatter.publishDate) {

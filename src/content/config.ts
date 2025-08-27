@@ -5,34 +5,38 @@ import { glob } from 'astro/loaders';
 const base = z.object({
   title: z.string(),
   subtitle: z.string().optional(),
-  language: z.enum(['en','de']).default('en'),
+  language: z.enum(['en', 'de']).default('en'),
   authors: z.array(reference('authors')).min(1),
   tags: z.array(z.string()).default([]),
 
   // Single source of truth for publication state
-  publicationStatus: z.enum(['draft','published','archived']).default('draft'),
+  publicationStatus: z.enum(['draft', 'published', 'archived']).default('draft'),
   draft: z.boolean().optional(), // legacy compatibility
 
   // Dates
   firstPublishedAt: z.string().datetime().optional(),
   updatedAt: z.string().datetime().optional(),
 
-  // Identity & i18n 
+  // Identity & i18n
   canonicalId: z.string().min(8).optional(), // Optional everywhere, auto-generated if missing
   translationKey: z.string().optional(),
 
   // Minimal AI metadata (optional)
-  ai_metadata: z.object({
-    translation: z.object({
-      model: z.string().optional(),
-      at: z.string().datetime(),
-      sourceLanguage: z.enum(['en','de']),
-      targetLanguage: z.enum(['en','de']),
-      tokens: z.number().optional(),
-      cost: z.number().optional(),
-      co2: z.number().optional(),
-    }).optional(),
-  }).optional(),
+  ai_metadata: z
+    .object({
+      translation: z
+        .object({
+          model: z.string().optional(),
+          at: z.string().datetime(),
+          sourceLanguage: z.enum(['en', 'de']),
+          targetLanguage: z.enum(['en', 'de']),
+          tokens: z.number().optional(),
+          cost: z.number().optional(),
+          co2: z.number().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
 
   // Legacy fields for backward compatibility during migration
   description: z.string().optional(),
@@ -158,7 +162,7 @@ const authors = defineCollection({
     bio: z.string().optional(),
     model: z.string().optional(), // for AI authors
     capabilities: z.array(z.string()).optional(), // for AI authors
-    
+
     // Legacy fields for compatibility
     id: z.string().optional(),
     displayName: z.string().optional(),
@@ -172,9 +176,11 @@ const authors = defineCollection({
       })
       .optional(),
     language: z.enum(['en', 'de']).default('en'),
-    status: z.object({
-      authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
-    }).optional(),
+    status: z
+      .object({
+        authoring: z.enum(['Human', 'AI', 'AI+Human']).default('Human'),
+      })
+      .optional(),
     firstPublishDate: z.string().optional(),
     publishDate: z.string().optional(),
   }),

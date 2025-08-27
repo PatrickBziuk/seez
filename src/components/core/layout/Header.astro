@@ -80,6 +80,8 @@ const isLinkActive = (href: string) => {
 const logoUrl = getLocalizedUrl('/', safeLocale);
 // Ensure no trailing slash for logo URL
 const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0, -1) : logoUrl;
+// Show debug nav-mode indicator only in development
+const showDebugIndicator = import.meta.env.DEV;
 ---
 
 <style>
@@ -131,6 +133,55 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
       display: none;
     }
   }
+
+  /* Small, subtle indicator for current nav mode */
+  .nav-mode-indicator {
+    font-size: 0.7rem;
+    line-height: 1;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.375rem;
+    background: rgba(55, 65, 81, 0.12);
+    color: #6b7280;
+    user-select: none;
+  }
+  :global(.dark) .nav-mode-indicator {
+    background: rgba(255, 255, 255, 0.12);
+    color: #9ca3af;
+  }
+
+  /* Hardening: enforce nav visibility based on header state */
+  :where(header[data-active-nav='desktop']) nav[data-nav='desktop'] {
+    display: flex !important;
+  }
+  :where(header[data-active-nav='desktop']) nav[data-nav='mobile'] {
+    display: none !important;
+  }
+  /* Ensure burger button is hidden in desktop mode even if rendered by a child component */
+  :where(header[data-active-nav='desktop']) :global([data-aw-toggle-menu]) {
+    display: none !important;
+  }
+
+  :where(header[data-active-nav='mobile']) nav[data-nav='desktop'] {
+    display: none !important;
+  }
+  /* Allow mobile toggle button in mobile mode; visibility still responds to breakpoints */
+  :where(header[data-active-nav='mobile']) :global([data-aw-toggle-menu]) {
+    display: flex;
+  }
+
+  /* Hardening: unconditional desktop enforcement via media query */
+  @media (min-width: 768px) {
+    nav[data-nav='desktop'] {
+      display: flex !important;
+    }
+    nav[data-nav='mobile'] {
+      display: none !important;
+    }
+    /* Target the burger globally so scoping doesn't prevent hiding on desktop */
+    :global([data-aw-toggle-menu]) {
+      display: none !important;
+    }
+  }
 </style>
 
 <header
@@ -140,6 +191,7 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
   ]}
   {...isSticky ? { 'data-aw-sticky-header': true } : {}}
   {...id ? { id } : {}}
+  data-active-nav="unknown"
 >
   <div class="absolute inset-0"></div>
   <div
@@ -305,6 +357,14 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
               </a>
             )
           }
+          <!-- Nav mode indicator (desktop/mobile) - visible only in development -->
+          {
+            showDebugIndicator && (
+              <span id="nav-mode-indicator" class="nav-mode-indicator" data-mode="unknown" aria-live="polite">
+                unknown
+              </span>
+            )
+          }
           {
             actions?.length ? (
               <span class="ml-4 rtl:ml-0 rtl:mr-4">
@@ -323,20 +383,12 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
 </header>
 
 <!-- Search Modal -->
-<div 
-  id="search-modal" 
-  class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden"
-  style="display: none;"
->
+<div id="search-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden" style="display: none;">
   <div class="flex items-start justify-center min-h-screen pt-16 px-4">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl">
       <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Search</h2>
-        <button 
-          id="search-close"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-          aria-label="Close"
-        >
+        <button id="search-close" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" aria-label="Close">
           <Icon name="tabler:x" class="w-6 h-6" />
         </button>
       </div>
@@ -361,8 +413,7 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
     interface PagefindGlobal {
       search: (query: string) => Promise<PagefindSearchResponse>;
     }
-    const getPagefind = (): PagefindGlobal | undefined =>
-      (window as unknown as { pagefind?: PagefindGlobal }).pagefind;
+    const getPagefind = (): PagefindGlobal | undefined => (window as unknown as { pagefind?: PagefindGlobal }).pagefind;
     const toggleButton = document.querySelector('[data-aw-toggle-menu]');
     const mobileNav = document.getElementById('mobile-navigation');
 
@@ -413,13 +464,13 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
       if (searchModal) {
         searchModal.style.display = 'block';
         searchModal.classList.remove('hidden');
-        
+
         // Initialize search if not already done
         if (!searchInitialized && searchContainer) {
           await initializeSearch();
           searchInitialized = true;
         }
-        
+
         // Focus the search input if available
         setTimeout(() => {
           const searchInput = searchContainer?.querySelector('input[type="search"]') as HTMLInputElement;
@@ -441,26 +492,26 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
       if (!searchContainer) return;
 
       console.log('Search: Initializing search functionality...');
-      
+
       try {
         // Try to load Pagefind directly
         console.log('Search: Attempting to load Pagefind...');
         await loadPagefind();
-        
       } catch (error) {
         console.log('Search: Failed to initialize search:', error);
-        
+
         // Check if we're likely in development mode
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.log('Search error details:', errorMessage);
-        
+
         // More specific development mode detection
-  // Determine environment by checking asset availability rather than relying on ports
-  const isDevelopment = errorMessage.includes('404') || 
-           errorMessage.includes('Failed to load') || 
-           errorMessage.includes('timeout') ||
-           errorMessage.includes('net::ERR');
-        
+        // Determine environment by checking asset availability rather than relying on ports
+        const isDevelopment =
+          errorMessage.includes('404') ||
+          errorMessage.includes('Failed to load') ||
+          errorMessage.includes('timeout') ||
+          errorMessage.includes('net::ERR');
+
         if (isDevelopment) {
           console.log('Search: Likely development mode detected');
           searchContainer.innerHTML = `
@@ -498,7 +549,7 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
     const loadPagefind = async () => {
       try {
         console.log('Loading pagefind script...');
-        
+
         // Quick preflight: verify the script exists (works in preview/build; will fail in dev)
         try {
           const headResp = await fetch('/pagefind/pagefind.js', { method: 'HEAD' });
@@ -506,19 +557,21 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
             throw new Error(`pagefind.js not reachable: status ${headResp.status}`);
           }
         } catch (preflightErr) {
-          throw new Error(`Preflight check failed for Pagefind: ${preflightErr instanceof Error ? preflightErr.message : String(preflightErr)}`);
+          throw new Error(
+            `Preflight check failed for Pagefind: ${preflightErr instanceof Error ? preflightErr.message : String(preflightErr)}`
+          );
         }
 
         // Load the Pagefind script
         const script = document.createElement('script');
         script.src = '/pagefind/pagefind.js';
         script.type = 'text/javascript';
-        
+
         await new Promise<void>((resolve, reject) => {
           const timeout = setTimeout(() => {
             reject(new Error('Script loading timeout after 10 seconds'));
           }, 10000); // Increased timeout to 10 seconds
-          
+
           script.onload = () => {
             clearTimeout(timeout);
             console.log('Pagefind script loaded successfully');
@@ -530,26 +583,28 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
           };
           document.head.appendChild(script);
         });
-        
+
         // Wait for Pagefind to be available with longer timeout
         console.log('Waiting for pagefind to be available...');
         let attempts = 0;
         while (attempts < 25 && !getPagefind()) {
-          await new Promise(resolve => setTimeout(resolve, 200));
+          await new Promise((resolve) => setTimeout(resolve, 200));
           attempts++;
           if (attempts % 5 === 0) {
             console.log(`Still waiting for pagefind... attempt ${attempts}/25`);
           }
         }
-        
+
         if (!getPagefind()) {
           console.error('Pagefind object not found on window after script load');
-          console.log('Window keys containing "pagefind":', Object.keys(window).filter(k => k.toLowerCase().includes('pagefind')));
+          console.log(
+            'Window keys containing "pagefind":',
+            Object.keys(window).filter((k) => k.toLowerCase().includes('pagefind'))
+          );
           throw new Error(`Pagefind not available after ${attempts} attempts (${attempts * 200}ms)`);
         }
 
         console.log('Pagefind is ready and available on window object');
-        
       } catch (error) {
         console.error('Failed to load pagefind:', error);
         throw error;
@@ -557,7 +612,7 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
 
       // Initialize the search UI
       if (!searchContainer) return;
-      
+
       searchContainer.innerHTML = `
         <div class="p-4">
           <div class="relative mb-4">
@@ -581,30 +636,33 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
       // Set up search functionality
       const searchInput = document.getElementById('pagefind-search') as HTMLInputElement;
       const resultsContainer = document.getElementById('search-results')!;
-      
+
       let debounceTimer: number;
-      
+
       searchInput.addEventListener('input', (e) => {
         clearTimeout(debounceTimer);
         debounceTimer = window.setTimeout(async () => {
           const query = (e.target as HTMLInputElement).value.trim();
-          
+
           if (query.length < 2) {
-            resultsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-sm text-center py-4">Type at least 2 characters to search...</p>';
+            resultsContainer.innerHTML =
+              '<p class="text-gray-500 dark:text-gray-400 text-sm text-center py-4">Type at least 2 characters to search...</p>';
             return;
           }
 
           try {
-            resultsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-sm text-center py-4">Searching...</p>';
-            
+            resultsContainer.innerHTML =
+              '<p class="text-gray-500 dark:text-gray-400 text-sm text-center py-4">Searching...</p>';
+
             const pf = getPagefind();
             if (!pf) {
               throw new Error('Pagefind not initialized');
             }
             const search = await pf.search(query);
-            
+
             if (search.results.length === 0) {
-              resultsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-sm text-center py-4">No results found</p>';
+              resultsContainer.innerHTML =
+                '<p class="text-gray-500 dark:text-gray-400 text-sm text-center py-4">No results found</p>';
               return;
             }
 
@@ -622,16 +680,15 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
                 `;
               })
             );
-            
+
             resultsContainer.innerHTML = resultsHtml.join('');
-            
+
             // Add click handlers to close modal when clicking results
-            resultsContainer.querySelectorAll('a').forEach(link => {
+            resultsContainer.querySelectorAll('a').forEach((link) => {
               link.addEventListener('click', () => {
                 closeSearchModal();
               });
             });
-            
           } catch (error) {
             console.error('Search error:', error);
             resultsContainer.innerHTML = '<p class="text-red-500 text-sm text-center py-4">Search error occurred</p>';
@@ -671,11 +728,147 @@ const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0,
           openSearchModal();
         }
       }
-      
+
       // Close search with Escape key
       if (e.key === 'Escape') {
         closeSearchModal();
       }
     });
+
+    // Initialize nav mode indicator on first load
+    const mqInitial = window.matchMedia('(min-width: 768px)');
+    if (mqInitial.matches) {
+      updateNavModeIndicator('desktop');
+    } else {
+      updateNavModeIndicator('mobile');
+    }
   });
+
+  // Helpers to manage mobile nav state defensively
+  const forceMobileNavHidden = () => {
+    const toggleButton = document.querySelector('[data-aw-toggle-menu]') as HTMLElement | null;
+    const mobileNav = document.getElementById('mobile-navigation');
+    const desktopNav = document.querySelector('nav[data-nav="desktop"]') as HTMLElement | null;
+    if (toggleButton && mobileNav) {
+      mobileNav.classList.add('hidden');
+      mobileNav.setAttribute('aria-hidden', 'true');
+      toggleButton.setAttribute('aria-expanded', 'false');
+      toggleButton.classList.remove('expanded');
+    }
+    if (desktopNav) {
+      desktopNav.classList.remove('hidden');
+      desktopNav.setAttribute('aria-hidden', 'false');
+    }
+  };
+
+  const updateNavModeIndicator = (mode: 'desktop' | 'mobile' | 'unknown') => {
+    try {
+      const indicator = document.getElementById('nav-mode-indicator');
+      const header = document.getElementById('header') as HTMLElement | null;
+      if (indicator) {
+        indicator.textContent = mode;
+        indicator.setAttribute('data-mode', mode);
+      }
+      if (header) {
+        header.setAttribute('data-active-nav', mode);
+      }
+      console.log('[Header] mode updated:', {
+        mode,
+        hasIndicator: !!indicator,
+        hasHeader: !!header,
+      });
+    } catch (e) {
+      console.warn('[Header] Failed to update mode indicator', e);
+    }
+  };
+
+  const applyMode = () => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    if (mq.matches) {
+      // Synchronously enforce desktop mode
+      updateNavModeIndicator('desktop');
+      forceMobileNavHidden();
+    } else {
+      updateNavModeIndicator('mobile');
+    }
+  };
+
+  const resetMobileNavState = async () => {
+    // Small delay to allow CSS and layout to settle after navigation
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    await new Promise(requestAnimationFrame);
+
+    // If we are at/above desktop breakpoint, ensure mobile nav is hidden
+    const mq = window.matchMedia('(min-width: 768px)');
+    if (mq.matches) {
+      forceMobileNavHidden();
+      updateNavModeIndicator('desktop');
+    } else {
+      // In mobile mode, ensure ARIA reflects state
+      const desktopNav = document.querySelector('nav[data-nav="desktop"]') as HTMLElement | null;
+      const mobileNav = document.getElementById('mobile-navigation');
+      if (desktopNav) desktopNav.setAttribute('aria-hidden', 'true');
+      if (mobileNav) mobileNav.setAttribute('aria-hidden', 'false');
+      updateNavModeIndicator('mobile');
+    }
+  };
+
+  // Also initialize on client-side navigation (Astro View Transitions)
+  document.addEventListener('astro:page-load', async () => {
+    applyMode();
+    await resetMobileNavState();
+  });
+
+  // Reset after Astro swaps DOM content during transitions
+  document.addEventListener('astro:after-swap', async () => {
+    applyMode();
+    await resetMobileNavState();
+  });
+
+  // Watch for viewport changes explicitly
+  const mediaQuery = window.matchMedia('(min-width: 768px)');
+  const mqHandler = (e: MediaQueryList | MediaQueryListEvent) => {
+    const matches = 'matches' in e ? e.matches : (e as MediaQueryList).matches;
+    if (matches) {
+      forceMobileNavHidden();
+      updateNavModeIndicator('desktop');
+    } else {
+      updateNavModeIndicator('mobile');
+    }
+  };
+  // Support older and newer APIs
+  if (typeof mediaQuery.addEventListener === 'function') {
+    mediaQuery.addEventListener('change', mqHandler);
+  } else {
+    // Legacy browsers: addListener/removeListener
+    // Use a loose cast to access legacy methods without strict typing conflicts
+    const legacyMql = mediaQuery as unknown as {
+      addListener?: (listener: (this: MediaQueryList, ev: MediaQueryListEvent) => void) => void;
+      removeListener?: (listener: (this: MediaQueryList, ev: MediaQueryListEvent) => void) => void;
+    };
+    if (typeof legacyMql.addListener === 'function') {
+      const legacyHandler = (ev: MediaQueryListEvent) => mqHandler(ev);
+      legacyMql.addListener(legacyHandler);
+    }
+  }
+
+  // Fallback: on resize, enforce state when entering desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768) {
+      forceMobileNavHidden();
+      updateNavModeIndicator('desktop');
+    } else {
+      updateNavModeIndicator('mobile');
+    }
+  });
+
+  // Initialize mode immediately on first load (no dependency on DOMContentLoaded)
+  (async () => {
+    try {
+      applyMode();
+      await resetMobileNavState();
+    } catch (err) {
+      console.warn('[Header] Initial mode setup failed', err);
+    }
+  })();
 </script>

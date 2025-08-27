@@ -73,14 +73,17 @@ const metadata: MetaData = {
               {lang === 'de'
                 ? 'Kein Inhalt gefunden. Lege in der Content-Collection eine Datei unter'
                 : 'No content found. Create a file in the content collection at'}{' '}
-              <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">src/content/pages/tech-stack/{lang}.mdx</code>{' '}
+              <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">
+                src/content/pages/tech-stack/{lang}.mdx
+              </code>{' '}
               {lang === 'de' ? 'oder' : 'or'}{' '}
-              <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">src/content/pages/tech-stack/{lang}.md</code>.
+              <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">src/content/pages/tech-stack/{lang}.md</code>
+              .
             </p>
             <p class="mt-2">
               {lang === 'de'
                 ? 'Danach neu bauen. Ich weiß, es ist nervig. Willkommen im Web.'
-                : 'Then rebuild. Yes, it\'s annoying. Welcome to the web.'}
+                : "Then rebuild. Yes, it's annoying. Welcome to the web."}
             </p>
           </div>
         )

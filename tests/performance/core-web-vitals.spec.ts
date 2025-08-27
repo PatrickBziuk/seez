@@ -185,7 +185,10 @@ test.describe('Core Web Vitals - CLS (Cumulative Layout Shift)', () => {
       if (!(await firstLink.isVisible())) {
         const menuToggle = page.locator('[data-aw-toggle-menu]');
         if (await menuToggle.count()) {
-          await menuToggle.first().click().catch(() => {});
+          await menuToggle
+            .first()
+            .click()
+            .catch(() => {});
           await page.waitForTimeout(200);
         }
       }
@@ -261,7 +264,7 @@ test.describe('Core Web Vitals - FID (First Input Delay)', () => {
     await page.goto('/');
     await page.waitForLoadState('domcontentloaded');
 
-  const buttons = page.locator('button, a, input');
+    const buttons = page.locator('button, a, input');
 
     if ((await buttons.count()) > 0) {
       const responseTimes: number[] = [];
@@ -447,8 +450,8 @@ test.describe('Performance Budget Monitoring', () => {
     await page.waitForLoadState('networkidle');
 
     // Performance budget checks - Updated to realistic targets for Plan 10030
-  expect(totalTransferSize).toBeLessThan(3 * 1024 * 1024); // Under 3MB (adjusted)
-  expect(totalResourceCount).toBeLessThan(120); // Under 120 requests
+    expect(totalTransferSize).toBeLessThan(3 * 1024 * 1024); // Under 3MB (adjusted)
+    expect(totalResourceCount).toBeLessThan(120); // Under 120 requests
   });
 
   test('should have efficient JavaScript bundles', async ({ page }) => {
@@ -517,7 +520,7 @@ test.describe('Performance Monitoring Across Pages', () => {
     const maxTime = Math.max(...times);
     const minTime = Math.min(...times);
 
-  expect(maxTime / minTime).toBeLessThan(5.0);
+    expect(maxTime / minTime).toBeLessThan(5.0);
 
     // All should be under 3 seconds
     for (const time of times) {
@@ -528,7 +531,7 @@ test.describe('Performance Monitoring Across Pages', () => {
   test('should maintain performance during navigation', async ({ page }) => {
     await page.goto('/');
 
-  const navigationLinks = page.locator('nav a');
+    const navigationLinks = page.locator('nav a');
     const navigationTimes: number[] = [];
 
     if ((await navigationLinks.count()) > 0) {
@@ -536,7 +539,10 @@ test.describe('Performance Monitoring Across Pages', () => {
       if (!(await navigationLinks.first().isVisible())) {
         const menuToggle = page.locator('[data-aw-toggle-menu]');
         if (await menuToggle.count()) {
-          await menuToggle.first().click().catch(() => {});
+          await menuToggle
+            .first()
+            .click()
+            .catch(() => {});
           await page.waitForTimeout(200);
         }
       }

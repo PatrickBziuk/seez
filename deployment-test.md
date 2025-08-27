@@ -11,6 +11,7 @@ Expected deployed version: v1.0.0-beta.54+c417887 or similar
 Current deployed version (before fix): v1.0.0-beta.526715a4f
 
 The deployed site should include:
+
 - Music navigation in header (/en/music, /de/music)
 - All collection pages working
 - Latest version number in footer

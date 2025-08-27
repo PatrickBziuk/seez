@@ -2,10 +2,10 @@
 
 /**
  * Content Schema Validator and Self-Healing Script
- * 
+ *
  * This script validates content files against the Astro content schema
  * and automatically fixes common schema issues that would block CI/CD pipeline.
- * 
+ *
  * Fixes Applied:
  * - Convert string status fields to proper object format
  * - Ensure required authors array exists and references valid authors
@@ -56,7 +56,7 @@ class ContentSchemaValidator {
     this.fixes = [];
 
     const collections = ['lab', 'books', 'projects', 'life', 'music', 'pages'];
-    
+
     for (const collection of collections) {
       await this.validateCollection(collection);
     }
@@ -64,7 +64,7 @@ class ContentSchemaValidator {
     return {
       valid: this.errors.length === 0,
       errors: this.errors,
-      fixes: this.fixes
+      fixes: this.fixes,
     };
   }
 
@@ -120,7 +120,7 @@ class ContentSchemaValidator {
     try {
       const content = await readFile(filePath, 'utf-8');
       const { data: frontmatter, content: body } = matter(content);
-      
+
       let needsUpdate = false;
       const relativePath = filePath.replace(PROJECT_ROOT, '');
 
@@ -162,13 +162,12 @@ class ContentSchemaValidator {
         await writeFile(filePath, newContent, 'utf-8');
         console.log(`✅ Fixed schema issues in ${relativePath}`);
       }
-
     } catch (error: unknown) {
       this.errors.push({
         file: filePath.replace(PROJECT_ROOT, ''),
         field: 'general',
         issue: `Failed to process file: ${error}`,
-        autoFixable: false
+        autoFixable: false,
       });
     }
   }
@@ -196,26 +195,26 @@ class ContentSchemaValidator {
             review: {
               content: true,
               reviewer: 'seez',
-              reviewDate: new Date().toISOString().split('T')[0]
-            }
+              reviewDate: new Date().toISOString().split('T')[0],
+            },
           };
           break;
         case 'draft':
         case 'in-progress':
         case 'wip':
           suggestedValue = {
-            authoring: 'Human'
+            authoring: 'Human',
           };
           break;
         case 'ai-generated':
         case 'ai':
           suggestedValue = {
-            authoring: 'AI'
+            authoring: 'AI',
           };
           break;
         default:
           suggestedValue = {
-            authoring: 'Human'
+            authoring: 'Human',
           };
       }
 
@@ -225,7 +224,7 @@ class ContentSchemaValidator {
         issue: `Status field is string "${frontmatter.status}" but should be object`,
         autoFixable: true,
         originalValue: frontmatter.status,
-        suggestedValue
+        suggestedValue,
       };
     }
 
@@ -244,7 +243,7 @@ class ContentSchemaValidator {
         issue: 'Missing required authors field',
         autoFixable: true,
         originalValue: undefined,
-        suggestedValue: ['seez'] // Default author
+        suggestedValue: ['seez'], // Default author
       };
     }
 
@@ -257,7 +256,7 @@ class ContentSchemaValidator {
         issue: `Authors field should be array but is ${typeof authorValue}`,
         autoFixable: true,
         originalValue: authorValue,
-        suggestedValue: Array.isArray(authorValue) ? authorValue : [String(authorValue)]
+        suggestedValue: Array.isArray(authorValue) ? authorValue : [String(authorValue)],
       };
     }
 
@@ -269,7 +268,7 @@ class ContentSchemaValidator {
         issue: 'Authors array is empty',
         autoFixable: true,
         originalValue: [],
-        suggestedValue: ['seez']
+        suggestedValue: ['seez'],
       };
     }
 
@@ -281,7 +280,7 @@ class ContentSchemaValidator {
    */
   private validateAndFixLanguage(frontmatter: Record<string, unknown>, filePath: string): ValidationError | null {
     const validLanguages = ['en', 'de'];
-    
+
     if (!frontmatter.language) {
       // Language defaults to 'en' but let's be explicit
       return {
@@ -290,7 +289,7 @@ class ContentSchemaValidator {
         issue: 'Missing language field',
         autoFixable: true,
         originalValue: undefined,
-        suggestedValue: 'en'
+        suggestedValue: 'en',
       };
     }
 
@@ -301,7 +300,7 @@ class ContentSchemaValidator {
         issue: `Invalid language "${frontmatter.language}", must be 'en' or 'de'`,
         autoFixable: true,
         originalValue: frontmatter.language,
-        suggestedValue: 'en' // Default to English
+        suggestedValue: 'en', // Default to English
       };
     }
 
@@ -315,7 +314,11 @@ class ContentSchemaValidator {
     if (!frontmatter.canonicalId) {
       // CanonicalId is optional, but if missing, we can generate one
       const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '');
-      const filename = filePath.split('/').pop()?.replace(/\.(md|mdx)$/, '') || 'content';
+      const filename =
+        filePath
+          .split('/')
+          .pop()
+          ?.replace(/\.(md|mdx)$/, '') || 'content';
       const suggestedId = `slug-${timestamp}-${filename}`;
 
       if (suggestedId.length >= 8) {
@@ -325,7 +328,7 @@ class ContentSchemaValidator {
           issue: 'Missing canonicalId field',
           autoFixable: true,
           originalValue: undefined,
-          suggestedValue: suggestedId
+          suggestedValue: suggestedId,
         };
       }
     }
@@ -336,7 +339,7 @@ class ContentSchemaValidator {
         field: 'canonicalId',
         issue: `CanonicalId "${frontmatter.canonicalId}" is too short (minimum 8 characters)`,
         autoFixable: false,
-        originalValue: frontmatter.canonicalId
+        originalValue: frontmatter.canonicalId,
       };
     }
 
@@ -348,7 +351,7 @@ class ContentSchemaValidator {
    */
   generateReport(): string {
     const report = [];
-    
+
     report.push('# Content Schema Validation Report');
     report.push(`Generated: ${new Date().toISOString()}`);
     report.push('');
@@ -361,7 +364,7 @@ class ContentSchemaValidator {
     if (this.fixes.length > 0) {
       report.push(`## ✅ Fixed Issues (${this.fixes.length})`);
       report.push('');
-      
+
       for (const fix of this.fixes) {
         report.push(`- **${fix.file}** (${fix.field}): ${fix.issue}`);
         if (fix.originalValue !== undefined) {
@@ -377,7 +380,7 @@ class ContentSchemaValidator {
     if (this.errors.length > 0) {
       report.push(`## ❌ Remaining Issues (${this.errors.length})`);
       report.push('');
-      
+
       for (const error of this.errors) {
         const status = error.autoFixable ? '🔧 Auto-fixable' : '⚠️  Manual fix required';
         report.push(`- **${error.file}** (${error.field}): ${error.issue} [${status}]`);
@@ -402,7 +405,7 @@ async function main() {
   const verbose = args.includes('--verbose') || args.includes('-v');
 
   console.log('🔍 Starting content schema validation...');
-  
+
   if (dryRun) {
     console.log('🔍 Running in dry-run mode (no files will be modified)');
   }

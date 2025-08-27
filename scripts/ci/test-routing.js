@@ -1,12 +1,16 @@
 // Routing test for language variants (ESM refactor)
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const collections = ['books', 'projects', 'lab', 'life', 'pages'];
 const languages = ['en', 'de'];
 
 function getContentEntries(collection) {
-  const dir = path.join(__dirname, `../src/content/${collection}`);
+  const dir = path.join(__dirname, `../../src/content/${collection}`);
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir).filter((f) => f.endsWith('.md'));
 }

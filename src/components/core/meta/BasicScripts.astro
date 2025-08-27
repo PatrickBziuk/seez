@@ -51,25 +51,18 @@ import { UI } from 'astrowind:config';
     let lastKnownScrollPosition = window.scrollY;
     let ticking = true;
 
-    attachEvent('#header nav', 'click', function () {
+    // Close mobile navigation when clicking inside it (e.g., selecting a link)
+    attachEvent('#mobile-navigation', 'click', function () {
       document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
       document.body.classList.remove('overflow-hidden');
       document.getElementById('header')?.classList.remove('h-screen');
       document.getElementById('header')?.classList.remove('expanded');
       document.getElementById('header')?.classList.remove('bg-page');
-      document.querySelector('#header nav')?.classList.add('hidden');
-      document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
+      document.getElementById('mobile-navigation')?.classList.add('hidden');
     });
 
-    attachEvent('[data-aw-toggle-menu]', 'click', function (_, elem) {
-      elem.classList.toggle('expanded');
-      document.body.classList.toggle('overflow-hidden');
-      document.getElementById('header')?.classList.toggle('h-screen');
-      document.getElementById('header')?.classList.toggle('expanded');
-      document.getElementById('header')?.classList.toggle('bg-page');
-      document.querySelector('#header nav')?.classList.toggle('hidden');
-      document.querySelector('#header > div > div:last-child')?.classList.toggle('hidden');
-    });
+    // Note: Toggle button behavior is implemented in Header.astro.
+    // We intentionally avoid duplicating it here to prevent conflicts.
 
     attachEvent('[data-aw-toggle-color-scheme]', 'click', function () {
       if (defaultTheme.endsWith(':only')) {
@@ -114,13 +107,13 @@ import { UI } from 'astrowind:config';
 
     const screenSize = window.matchMedia('(max-width: 767px)');
     screenSize.addEventListener('change', function () {
+      // Always reset mobile nav state when crossing breakpoints
       document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
       document.body.classList.remove('overflow-hidden');
       document.getElementById('header')?.classList.remove('h-screen');
       document.getElementById('header')?.classList.remove('expanded');
       document.getElementById('header')?.classList.remove('bg-page');
-      document.querySelector('#header nav')?.classList.add('hidden');
-      document.querySelector('#header > div > div:last-child')?.classList.add('hidden');
+      document.getElementById('mobile-navigation')?.classList.add('hidden');
     });
 
     function applyHeaderStylesOnScroll() {
@@ -155,7 +148,8 @@ import { UI } from 'astrowind:config';
     document.body.classList.remove('overflow-hidden');
     document.getElementById('header')?.classList.remove('h-screen');
     document.getElementById('header')?.classList.remove('expanded');
-    document.querySelector('#header nav')?.classList.add('hidden');
+    // Hide only the mobile navigation on page show to avoid affecting desktop nav
+    document.getElementById('mobile-navigation')?.classList.add('hidden');
   };
 
   window.onload = onLoad;

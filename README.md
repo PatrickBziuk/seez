@@ -1,6 +1,7 @@
 ## 🛠️ Development & Deployment
 
 ### Quick Start
+
 ```bash
 # Install dependencies
 pnpm install
@@ -16,6 +17,7 @@ pnpm astro sync
 ```
 
 ### Testing
+
 ```bash
 # Run all tests
 pnpm run test:all
@@ -31,6 +33,7 @@ pnpm run test:performance
 ```
 
 ### Content Management
+
 - **Add content**: Place Markdown files in `src/content/{collection}/`
 - **Update schema**: Modify `src/content/config.ts` and run `pnpm astro sync`
 - **Preview content**: Use development server to see changes live
@@ -77,7 +80,9 @@ Built upon the solid foundation of **AstroWind**, this repository is my personal
 ## ✨ New Features & Capabilities
 
 ### 🔍 **Lightning-Fast Search**
+
 Powered by Pagefind for instant, client-side search across all content:
+
 - **Sub-100ms response times** for snappy user experience
 - **Multilingual support** for English and German content
 - **Fuzzy matching** handles typos gracefully
@@ -87,7 +92,9 @@ Powered by Pagefind for instant, client-side search across all content:
 [📚 Search Functionality Guide](docs/guides/search-functionality-guide.md)
 
 ### 📡 **RSS Feeds for Every Collection**
+
 Stay updated with comprehensive RSS feed support:
+
 - **Main feed**: [/rss.xml](https://seez.eu/rss.xml) - Latest from all collections
 - **Language-specific**: `/en/rss.xml`, `/de/rss.xml`
 - **Collection-specific**: `/en/projects/rss.xml`, `/en/books/rss.xml`, etc.
@@ -97,7 +104,9 @@ Stay updated with comprehensive RSS feed support:
 [📚 RSS Feeds Guide](docs/guides/rss-feeds-guide.md)
 
 ### 🔧 **Comprehensive CI/CD Pipeline**
+
 Production-ready automated testing and deployment:
+
 - **4-phase testing**: Validation → E2E → Components → Performance
 - **80% success threshold** for conditional deployment
 - **Multi-browser testing** (Chrome, Firefox, Safari)
@@ -108,7 +117,9 @@ Production-ready automated testing and deployment:
 [📚 CI/CD Pipeline Guide](docs/guides/cicd-pipeline-guide.md)
 
 ### 📝 **Rich Content Collections**
+
 Organized content across multiple categories:
+
 - **📚 Books**: In-depth reviews and recommendations
 - **🧪 Lab**: Technical experiments and tutorials
 - **🎵 Music**: Musical projects and thoughts
@@ -116,7 +127,9 @@ Organized content across multiple categories:
 - **🌱 Life**: Personal reflections and experiences
 
 ### 🌐 **Advanced Multilingual Support**
+
 Seamless bilingual experience:
+
 - **English/German** content with automatic language detection
 - **Localized URLs** and navigation
 - **AI-powered translation pipeline** with quality controls
@@ -129,7 +142,7 @@ Seamless bilingual experience:
 Comprehensive guides for users and developers:
 
 - **[RSS Feeds Guide](docs/guides/rss-feeds-guide.md)**: Complete RSS feed documentation with endpoints and usage examples
-- **[Search Functionality Guide](docs/guides/search-functionality-guide.md)**: User guide for search features and keyboard shortcuts  
+- **[Search Functionality Guide](docs/guides/search-functionality-guide.md)**: User guide for search features and keyboard shortcuts
 - **[CI/CD Pipeline Guide](docs/guides/cicd-pipeline-guide.md)**: Developer guide for testing workflows and contribution guidelines
 - **[Technical Documentation](docs/)**: Full project documentation and planning resources
 

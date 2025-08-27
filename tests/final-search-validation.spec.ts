@@ -17,11 +17,11 @@ test.describe('Complete Search Functionality Validation', () => {
 
     // Step 3: Check if search input is available
     const searchInput = page.locator('#pagefind-search');
-    
+
     // Only proceed if search input is available (skip if in dev mode)
     if (await searchInput.isVisible()) {
       console.log('✅ Search input is available - proceeding with search test');
-      
+
       // Step 4: Perform actual search
       await searchInput.fill('music');
       await page.waitForTimeout(2000);
@@ -29,31 +29,31 @@ test.describe('Complete Search Functionality Validation', () => {
       // Step 5: Check for results
       const resultsContainer = page.locator('#search-results');
       await expect(resultsContainer).toBeVisible();
-      
+
       const results = resultsContainer.locator('a');
       const resultCount = await results.count();
-      
+
       if (resultCount > 0) {
         console.log(`✅ Search returned ${resultCount} results`);
-        
+
         // Validate first result structure
         const firstResult = results.first();
         await expect(firstResult).toBeVisible();
-        
+
         const href = await firstResult.getAttribute('href');
         expect(href).toBeTruthy();
         expect(href).toMatch(/^\/[a-z]{2}\//); // Should start with language code
-        
+
         console.log(`✅ First result has valid href: ${href}`);
-        
+
         // Test clicking a result
         await firstResult.click();
         await page.waitForLoadState('load');
-        
+
         // Should navigate to the clicked page
         expect(page.url()).toContain(href!);
         console.log('✅ Search result navigation works');
-        
+
         return; // Exit successfully
       } else {
         // Check for "no results" message
@@ -68,7 +68,7 @@ test.describe('Complete Search Functionality Validation', () => {
       // Check what error message is shown
       const devMessage = page.locator('text=Search in Development Mode');
       const errorMessage = page.locator('text=Search Unavailable');
-      
+
       if (await devMessage.isVisible()) {
         console.log('⚠️ Search shows development mode message - this indicates the site is not in production mode');
         test.skip(true, 'Search not available in current mode');
@@ -87,14 +87,14 @@ test.describe('Complete Search Functionality Validation', () => {
   test('should validate keyboard shortcuts work', async ({ page }) => {
     // Test opening search with '/' key
     await page.keyboard.press('/');
-    
+
     const searchModal = page.locator('#search-modal');
     await expect(searchModal).toBeVisible();
-    
+
     // Test closing with Escape
     await page.keyboard.press('Escape');
     await expect(searchModal).toBeHidden();
-    
+
     console.log('✅ Keyboard shortcuts (/ and Escape) work correctly');
   });
 
@@ -104,22 +104,22 @@ test.describe('Complete Search Functionality Validation', () => {
     await page.waitForTimeout(5000);
 
     const searchInput = page.locator('#pagefind-search');
-    
+
     if (await searchInput.isVisible()) {
       // Test multiple search terms
       const searchTerms = ['project', 'book', 'music', 'tech'];
-      
+
       for (const term of searchTerms) {
         await searchInput.clear();
         await searchInput.fill(term);
         await page.waitForTimeout(1500);
-        
+
         const resultsContainer = page.locator('#search-results');
         const results = resultsContainer.locator('a');
         const resultCount = await results.count();
-        
+
         console.log(`Search for "${term}": ${resultCount} results`);
-        
+
         // At least some searches should return results
         if (resultCount > 0) {
           // Validate that results contain the search term
@@ -127,7 +127,7 @@ test.describe('Complete Search Functionality Validation', () => {
           console.log(`First result for "${term}": ${firstResultText?.substring(0, 100)}...`);
         }
       }
-      
+
       console.log('✅ Search tested across multiple content types');
     } else {
       test.skip(true, 'Search input not available');
@@ -139,17 +139,17 @@ test.describe('Complete Search Functionality Validation', () => {
     const pages = [
       { url: '/en/books', name: 'Books' },
       { url: '/en/projects', name: 'Projects' },
-      { url: '/en/music', name: 'Music' }
+      { url: '/en/music', name: 'Music' },
     ];
 
     for (const pageInfo of pages) {
       await page.goto(`http://localhost:4324${pageInfo.url}`);
       await page.waitForLoadState('load');
-      
+
       // Look for active navigation item
       const activeNavItems = page.locator('nav a.active, nav a[class*="active"]');
       const activeCount = await activeNavItems.count();
-      
+
       if (activeCount > 0) {
         const activeText = await activeNavItems.first().textContent();
         console.log(`✅ Active navigation on ${pageInfo.name} page: "${activeText}"`);

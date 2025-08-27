@@ -1,6 +1,6 @@
 /**
  * AI Usage Logging System
- * 
+ *
  * Provides centralized logging of AI operations to an append-only ledger.
  * Separates AI usage tracking from content frontmatter for cleaner architecture.
  */
@@ -44,19 +44,21 @@ const LEDGER_PATH = 'data/ai-ledger.ndjson';
 export function logAIUsage(event: Omit<AIUsageEvent, 'ts'>): void {
   const record: AIUsageLogEntry = {
     ts: new Date().toISOString(),
-    ...event
+    ...event,
   };
-  
+
   try {
     // Ensure ledger file exists
     if (!existsSync(LEDGER_PATH)) {
       appendFileSync(LEDGER_PATH, '', 'utf8');
     }
-    
+
     // Append as NDJSON (newline-delimited JSON)
     appendFileSync(LEDGER_PATH, JSON.stringify(record) + '\n', 'utf8');
-    
-    console.log(`✅ AI usage logged: ${event.op} for ${event.canonicalId} (${event.input_tokens + event.output_tokens} tokens)`);
+
+    console.log(
+      `✅ AI usage logged: ${event.op} for ${event.canonicalId} (${event.input_tokens + event.output_tokens} tokens)`
+    );
   } catch (error) {
     console.error('❌ Failed to log AI usage:', error);
     // Don't throw - logging failure shouldn't break the pipeline

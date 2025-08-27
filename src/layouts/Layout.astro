@@ -42,9 +42,7 @@ const textDirection = 'ltr'; // Seez supports LTR languages
 
 // Fix T36-002: Normalize route assumptions for alternates
 const availableLanguages = supportedLanguages;
-const alternateLanguages = shouldHaveAlternates(Astro.url.pathname) 
-  ? buildAlternates(Astro, availableLanguages)
-  : [];
+const alternateLanguages = shouldHaveAlternates(Astro.url.pathname) ? buildAlternates(Astro, availableLanguages) : [];
 ---
 
 <!doctype html>

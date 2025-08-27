@@ -3,12 +3,8 @@
     "total_tokens": 150,
     "total_usd": 0.001,
     "total_co2_g": 0.1455,
-    "operations": [
-      "tldr"
-    ],
-    "models_used": [
-      "gpt-4o-mini"
-    ],
+    "operations": ["tldr"],
+    "models_used": ["gpt-4o-mini"],
     "first_operation": "2025-08-13T19:05:23.812Z",
     "last_operation": "2025-08-13T19:05:23.812Z"
   },
@@ -16,12 +12,8 @@
     "total_tokens": 4300,
     "total_usd": 0.001455,
     "total_co2_g": 4.171,
-    "operations": [
-      "translation"
-    ],
-    "models_used": [
-      "gpt-4o-mini"
-    ],
+    "operations": ["translation"],
+    "models_used": ["gpt-4o-mini"],
     "first_operation": "2025-08-13T19:13:01.185Z",
     "last_operation": "2025-08-13T19:13:01.185Z"
   }

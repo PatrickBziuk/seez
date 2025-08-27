@@ -31,8 +31,9 @@ test.describe('Debug - Core Navigation', () => {
     // Test main navigation links
     const navLinks = await page.locator('nav a').all();
     const linkData = [];
-    
-    for (const link of navLinks.slice(0, 6)) { // Limit to first 6 to prevent timeout
+
+    for (const link of navLinks.slice(0, 6)) {
+      // Limit to first 6 to prevent timeout
       const href = await link.getAttribute('href');
       const text = await link.textContent();
       linkData.push({ text: text?.trim(), href });
@@ -40,7 +41,7 @@ test.describe('Debug - Core Navigation', () => {
     }
 
     // Verify links are properly localized
-    const localizedLinks = linkData.filter(link => link.href?.startsWith('/en/'));
+    const localizedLinks = linkData.filter((link) => link.href?.startsWith('/en/'));
     expect(localizedLinks.length).toBeGreaterThan(0);
   });
 

@@ -9,7 +9,7 @@
 <script is:inline>
   window.addEventListener('DOMContentLoaded', async () => {
     console.log('Search: DOM loaded, initializing...');
-    
+
     const searchContainer = document.getElementById('search');
     if (!searchContainer) {
       console.error('Search: Container not found');
@@ -18,11 +18,11 @@
 
     console.log('Search: Checking pagefind availability...');
     console.log('Search: Current URL:', window.location.href);
-    
+
     // Check if we're in development mode
     const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     console.log('Search: Development mode detected:', isDev);
-    
+
     if (isDev) {
       console.log('Search: Dev mode detected, showing dev message');
       searchContainer.innerHTML = `
@@ -40,9 +40,9 @@
       console.error('Search: Fetch error:', error);
       return null;
     });
-    
+
     const isPagefindAvailable = pagefindResponse && pagefindResponse.ok;
-    
+
     if (!isPagefindAvailable) {
       console.log('Search: Pagefind not available in production');
       searchContainer.innerHTML = `
@@ -61,20 +61,20 @@
       const script = document.createElement('script');
       script.src = '/pagefind/pagefind.js';
       script.type = 'text/javascript';
-      
+
       await new Promise((resolve, reject) => {
         script.onload = resolve;
         script.onerror = () => reject(new Error('Failed to load pagefind.js'));
         document.head.appendChild(script);
       });
-      
+
       // Wait for pagefind to be available
-      await new Promise(resolve => setTimeout(resolve, 200));
-      
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
       if (!window.pagefind) {
         throw new Error('window.pagefind not available');
       }
-      
+
       // Initialize pagefind UI
       await window.pagefind.options({
         element: '#search',
@@ -84,17 +84,16 @@
         resetStyles: false,
         bundlePath: '/pagefind/',
         translations: {
-          placeholder: "Search...",
-          clear_search: "Clear",
-          load_more: "Load more results"
-        }
+          placeholder: 'Search...',
+          clear_search: 'Clear',
+          load_more: 'Load more results',
+        },
       });
-      
+
       console.log('Search: Initialized successfully');
-      
     } catch (error) {
       console.error('Search: Failed to initialize:', error);
-      
+
       searchContainer.innerHTML = `
         <div class="p-4 text-center text-gray-500 dark:text-gray-400">
           <p class="mb-2">Search is currently unavailable</p>
