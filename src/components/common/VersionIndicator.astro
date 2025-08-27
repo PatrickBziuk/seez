@@ -17,11 +17,26 @@ export interface Props {
 
 const { locale = 'en', showDetails = false, position = 'footer', className = '' } = Astro.props;
 
-// Get version information
-const buildDate = new Date().toISOString();
-const commitSha = process.env.GITHUB_SHA?.slice(0, 7) || 'dev';
-const version = process.env.npm_package_version || '1.0.0';
-const isProduction = import.meta.env.PROD;
+// Get version information from generated file or environment
+let versionInfo = null;
+try {
+  // Try to read the version file if it exists
+  const { readFileSync } = await import('fs');
+  const { join } = await import('path');
+  const versionPath = join(process.cwd(), 'src/generated/version.json');
+  const versionData = readFileSync(versionPath, 'utf8');
+  versionInfo = JSON.parse(versionData);
+} catch (error) {
+  // File doesn't exist yet or other error, use fallback
+  console.warn('Could not load version info, using fallbacks:', error instanceof Error ? error.message : String(error));
+}
+
+// Fallback values
+const commitSha = versionInfo?.commitSha?.slice(0, 7) || process.env.GITHUB_SHA?.slice(0, 7) || 'dev';
+const version = versionInfo?.version || process.env.npm_package_version || '1.0.0';
+const buildDate = versionInfo?.buildDate || new Date().toISOString();
+const commitCount = versionInfo?.commitCount || 0;
+const branch = versionInfo?.branch || 'unknown';
 
 // Format build time
 const formatBuildTime = (date: string) => {
@@ -44,7 +59,7 @@ const positionClasses = {
 
 <div
   class={`version-indicator ${positionClasses[position]} ${className}`}
-  title={`Version ${version} - ${commitSha} - Built: ${formatBuildTime(buildDate)}`}
+  title={`Version ${version} - Commit ${commitSha} (${commitCount}) - Branch: ${branch} - Built: ${formatBuildTime(buildDate)}`}
 >
   {
     showDetails ? (
@@ -52,13 +67,14 @@ const positionClasses = {
         <span class="version-badge inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
           v{version}
         </span>
-        {isProduction && <span class="commit-info text-xs ml-2">{commitSha}</span>}
+        <span class="commit-info text-xs ml-2">#{commitCount}</span>
+        <span class="commit-sha text-xs ml-1 opacity-75">({commitSha})</span>
         <span class="build-time text-xs ml-2">{formatBuildTime(buildDate)}</span>
       </div>
     ) : (
       <span class="version-simple">
         v{version}
-        {isProduction && <span class="commit-short ml-1 opacity-75">{commitSha}</span>}
+        <span class="commit-short ml-1 opacity-75">#{commitCount}</span>
       </span>
     )
   }

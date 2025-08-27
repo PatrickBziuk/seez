@@ -2,6 +2,13 @@ import { getRssString } from '@astrojs/rss';
 import { buildRssItems, getRssChannelMeta } from '~/utils/rss';
 import type { SupportedLanguage } from '~/utils/i18n';
 
+export async function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'de' } },
+  ];
+}
+
 export const GET = async ({ params }: { params: { lang: SupportedLanguage } }) => {
   const lang = params.lang;
   const { items, lastBuildDate } = await buildRssItems({ language: lang });
