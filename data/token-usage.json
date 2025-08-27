@@ -11308,5 +11308,31 @@
     "timestamp": "2025-08-27T08:39:26.359Z",
     "sourceLanguage": "de",
     "targetLanguage": "en"
+  },
+  {
+    "operation": "translation",
+    "canonicalId": "slug-20250805-e84d4526",
+    "model": "gpt-4.1-nano",
+    "inputTokens": 2092,
+    "outputTokens": 1546,
+    "totalTokens": 3638,
+    "cost": 0.0008276000000000001,
+    "co2Impact": 0.3638,
+    "timestamp": "2025-08-27T17:04:59.398Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
+  },
+  {
+    "operation": "title-translation",
+    "canonicalId": "slug-20250805-e84d4526",
+    "model": "gpt-4.1-nano",
+    "inputTokens": 20,
+    "outputTokens": 56,
+    "totalTokens": 76,
+    "cost": 0.000024400000000000004,
+    "co2Impact": 0.0076,
+    "timestamp": "2025-08-27T17:05:00.597Z",
+    "sourceLanguage": "de",
+    "targetLanguage": "en"
   }
 ]
