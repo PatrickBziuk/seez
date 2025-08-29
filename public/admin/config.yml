@@ -16,6 +16,243 @@ collections:
       - { label: 'Date', name: 'date', widget: 'datetime' }
       - { label: 'Draft', name: 'draft', widget: 'boolean', default: false }
       - { label: 'Body', name: 'body', widget: 'markdown' }
+  - name: 'music'
+    label: 'Music'
+    folder: 'src/content/music'
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Language', name: 'language', widget: 'select', options: ['en', 'de'], default: 'en' }
+      - {
+          label: 'Authors',
+          name: 'authors',
+          widget: 'list',
+          field:
+            {
+              label: 'Author',
+              name: 'author',
+              widget: 'relation',
+              collection: 'authors',
+              searchFields: ['name'],
+              valueField: 'name',
+            },
+        }
+      - { label: 'Tags', name: 'tags', widget: 'list', default: [] }
+      - {
+          label: 'Publication Status',
+          name: 'publicationStatus',
+          widget: 'select',
+          options: ['draft', 'published', 'archived'],
+          default: 'draft',
+        }
+      - {
+          label: 'Audio URL',
+          name: 'audioUrl',
+          widget: 'string',
+          required: false,
+          hint: 'Site-relative (/sounds/*.mp3) or full URL',
+        }
+      - { label: 'Spotify ID', name: 'spotifyId', widget: 'string', required: false }
+      - {
+          label: 'Fragment',
+          name: 'figureRef',
+          widget: 'relation',
+          collection: 'fragments',
+          searchFields: ['title', 'id'],
+          valueField: 'id',
+          required: false,
+        }
+      - { label: 'BPM', name: 'bpm', widget: 'number', required: false }
+      - { label: 'Genre', name: 'genre', widget: 'list', default: [] }
+      - { label: 'Liner Notes', name: 'linerNotes', widget: 'text', required: false }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
+  - name: 'texts'
+    label: 'Texts'
+    folder: 'src/content/texts'
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Language', name: 'language', widget: 'select', options: ['en', 'de'], default: 'en' }
+      - {
+          label: 'Authors',
+          name: 'authors',
+          widget: 'list',
+          field:
+            {
+              label: 'Author',
+              name: 'author',
+              widget: 'relation',
+              collection: 'authors',
+              searchFields: ['name'],
+              valueField: 'name',
+            },
+        }
+      - { label: 'Tags', name: 'tags', widget: 'list', default: [] }
+      - {
+          label: 'Publication Status',
+          name: 'publicationStatus',
+          widget: 'select',
+          options: ['draft', 'published', 'archived'],
+          default: 'draft',
+        }
+      - {
+          label: 'Type',
+          name: 'type',
+          widget: 'select',
+          options: ['prolog', 'chapter', 'essay', 'poem', 'story'],
+          required: false,
+        }
+      - { label: 'Excerpt', name: 'excerpt', widget: 'text', required: false }
+      - { label: 'Chapter Number', name: 'chapterNumber', widget: 'number', required: false }
+      - {
+          label: 'Fragments',
+          name: 'figureRefs',
+          widget: 'relation',
+          multiple: true,
+          collection: 'fragments',
+          searchFields: ['title', 'id'],
+          valueField: 'id',
+          required: false,
+        }
+      - {
+          label: 'Songs',
+          name: 'songRefs',
+          widget: 'relation',
+          multiple: true,
+          collection: 'music',
+          searchFields: ['title', 'id'],
+          valueField: 'id',
+          required: false,
+        }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
+  - name: 'fragments'
+    label: 'Fragments'
+    folder: 'src/content/fragments'
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Alias', name: 'alias', widget: 'string', required: false }
+      - { label: 'Language', name: 'language', widget: 'select', options: ['en', 'de'], default: 'en' }
+      - label: 'Authors'
+        name: 'authors'
+        widget: 'list'
+        field:
+          label: 'Author'
+          name: 'author'
+          widget: 'relation'
+          collection: 'authors'
+          searchFields: ['name']
+          valueField: 'name'
+      - { label: 'Tags', name: 'tags', widget: 'list', default: [] }
+      - label: 'Publication Status'
+        name: 'publicationStatus'
+        widget: 'select'
+        options: ['draft', 'published', 'archived']
+        default: 'draft'
+      - label: 'Image (filename or URL)'
+        name: 'image'
+        widget: 'string'
+        required: false
+        hint: 'If empty, falls back to /images/figures/{slug}.png'
+      - { label: 'Designation (e.g., SZ-001)', name: 'designation', widget: 'string', required: false }
+      - { label: 'Color Code', name: 'colorCode', widget: 'string', required: false }
+      - label: 'Symbolism'
+        name: 'symbolism'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Icon', name: 'icon', widget: 'string' }
+          - { label: 'Meaning', name: 'meaning', widget: 'string' }
+      - label: 'Voice Characteristics'
+        name: 'voiceCharacteristics'
+        widget: 'object'
+        required: false
+        fields:
+          - { label: 'Preset', name: 'preset', widget: 'string', required: false }
+          - label: 'BPM Range'
+            name: 'bpmRange'
+            widget: 'list'
+            required: false
+            field: { label: 'BPM', name: 'bpm', widget: 'number' }
+          - { label: 'Style', name: 'style', widget: 'list', required: false }
+      - { label: 'Movement Grammar', name: 'movementGrammar', widget: 'list', required: false }
+      - label: 'Primary Songs'
+        name: 'primarySongs'
+        widget: 'relation'
+        multiple: true
+        collection: 'music'
+        searchFields: ['title', 'id']
+        valueField: 'id'
+        required: false
+      - { label: 'Containment Note', name: 'containmentNote', widget: 'text', required: false }
+      - { label: 'Do Not Translate (strings)', name: 'notranslate', widget: 'list', required: false }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
+  - name: 'artifacts'
+    label: 'Artifacts'
+    folder: 'src/content/artifacts'
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Language', name: 'language', widget: 'select', options: ['en', 'de'], default: 'en' }
+      - {
+          label: 'Authors',
+          name: 'authors',
+          widget: 'list',
+          field:
+            {
+              label: 'Author',
+              name: 'author',
+              widget: 'relation',
+              collection: 'authors',
+              searchFields: ['name'],
+              valueField: 'name',
+            },
+        }
+      - { label: 'Tags', name: 'tags', widget: 'list', default: [] }
+      - {
+          label: 'Publication Status',
+          name: 'publicationStatus',
+          widget: 'select',
+          options: ['draft', 'published', 'archived'],
+          default: 'draft',
+        }
+      - {
+          label: 'Type',
+          name: 'type',
+          widget: 'select',
+          options: ['merch', 'physical', 'digital', 'print'],
+          required: false,
+        }
+      - label: 'Cost Breakdown'
+        name: 'costBreakdown'
+        widget: 'object'
+        required: false
+        fields:
+          - { label: 'Materials', name: 'materials', widget: 'number', required: false }
+          - { label: 'Production', name: 'production', widget: 'number', required: false }
+          - { label: 'Shipping', name: 'shipping', widget: 'number', required: false }
+          - { label: 'Total', name: 'total', widget: 'number', required: false }
+      - {
+          label: 'Availability',
+          name: 'availability',
+          widget: 'select',
+          options: ['available', 'limited', 'sold-out', 'custom-order'],
+          required: false,
+        }
+      - {
+          label: 'Fragment',
+          name: 'figureRef',
+          widget: 'relation',
+          collection: 'fragments',
+          searchFields: ['title', 'id'],
+          valueField: 'id',
+          required: false,
+        }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
   - name: 'projects'
     label: 'Projects'
     folder: 'src/content/projects'

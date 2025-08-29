@@ -256,10 +256,17 @@ function initializeOpenAI(): OpenAI {
 /**
  * Extract content for translation (preserve MDX components)
  */
-function extractTranslatableContent(content: string): string {
-  // For now, just return the content as-is
-  // Future enhancement: implement code block preservation
-  return content.trim();
+function extractTranslatableContent(content: string, notranslateList: string[] = []): string {
+  let working = content;
+  let i = 0;
+  for (const phrase of notranslateList) {
+    if (!phrase || phrase.length < 2) continue;
+    const safe = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(safe, 'g');
+    const ph = `__NOTR_${i++}__`;
+    working = working.replace(re, ph);
+  }
+  return working.trim();
 }
 
 /**
@@ -276,8 +283,17 @@ async function generateTranslation(
   tokenUsageMetadata: TokenUsageMetadata;
 }> {
   console.log(`🔄 Translating ${task.canonicalId}: ${task.sourceLanguage} → ${task.targetLang}`);
+  let notranslateList: string[] = [];
+  try {
+    const parsed = matter(content);
+    if (Array.isArray(parsed.data?.notranslate)) {
+      notranslateList = parsed.data.notranslate as string[];
+    }
+  } catch {
+    // ignore frontmatter parse errors; proceed without notranslate list
+  }
 
-  const extractedContent = extractTranslatableContent(content);
+  const extractedContent = extractTranslatableContent(content, notranslateList);
 
   const prompt = `You are a professional translator specializing in technical content and software documentation.
 
@@ -285,7 +301,8 @@ Task: Translate the following content from ${task.sourceLanguage} to ${task.targ
 
 Important guidelines:
 1. Preserve all Markdown formatting exactly
-2. Do NOT translate technical terms, code, URLs,  something inside a component (lyrics, quotes, whatever) or component names
+2. Do NOT translate technical terms, code, URLs, content inside components, or component names
+3. Do NOT translate placeholders starting with __NOTR_ and return them verbatim; they will be restored after
 3. Maintain the same tone and style
 4. Keep all punctuation and line breaks
 5. Preserve any special syntax like frontmatter or MDX components
@@ -305,7 +322,7 @@ Please provide ONLY the translated content without any explanation or additional
       max_tokens: 4000,
     });
 
-    const translatedContent = response.choices[0]?.message?.content?.trim() || '';
+    let translatedContent = response.choices[0]?.message?.content?.trim() || '';
 
     if (!translatedContent) {
       throw new Error('Empty translation response');
@@ -336,7 +353,7 @@ Please provide ONLY the translated content without any explanation or additional
       max_tokens: 100,
     });
 
-    const translatedTitle = titleResponse.choices[0]?.message?.content?.trim() || title;
+    let translatedTitle = titleResponse.choices[0]?.message?.content?.trim() || title;
 
     // Track token usage for title translation
     const titleUsage = titleResponse.usage;
@@ -358,6 +375,13 @@ Please provide ONLY the translated content without any explanation or additional
         co2: translationUsage.co2Impact + titleTokenUsage.co2Impact,
       },
     };
+
+    // Restore notranslate placeholders back to original phrases
+    notranslateList.forEach((phrase, i) => {
+      const ph = new RegExp(`__NOTR_${i}__`, 'g');
+      translatedContent = translatedContent.replace(ph, phrase);
+      translatedTitle = translatedTitle.replace(ph, phrase);
+    });
 
     return { translatedContent, translatedTitle, tokenUsageMetadata };
   } catch (error) {

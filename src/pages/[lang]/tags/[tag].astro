@@ -12,8 +12,9 @@ import { SUPPORTED_LANGUAGES, getTranslations } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 import type { CollectionEntry } from 'astro:content';
 import ContentMetadata from '../../../components/content/metadata/ContentMetadata.astro';
+import { getPermalink } from '../../../utils/permalinks';
 
-type ContentEntry = CollectionEntry<'projects'>;
+type ContentEntry = CollectionEntry<'projects' | 'music' | 'texts' | 'fragments'>;
 
 export async function getStaticPaths() {
   const paths: Array<{
@@ -22,11 +23,18 @@ export async function getStaticPaths() {
   }> = [];
 
   for (const lang of SUPPORTED_LANGUAGES) {
-    // Get all content from all collections
-    const projects = await getCollection('projects');
+    // Get all content from relevant collections
+    const [projects, music, texts, figures] = await Promise.all([
+      getCollection('projects'),
+      getCollection('music'),
+      getCollection('texts'),
+      getCollection('fragments'),
+    ]);
 
-    // Combine all content and filter by language
-    const allContent: ContentEntry[] = [...projects].filter((item) => item.data.language === lang);
+    // Combine and filter by language
+    const allContent: ContentEntry[] = [...projects, ...music, ...texts, ...figures].filter(
+      (item) => item.data.language === lang
+    );
 
     // Extract unique tags for this language
     const tags = new Set<string>();
@@ -52,8 +60,8 @@ const t = await getTranslations(lang);
 
 // Sort content by date (newest first)
 const sortedContent = content.sort((a: ContentEntry, b: ContentEntry) => {
-  const dateA = a.data.date || a.data.timestamp;
-  const dateB = b.data.date || b.data.timestamp;
+  const dateA = a.data.firstPublishedAt || a.data.date || a.data.timestamp;
+  const dateB = b.data.firstPublishedAt || b.data.date || b.data.timestamp;
 
   // Ensure dates are valid before creating Date objects
   const timeA = dateA ? new Date(dateA).getTime() : 0;
@@ -75,7 +83,7 @@ const metadata = {
   <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
     <header class="mb-12">
       <nav class="text-sm breadcrumbs mb-4">
-        <a href={`/${lang}/tags`} class="text-blue-600 dark:text-blue-400 hover:underline">
+        <a href={getPermalink(`/${lang}/tags`)} class="text-blue-600 dark:text-blue-400 hover:underline">
           {lang === 'de' ? 'Alle Themen' : 'All Topics'}
         </a>
         <span class="mx-2">/</span>
@@ -95,8 +103,8 @@ const metadata = {
     </header>
 
     <nav class="mb-6 text-sm text-gray-500 dark:text-gray-400">
-      <a href={`/${lang}/`}>{lang === 'de' ? 'Startseite' : 'Home'}</a> &gt; <a href={`/${lang}/tags`}
-        >{lang === 'de' ? 'Alle Themen' : 'All Topics'}</a
+      <a href={getPermalink(`/${lang}/`)}>{lang === 'de' ? 'Startseite' : 'Home'}</a> &gt; <a
+        href={getPermalink(`/${lang}/tags`)}>{lang === 'de' ? 'Alle Themen' : 'All Topics'}</a
       > &gt; <span>{tag}</span>
     </nav>
 
@@ -107,7 +115,9 @@ const metadata = {
             <article class="border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0">
               <h2 class="text-xl font-semibold mb-3">
                 <a
-                  href={`/${lang}/${item.collection}/${item.id.replace(/\.mdx?$/, '')}`}
+                  href={getPermalink(
+                    `/${lang}/${item.collection}/${item.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`
+                  )}
                   class="text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   {item.data.title}

@@ -197,7 +197,10 @@ function markTaskCompleted(task: TranslationTask, progress: TranslationProgress)
 /**
  * Extract translatable content, preserving components and technical elements
  */
-function extractTranslatableContent(content: string): {
+function extractTranslatableContent(
+  content: string,
+  notranslateList: string[] = []
+): {
   translatableText: string;
   preservedElements: Map<string, string>;
 } {
@@ -213,6 +216,26 @@ function extractTranslatableContent(content: string): {
       placeholderIndex++;
       return placeholder;
     });
+  }
+
+  // Preserve notranslate block markers
+  const blockPattern = /<!--\s*notranslate:start\s*-->[\s\S]*?<!--\s*notranslate:end\s*-->/g;
+  workingContent = workingContent.replace(blockPattern, (match) => {
+    const placeholder = `__PRESERVED_${placeholderIndex}__`;
+    preservedElements.set(placeholder, match);
+    placeholderIndex++;
+    return placeholder;
+  });
+
+  // Preserve explicit notranslate phrases by replacing them with placeholders
+  for (const phrase of notranslateList) {
+    if (!phrase || phrase.length < 2) continue;
+    const safe = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(safe, 'g');
+    const placeholder = `__NOTR_${placeholderIndex}__`;
+    preservedElements.set(placeholder, phrase);
+    placeholderIndex++;
+    workingContent = workingContent.replace(re, placeholder);
   }
 
   return {
@@ -339,7 +362,8 @@ async function translateTask(task: TranslationTask): Promise<boolean> {
     console.log(`🔄 Extracting translatable content...`);
 
     // Extract translatable content while preserving components
-    const { translatableText, preservedElements } = extractTranslatableContent(raw);
+    const notranslateList: string[] = Array.isArray(parsed.data.notranslate) ? parsed.data.notranslate : [];
+    const { translatableText, preservedElements } = extractTranslatableContent(raw, notranslateList);
 
     const openai = new OpenAI();
 
@@ -348,6 +372,7 @@ async function translateTask(task: TranslationTask): Promise<boolean> {
 
 1. Translate ONLY the human-readable text content into ${targetLang}
 2. NEVER translate: import statements, component tags, code blocks, URLs, technical terms, or tag arrays
+3. Do not translate placeholders named __NOTR_*__ and return them verbatim; they will be restored after translation
 3. PRESERVE ALL markdown structure exactly (headings, lists, formatting)
 4. Preserve placeholders like __PRESERVED_X__ exactly as they are
 5. Generate a 3-4 sentence TLDR in ${targetLang}
@@ -464,7 +489,16 @@ Output exactly one JSON object:
     const restoredTranslation = restorePreservedElements(translated_markdown, preservedElements);
 
     // Parse the translated content
-    const { data: fm, content: body } = matter(restoredTranslation);
+    const parsedTranslated = matter(restoredTranslation);
+    const fm = parsedTranslated.data as Record<string, unknown>;
+    let body = parsedTranslated.content;
+    // Ensure __NOTR_*__ placeholders are restored in body
+    if (Array.isArray(parsed.data.notranslate)) {
+      (parsed.data.notranslate as string[]).forEach((phrase: string, i: number) => {
+        const ph = new RegExp(`__NOTR_${i}__`, 'g');
+        body = body.replace(ph, phrase);
+      });
+    }
 
     // Analyze content similarity for hallucination detection
     const similarityAnalysis = analyzeContentSimilarity(parsed.content, body);

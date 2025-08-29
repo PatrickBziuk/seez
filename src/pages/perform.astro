@@ -1,0 +1,125 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const metadata = {
+  title: 'Performer License - seez.eu',
+  description: 'License terms for performing seez music - Sinn fix, Form frei (Fixed meaning, free form)',
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+---
+
+<Layout metadata={metadata}>
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="prose prose-lg dark:prose-invert max-w-none">
+      <h1>Performer License</h1>
+
+      <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-8">
+        <h2 class="text-xl font-semibold text-blue-900 dark:text-blue-100 mt-0">🎵 Sinn fix, Form frei</h2>
+        <p class="text-blue-800 dark:text-blue-200 mb-0">
+          <strong>Fixed meaning, free form</strong> - Perform our music with your interpretation while preserving the core
+          message.
+        </p>
+      </div>
+
+      <h2>License Terms</h2>
+
+      <p>All music in the seez creative cosmos is available for performance under the following terms:</p>
+
+      <h3>✅ You are free to:</h3>
+      <ul>
+        <li><strong>Perform</strong> - Play and perform the songs publicly</li>
+        <li><strong>Adapt</strong> - Change arrangement, tempo, and musical style</li>
+        <li><strong>Interpret</strong> - Add your own vocal interpretation and energy</li>
+        <li><strong>Record</strong> - Create your own recordings of performances</li>
+        <li><strong>Stream</strong> - Share performances on social media and streaming platforms</li>
+      </ul>
+
+      <h3>📋 Requirements:</h3>
+      <ul>
+        <li><strong>Attribution</strong> - Credit "Original by seez" in description/credits</li>
+        <li><strong>Core Message</strong> - Preserve the essential meaning and emotional intent</li>
+        <li><strong>Non-Commercial</strong> - Free performances only (see commercial licensing below)</li>
+      </ul>
+
+      <h3>🚫 Not allowed:</h3>
+      <ul>
+        <li>Changing lyrics to contradict the original message</li>
+        <li>Commercial use without explicit permission</li>
+        <li>Claiming original authorship</li>
+        <li>Use for harmful, discriminatory, or hateful purposes</li>
+      </ul>
+
+      <h2>Commercial Licensing</h2>
+
+      <p>
+        For commercial performances, recordings, or streaming with monetization,
+        <a
+          href="mailto:info@seez.eu?subject=Commercial%20License%20Request"
+          class="text-blue-600 dark:text-blue-400 hover:underline"
+        >
+          contact us for a commercial license
+        </a>.
+      </p>
+
+      <h2>Stems & Production Files</h2>
+
+      <div class="bg-gray-50 dark:bg-gray-800 border rounded-lg p-6">
+        <h3 class="mt-0">Request Production Materials</h3>
+        <p>Need stems, MIDI files, or production materials for your performance? We're happy to share when possible.</p>
+        <a
+          href="mailto:info@seez.eu?subject=Stems%20Request"
+          class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Request Stems
+        </a>
+      </div>
+
+      <h2>Figure-Specific Guidelines</h2>
+
+      <p>Some figures have specific performance considerations:</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">🪞 Splinter</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-400">
+            Introspective delivery required. Avoid theatrical exaggeration.
+          </p>
+        </div>
+
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">🔬 Lume</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-400">
+            Gentle, dreamy vocals. Hook sections especially important.
+          </p>
+        </div>
+
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">⚠️ Drift</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-400">
+            <strong>Content Warning:</strong> Handle substance themes responsibly.
+          </p>
+        </div>
+      </div>
+
+      <h2>Community & Collaboration</h2>
+
+      <p>
+        We love seeing creative interpretations! Tag us on social media or send recordings to
+        <a href="mailto:info@seez.eu" class="text-blue-600 dark:text-blue-400 hover:underline">info@seez.eu</a>
+        to be featured in our community showcase.
+      </p>
+
+      <div class="border-t border-gray-200 dark:border-gray-700 pt-8 mt-12">
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          <strong>Last updated:</strong> August 27, 2025<br />
+          <strong>License version:</strong> 1.0<br />
+          <strong>Questions?</strong> Contact us at
+          <a href="mailto:info@seez.eu" class="text-blue-600 dark:text-blue-400 hover:underline">info@seez.eu</a>
+        </p>
+      </div>
+    </div>
+  </main>
+</Layout>

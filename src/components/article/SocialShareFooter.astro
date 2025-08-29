@@ -11,6 +11,7 @@
  */
 
 import { Icon } from 'astro-icon/components';
+import { getPermalink } from '~/utils/permalinks';
 import Badge from '../ui/display/Badge.astro';
 import { getTranslations, detectLanguage } from '~/utils/i18n';
 
@@ -137,7 +138,7 @@ const followPlatforms = [
           <div class="flex flex-wrap gap-2">
             {tags.map((tag: string) => (
               <a
-                href={`/${language}/tags/${encodeURIComponent(tag)}`}
+                href={getPermalink(`/${language}/tags/${encodeURIComponent(tag)}`)}
                 class="focus:outline-none transition-transform hover:scale-105"
               >
                 <Badge 

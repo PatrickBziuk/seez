@@ -1,0 +1,228 @@
+---
+/**
+ * Figure Detail (FRAGMENT) - Identity fragment dossier
+ * @props - lang, slug
+ * @behavior - Presents figure as identity fragment: portrait, color, symbolism, voice, movement, related works
+ * @dependencies - astro:content, RelatedContent, i18n utils
+ * @usedBy - /[lang]/figuren grid, deep links, search
+ */
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/PageLayout.astro';
+import RelatedContent from '../../../components/content/RelatedContent.astro';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+import { getPermalink } from '../../../utils/permalinks';
+
+export const getStaticPaths = (async () => {
+  const figures = await getCollection('fragments');
+
+  return SUPPORTED_LANGUAGES.flatMap((lang) =>
+    figures.map((figure) => ({
+      params: { lang, slug: figure.id },
+      props: { figure },
+    }))
+  );
+}) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+const { figure } = Astro.props;
+
+const t = (de: string, en: string) => (lang === 'de' ? de : en);
+
+// Get related music content
+const allMusic = await getCollection('music');
+const relatedSongs = allMusic.filter(
+  (song) =>
+    (Array.isArray(figure.data.primarySongs) && figure.data.primarySongs.some((ref) => ref.id === song.id)) ||
+    (song.data.figureRef && song.data.figureRef.id === figure.id)
+);
+
+const manifestTitle = lang === 'de' ? 'FRAGMENT Dossier' : 'FRAGMENT Dossier';
+const metaDesc =
+  lang === 'de'
+    ? `Identitätsfragment: ${figure.data.title}${figure.data.alias ? ` ("${figure.data.alias}")` : ''}. Stimme, Symbolik, Bewegung.`
+    : `Identity fragment: ${figure.data.title}${figure.data.alias ? ` ("${figure.data.alias}")` : ''}. Voice, symbolism, movement.`;
+
+const metadata = {
+  title: `${figure.data.designation ? figure.data.designation + ' · ' : ''}${figure.data.title} — ${manifestTitle}`,
+  description: metaDesc,
+  canonical: getPermalink(`/${lang}/fragmente/${figure.id}`),
+};
+
+// Render content
+const { Content } = await render(figure);
+---
+
+<Layout metadata={metadata}>
+  <!-- FRAGMENT Header -->
+  <div class="py-4 mb-8 border-b border-gray-200 dark:border-gray-800 bg-transparent">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        {figure.data.designation && <span class="text-2xl font-mono font-bold">{figure.data.designation}</span>}
+        <div class="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
+        <span class="text-sm uppercase tracking-wider text-muted">{manifestTitle}</span>
+      </div>
+      <div class="w-6 h-6 rounded-full border border-gray-400/30 bg-gray-400/20"></div>
+    </div>
+  </div>
+
+  <article class="max-w-4xl mx-auto px-4 sm:px-6">
+    <!-- Character Portrait -->
+    <div class="mb-8 text-center relative">
+      {
+        (() => {
+          const explicit = figure.data.image as string | undefined;
+          const base = figure.id.replace('sz-', '').replace(/^\d+-/, '');
+          const src = explicit || `/images/figures/${base}.png`;
+          return <img src={src} alt={figure.data.title} class="w-64 h-64 mx-auto rounded-lg shadow-lg object-cover" />;
+        })()
+      }
+      {
+        figure.id.includes('gl1tch') && (
+          <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div class="glitch w-64 h-64 rounded-lg" />
+          </div>
+        )
+      }
+    </div>
+
+    <!-- RPG-style Stat Block -->
+    <div
+      class="mb-8 rounded-xl p-6 border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-slate-900/60 backdrop-blur"
+    >
+      <h2 class="text-xl font-bold mb-4 text-center">{t('Profil', 'Profile')}</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <div class="text-xs uppercase tracking-wide text-muted">{t('Alias', 'Alias')}</div>
+          <div class="text-lg">{figure.data.alias || t('—', '—')}</div>
+        </div>
+        <!-- Color removed per neutral spec -->
+        <!-- Voice/movement removed per spec; keep minimal fields only -->
+      </div>
+      {
+        figure.data.symbolism && (
+          <div class="mt-4 flex flex-wrap gap-2">
+            {figure.data.symbolism.map((s) => (
+              <span
+                class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-xs"
+                title={s.meaning}
+              >
+                <span>{s.icon}</span>
+                <span class="hidden sm:inline">{s.meaning}</span>
+              </span>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    <!-- Voice & Movement removed per spec -->
+
+    <!-- Related Songs -->
+    {
+      relatedSongs.length > 0 && (
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold mb-4">{lang === 'de' ? 'Verknüpfte Musik' : 'Related Music'}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {relatedSongs.map((song) => (
+              <a
+                href={getPermalink(`/${lang}/music/${song.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`)}
+                class="block bg-white dark:bg-slate-900 rounded-lg shadow hover:shadow-lg transition-shadow p-4 border border-gray-200 dark:border-gray-700"
+              >
+                <h3 class="font-semibold mb-1">{song.data.title}</h3>
+                {song.data.artist && <p class="text-sm text-muted mb-2">{song.data.artist}</p>}
+                <p class="text-xs text-muted">
+                  {song.data.firstPublishedAt
+                    ? new Date(song.data.firstPublishedAt).toLocaleDateString(lang)
+                    : 'Unveröffentlicht'}
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    <!-- Main Content -->
+    <div class="prose prose-lg dark:prose-invert max-w-none mb-8">
+      <Content />
+    </div>
+
+    <!-- Fragment Note (optional legacy field reuse) -->
+    {
+      figure.data.containmentNote && (
+        <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-6 mb-8">
+          <h3 class="font-bold mb-2 text-purple-800 dark:text-purple-200">{t('FRAGMENT-Notiz', 'Fragment Note')}</h3>
+          <p class="text-purple-700 dark:text-purple-300">{figure.data.containmentNote}</p>
+        </div>
+      )
+    }
+
+    <!-- Navigation -->
+    <div class="border-t border-gray-200 dark:border-gray-700 pt-8 mt-8">
+      <div class="flex justify-between">
+        <a
+          href={getPermalink(`/${lang}/fragmente`)}
+          class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        >
+          ← {lang === 'de' ? 'Alle Fragmente' : 'All Fragments'}
+        </a>
+
+        <div class="text-right">
+          <p class="text-xs text-muted mb-1">{lang === 'de' ? 'Aktualisiert' : 'Updated'}</p>
+          <p class="text-sm font-mono">
+            {
+              figure.data.firstPublishedAt
+                ? new Date(figure.data.firstPublishedAt).toLocaleDateString(lang)
+                : 'Nicht veröffentlicht'
+            }
+          </p>
+        </div>
+      </div>
+    </div>
+  </article>
+  <RelatedContent entry={figure} lang={lang} />
+</Layout>
+
+<style>
+  /* subtle glitch overlay for Gl1tch */
+  .glitch {
+    --c: 2px;
+    background: repeating-linear-gradient(0deg, transparent 0 4px, rgba(255, 255, 255, 0.03) 4px 6px);
+    filter: contrast(120%) saturate(110%);
+    animation: shift 2.5s infinite ease-in-out;
+  }
+  @keyframes shift {
+    0% {
+      transform: translate(0, 0);
+      opacity: 0;
+      mix-blend-mode: normal;
+    }
+    15% {
+      transform: translate(1px, -1px);
+      opacity: 0.3;
+      mix-blend-mode: screen;
+    }
+    30% {
+      transform: translate(-1px, 2px);
+      opacity: 0.15;
+      mix-blend-mode: lighten;
+    }
+    45% {
+      transform: translate(2px, 1px);
+      opacity: 0.25;
+      mix-blend-mode: screen;
+    }
+    60% {
+      transform: translate(-2px, -1px);
+      opacity: 0.12;
+      mix-blend-mode: lighten;
+    }
+    100% {
+      transform: translate(0, 0);
+      opacity: 0;
+      mix-blend-mode: normal;
+    }
+  }
+</style>

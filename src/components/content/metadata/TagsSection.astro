@@ -9,6 +9,7 @@
 import Badge from '../../ui/display/Badge.astro';
 import { Icon } from 'astro-icon/components';
 import { getTranslations, detectLanguage } from '~/utils/i18n';
+import { getPermalink } from '~/utils/permalinks';
 
 const { tags = [], placement = 'bottom' } = Astro.props;
 const currentLanguage = detectLanguage(Astro.url.pathname);
@@ -31,7 +32,7 @@ const isBottom = placement === 'bottom';
       <div class={`flex flex-wrap gap-2 ${isTop ? 'gap-3' : ''}`}>
         {tags.map((tag: string) => (
           <a
-            href={`/${currentLanguage}/tags/${encodeURIComponent(tag)}`}
+            href={getPermalink(`/${currentLanguage}/tags/${encodeURIComponent(tag)}`)}
             class={`focus:outline-none transition-transform hover:scale-105 ${isTop ? 'hover:scale-110' : ''}`}
           >
             <Badge

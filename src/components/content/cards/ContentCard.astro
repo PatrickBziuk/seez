@@ -8,6 +8,7 @@
  */
 import { Icon } from 'astro-icon/components';
 import { getTranslations } from '~/utils/i18n';
+import { getPermalink } from '~/utils/permalinks';
 import type { SupportedLanguage } from '~/utils/i18n';
 import type { CollectionEntry } from 'astro:content';
 
@@ -61,7 +62,7 @@ const publishDate = formatDate(item.data.publishDate || item.data.timestamp);
   class="flex flex-col min-h-80 p-6 rounded-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition-all duration-200"
 >
   <!-- Title -->
-  <a href={generateItemUrl(item, lang, basePath)} class="group">
+  <a href={getPermalink(generateItemUrl(item, lang, basePath))} class="group">
     <h2
       class="text-xl font-semibold mb-3 font-heading dark:text-gray-200 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-2"
     >
@@ -111,7 +112,7 @@ const publishDate = formatDate(item.data.publishDate || item.data.timestamp);
             <div class="mt-2 flex flex-wrap gap-2 max-h-20 overflow-y-auto">
               {item.data.tags.map((tag) => (
                 <a
-                  href={`/${lang}/tags/${tag}`}
+                  href={getPermalink(`/${lang}/tags/${encodeURIComponent(tag)}`)}
                   class="inline-block bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs px-2 py-1 rounded hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors"
                 >
                   {tag}

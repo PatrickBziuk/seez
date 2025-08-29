@@ -1,3 +1,7 @@
+#local drafts
+content_to_fill_site/*
+.content_to_fill_site
+
 # build output
 dist/
 .output/

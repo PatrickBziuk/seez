@@ -1,0 +1,84 @@
+---
+import { getCollection, type CollectionEntry, render } from 'astro:content';
+import MarkdownLayout from '../../../layouts/MarkdownLayout.astro';
+import { getPermalink } from '../../../utils/permalinks';
+import RelatedContent from '../../../components/content/RelatedContent.astro';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+
+export async function getStaticPaths() {
+  const paths: Array<{
+    params: { lang: SupportedLanguage; slug: string };
+    props: { entry: CollectionEntry<'texts'> };
+  }> = [];
+  for (const lang of SUPPORTED_LANGUAGES) {
+    const items = (await getCollection('texts')) as CollectionEntry<'texts'>[];
+    const langItems = items.filter((it) => it.data.language === lang || (!it.data.language && lang === 'en'));
+    for (const it of langItems) {
+      const cleanSlug = it.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+      paths.push({ params: { lang, slug: cleanSlug }, props: { entry: it } });
+    }
+  }
+  return paths;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const frontmatterWithDateObjects = {
+  ...entry.data,
+  publishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
+  firstPublishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
+  modifiedDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+  lastChangeDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+};
+---
+
+<MarkdownLayout frontmatter={frontmatterWithDateObjects}>
+  <Content />
+
+  {
+    (entry.data.figureRefs?.length || entry.data.songRefs?.length) && (
+      <section class="mt-10 border-t pt-6 space-y-4">
+        {entry.data.figureRefs?.length && (
+          <div>
+            <h2 class="text-xl font-semibold mb-2">{Astro.params.lang === 'de' ? 'Fragmente' : 'Fragments'}</h2>
+            <ul class="list-disc ml-5">
+              {entry.data.figureRefs.map((ref) => (
+                <li>
+                  <a
+                    class="underline hover:no-underline"
+                    href={getPermalink(`/${Astro.params.lang}/fragmente/${ref.id}`)}
+                  >
+                    {ref.id}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {entry.data.songRefs?.length && (
+          <div>
+            <h2 class="text-xl font-semibold mb-2">{Astro.params.lang === 'de' ? 'Songs' : 'Songs'}</h2>
+            <ul class="list-disc ml-5">
+              {entry.data.songRefs.map((ref) => (
+                <li>
+                  <a
+                    class="underline hover:no-underline"
+                    href={getPermalink(
+                      `/${Astro.params.lang}/music/${ref.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`
+                    )}
+                  >
+                    {ref.id}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+    )
+  }
+
+  <RelatedContent entry={entry} lang={Astro.params.lang as 'en' | 'de'} />
+</MarkdownLayout>

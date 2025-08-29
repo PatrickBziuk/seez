@@ -1,0 +1,143 @@
+---
+/**
+ * Figures Listing (FRAGMENT) - Identity fragments overview grid
+ * @props - lang: URL language param
+ * @behavior - Grid of figure “fragments” with color accents, symbolism chips, and alias
+ * @dependencies - astro:content, i18n utils, figures collection schema
+ * @usedBy - /[lang]/figuren navigation and cross-links
+ */
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/PageLayout.astro';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+import { getPermalink } from '../../../utils/permalinks';
+
+export const getStaticPaths = (() => {
+  return SUPPORTED_LANGUAGES.map((lang) => ({
+    params: { lang },
+  }));
+}) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+// Get all fragments and sort by designation
+const figures = await getCollection('fragments');
+const sortedFigures = figures.sort((a, b) => {
+  const da = a.data.designation || '';
+  const db = b.data.designation || '';
+  return da.localeCompare(db);
+});
+
+const metadata = {
+  title: lang === 'de' ? 'Figuren – FRAGMENT Dossiers' : 'Figures – FRAGMENT Dossiers',
+  description:
+    lang === 'de'
+      ? 'Identitätsfragmente des kreativen Kosmos. Jede Figur ist ein Fragment – mit eigener Stimme, Symbolik und Ankerfarben.'
+      : 'Identity fragments of the creative cosmos. Each figure is a fragment – with its own voice, symbolism, and anchor color.',
+  canonical: getPermalink(`/${lang}/fragmente`),
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="py-16 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- Header -->
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-3">
+          {lang === 'de' ? 'FRAGMENT Dossiers' : 'FRAGMENT Dossiers'}
+        </h1>
+        <p class="text-muted max-w-3xl mx-auto">
+          {
+            lang === 'de'
+              ? 'Figuren als Identitätsfragmente – Stimmen, Symbole, Bewegungen. Kein Containment. Nur Reflektion.'
+              : 'Figures as identity fragments – voices, symbols, movements. No containment. Only reflection.'
+          }
+        </p>
+      </div>
+
+      <!-- Figures Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {
+          sortedFigures.map((figure) => (
+            <a
+              href={getPermalink(`/${lang}/fragmente/${figure.id}`)}
+              class="group block rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-slate-900/60 backdrop-blur-sm shadow-sm hover:shadow-lg transition-all"
+            >
+              <div class="relative aspect-square overflow-hidden rounded-b-none">
+                {(() => {
+                  const explicit = figure.data.image as string | undefined;
+                  const base = figure.id.replace('sz-', '').replace(/^\d+-/, '');
+                  const src = explicit || `/images/figures/${base}.png`;
+                  return (
+                    <img
+                      src={src}
+                      alt={figure.data.title}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  );
+                })()}
+                <div
+                  class="absolute inset-0"
+                  style={`background: linear-gradient(180deg, transparent, rgba(0,0,0,.0) 50%, rgba(0,0,0,.45) 100%)`}
+                />
+                <div class="absolute top-3 left-3 flex items-center gap-2">
+                  {figure.data.designation && (
+                    <span class="px-2 py-0.5 text-xs font-mono rounded bg-white/80 dark:bg-black/50 border border-black/10 dark:border-white/10">
+                      {figure.data.designation}
+                    </span>
+                  )}
+                </div>
+                <div class="absolute bottom-3 left-3 right-3">
+                  <h3 class="text-white text-lg font-semibold drop-shadow-sm">{figure.data.title}</h3>
+                  {figure.data.alias && <p class="text-white/90 text-xs italic">"{figure.data.alias}"</p>}
+                </div>
+              </div>
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-2">
+                    {(figure.data.symbolism || []).slice(0, 3).map((s) => (
+                      <span
+                        class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 text-base"
+                        title={s.meaning}
+                      >
+                        {s.icon}
+                      </span>
+                    ))}
+                  </div>
+                  <div class="w-5 h-5 rounded-full border border-gray-400/20 bg-gray-400/20" />
+                </div>
+                <div class="text-[11px] text-muted uppercase tracking-wide flex items-center gap-2">
+                  <span>{lang === 'de' ? 'Voice' : 'Voice'}</span>
+                  <span class="opacity-50">·</span>
+                  <span class="normal-case truncate max-w-[14rem]">
+                    {figure.data.voiceCharacteristics?.preset || (lang === 'de' ? 'Nicht definiert' : 'Not set')}
+                  </span>
+                </div>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+
+      <!-- Footer Note -->
+      <div class="mt-16 text-center">
+        <div
+          class="inline-block rounded-lg p-6 max-w-2xl border border-gray-200 dark:border-gray-800 bg-gradient-to-br from-white/70 to-gray-50/40 dark:from-slate-900/60 dark:to-slate-900/30 backdrop-blur"
+        >
+          <h3 class="font-bold mb-2">
+            {lang === 'de' ? 'FRAGMENT Manifest' : 'FRAGMENT Manifesto'}
+          </h3>
+          <p class="text-sm text-muted">
+            {
+              lang === 'de'
+                ? 'Diese Figuren sind Fragmente einer Identität. Kein Einsperren. Kein Breach. Nur Verstehen, Verbinden und künstlerisch verarbeiten.'
+                : 'These figures are fragments of an identity. No containment. No breach. Only understanding, connection, and artistic processing.'
+            }
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,102 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../layouts/PageLayout.astro';
+import { SUPPORTED_LANGUAGES } from '../../utils/i18n';
+import type { SupportedLanguage } from '../../utils/i18n';
+import { getPermalink } from '../../utils/permalinks';
+
+export const getStaticPaths = (() =>
+  SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+const t = (de: string, en: string) => (lang === 'de' ? de : en);
+
+const metadata = {
+  title: t('Willkommen im Universum', 'Welcome to the Universe'),
+  description: t(
+    'Das kreative Kosmos-Projekt: Musik, Texte und Figuren – verbunden, offen und performativ. Figuren sind FRAGMENTS: Identitäts-Teile mit eigener Stimme.',
+    'The Creative Cosmos: music, texts, and figures – connected, open, and performative. Figures are FRAGMENTS: identity parts with their own voices.'
+  ),
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-3xl">
+    <header class="mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold mb-3">{t('Willkommen im Universum', 'Welcome to the Universe')}</h1>
+      <p class="text-muted">{t('Ein offener, wachsender Erzählraum.', 'An open, growing narrative space.')}</p>
+    </header>
+
+    <div class="prose dark:prose-invert max-w-none">
+      <p>
+        {
+          t(
+            'Dieses Projekt ist ein zusammenhängendes Universum aus Musik, Texten und Figuren. Jede Figur ist ein FRAGMENT – ein Teil meiner Identität. Manche haben eigene Songs, andere tauchen in Texten auf – alles ist miteinander verknüpft.',
+            'This project is a connected universe of music, texts, and figures. Each figure is a FRAGMENT – a part of my identity. Some have their own songs, others appear in stories – everything is linked.'
+          )
+        }
+      </p>
+
+      <h2>{t('So ist es gebaut', 'How it’s built')}</h2>
+      <ul>
+        <li>
+          {
+            t(
+              'Astro 5, Markdown-Content, i18n – schnell, sauber, offen.',
+              'Astro 5, Markdown content, i18n – fast, clean, open.'
+            )
+          }
+        </li>
+        <li>
+          {
+            t(
+              'Sammlungen: Musik, Texte, Fragmente (FRAGMENTS), Artefakte – mit Querverweisen.',
+              'Collections: music, texts, fragments (FRAGMENTS), artifacts – with cross-references.'
+            )
+          }
+        </li>
+        <li>
+          {t('Lizenzen für Performer: "Sinn fix, Form frei".', 'Licensing for performers: "Sinn fix, Form frei".')}
+        </li>
+      </ul>
+
+      <h2>{t('Wie du navigierst', 'How to navigate')}</h2>
+      <ul>
+        <li>
+          <a class="underline hover:no-underline" href={getPermalink(`/${lang}/musik`)}>{t('Musik', 'Music')}</a> – {
+            t('Stimmen der Fragmente', 'Voices of the fragments')
+          }
+        </li>
+        <li>
+          <a class="underline hover:no-underline" href={getPermalink(`/${lang}/texte`)}>{t('Texte', 'Texts')}</a> – {
+            t('Prosa, Gedichte, Essays', 'Prose, poems, essays')
+          }
+        </li>
+        <li>
+          <a class="underline hover:no-underline" href={getPermalink(`/${lang}/fragmente`)}
+            >{t('Fragmente', 'Fragments')}</a
+          > –
+          {t('FRAGMENTS: Identitäts-Teile', 'FRAGMENTS: identity parts')}
+        </li>
+      </ul>
+
+      <h2>{t('Warum?', 'Why?')}</h2>
+      <p>
+        {
+          t(
+            'Weil Geschichten größer sind als einzelne Formate. Dieses Universum erlaubt es, Musik, Sprache und Bild miteinander zu verweben – und es lädt dich ein, mitzudenken und mitzuspielen.',
+            'Because stories are bigger than single formats. This universe lets music, language and image weave together – and invites you to think and play along.'
+          )
+        }
+      </p>
+
+      <p class="mt-6">
+        <a
+          class="inline-flex items-center px-4 py-2 rounded-md bg-primary-600 text-white hover:bg-primary-700"
+          href={getPermalink(`/${lang}/perform`)}>{t('Für Performer – Lizenz', 'For performers – license')}</a
+        >
+      </p>
+    </div>
+  </section>
+</Layout>

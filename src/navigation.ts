@@ -3,11 +3,10 @@ import type { SupportedLanguage } from './utils/i18n';
 
 export const getHeaderData = (locale: SupportedLanguage = 'en') => ({
   links: [
-    { text: locale === 'de' ? 'Bücher' : 'Books', href: getLocalizedUrl('/books', locale) },
-    { text: locale === 'de' ? 'Projekte' : 'Projects', href: getLocalizedUrl('/projects', locale) },
-    { text: locale === 'de' ? 'Musik' : 'Music', href: getLocalizedUrl('/music', locale) },
-    { text: 'Lab', href: getLocalizedUrl('/lab', locale) },
-    { text: locale === 'de' ? 'Leben' : 'Life', href: getLocalizedUrl('/life', locale) },
+    { text: locale === 'de' ? 'Musik' : 'Music', href: getLocalizedUrl('/musik', locale) },
+    { text: locale === 'de' ? 'Texte' : 'Texts', href: getLocalizedUrl('/texte', locale) },
+    { text: locale === 'de' ? 'Fragmente' : 'Fragments', href: getLocalizedUrl('/fragmente', locale) },
+    { text: locale === 'de' ? 'Presse' : 'Press', href: getLocalizedUrl('/press', locale) },
     { text: locale === 'de' ? 'Über' : 'About', href: getLocalizedUrl('/about', locale) },
     { text: locale === 'de' ? 'Kontakt' : 'Contact', href: getLocalizedUrl('/contact', locale) },
   ],
@@ -21,10 +20,22 @@ export const headerData = getHeaderData();
 export const getFooterData = (locale: SupportedLanguage = 'en') => ({
   links: [
     {
-      title: locale === 'de' ? 'Rechtliches' : 'Legal',
+      title: locale === 'de' ? 'Kreatives' : 'Creative',
       links: [
-        { text: locale === 'de' ? 'Über' : 'About', href: getLocalizedUrl('/about', locale) },
+        { text: locale === 'de' ? 'Musik' : 'Music', href: getLocalizedUrl('/musik', locale) },
+        { text: locale === 'de' ? 'Texte' : 'Texts', href: getLocalizedUrl('/texte', locale) },
+        { text: locale === 'de' ? 'Fragmente' : 'Fragments', href: getLocalizedUrl('/fragmente', locale) },
         { text: locale === 'de' ? 'Blog' : 'Blog', href: getLocalizedUrl('/blog', locale) },
+        { text: locale === 'de' ? 'Presse' : 'Press', href: getLocalizedUrl('/press', locale) },
+      ],
+    },
+    {
+      title: locale === 'de' ? 'Technisches' : 'Technical',
+      links: [
+        { text: locale === 'de' ? 'Projekte' : 'Projects', href: getLocalizedUrl('/projects', locale) },
+        { text: 'Lab', href: getLocalizedUrl('/lab', locale) },
+        { text: locale === 'de' ? 'Leben' : 'Life', href: getLocalizedUrl('/life', locale) },
+        { text: locale === 'de' ? 'Über' : 'About', href: getLocalizedUrl('/about', locale) },
       ],
     },
     {

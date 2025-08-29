@@ -155,7 +155,7 @@ async function detectMissingTranslationsFromFiles(): Promise<TranslationTask[]> 
   const config = loadConfig();
 
   try {
-    const contentFiles = await glob('src/content/{books,projects,lab,life,pages}/**/*.{md,mdx}', {
+    const contentFiles = await glob('src/content/{books,projects,lab,life,pages,figures,texts,music}/**/*.{md,mdx}', {
       cwd: process.cwd(),
     });
 
@@ -230,6 +230,15 @@ async function generateTranslation(task: TranslationTask, openai: OpenAI): Promi
 
     const originalContent = readFileSync(task.originalPath, 'utf-8');
     const { data: frontmatter, content } = matter(originalContent);
+    const notranslate: string[] = Array.isArray(frontmatter.notranslate) ? (frontmatter.notranslate as string[]) : [];
+    let masked = content;
+    let idx = 0;
+    for (const phrase of notranslate) {
+      if (!phrase || phrase.length < 2) continue;
+      const safe = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const re = new RegExp(safe, 'g');
+      masked = masked.replace(re, `__NOTR_${idx++}__`);
+    }
 
     const targetLanguageName = task.targetLanguage === 'de' ? 'German' : 'English';
 
@@ -244,7 +253,7 @@ IMPORTANT INSTRUCTIONS:
 
 Original content to translate:
 
-${content}`;
+${masked}`;
 
     const response = await openai.chat.completions.create({
       model: 'gpt-4',

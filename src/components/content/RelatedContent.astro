@@ -1,90 +1,140 @@
 ---
 /**
- * RelatedContent - Shows related content based on tags and collection
- * @props currentEntry, maxItems
- * @behavior Finds and displays related content using tag similarity
- * @dependencies getCollection, calculateRelatedness
- * @usedBy Content pages that want to show related items
+ * RelatedContent - Shows cross-linked content between music, texts, and fragments
+ * @props entry: CollectionEntry<'music' | 'texts' | 'fragments'>
+ * @props lang: 'en' | 'de'
+ * @behavior Fetches collections and renders related sections if available.
+ * @dependencies astro:content getCollection, utils/permalinks.getPermalink
+ * @usedBy Music/Text/Figure detail pages
  */
-import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
-import { calculateRelatedness } from '../../utils/content';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getPermalink } from '~/utils/permalinks';
 
-interface Props {
-  currentEntry: CollectionEntry<'books' | 'projects' | 'lab' | 'life' | 'pages'>;
-  maxItems?: number;
+type Lang = 'en' | 'de';
+
+export interface Props {
+  entry: CollectionEntry<'music' | 'texts' | 'fragments'>;
+  lang: Lang;
 }
 
-const { currentEntry, maxItems = 3 } = Astro.props;
+const { entry, lang } = Astro.props as Props;
 
-// Find related content based on tags and collection
-const allContent = await getCollection(currentEntry.collection);
-const related = allContent
-  .filter((entry) => entry.id !== currentEntry.id && entry.data.language === currentEntry.data.language)
-  .map((entry) => ({
-    entry,
-    score: calculateRelatedness(currentEntry.data.tags || [], entry.data.tags || []),
-  }))
-  .filter((item) => item.score > 0)
-  .sort((a, b) => b.score - a.score)
-  .slice(0, maxItems);
+// Helpers
+const cleanSlug = (id: string) => id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+const t = (de: string, en: string) => (lang === 'de' ? de : en);
+
+// Load collections once
+const [allMusic, allTexts, allFigures] = await Promise.all([
+  getCollection('music'),
+  getCollection('texts'),
+  getCollection('fragments'),
+]);
+
+// Compute relateds depending on entry.collection
+let relatedSongs: typeof allMusic = [];
+let relatedTexts: typeof allTexts = [];
+let relatedFigures: typeof allFigures = [];
+
+if (entry.collection === 'music') {
+  // Songs: show linked figure, texts referencing this song, and other songs by same figure
+  const currentSongId = entry.id;
+  const figId = entry.data.figureRef?.id;
+
+  if (figId) {
+    relatedFigures = allFigures.filter((f) => f.id === figId);
+    relatedSongs = allMusic.filter((m) => m.id !== currentSongId && m.data.figureRef?.id === figId).slice(0, 6);
+  }
+
+  relatedTexts = allTexts
+    .filter((tx) => Array.isArray(tx.data.songRefs) && tx.data.songRefs.some((ref) => ref.id === currentSongId))
+    .slice(0, 6);
+}
+
+if (entry.collection === 'texts') {
+  // Texts: show referenced figures and songs
+  relatedFigures = allFigures.filter((f) => entry.data.figureRefs?.some((ref) => ref.id === f.id));
+  relatedSongs = allMusic.filter((m) => entry.data.songRefs?.some((ref) => ref.id === m.id));
+}
+
+if (entry.collection === 'fragments') {
+  // Figures: show songs linked to this figure and texts referencing it
+  const figId = entry.id;
+  relatedSongs = allMusic
+    .filter((m) => m.data.figureRef?.id === figId || entry.data.primarySongs?.some((ref) => ref.id === m.id))
+    .slice(0, 12);
+  relatedTexts = allTexts
+    .filter((tx) => Array.isArray(tx.data.figureRefs) && tx.data.figureRefs.some((ref) => ref.id === figId))
+    .slice(0, 12);
+}
 ---
 
 {
-  related.length > 0 && (
-    <aside class="related-content">
-      <h3>Related Content</h3>
-      <ul>
-        {related.map(({ entry }) => (
-          <li>
-            <a href={`/${entry.data.language}/${entry.collection}/${entry.id.replace(/\.mdx?$/, '')}/`}>
-              {entry.data.title}
-            </a>
-            {entry.data.description && <p class="related-description">{entry.data.description}</p>}
-          </li>
-        ))}
-      </ul>
-    </aside>
+  (relatedFigures.length || relatedSongs.length || relatedTexts.length) && (
+    <section class="mt-10 border-t pt-6 space-y-6">
+      <h2 class="text-xl font-semibold">{t('Verwandte Inhalte', 'Related Content')}</h2>
+
+      {relatedFigures.length > 0 && (
+        <div>
+          <h3 class="text-lg font-semibold mb-3">{t('Fragmente', 'Fragments')}</h3>
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {relatedFigures.map((f) => (
+              <li>
+                <a
+                  class="block p-3 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+                  href={getPermalink(`/${lang}/fragmente/${f.id}`)}
+                >
+                  <span class="font-medium">{f.data.title}</span>
+                  {f.data.alias && <span class="text-xs text-muted ml-2">“{f.data.alias}”</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {relatedSongs.length > 0 && (
+        <div>
+          <h3 class="text-lg font-semibold mb-3">{t('Songs', 'Songs')}</h3>
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {relatedSongs.map((m) => (
+              <li>
+                <a
+                  class="block p-3 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+                  href={getPermalink(`/${lang}/music/${cleanSlug(m.id)}`)}
+                >
+                  <span class="font-medium">{m.data.title}</span>
+                  {m.data.artist && <span class="text-xs text-muted ml-2">{m.data.artist}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {relatedTexts.length > 0 && (
+        <div>
+          <h3 class="text-lg font-semibold mb-3">{t('Texte', 'Texts')}</h3>
+          <ul class="space-y-2">
+            {relatedTexts.map((tx) => (
+              <li>
+                <a class="underline hover:no-underline" href={getPermalink(`/${lang}/texte/${cleanSlug(tx.id)}`)}>
+                  {tx.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
   )
 }
 
 <style>
-  .related-content {
-    margin-top: 2rem;
-    padding: 1.5rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+  .text-muted {
+    color: rgb(100 116 139);
   }
-
-  .related-content h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-  }
-
-  .related-content ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .related-content li {
-    margin-bottom: 1rem;
-  }
-
-  .related-content a {
-    font-weight: 600;
-    text-decoration: none;
-    color: #007acc;
-  }
-
-  .related-content a:hover {
-    text-decoration: underline;
-  }
-
-  .related-description {
-    margin: 0.25rem 0 0 0;
-    font-size: 0.9rem;
-    color: #666;
+  :global(.dark) .text-muted {
+    color: rgb(148 163 184);
   }
 </style>
+---

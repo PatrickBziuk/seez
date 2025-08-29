@@ -1,0 +1,121 @@
+---
+/**
+ * Press Page - Multilingual project explainer for media
+ * @props - lang
+ * @behavior - Summarizes the Creative Cosmos, FRAGMENT concept, structure, and contact
+ * @dependencies - PageLayout, i18n utils
+ */
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../layouts/PageLayout.astro';
+import { SUPPORTED_LANGUAGES } from '../../utils/i18n';
+import type { SupportedLanguage } from '../../utils/i18n';
+import { getPermalink } from '../../utils/permalinks';
+
+export const getStaticPaths = (() =>
+  SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+const t = (de: string, en: string) => (lang === 'de' ? de : en);
+
+const metadata = {
+  title: t('Presse – Projektüberblick', 'Press – Project Overview'),
+  description: t(
+    'Seez Creative Cosmos: Musik, Texte und Figuren als FRAGMENTS einer Identität. Überblick, Struktur, Kontakt. ',
+    'Seez Creative Cosmos: music, texts, and figures as FRAGMENTS of an identity. Overview, structure, contact.'
+  ),
+  canonical: getPermalink(`/${lang}/press`),
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-3xl">
+    <header class="mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold mb-3">{t('Presse', 'Press')}</h1>
+      <p class="text-muted">{t('Projektüberblick und Funktionsweise', 'Project overview and how it works')}</p>
+    </header>
+
+    <div class="prose dark:prose-invert max-w-none">
+      <h2>{t('Kurzfassung', 'Summary')}</h2>
+      <p>
+        {
+          t(
+            'Seez.eu ist ein kreatives Universum aus Musik, Texten und Figuren. Die Figuren sind FRAGMENTS – Teile einer Identität mit eigenen Stimmen, Symbolen und Bewegungsmustern. Inhalte sind miteinander verknüpft und bilden ein wachsendes, offenes Erzählgefüge.',
+            'Seez.eu is a creative universe of music, texts, and figures. The figures are FRAGMENTS – parts of an identity with their own voices, symbols, and movement patterns. Content is cross-linked, forming a growing, open narrative system.'
+          )
+        }
+      </p>
+
+      <h2>{t('So funktioniert es', 'How it works')}</h2>
+      <ul>
+        <li>
+          {t('Musik', 'Music')}: {
+            t('Songs und Skizzen, teils mit Figur-Referenzen.', 'Songs and sketches, some linked to figures.')
+          }
+        </li>
+        <li>
+          {t('Texte', 'Texts')}: {
+            t(
+              'Prosa, Lyrik, Essays – häufig mit Figuren verknüpft.',
+              'Prose, poetry, essays – often linked to figures.'
+            )
+          }
+        </li>
+        <li>
+          {t('Fragmente (FRAGMENTS)', 'Fragments (FRAGMENTS)')}: {
+            t(
+              'Identitätsfragmente mit Symbolik, Stimme, Bewegung.',
+              'Identity fragments with symbolism, voice, movement.'
+            )
+          }
+        </li>
+        <li>
+          {t('Artefakte', 'Artifacts')}: {
+            t('Optionale Objekte/Prints/Merch (im Aufbau).', 'Optional objects/prints/merch (in progress).')
+          }
+        </li>
+      </ul>
+
+      <h2>{t('Technik & Veröffentlichung', 'Tech & Publishing')}</h2>
+      <ul>
+        <li>
+          {
+            t(
+              'Astro 5, statisch generiert, schnell und barrierearm.',
+              'Astro 5, statically generated, fast and accessible.'
+            )
+          }
+        </li>
+        <li>
+          {
+            t(
+              'Mehrsprachig (Deutsch/Englisch) mit konsistenter URL-Struktur.',
+              'Multilingual (German/English) with consistent URL structure.'
+            )
+          }
+        </li>
+        <li>{t('Suchfunktion und Querverweise zwischen Inhalten.', 'Search and cross-linking across content.')}</li>
+      </ul>
+
+      <h2>{t('Relevante Einstiegspunkte', 'Key entry points')}</h2>
+      <ul>
+        <li><a class="underline hover:no-underline" href={getPermalink(`/${lang}/musik`)}>{t('Musik', 'Music')}</a></li>
+        <li><a class="underline hover:no-underline" href={getPermalink(`/${lang}/texte`)}>{t('Texte', 'Texts')}</a></li>
+        <li>
+          <a class="underline hover:no-underline" href={getPermalink(`/${lang}/fragmente`)}
+            >{t('Fragmente (FRAGMENTS)', 'Fragments (FRAGMENTS)')}</a
+          >
+        </li>
+        <li>
+          <a class="underline hover:no-underline" href={getPermalink(`/${lang}/welcome`)}
+            >{t('Projekt-Erläuterung', 'Project explainer')}</a
+          >
+        </li>
+      </ul>
+
+      <h2>{t('Kontakt', 'Contact')}</h2>
+      <p>
+        {t('Presseanfragen', 'Press inquiries')}: <a href="mailto:info@seez.eu">info@seez.eu</a>
+      </p>
+    </div>
+  </section>
+</Layout>

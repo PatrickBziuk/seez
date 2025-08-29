@@ -1,0 +1,215 @@
+---
+/**
+ * Creative Landing - Central hub for the creative cosmos
+ * @behavior: Hero + quick-entry links to Music, Texts, Figures and recent highlights
+ */
+import type { GetStaticPaths } from 'astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../../layouts/PageLayout.astro';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+import { getPermalink } from '../../../utils/permalinks';
+
+export const getStaticPaths = (() => {
+  return SUPPORTED_LANGUAGES.map((lang) => ({
+    params: { lang },
+  }));
+}) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+// Load content for highlights
+const allMusic = (await getCollection('music')) as CollectionEntry<'music'>[];
+const allTexts = await getCollection('texts');
+const allFigures = await getCollection('fragments');
+
+// Helper: language filter for collections that store language
+const byLang = <T extends { data: { language?: string; draft?: boolean; publicationStatus?: string } }>(items: T[]) =>
+  items.filter((i) => !i.data.draft && (i.data.language === lang || (!i.data.language && lang === 'en')));
+
+// Helper: sort by a few possible dates and take N
+const toDate = (v: string | number | Date | undefined): Date => {
+  if (v instanceof Date) return v;
+  if (typeof v === 'string' || typeof v === 'number') return new Date(v);
+  return new Date('1970-01-01');
+};
+
+const sortByDateDesc = <T extends { data: Record<string, unknown> }>(items: T[]) => {
+  return items
+    .slice()
+    .sort((a, b) => {
+      const aDate = (a.data.releaseDate || a.data.firstPublishedAt || a.data.publishDate || a.data.timestamp) as
+        | string
+        | number
+        | Date
+        | undefined;
+      const bDate = (b.data.releaseDate || b.data.firstPublishedAt || b.data.publishDate || b.data.timestamp) as
+        | string
+        | number
+        | Date
+        | undefined;
+      return toDate(bDate).getTime() - toDate(aDate).getTime();
+    })
+    .slice(0, 5);
+};
+
+// Compute highlights
+const music = sortByDateDesc(byLang(allMusic));
+const texts = sortByDateDesc(byLang(allTexts));
+// Figures have no language field typically; take the first few sorted by designation or title
+const figures = allFigures
+  .slice()
+  .sort((a, b) => (a.data.designation || '').localeCompare(b.data.designation || ''))
+  .slice(0, 6);
+
+const metadata = {
+  title: lang === 'de' ? 'Kreatives' : 'Creative',
+  description:
+    lang === 'de'
+      ? 'Musik, Texte und Fragmente – zentrale Anlaufstelle des kreativen Kosmos.'
+      : 'Music, texts, and fragments – the central hub of the creative cosmos.',
+  canonical: getPermalink(`/${lang}/kreatives`),
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="py-16 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <!-- Hero -->
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">
+          {lang === 'de' ? 'Kreativer Kosmos' : 'Creative Cosmos'}
+        </h1>
+        <p class="text-xl text-muted max-w-3xl mx-auto">
+          {
+            lang === 'de'
+              ? 'Musik, Texte und Fragmente – verbunden, offen, performativ. Entdecke die künstlerische Welt von seez.'
+              : 'Music, texts, and fragments – connected, open, and performative. Explore the artistic world of seez.'
+          }
+        </p>
+      </div>
+
+      <!-- Quick entries -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <a
+          href={getPermalink(`/${lang}/musik`)}
+          class="group block rounded-lg border border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-slate-900 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition"
+        >
+          <h3 class="text-xl font-semibold mb-2 group-hover:text-primary">{lang === 'de' ? 'Musik' : 'Music'}</h3>
+          <p class="text-muted">
+            {
+              lang === 'de'
+                ? 'Songs, Lyrics und musikalische Experimente – höre die Stimmen der Fragmente.'
+                : 'Songs, lyrics and musical experiments – hear the voices of the fragments.'
+            }
+          </p>
+        </a>
+        <a
+          href={getPermalink(`/${lang}/texte`)}
+          class="group block rounded-lg border border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-slate-900 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition"
+        >
+          <h3 class="text-xl font-semibold mb-2 group-hover:text-primary">{lang === 'de' ? 'Texte' : 'Texts'}</h3>
+          <p class="text-muted">
+            {lang === 'de' ? 'Prosa, Gedichte und Notizen.' : 'Prose, poems and notes.'}
+          </p>
+        </a>
+        <a
+          href={getPermalink(`/${lang}/fragmente`)}
+          class="group block rounded-lg border border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-slate-900 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition"
+        >
+          <h3 class="text-xl font-semibold mb-2 group-hover:text-primary">
+            {lang === 'de' ? 'Fragmente' : 'Fragments'}
+          </h3>
+          <p class="text-muted">
+            {
+              lang === 'de'
+                ? 'Sechs Entitäten mit Profilen, Symbolik und Containment-Protokollen.'
+                : 'Six entities with profiles, symbolism and containment protocols.'
+            }
+          </p>
+        </a>
+      </div>
+
+      <!-- Highlights -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <!-- Latest Music -->
+        <section>
+          <header class="mb-4">
+            <h2 class="text-2xl font-bold">{lang === 'de' ? 'Neu: Musik' : 'Latest: Music'}</h2>
+          </header>
+          {
+            music.length ? (
+              <ul class="space-y-2">
+                {music.map((it) => {
+                  const cleanSlug = it.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+                  return (
+                    <li>
+                      <a class="underline hover:no-underline" href={getPermalink(`/${lang}/music/${cleanSlug}`)}>
+                        <span class="inline-flex items-center gap-2">
+                          <span class="inline-block w-2 h-2 rounded-full bg-primary-500" />
+                          {it.data.title}
+                        </span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <p class="text-muted">{lang === 'de' ? 'Noch keine Musik verfügbar.' : 'No music yet.'}</p>
+            )
+          }
+        </section>
+
+        <!-- Latest Texts -->
+        <section>
+          <header class="mb-4">
+            <h2 class="text-2xl font-bold">{lang === 'de' ? 'Neu: Texte' : 'Latest: Texts'}</h2>
+          </header>
+          {
+            texts.length ? (
+              <ul class="space-y-2">
+                {texts.map((it) => {
+                  const cleanSlug = it.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+                  return (
+                    <li>
+                      <a class="underline hover:no-underline" href={getPermalink(`/${lang}/texte/${cleanSlug}`)}>
+                        <span class="inline-flex items-center gap-2">
+                          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500" />
+                          {it.data.title}
+                        </span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <p class="text-muted">{lang === 'de' ? 'Noch keine Texte verfügbar.' : 'No texts yet.'}</p>
+            )
+          }
+        </section>
+
+        <!-- Figures Overview -->
+        <section>
+          <header class="mb-4">
+            <h2 class="text-2xl font-bold">{lang === 'de' ? 'Fragmente' : 'Fragments'}</h2>
+          </header>
+          {
+            figures.length ? (
+              <ul class="space-y-2">
+                {figures.map((f) => (
+                  <li>
+                    <a class="underline hover:no-underline" href={getPermalink(`/${lang}/fragmente/${f.id}`)}>
+                      {f.data.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="text-muted">{lang === 'de' ? 'Keine Fragmente gefunden.' : 'No fragments found.'}</p>
+            )
+          }
+        </section>
+      </div>
+    </div>
+  </section>
+</Layout>

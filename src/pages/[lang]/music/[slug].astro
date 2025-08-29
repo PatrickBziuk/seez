@@ -1,6 +1,9 @@
 ---
 import { getCollection, type CollectionEntry, render } from 'astro:content';
 import MarkdownLayout from '../../../layouts/MarkdownLayout.astro';
+import MediaPlayer from '../../../components/content/media/MediaPlayer.astro';
+import RelatedContent from '../../../components/content/RelatedContent.astro';
+import { getPermalink } from '../../../utils/permalinks';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 
@@ -48,4 +51,36 @@ const frontmatterWithDateObjects = {
 
 <MarkdownLayout frontmatter={frontmatterWithDateObjects}>
   <Content />
+
+  {/* Audio player if audio URL provided */}
+  {
+    entry.data.audioUrl && (
+      <section class="mt-6">
+        <MediaPlayer
+          src={entry.data.audioUrl}
+          title={entry.data.title}
+          artist={entry.data.artist || 'Seez'}
+          description={entry.data.linerNotes || ''}
+        />
+      </section>
+    )
+  }
+
+  {/* Figure reference (if any) */}
+  {
+    entry.data.figureRef && (
+      <section class="mt-8">
+        <h2 class="text-xl font-semibold mb-3">{Astro.params.lang === 'de' ? 'Figur' : 'Figure'}</h2>
+        <a
+          class="underline hover:no-underline"
+          href={getPermalink(`/${Astro.params.lang}/fragmente/${entry.data.figureRef.id}`)}
+        >
+          {entry.data.figureRef.id}
+        </a>
+      </section>
+    )
+  }
+
+  {/* Placeholder for related content component (Phase 4.3) */}
+  <RelatedContent entry={entry} lang={Astro.params.lang as 'en' | 'de'} />
 </MarkdownLayout>

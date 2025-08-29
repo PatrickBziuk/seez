@@ -117,7 +117,7 @@ function validateLanguageConsistency(
 /**
  * Content collection configuration
  */
-const CONTENT_COLLECTIONS = ['books', 'projects', 'lab', 'life'] as const;
+const CONTENT_COLLECTIONS = ['books', 'projects', 'lab', 'life', 'pages', 'figures', 'texts', 'music'] as const;
 const CONTENT_BASE_PATH = 'src/content';
 
 /**

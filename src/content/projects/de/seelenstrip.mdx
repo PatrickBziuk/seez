@@ -1,0 +1,55 @@
+---
+title: Seelenstrip
+language: de
+description: >-
+  Multimediales Kunstprojekt aus Texten, Musik und Performance – fragmentarisch,
+  ehrlich, persönlich.
+authors:
+  - authors/seez
+tags:
+  - projekt
+  - buch
+  - album
+  - live
+  - kreativ
+  - seez
+publicationStatus: published
+firstPublishedAt: '2025-08-28T10:00:00.000Z'
+canonicalId: slug-20250829-991fe0c3
+---
+
+import { Fragment } from 'astro/jsx-runtime';
+import MediaPlayer from '~/components/content/media/MediaPlayer.astro';
+import { getCollection } from 'astro:content';
+
+export async function Content() {
+  const songs = (await getCollection('music')).filter((m) => !m.data.draft && m.data.language === 'de');
+  const picks = songs.filter((s) =>
+    ['/sounds/als-sie-kamen.mp3','/sounds/genaeht.mp3','/sounds/herz-klopft-kopf-platzt.mp3','/sounds/schmetterlingsmoment.mp3'].includes(s.data.audioUrl || '')
+  );
+  return (
+    <Fragment>
+      <section class="prose dark:prose-invert max-w-none">
+        <p>
+          Seelenstrip (früher Seelenstriptease) ist ein multimediales Projekt, das Literatur, Musik und Performance
+          verschränkt. Es zeigt Identität als Fragment – mit sechs Figuren als Stimmen: Splinter, Lume, Drift, Shift,
+          Unknown und Gl1tch.
+        </p>
+        <p>
+          Das Projekt bündelt: ein Buch, ein Album und ein Live‑Konzept. Songs sind Stimmen der Figuren; Texte
+          kommentieren und spiegeln.
+        </p>
+      </section>
+
+      <h2 class="mt-8 text-2xl font-bold">Ausgewählte Songs</h2>
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {picks.map((s) => (
+          <MediaPlayer src={s.data.audioUrl} title={s.data.title} artist={s.data.artist || 'Seez'} description={s.data.linerNotes || ''} />
+        ))}
+      </div>
+    </Fragment>
+
+);
+}
+
+<Content />

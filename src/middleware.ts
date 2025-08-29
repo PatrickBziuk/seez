@@ -7,6 +7,19 @@ export const onRequest: MiddlewareHandler = (context, next) => {
     console.log('🌐 Middleware hit:', url.pathname);
   }
 
+  // Legacy redirects: /[lang]/figuren -> /[lang]/fragmente
+  // Handles index and detail routes.
+  const m = url.pathname.match(/^\/(de|en)\/figuren(\/.*)?$/);
+  if (m) {
+    const lang = m[1];
+    const rest = m[2] || '';
+    const target = `/${lang}/fragmente${rest}`;
+    return new Response(null, {
+      status: 308,
+      headers: { Location: target },
+    });
+  }
+
   // Skip for API routes and assets
   if (url.pathname.startsWith('/api/') || url.pathname.includes('.')) {
     if (import.meta.env.DEV) {

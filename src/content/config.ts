@@ -8,6 +8,8 @@ const base = z.object({
   language: z.enum(['en', 'de']).default('en'),
   authors: z.array(reference('authors')).min(1),
   tags: z.array(z.string()).default([]),
+  // Strings or phrases that must not be translated (opt-out list)
+  notranslate: z.array(z.string()).optional(),
 
   // Single source of truth for publication state
   publicationStatus: z.enum(['draft', 'published', 'archived']).default('draft'),
@@ -207,14 +209,87 @@ const life = defineCollection({
   schema: base,
 });
 
-const music = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/music' }),
-  schema: base,
-});
-
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
   schema: base,
+});
+
+// New collections for Plan 10043 - Creative Cosmos (renamed to fragments)
+const fragments = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/fragments' }),
+  schema: base.extend({
+    image: z.string().optional(),
+    alias: z.string().optional(),
+    designation: z.string().optional(), // SZ-001, etc.
+    colorCode: z.string().optional(),
+    symbolism: z
+      .array(
+        z.object({
+          icon: z.string(),
+          meaning: z.string(),
+        })
+      )
+      .length(3)
+      .optional(),
+    voiceCharacteristics: z
+      .object({
+        preset: z.string().optional(),
+        bpmRange: z.tuple([z.number(), z.number()]).optional(),
+        style: z.array(z.string()).optional(),
+      })
+      .optional(),
+    movementGrammar: z.array(z.string()).length(3).optional(),
+    primarySongs: z.array(reference('music')).optional(),
+    containmentNote: z.string().optional(),
+    artifacts: z.array(reference('artifacts')).optional(),
+  }),
+});
+
+const texts = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/texts' }),
+  schema: base.extend({
+    type: z.enum(['prolog', 'chapter', 'essay', 'poem', 'story']).optional(),
+    figureRefs: z.array(reference('fragments')).optional(),
+    songRefs: z.array(reference('music')).optional(),
+    excerpt: z.string().optional(),
+    chapterNumber: z.number().optional(),
+  }),
+});
+
+const artifacts = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/artifacts' }),
+  schema: base.extend({
+    type: z.enum(['merch', 'physical', 'digital', 'print']).optional(),
+    figureRef: reference('fragments').optional(),
+    costBreakdown: z
+      .object({
+        materials: z.number().optional(),
+        production: z.number().optional(),
+        shipping: z.number().optional(),
+        total: z.number().optional(),
+      })
+      .optional(),
+    availability: z.enum(['available', 'limited', 'sold-out', 'custom-order']).optional(),
+  }),
+});
+
+// Extended music collection schema
+const musicExtended = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/music' }),
+  schema: base.extend({
+    artist: z.string().default('Seez'),
+    figureRef: reference('fragments').optional(),
+    releaseDate: z.string().datetime().optional(),
+    // Accept absolute or site-relative URLs
+    audioUrl: z
+      .string()
+      .regex(/^(https?:\/\/|\/)/)
+      .optional(),
+    spotifyId: z.string().optional(),
+    bpm: z.number().optional(),
+    genre: z.array(z.string()).default([]),
+    linerNotes: z.string().optional(),
+  }),
 });
 
 // Legacy blog post schema (keeping for compatibility)
@@ -325,7 +400,10 @@ export const collections = {
   projects,
   lab,
   life,
-  music,
+  music: musicExtended, // Use extended music schema
   post,
   pages,
+  fragments,
+  texts,
+  artifacts,
 };

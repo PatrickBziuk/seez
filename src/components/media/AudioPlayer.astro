@@ -1,0 +1,26 @@
+---
+/**
+ * AudioPlayer - Minimal HTML5 audio player with title
+ * @props src: string (URL), title?: string
+ */
+export interface Props {
+  src: string;
+  title?: string;
+}
+
+const { src, title } = Astro.props as Props;
+---
+
+<div class="w-full my-6">
+  {title && <div class="mb-2 text-sm text-muted">{title}</div>}
+  <audio class="w-full" controls preload="none" src={src}> Your browser does not support the audio element. </audio>
+</div>
+
+<style>
+  .text-muted {
+    color: rgb(100 116 139);
+  }
+  :global(.dark) .text-muted {
+    color: rgb(148 163 184);
+  }
+</style>

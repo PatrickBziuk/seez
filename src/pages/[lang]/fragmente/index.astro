@@ -1,0 +1,116 @@
+---
+/**
+ * Fragments Listing - Pokemon TCG-style grid of identity fragments
+ * @props - lang
+ * @behavior - Lists all fragments with Pokemon card aesthetics, holographic effects
+ * @dependencies - astro:content, i18n utils, FragmentCard
+ */
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/PageLayout.astro';
+import FragmentCard from '../../../components/content/cards/FragmentCard.astro';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+import { getPermalink } from '../../../utils/permalinks';
+
+export const getStaticPaths = (() =>
+  SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+// Get all fragments, group by base slug (strip optional `en/` prefix),
+// and pick the localized entry for current lang with sensible fallback.
+const all = await getCollection('fragments');
+type FigureEntry = (typeof all)[number];
+const byBase = new Map<string, { de?: FigureEntry; en?: FigureEntry }>();
+for (const entry of all) {
+  const isEnPath = entry.id.startsWith('en/');
+  const baseSlug = isEnPath ? entry.id.replace(/^en\//, '') : entry.id;
+  const langKey = (entry.data.language || 'de') as 'de' | 'en';
+  const rec = byBase.get(baseSlug) || {};
+  rec[langKey] = entry;
+  byBase.set(baseSlug, rec);
+}
+
+const sortedFigures = Array.from(byBase.entries())
+  .map(([baseSlug, rec]) => {
+    const pick = (lang as string) === 'en' ? rec.en || rec.de : rec.de || rec.en || rec.de;
+    return { baseSlug, entry: pick! };
+  })
+  .sort((a, b) => {
+    const da = a.entry.data.designation || '';
+    const db = b.entry.data.designation || '';
+    return da.localeCompare(db);
+  });
+
+const metadata = {
+  title: lang === 'de' ? 'Fragmente – FRAGMENT Dossiers' : 'Fragments – FRAGMENT Dossiers',
+  description:
+    lang === 'de'
+      ? 'Identitätsfragmente – minimalistische Kartenübersicht.'
+      : 'Identity fragments – minimalist card overview.',
+  canonical: getPermalink(`/${lang}/fragmente`),
+};
+---
+
+<Layout metadata={metadata}>
+  <header class="py-4 mb-6 border-b border-gray-200 dark:border-gray-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <h1 class="text-2xl sm:text-3xl font-bold">
+        {lang === 'de' ? 'FRAGMENT Dossiers' : 'FRAGMENT Dossiers'}
+      </h1>
+      <p class="text-muted mt-1">
+        {
+          lang === 'de'
+            ? 'Fragmente als Teile einer Identität – kompakt, neutral, ohne Farbe.'
+            : 'Fragments as parts of an identity – compact, neutral, colorless.'
+        }
+      </p>
+    </div>
+  </header>
+
+  <section class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 justify-items-center">
+      {
+        sortedFigures.map(({ baseSlug, entry }) => {
+          return (
+            <div class="relative">
+              <FragmentCard
+                fragment={entry}
+              />
+              <a
+                href={getPermalink(`/${lang}/fragmente/${baseSlug}`)}
+                class="absolute inset-0"
+                aria-label={entry.data.title}
+              />
+            </div>
+          );
+        })
+      }
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* Neutralize ProfileCard visual effects */
+  .no-shine .pc-shine,
+  .no-shine .pc-glare {
+    display: none !important;
+  }
+  .no-shine .pc-card-wrapper::before {
+    display: none !important;
+  }
+  .no-shine .pc-card {
+    background: none !important;
+    box-shadow: none !important;
+  }
+  .no-shine .pc-details h3,
+  .no-shine .pc-details p {
+    background-image: none !important;
+    -webkit-text-fill-color: currentColor !important;
+    color: inherit !important;
+  }
+  .no-shine .pc-avatar-content::before {
+    backdrop-filter: none !important;
+  }
+</style>

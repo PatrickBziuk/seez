@@ -8,6 +8,27 @@
       "group": "build",
       "problemMatcher": [],
       "isBackground": false
+    },
+    {
+      "label": "Astro Content Sync",
+      "type": "shell",
+      "command": "pnpm run astro sync",
+      "isBackground": false,
+      "group": "build"
+    },
+    {
+      "label": "Astro Content Sync",
+      "type": "shell",
+      "command": "pnpm run astro sync",
+      "isBackground": false,
+      "group": "build"
+    },
+    {
+      "label": "Astro Content Sync",
+      "type": "shell",
+      "command": "pnpm run astro sync",
+      "isBackground": false,
+      "group": "build"
     }
   ]
 }

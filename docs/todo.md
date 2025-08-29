@@ -1,3 +1,95 @@
+## 🚀 ACTIVE PROJECTS - August 28, 2025
+
+### 🎨 MAJOR: Creative Cosmos Overhaul (Plan 10043)
+
+**Status**: Phase 4 IN PROGRESS - Music & Text Integration 🔄  
+**Priority**: High - Complete Site Transformation  
+**Document**: `docs/plan-10043-creative-cosmos-overhaul.md`  
+**Duration**: 4-6 weeks
+
+**Goal**: Transform seez.eu from development portfolio to focused creative universe centered on music, texts, and character figures.
+
+#### Phase 1: Foundation & Legal (Week 1) - ✅ COMPLETED
+
+- [x] **CRITICAL**: Fix impressum and privacy policy for legal compliance
+- [x] Transform homepage with new creative focus
+- [x] Implement 3-4 main entry points (Musik, Texte, Figuren, Kreatives)
+- [x] Add "Neu" section and "Zufall" random discovery button
+- [x] Simplify URL structure while maintaining /de/ /en/ prefixes
+
+#### Phase 2: Content Collections (Week 2) - ✅ COMPLETED
+
+- [x] Extend `src/content/config.ts` with new collections (music, figures, texts, artifacts)
+- [x] Create figures collection with SCP-style character dossiers
+- [x] Port figure data from `content_to_fill_site/` directory
+- [x] Set up bidirectional reference system between content types
+
+#### Phase 3: Figure Universe (Week 3) - ✅ COMPLETED
+
+- [x] Complete figure universe with all 6 characters (Splinter, Lume, Drift, Shift, Gl1tch, Unknown)
+- [x] Create `/[slug].astro` template for figures with SCP-style layout
+- [x] Implement figures listing page with grid display
+- [x] Build proper schema with symbolism, voice characteristics, movement grammar
+- [x] Add figure color theming and containment protocols
+
+#### Phase 4: Music & Text Integration (Week 4) - 🔄 IN PROGRESS
+
+- [x] Music listing pages live at `/[lang]/musik/` with figure chips
+- [x] Song detail pages render `AudioPlayer` when `audioUrl` exists
+- [x] Texts collection: listing + detail routes with cross-links
+- [x] Concept page `/[lang]/welcome` created
+- [x] Figures listing/detail: image field added; Gl1tch/Shift images fixed with fallback logic
+- [x] Translation pipeline: add `notranslate` opt-out; extend scanning to figures/texts/music
+- [x] Related Content component reused across collections (baseline implemented)
+- [x] Header: Creative nav points to /[lang]/kreatives and dedicated landing implemented
+- [ ] Album/collection grouping and filters for music
+- [ ] Liner notes and lyrics sections on song pages
+- [ ] JSON-LD for MusicRecording/AudioObject and Article
+- [ ] Accessibility polish (audio keyboard controls, transcripts)
+- [ ] Search facets and tag filters
+- [ ] Breadcrumbs and active nav highlights
+
+### ✅ DONE: FRAGMENT Redesign & Press (Plan 10044)
+
+- Redesigned figures listing and detail pages to FRAGMENT identity concept (multilingual)
+- Added `/[lang]/press` page with project explainer for media
+- Updated Welcome explainer to introduce FRAGMENTS
+- Wired header/footer link to Press
+- See: `docs/plan-10044-fragment-redesign-and-press.md`
+- [x] DecapCMS config updates for new fields (music/texts/figures/artifacts; figures.image + notranslate)
+- [ ] E2E tests for music/texts/welcome pages
+
+##### Immediate Next Tasks (Aug 28, 2025)
+
+- [ ] Link audit: verify all internal links on `/[lang]/musik`, `/[lang]/texte`, `/[lang]/figuren`, `/[lang]/welcome`, and detail pages; fix broken paths and prefer `getPermalink()` where applicable (partial: welcome, homepage, texts listing/detail, music detail updated; tags done)
+  - Update after rename: `/[lang]/fragmente` replaces `/[lang]/figuren`; ensure redirects if needed
+- [x] Implement Related Content sections on music/texts/figures using references (`figureRef`, `primarySongs`, `figureRefs`, `songRefs`)
+  - [ ] Update Related Content to `fragments` (code updated) and validate on pages
+- [ ] Reuse `AudioPlayer` where beneficial (listing snippets or embeds); ensure localized labels and a11y
+- [x] Update `public/admin/config.yml` to expose `figures.image` and `figures.notranslate`
+- [x] Create Creative landing at `/[lang]/kreatives` with quick links and highlights
+- [x] Import initial text: `texts/de/fuck-suno-meta.md` linking to song `de/fck-suno`
+
+#### FRAGMENTS Migration & Content Tasks
+
+- [x] Replace remaining `figuren` routes with `fragmente` across site (pages wired); legacy redirects added in `src/middleware.ts`; remove old routes after QA
+- [ ] Update CMS config to rename collection `figures` ➜ `fragments` and relation widgets accordingly
+- [ ] Integrate TCG ProfileCard on `/[lang]/fragmente` grid; reduce tilt dramatically (enableTilt: true, mobileTiltSensitivity ~1-2)
+- [ ] Remove all color accents/dots from fragment cards and detail pages (neutral UI)
+- [ ] Remove Voice/Movement blocks from fragment detail pages (done in code) and update copy accordingly
+- [x] Create EN versions for all fragments: `src/content/fragments/en/{gl1tch,shift,drift,lume,splinter,sz-006-unknown}.md`
+  - [ ] Translate and tone-adjust content: less pathos, more readable RPG-style with personality
+  - [ ] Ensure metadata language: 'en' and tags updated
+
+#### Subsequent Phases (Weeks 5-6)
+
+- [ ] Build performer license system at `/perform`
+- [ ] Content enhancement and discovery features
+- [ ] Content migration and launch preparation
+- [ ] User testing and final polish
+
+---
+
 ## ✅ RECENTLY COMPLETED - August 27, 2025
 
 ### About, Blog, Homepage Enhancements ✅
