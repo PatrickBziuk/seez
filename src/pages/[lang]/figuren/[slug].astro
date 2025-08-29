@@ -18,10 +18,16 @@ export const getStaticPaths = (async () => {
   const figures = await getCollection('fragments');
 
   return SUPPORTED_LANGUAGES.flatMap((lang) =>
-    figures.map((figure) => ({
-      params: { lang, slug: figure.id },
-      props: { figure },
-    }))
+    figures
+      .filter((figure) => {
+        // Filter out fragments that already have a language prefix in their ID
+        // to avoid creating duplicate routes like /en/figuren/en/drift/
+        return !figure.id.startsWith('en/') && !figure.id.startsWith('de/');
+      })
+      .map((figure) => ({
+        params: { lang, slug: figure.id },
+        props: { figure },
+      }))
   );
 }) satisfies GetStaticPaths;
 
