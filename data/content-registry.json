@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-27T17:05:00.608Z",
+  "lastUpdated": "2025-08-29T21:21:52.641Z",
   "entries": {
     "slug-20250805-d90c95e9": {
       "canonicalId": "slug-20250805-d90c95e9",
@@ -77,8 +77,8 @@
         "en": {
           "path": "src/content/projects/en/cosensai.mdx",
           "status": "current",
-          "lastTranslated": "2025-08-27T17:05:00.608Z",
-          "translationHash": "b08c245a74fe9c35fa7c9980af7f0b24d2e0341a2cf05ab7b75766aada993c86"
+          "lastTranslated": "2025-08-29T21:21:52.641Z",
+          "translationHash": "4537f77fe31b0658b0767c3ebc4b066073b44e93ea73f6b3ea6bd3f1b4c71954"
         }
       }
     },
@@ -248,6 +248,15 @@
       "title": "What would happen when Trump lands a coup.",
       "lastModified": "2025-08-26T08:38:55.754Z",
       "contentHash": "8bb285828609d8a19d73ff8cbd5d4b963938ef65e3dca45edcd96ba72bf0b03f",
+      "translations": {}
+    },
+    "slug-20250829-991fe0c3": {
+      "canonicalId": "slug-20250829-991fe0c3",
+      "originalPath": "projects/de/seelenstrip.mdx",
+      "originalLanguage": "de",
+      "title": "Seelenstrip",
+      "lastModified": "2025-08-29T21:21:32.241Z",
+      "contentHash": "57066de551daf9d6d1872f1b29bcab6ea2e243ede24206898ac24e1251ae31c0",
       "translations": {}
     }
   }
