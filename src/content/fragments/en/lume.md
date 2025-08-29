@@ -12,11 +12,11 @@ alias: 'The Dreamer, The Explorer'
 designation: 'SZ-002'
 symbolism:
   - icon: '🔬'
-    meaning: 'Vial amulet — potion vibe, comfort and care'
+    meaning: 'Vial amulet - potion vibe, comfort and care'
   - icon: '👓'
-    meaning: 'Golden glasses — curiosity filter; every light an easter egg'
+    meaning: 'Golden glasses - curiosity filter; every light an easter egg'
   - icon: '🎮'
-    meaning: 'Controller/books/notebook — identity manifest: art, games, words'
+    meaning: 'Controller/books/notebook - identity manifest: art, games, words'
 containmentNote: 'Embodies curious fan energy; easily over-stimulated by routine, thrives on discovery.'
 tags: ['fragment', 'character', 'music', 'discovery', 'gaming', 'books', 'dreamer']
 ---

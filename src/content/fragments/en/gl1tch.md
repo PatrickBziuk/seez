@@ -14,11 +14,11 @@ alias: 'The Meta, Line-Face, Patch 1.0'
 designation: 'SZ-005'
 symbolism:
   - icon: '🔬'
-    meaning: 'LED line-face — identity as a signal that's allowed to glitch'
+    meaning: 'LED line-face - identity as a signal that is allowed to glitch'
   - icon: '💔'
-    meaning: 'Heart with blade — truth cuts before it heals; love under system pressure'
+    meaning: 'Heart with blade - truth cuts before it heals; love under system pressure'
   - icon: '📡'
-    meaning: 'Cable-tubes — connection and dependency on digital systems'
+    meaning: 'Cable-tubes - connection and dependency on digital systems'
 containmentNote: 'Gl1tch acts as a critical instance for AI and tech ethics. Meta commentary may trigger existential questions about authenticity and digital identity.'
 tags: ['fragment', 'character', 'music', 'meta', 'technology', 'ai-ethics', 'glitch']
 ---

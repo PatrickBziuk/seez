@@ -12,16 +12,16 @@ designation: 'SZ-003'
 colorCode: '#111827'
 symbolism:
   - icon: '⚓'
-    meaning: 'Anker-Tattoos — Suche nach Halt, findet nur Symbole davon'
-  - icon: '🚬'
-    meaning: 'Rauch — Leben löst sich auf wie die Glut seiner Kippen'
+    meaning: 'Anker-Tattoos - Suche nach Halt, findet nur Symbole davon'
+  - icon: '💨'
+    meaning: 'Rauch - Leben löst sich auf wie die Glut seiner Kippen'
   - icon: '🍺'
-    meaning: 'Bierdose — billiger Trost, Statussymbol der Haltlosigkeit'
+    meaning: 'Bierdose - billiger Trost, Statussymbol der Haltlosigkeit'
 voiceCharacteristics:
-  preset: 'Rau, unberechenbar, exzessiv'
-  style: ['Dark Trap', 'Emo Rap', 'Substance Rap', 'Raw Hip-Hop']
-movementGrammar: ['treiben', 'flüchten', 'betäuben']
-containmentNote: 'Drift verkörpert jugendliche Selbstdestruktion ohne romantisierende Verklärung. Hohe Gefahr für emotionale Ansteckung bei vulnerablen Personen. Interaktion nur unter kontrollierten Bedingungen und mit entsprechender Nachbetreuung empfohlen.'
+  preset: 'Rau, gebrochen, ehrlich'
+  style: ['Depressive Hip-Hop', 'Emo Trap', 'Confession Rap']
+movementGrammar: ['treiben', 'fallen', 'festhalten']
+containmentNote: 'Embodies youth self-destruction without glamorization; handle carefully.'
 tags: ['figure', 'character', 'music', 'substance', 'youth-crisis', 'anchor-lost']
 ---
 

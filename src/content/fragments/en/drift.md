@@ -11,11 +11,11 @@ alias: 'The Anchorless'
 designation: 'SZ-003'
 symbolism:
   - icon: '⚓'
-    meaning: 'Anchor tattoos — searching for hold, finding only symbols of it'
-  - icon: '🚬'
-    meaning: 'Smoke — life dissolving like the glow of his cigarettes'
+    meaning: 'Anchor tattoos - searching for hold, finding only symbols of it'
+  - icon: '💨'
+    meaning: 'Smoke - life dissolving like the glow of his cigarettes'
   - icon: '🍺'
-    meaning: 'Beer can — cheap comfort, status symbol of being unmoored'
+    meaning: 'Beer can - cheap comfort, status symbol of being unmoored'
 containmentNote: 'Embodies youth self-destruction without glamorization; handle carefully.'
 tags: ['fragment', 'character', 'music', 'substance', 'youth-crisis', 'anchor-lost']
 ---

@@ -14,12 +14,12 @@ alias: 'Der Meta, Liniengesicht, Patch 1.0'
 designation: 'SZ-005'
 colorCode: '#0ea5e9'
 symbolism:
-  - icon: '🔬'
-    meaning: 'LED-Liniengesicht — Identität als Signal, das stören darf'
-  - icon: '💔'
-    meaning: 'Herz mit Klinge — Wahrheit schneidet, bevor sie heilt; Liebe unter Systemdruck'
-  - icon: '📡'
-    meaning: 'Kabel-Tubes — Verbindung und Abhängigkeit zu digitalen Systemen'
+  - icon: '📱'
+    meaning: 'LED-Liniengesicht - Identität als Signal, das stören darf'
+  - icon: '💖'
+    meaning: 'Herz mit Klinge - Wahrheit schneidet, bevor sie heilt; Liebe unter Systemdruck'
+  - icon: '🔌'
+    meaning: 'Kabel-Tubes - Verbindung und Abhängigkeit zu digitalen Systemen'
 voiceCharacteristics:
   preset: 'Reflexiv, ironisch, vermittelnd'
   style: ['Meta Hip-Hop', 'Glitch Pop', 'Tech Commentary', 'Digital Conscious Rap']

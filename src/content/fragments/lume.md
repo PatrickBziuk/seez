@@ -13,11 +13,11 @@ designation: 'SZ-002'
 colorCode: '#e6d7c8'
 symbolism:
   - icon: '🔬'
-    meaning: 'Flakon-Amulett — Health-Potion-Vibe, Trost und Hoffnung'
+    meaning: 'Flakon-Amulett - Health-Potion-Vibe, Trost und Hoffnung'
   - icon: '👓'
-    meaning: 'Goldene Brille — Neugierfilter; jedes Licht ein Easter Egg'
+    meaning: 'Goldene Brille - Neugierfilter; jedes Licht ein Easter Egg'
   - icon: '🎮'
-    meaning: 'Controller/Bücher/Notizbuch — Identitätsmanifest: Kunst, Games, Worte'
+    meaning: 'Controller/Bücher/Notizbuch - Identitätsmanifest: Kunst, Games, Worte'
 voiceCharacteristics:
   preset: 'Sanft, träumerisch, begeistert'
   style: ['Indie Pop', 'Dream Pop', 'Hook Vocals', 'Spoken Word Poetry']

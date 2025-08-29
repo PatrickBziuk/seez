@@ -10,12 +10,12 @@ additionalImages:
 alias: 'The Mirror Man'
 designation: 'SZ-001'
 symbolism:
-  - icon: '🪞'
-    meaning: 'Shattered mirror mask — never shows himself, only reflections'
-  - icon: '🩸'
-    meaning: 'Scars on hands — visible past carried openly'
+  - icon: '🔗'
+    meaning: 'Shattered mirror mask - never shows himself, only reflections'
+  - icon: '✊'
+    meaning: 'Scars on hands - visible past carried openly'
   - icon: '🎤'
-    meaning: 'Microphone as sole channel — paradoxically anonymous to be seen'
+    meaning: 'Microphone as sole channel - paradoxically anonymous to be seen'
 containmentNote: 'Represents fragmented digital identity; handle with emotional care.'
 tags: ['fragment', 'character', 'music', 'rap', 'introspection', 'mirror-man']
 ---

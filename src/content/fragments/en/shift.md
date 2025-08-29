@@ -12,12 +12,12 @@ notranslate: ['SZ-004', 'Shift']
 alias: 'The Worker'
 designation: 'SZ-004'
 symbolism:
-  - icon: '🏭'
-    meaning: 'Punch card — life metered by shifts'
+  - icon: '⏰'
+    meaning: 'Punch card - life metered by shifts'
   - icon: '🚬'
-    meaning: 'Cigarettes — five minutes of life condensed into smoke'
-  - icon: '⚡'
-    meaning: 'Energy drinks — artificial wakefulness to survive the shift'
+    meaning: 'Cigarettes - five minutes of life condensed into smoke'
+  - icon: '🥤'
+    meaning: 'Energy drinks - artificial wakefulness to survive the shift'
 containmentNote: 'Working-class experience; themes may trigger socioeconomic frustration.'
 tags: ['fragment', 'character', 'music', 'working-class', 'social-commentary', 'labor']
 ---

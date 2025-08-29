@@ -14,11 +14,11 @@ alias: 'Der Fremde'
 colorCode: '#8B9DC3'
 symbolism:
   - icon: '🚩'
-    meaning: 'Überlagerte Flaggenflicken — Mehrfachzugehörigkeit als Muster'
+    meaning: 'Überlagerte Flaggenflicken - Mehrfachzugehörigkeit als Muster'
   - icon: '🥽'
-    meaning: 'Verspiegelte Brille — reflektiert Projektionen zurück'
+    meaning: 'Verspiegelte Brille - reflektiert Projektionen zurück'
   - icon: '📝'
-    meaning: 'Stempel "Unbekannt" — amtliche Distanzierung als Selbstermächtigung'
+    meaning: 'Stempel "Unbekannt" - amtliche Distanzierung als Selbstermächtigung'
 voiceCharacteristics:
   preset: 'Präzise, chirurgisch, zwischen Sprachen wechselnd'
   style: ['politisch-kritisch', 'mehrsprachig', 'präzise']

@@ -1,5 +1,10 @@
 ---
-title: 'Shift - Der Arbeiter'
+title: 'Shi  - icon: '⏰'
+    meaning: 'Stempelkarte - Leben nach Schicht-Takt gemessen'
+  - icon: '🚬'
+    meaning: 'Zigaretten - fünf Minuten Leben in Rauch kondensiert'
+  - icon: '🥤'
+    meaning: 'Energy Drinks - künstliche Wachheit um die Schicht zu überleben'er Arbeiter'
 language: 'de'
 authors: ['seez']
 publicationStatus: 'published'
