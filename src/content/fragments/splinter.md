@@ -1,10 +1,5 @@
 ---
-title: 'S  - icon: '🔗'
-    meaning: 'Gesplitterte Spiegelmaske - zeigt nie sich selbst, nur Reflexionen'
-  - icon: '✊'
-    meaning: 'Narben an Händen - sichtbare Vergangenheit offen getragen'
-  - icon: '🎤'
-    meaning: 'Mikrofon als einziger Kanal - paradoxerweise anonym um gesehen zu werden'r - Der Spiegelmann'
+title: 'Splinter - Der Spiegelmann'
 language: 'de'
 authors: ['seez']
 publicationStatus: 'published'

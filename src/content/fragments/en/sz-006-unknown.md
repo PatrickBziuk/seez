@@ -17,8 +17,6 @@ symbolism:
     meaning: 'Mirrored glasses - reflecting projections'
   - icon: '📝'
     meaning: 'Unknown stamp - official distancing as self-empowerment'
-  - icon: 'border-cross'
-    meaning: 'Border crossing as stance'
 containmentNote: 'Multilingual political voice - switches between languages, surgically reflects systemic exclusion patterns.'
 tags: ['fragment', 'politics', 'migration', 'identity', 'borders', 'belonging']
 ---
