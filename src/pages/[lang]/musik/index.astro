@@ -136,14 +136,14 @@ const metadata = {
 </Layout>
 
 <script>
-  const tracks = Array.from(document.querySelectorAll('.track-item'));
+  const tracks = Array.from(document.querySelectorAll<HTMLButtonElement>('.track-item'));
   const vinyl = document.getElementById('vinyl');
   const playBtn = document.getElementById('play-btn');
   const playerTitle = document.getElementById('player-title');
   const playerSubtitle = document.getElementById('player-subtitle');
   const playerChar = document.getElementById('player-char');
   const visualizer = document.getElementById('visualizer');
-  const audio = document.getElementById('archive-audio');
+  const audio = document.getElementById('archive-audio') as HTMLAudioElement | null;
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
 
@@ -165,7 +165,7 @@ const metadata = {
     }
   }
 
-  function loadTrack(index) {
+  function loadTrack(index: number) {
     if (index < 0 || index >= tracks.length) return;
     currentIndex = index;
 
