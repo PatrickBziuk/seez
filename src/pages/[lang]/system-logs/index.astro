@@ -1,0 +1,183 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/PageLayout.astro';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+
+export const getStaticPaths = (() => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+const lifeEntries = (await getCollection('life'))
+  .filter((entry) => {
+    const data = entry.data as { language?: string; draft?: boolean; publicationStatus?: string };
+    return !data.draft && data.publicationStatus !== 'draft' && (data.language === lang || (!data.language && lang === 'en'));
+  })
+  .sort((a, b) => {
+    const aDate = new Date((a.data.firstPublishedAt || a.data.publishDate || a.data.date || 0) as string | number | Date).getTime();
+    const bDate = new Date((b.data.firstPublishedAt || b.data.publishDate || b.data.date || 0) as string | number | Date).getTime();
+    return bDate - aDate;
+  })
+  .slice(0, 3)
+  .map((entry) => ({
+    title: entry.data.title,
+    description: entry.data.description,
+    href: `/${lang}/life/${entry.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`,
+  }));
+
+const metadata = {
+  title: lang === 'de' ? 'System Logs' : 'System Logs',
+  description:
+    lang === 'de'
+      ? 'Archivseite mit Zeitleiste, Fragmenten und Legacy-Einträgen.'
+      : 'Archive page with timeline, fragments and legacy entries.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="logs-shell min-h-screen">
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <header class="max-w-5xl mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-10">
+      <p class="text-xs text-lime-400 opacity-80 font-mono">&gt; MOUNTING: /mnt/legacy_data</p>
+      <h1 class="text-4xl md:text-6xl font-bold tracking-tight mt-3 glitch" data-text="SYSTEM LOGS: SEEZ_ARCHIVE">
+        SYSTEM LOGS: SEEZ_ARCHIVE
+      </h1>
+      <p class="text-gray-400 max-w-2xl mt-5 text-sm md:text-base border-l-2 border-lime-500 pl-4">
+        {
+          lang === 'de'
+            ? 'Beschädigte Datenspur. Hier liegen Ursprung, Brüche und der Übergang in das heutige Seez-Universum.'
+            : 'Corrupted data trail. This archive holds origin, fractures, and the transition into today’s Seez universe.'
+        }
+      </p>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 pb-20 space-y-14">
+      <section class="log-card">
+        <p class="badge">LOG_ID: SPLINTER_ORIGIN</p>
+        <h2 class="text-2xl md:text-3xl font-bold mt-3">{lang === 'de' ? 'Der Riss im Selbstbild' : 'The fracture in self-image'}</h2>
+        <p class="text-sm text-gray-300 mt-4 leading-relaxed">
+          {lang === 'de'
+            ? 'Kein Branding-Mythos. Ein echter Bruchpunkt, aus dem später Figuren, Songs und Texte entstanden sind.'
+            : 'Not a branding myth. A real breaking point that later evolved into characters, songs, and texts.'}
+        </p>
+      </section>
+
+      <section>
+        <div class="flex items-center justify-between gap-3 mb-4">
+          <h2 class="text-2xl font-bold">{lang === 'de' ? 'Legacy Timeline' : 'Legacy Timeline'}</h2>
+          <a class="text-xs text-cyan-300 hover:underline" href={`/${lang}/blog`}>{lang === 'de' ? 'Zum Blog' : 'Open Blog'}</a>
+        </div>
+
+        {
+          lifeEntries.length === 0 ? (
+            <p class="text-sm text-gray-400">{lang === 'de' ? 'Noch keine Legacy-Einträge.' : 'No legacy entries yet.'}</p>
+          ) : (
+            <ul class="space-y-3">
+              {lifeEntries.map((entry) => (
+                <li>
+                  <a href={entry.href} class="timeline-item block">
+                    <h3 class="font-semibold text-white">{entry.title}</h3>
+                    {entry.description && <p class="text-sm text-gray-400 mt-1 line-clamp-2">{entry.description}</p>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </section>
+
+      <section class="terminal">
+        <p>&gt; root@seez:~$ check_integrity</p>
+        <p class="ok">✓ Evidence verified</p>
+        <p class="ok">✓ Timeline consistent</p>
+        <p>&gt; root@seez:~$ next_step</p>
+        <p class="text-gray-400">_ waiting for phase progression ...</p>
+      </section>
+    </main>
+  </section>
+</Layout>
+
+<style>
+  .logs-shell {
+    background: #050505;
+    color: #e5e7eb;
+    position: relative;
+  }
+
+  .scanlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.24) 50%, rgba(0, 0, 0, 0.24));
+    background-size: 100% 4px;
+    opacity: 0.35;
+    z-index: 1;
+  }
+
+  .glitch {
+    position: relative;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .glitch::before {
+    transform: translateX(2px);
+    color: rgba(34, 211, 238, 0.45);
+    clip-path: inset(35% 0 50% 0);
+  }
+
+  .glitch::after {
+    transform: translateX(-2px);
+    color: rgba(244, 63, 94, 0.5);
+    clip-path: inset(60% 0 10% 0);
+  }
+
+  .log-card {
+    border: 1px solid #27272a;
+    background: rgba(12, 12, 12, 0.9);
+    padding: 1.1rem;
+  }
+
+  .badge {
+    display: inline-block;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.45rem;
+    letter-spacing: 0.08em;
+  }
+
+  .timeline-item {
+    border-left: 2px solid #3f3f46;
+    padding-left: 0.75rem;
+    background: rgba(9, 9, 11, 0.8);
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+    transition: 0.2s ease;
+  }
+
+  .timeline-item:hover {
+    border-left-color: #22d3ee;
+    transform: translateX(3px);
+  }
+
+  .terminal {
+    border: 1px solid #27272a;
+    background: #040404;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+  }
+
+  .ok {
+    color: #4ade80;
+  }
+</style>

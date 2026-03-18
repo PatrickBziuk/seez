@@ -1,243 +1,294 @@
 ---
-/**
- * Homepage - Multilingual homepage showing main navigation sections
- * @props lang: SupportedLanguage - Current language from route params
- * @behavior Shows welcome message and main navigation cards to Books, Projects, Lab, Life sections
- * @dependencies SUPPORTED_LANGUAGES, getTranslations, Layout
- * @usedBy Direct navigation to /[lang] (root homepage)
- */
 import Layout from '../../layouts/PageLayout.astro';
 import { SUPPORTED_LANGUAGES } from '../../utils/i18n';
-import { getCollection, type CollectionEntry } from 'astro:content';
 import type { SupportedLanguage } from '../../utils/i18n';
-import { getPermalink } from '../../utils/permalinks';
+import { getCollection } from 'astro:content';
 
-export const getStaticPaths = () => {
-  return SUPPORTED_LANGUAGES.map((lang) => ({
-    params: { lang },
-  }));
-};
+export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
-const metadata = {
-  title: lang === 'de' ? 'Kreativer Kosmos - seez.eu' : 'Creative Cosmos - seez.eu',
-  description:
-    lang === 'de'
-      ? 'Entdecke Musik, Texte und Fragmente in einem kreativen Universum voller Möglichkeiten.'
-      : 'Discover music, texts, and fragments in a creative universe of endless possibilities.',
-  ignoreTitleTemplate: true,
-};
-
-// Fetch a few latest items per section - prioritizing creative content
-const [music, texts, figures, life] = await Promise.all([
-  getCollection('music'),
-  getCollection('texts'),
-  getCollection('fragments'),
-  getCollection('life'),
-]);
-
-type Coll = 'texts' | 'fragments' | 'music' | 'life';
-type Entry = CollectionEntry<Coll>;
+const collections = ['books', 'projects', 'lab', 'life', 'music', 'pages'] as const;
+type Coll = (typeof collections)[number];
+type Entry = Awaited<ReturnType<typeof getCollection<Coll>>>[number];
 type EntryData = {
-  title: string;
+  title?: string;
   description?: string;
-  firstPublishedAt?: string;
-  publishDate?: string;
-  date?: Date | string;
   language?: 'en' | 'de';
   draft?: boolean;
   publicationStatus?: 'draft' | 'published' | 'archived';
+  firstPublishedAt?: string;
+  publishDate?: string;
+  date?: Date | string;
 };
 
-const baseAlias = (collection: Coll): string => {
-  switch (collection) {
-    case 'texts':
-      return 'texte';
-    case 'fragments':
-      return 'fragmente';
-    default:
-      return collection;
+function toDate(entry: Entry): Date | null {
+  const data = entry.data as unknown as EntryData;
+  const d = data.firstPublishedAt || data.publishDate || data.date;
+  if (!d) return null;
+  try {
+    return d instanceof Date ? d : new Date(d as string);
+  } catch {
+    return null;
   }
-};
-
-function normalize(list: Entry[]) {
-  return list
-    .filter((e) => {
-      const d = e.data as unknown as EntryData;
-      return d.language === lang && !d.draft && d.publicationStatus !== 'draft';
-    })
-    .map((e) => {
-      const idNoExt = e.id.replace(/\.(md|mdx)$/i, '');
-      const cleanSlug = idNoExt.replace(/^[a-z]{2}\//, '');
-      const data = e.data as unknown as EntryData;
-      const d = data.firstPublishedAt || data.publishDate || data.date;
-      const date: Date = d instanceof Date ? d : d ? new Date(String(d)) : new Date(0);
-      return {
-        title: (data.title || '').toString(),
-        description: data.description,
-        url: `/${lang}/${baseAlias(e.collection as Coll)}/${cleanSlug}`,
-        date,
-      };
-    })
-    .sort((a, b) => b.date.getTime() - a.date.getTime())
-    .slice(0, 3);
 }
 
-const sections = [
+function toUrl(entry: Entry): string {
+  const data = entry.data as unknown as EntryData;
+  const entryLang = data.language || 'en';
+  const idNoExt = entry.id.replace(/\.(md|mdx)$/i, '');
+  const cleanSlug = idNoExt.replace(/^[a-z]{2}\//, '');
+
+  if (entry.collection === 'pages') {
+    if (cleanSlug.startsWith('about/')) return `/${entryLang}/about`;
+    if (cleanSlug.startsWith('tech-stack/')) return `/${entryLang}/tech-stack`;
+  }
+
+  return `/${entryLang}/${entry.collection}/${cleanSlug}`;
+}
+
+const latestBlogItems = (await Promise.all(collections.map((c) => getCollection(c))))
+  .flat()
+  .filter((entry) => {
+    const data = entry.data as unknown as EntryData;
+    return data.language === lang && !data.draft && data.publicationStatus !== 'draft';
+  })
+  .map((entry) => {
+    const data = entry.data as unknown as EntryData;
+    return {
+      title: (data.title || '').toString(),
+      description: data.description,
+      date: toDate(entry),
+      href: toUrl(entry),
+      collection: entry.collection,
+    };
+  })
+  .filter((entry) => !!entry.date)
+  .sort((a, b) => b.date!.getTime() - a.date!.getTime())
+  .slice(0, 4);
+
+const modules = [
   {
-    key: 'music',
-    href: `/${lang}/musik`,
-    icon: '🎵',
-    title: lang === 'de' ? 'Musik' : 'Music',
-    items: normalize(music),
+    id: 'logs',
+    title: lang === 'de' ? 'System Logs' : 'System Logs',
+    subtitle: lang === 'de' ? 'Vergangenheit und Beweise' : 'Past and evidence',
+    href: `/${lang}/system-logs`,
+    status: 'ARCHIVE ONLINE',
   },
   {
-    key: 'texts',
-    href: `/${lang}/texte`,
-    icon: '📝',
-    title: lang === 'de' ? 'Texte' : 'Texts',
-    items: normalize(texts),
-  },
-  {
-    key: 'fragments',
-    href: `/${lang}/fragmente`,
-    icon: '🎭',
-    title: lang === 'de' ? 'Fragmente' : 'Fragments',
-    items: normalize(figures),
-  },
-  {
-    key: 'life',
+    id: 'core',
+    title: lang === 'de' ? 'Creative Core' : 'Creative Core',
+    subtitle: lang === 'de' ? 'Prozess und Architektur' : 'Process and architecture',
     href: `/${lang}/kreatives`,
-    icon: '✨',
-    title: lang === 'de' ? 'Kreatives' : 'Creative',
-    items: normalize(life),
+    status: 'ENGINE READY',
+  },
+  {
+    id: 'sonic',
+    title: lang === 'de' ? 'Sonic Archive' : 'Sonic Archive',
+    subtitle: lang === 'de' ? 'Tracks und Stimmen' : 'Tracks and voices',
+    href: `/${lang}/musik`,
+    status: 'AUDIO MOUNTED',
+  },
+  {
+    id: 'fragments',
+    title: lang === 'de' ? 'Fragments' : 'Fragments',
+    subtitle: lang === 'de' ? 'Identität und Rollen' : 'Identity and roles',
+    href: `/${lang}/fragmente`,
+    status: 'DOSSIERS READY',
+  },
+  {
+    id: 'inventory',
+    title: lang === 'de' ? 'Inventory' : 'Inventory',
+    subtitle: lang === 'de' ? 'Action und Zugang' : 'Action and access',
+    href: `/${lang}/inventory`,
+    status: 'LOOT ACTIVE',
+  },
+  {
+    id: 'blog',
+    title: 'Blog',
+    subtitle: lang === 'de' ? 'Alle Inhalte in Timeline' : 'All content in one timeline',
+    href: `/${lang}/blog`,
+    status: 'LIVE FEED',
   },
 ];
+
+const metadata = {
+  title: lang === 'de' ? 'Seez Erlebnis' : 'Seez Experience',
+  description:
+    lang === 'de'
+      ? 'Ein kreatives Erlebnis mit System Logs, Creative Core, Sonic Archive, Fragments, Inventory und Blog.'
+      : 'An immersive creative experience with System Logs, Creative Core, Sonic Archive, Fragments, Inventory and Blog.',
+  ignoreTitleTemplate: true,
+};
 ---
 
 <Layout metadata={metadata}>
-  <main>
-    <section class="py-16 text-center">
-      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight dark:text-white">
-        {lang === 'de' ? 'Kreativer Kosmos' : 'Creative Cosmos'}
+  <section class="experience-shell">
+    <div class="bg-grid" aria-hidden="true"></div>
+
+    <header class="hero max-w-6xl mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-10">
+      <p class="boot">&gt; BOOTING EXPERIENCE_PROTOCOL v2</p>
+      <h1 class="text-4xl md:text-7xl font-bold tracking-tight uppercase">
+        {lang === 'de' ? 'Seez Universe' : 'Seez Universe'}
       </h1>
-      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+      <p class="max-w-3xl text-gray-300 mt-5 text-sm md:text-base leading-relaxed">
         {
           lang === 'de'
-            ? 'Musik, Texte und Fragmente – ein Universum voller kreativer Möglichkeiten.'
-            : 'Music, texts, and fragments – a universe of creative possibilities.'
+            ? 'Kein normales Portfolio. Ein begehbares System aus Vergangenheit, Prozess, Musik, Charakteren, Aktionen und dem vollständigen Blog-Feed.'
+            : 'Not a standard portfolio. A navigable system of past, process, music, characters, action, and the full blog feed.'
         }
       </p>
-      <div class="mt-6 flex items-center justify-center gap-3">
-        <a href={getPermalink(`/${lang}/musik`)} class="px-5 py-2.5 rounded-md bg-blue-600 text-white hover:bg-blue-700"
-          >{lang === 'de' ? 'Musik entdecken' : 'Discover Music'}</a
-        >
-        <a
-          href="#random"
-          id="random-content-btn"
-          class="px-5 py-2.5 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
-          >{lang === 'de' ? 'Zufall' : 'Random'}</a
-        >
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a class="cta cta-primary" href={`/${lang}/kreatives`}>{lang === 'de' ? 'Erlebnis starten' : 'Enter experience'}</a>
+        <a class="cta" href={`/${lang}/blog`}>{lang === 'de' ? 'Zum Blog' : 'Open blog'}</a>
       </div>
-    </section>
+    </header>
 
-    <section class="px-6 sm:px-6 pb-16 max-w-6xl mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-10">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {
-          sections.map((s) => (
-            <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-5 bg-white dark:bg-gray-900">
-              <a href={getPermalink(s.href)} class="inline-flex items-center gap-2 text-lg font-semibold">
-                <span class="text-2xl">{s.icon}</span>
-                {s.title}
-              </a>
-              <ul class="mt-4 space-y-3">
-                {s.items.map((it) => (
-                  <li>
-                    <a href={getPermalink(it.url)} class="block group">
-                      <div class="text-sm text-gray-500 dark:text-gray-400">
-                        {new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(it.date)}
-                      </div>
-                      <div class="font-medium group-hover:text-blue-600 dark:group-hover:text-blue-400">{it.title}</div>
-                      {it.description && (
-                        <div class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{it.description}</div>
-                      )}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-              <div class="mt-4">
-                <a href={getPermalink(s.href)} class="text-sm underline underline-offset-2 hover:no-underline">
-                  {lang === 'de' ? 'Mehr' : 'More'}
-                </a>
-              </div>
-            </div>
+          modules.map((module) => (
+            <a href={module.href} class="module-card group">
+              <p class="text-xs text-cyan-300">{module.status}</p>
+              <h2 class="text-2xl font-bold mt-2">{module.title}</h2>
+              <p class="text-sm text-gray-400 mt-2">{module.subtitle}</p>
+              <span class="open-link mt-5 inline-block text-xs">&gt;&gt; OPEN</span>
+            </a>
           ))
         }
       </div>
     </section>
 
-    <!-- Neu/New Section -->
-    <section class="px-6 sm:px-6 pb-8 max-w-6xl mx-auto">
-      <h2 class="text-2xl font-bold mb-6 text-center">
-        {lang === 'de' ? 'Neu' : 'New'}
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {
-          (() => {
-            // Get latest 3 items across all collections
-            const allItems = [
-              ...normalize(music).map((item) => ({ ...item, type: 'music', icon: '🎵' })),
-              ...normalize(texts).map((item) => ({ ...item, type: 'texts', icon: '📝' })),
-              ...normalize(figures).map((item) => ({ ...item, type: 'fragments', icon: '🎭' })),
-              ...normalize(life).map((item) => ({ ...item, type: 'creative', icon: '✨' })),
-            ]
-              .sort((a, b) => b.date.getTime() - a.date.getTime())
-              .slice(0, 3);
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
+      <div class="timeline-shell">
+        <div class="flex items-center justify-between gap-3 pb-3 border-b border-gray-800">
+          <h2 class="text-2xl font-bold">{lang === 'de' ? 'Live Blog Feed' : 'Live Blog Feed'}</h2>
+          <a class="text-xs text-cyan-300 hover:underline" href={`/${lang}/blog`}>
+            {lang === 'de' ? 'Alle Beiträge' : 'All entries'}
+          </a>
+        </div>
 
-            return allItems.map((item) => (
-              <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-5 bg-white dark:bg-gray-900">
-                <a href={item.url} class="block group">
-                  <div class="flex items-center gap-2 mb-2">
-                    <span class="text-xl">{item.icon}</span>
-                    <span class="text-sm text-gray-500 dark:text-gray-400 capitalize">{item.type}</span>
-                  </div>
-                  <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">
-                    {new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(item.date)}
-                  </div>
-                  <div class="font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-400 mb-2">
-                    {item.title}
-                  </div>
-                  {item.description && (
-                    <div class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{item.description}</div>
-                  )}
-                </a>
-              </div>
-            ));
-          })()
+        {
+          latestBlogItems.length === 0 ? (
+            <p class="text-sm text-gray-400 mt-4">
+              {lang === 'de' ? 'Noch keine veröffentlichten Einträge.' : 'No published entries yet.'}
+            </p>
+          ) : (
+            <ul class="mt-4 space-y-4">
+              {latestBlogItems.map((item) => (
+                <li>
+                  <a href={item.href} class="timeline-item block">
+                    <div class="text-xs text-gray-500">
+                      {new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(item.date!)} · {item.collection}
+                    </div>
+                    <h3 class="text-lg font-semibold mt-1 text-white">{item.title}</h3>
+                    {item.description && <p class="text-sm text-gray-400 mt-1 line-clamp-2">{item.description}</p>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
         }
       </div>
     </section>
-  </main>
-
-  <script>
-    // Random content functionality
-    document.getElementById('random-content-btn')?.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      // Get all available content URLs from the page
-      const contentLinks = document.querySelectorAll('section a[href*="/"]');
-      const urls = Array.from(contentLinks)
-        .map((link) => link.getAttribute('href'))
-        .filter((href) => href && href.startsWith('/') && !href.includes('#'))
-        .filter((url, index, arr) => arr.indexOf(url) === index); // Remove duplicates
-
-      if (urls.length > 0) {
-        const randomUrl = urls[Math.floor(Math.random() * urls.length)];
-        if (randomUrl) {
-          window.location.href = randomUrl;
-        }
-      }
-    });
-  </script>
+  </section>
 </Layout>
+
+<style>
+  .experience-shell {
+    --bg: #05070d;
+    --panel: rgba(8, 10, 17, 0.86);
+    --line: rgba(0, 224, 255, 0.25);
+    --text: #d9e2ec;
+    position: relative;
+    color: var(--text);
+    background: radial-gradient(circle at 20% -10%, rgba(0, 194, 255, 0.2), transparent 35%),
+      radial-gradient(circle at 90% 10%, rgba(22, 78, 99, 0.25), transparent 30%), var(--bg);
+    min-height: calc(100vh - 6rem);
+  }
+
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.35;
+  }
+
+  .hero,
+  .timeline-shell,
+  .module-card {
+    position: relative;
+    z-index: 1;
+  }
+
+  .boot {
+    color: #67e8f9;
+    letter-spacing: 0.12em;
+    font-size: 0.72rem;
+    margin-bottom: 1rem;
+  }
+
+  .cta {
+    border: 1px solid #2c3650;
+    padding: 0.65rem 1rem;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: 0.25s ease;
+  }
+
+  .cta:hover {
+    border-color: #67e8f9;
+    color: #67e8f9;
+  }
+
+  .cta-primary {
+    background: #67e8f9;
+    border-color: #67e8f9;
+    color: #030712;
+    font-weight: 700;
+  }
+
+  .cta-primary:hover {
+    background: #22d3ee;
+    color: #020617;
+  }
+
+  .module-card {
+    background: var(--panel);
+    border: 1px solid #21283b;
+    padding: 1.2rem;
+    transition: 0.2s ease;
+  }
+
+  .module-card:hover {
+    border-color: #67e8f9;
+    transform: translateY(-2px);
+    box-shadow: 0 0 24px rgba(103, 232, 249, 0.18);
+  }
+
+  .open-link {
+    color: #67e8f9;
+    letter-spacing: 0.08em;
+  }
+
+  .timeline-shell {
+    background: var(--panel);
+    border: 1px solid #21283b;
+    padding: 1rem 1rem 1.2rem;
+  }
+
+  .timeline-item {
+    border-left: 2px solid #1f2937;
+    padding-left: 0.75rem;
+    transition: 0.2s ease;
+  }
+
+  .timeline-item:hover {
+    border-left-color: #67e8f9;
+    transform: translateX(3px);
+  }
+</style>

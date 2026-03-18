@@ -1,215 +1,188 @@
 ---
-/**
- * Creative Landing - Central hub for the creative cosmos
- * @behavior: Hero + quick-entry links to Music, Texts, Figures and recent highlights
- */
 import type { GetStaticPaths } from 'astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../../../layouts/PageLayout.astro';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
-import { getPermalink } from '../../../utils/permalinks';
 
-export const getStaticPaths = (() => {
-  return SUPPORTED_LANGUAGES.map((lang) => ({
-    params: { lang },
-  }));
-}) satisfies GetStaticPaths;
+export const getStaticPaths = (() => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
-// Load content for highlights
-const allMusic = (await getCollection('music')) as CollectionEntry<'music'>[];
-const allTexts = await getCollection('texts');
-const allFigures = await getCollection('fragments');
-
-// Helper: language filter for collections that store language
-const byLang = <T extends { data: { language?: string; draft?: boolean; publicationStatus?: string } }>(items: T[]) =>
-  items.filter((i) => !i.data.draft && (i.data.language === lang || (!i.data.language && lang === 'en')));
-
-// Helper: sort by a few possible dates and take N
-const toDate = (v: string | number | Date | undefined): Date => {
-  if (v instanceof Date) return v;
-  if (typeof v === 'string' || typeof v === 'number') return new Date(v);
-  return new Date('1970-01-01');
-};
-
-const sortByDateDesc = <T extends { data: Record<string, unknown> }>(items: T[]) => {
-  return items
-    .slice()
-    .sort((a, b) => {
-      const aDate = (a.data.releaseDate || a.data.firstPublishedAt || a.data.publishDate || a.data.timestamp) as
-        | string
-        | number
-        | Date
-        | undefined;
-      const bDate = (b.data.releaseDate || b.data.firstPublishedAt || b.data.publishDate || b.data.timestamp) as
-        | string
-        | number
-        | Date
-        | undefined;
-      return toDate(bDate).getTime() - toDate(aDate).getTime();
-    })
-    .slice(0, 5);
-};
-
-// Compute highlights
-const music = sortByDateDesc(byLang(allMusic));
-const texts = sortByDateDesc(byLang(allTexts));
-// Figures have no language field typically; take the first few sorted by designation or title
-const figures = allFigures
-  .slice()
-  .sort((a, b) => (a.data.designation || '').localeCompare(b.data.designation || ''))
-  .slice(0, 6);
-
 const metadata = {
-  title: lang === 'de' ? 'Kreatives' : 'Creative',
+  title: lang === 'de' ? 'Creative Core' : 'Creative Core',
   description:
     lang === 'de'
-      ? 'Musik, Texte und Fragmente – zentrale Anlaufstelle des kreativen Kosmos.'
-      : 'Music, texts, and fragments – the central hub of the creative cosmos.',
-  canonical: getPermalink(`/${lang}/kreatives`),
+      ? 'Die kreative Engine hinter Seez: Visuals, Narrative und Audio in einem verbundenen Prozess.'
+      : 'The creative engine behind Seez: visuals, narrative, and audio in one connected process.',
 };
 ---
 
 <Layout metadata={metadata}>
-  <section class="py-16 md:py-20">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      <!-- Hero -->
-      <div class="mb-12 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">
-          {lang === 'de' ? 'Kreativer Kosmos' : 'Creative Cosmos'}
-        </h1>
-        <p class="text-xl text-muted max-w-3xl mx-auto">
-          {
-            lang === 'de'
-              ? 'Musik, Texte und Fragmente – verbunden, offen, performativ. Entdecke die künstlerische Welt von seez.'
-              : 'Music, texts, and fragments – connected, open, and performative. Explore the artistic world of seez.'
-          }
-        </p>
+  <section class="core-shell min-h-screen px-4 sm:px-6 py-10 md:py-16">
+    <div class="grid-bg" aria-hidden="true"></div>
+
+    <header class="mb-16 flex flex-col items-center text-center max-w-4xl mx-auto relative z-10">
+      <div class="text-xs text-cyan-300 mb-2 border border-cyan-400/30 px-2 py-1 rounded">&gt; MODULE: CREATIVE_ENGINE</div>
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight uppercase">THE BLACK BOX</h1>
+      <p class="max-w-2xl text-gray-300 text-sm leading-relaxed">
+        {
+          lang === 'de'
+            ? 'Ein Prozess statt einem Tool-Stack: Emotion, Iteration und Produktion greifen ineinander. KI bleibt Verstärker, nicht Ursprung.'
+            : 'A process, not a tool stack: emotion, iteration, and production work as one. AI stays amplifier, not origin.'
+        }
+      </p>
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs uppercase tracking-wide">
+        <a class="chip" href={`/${lang}/system-logs`}>System Logs</a>
+        <a class="chip" href={`/${lang}/musik`}>Sonic Archive</a>
+        <a class="chip" href={`/${lang}/blog`}>Blog</a>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto relative min-h-[720px] z-10">
+      <div class="absolute left-1/2 top-3 -translate-x-1/2 z-20">
+        <div class="relative w-24 h-24 bg-black border-2 border-white rounded-full flex items-center justify-center">
+          <div class="pulse-ring w-full h-full"></div>
+          <span class="font-bold text-xl">SEEZ</span>
+        </div>
       </div>
 
-      <!-- Quick entries -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <a
-          href={getPermalink(`/${lang}/musik`)}
-          class="group block rounded-lg border border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-slate-900 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition"
-        >
-          <h3 class="text-xl font-semibold mb-2 group-hover:text-primary">{lang === 'de' ? 'Musik' : 'Music'}</h3>
-          <p class="text-muted">
-            {
-              lang === 'de'
-                ? 'Songs, Lyrics und musikalische Experimente – höre die Stimmen der Fragmente.'
-                : 'Songs, lyrics and musical experiments – hear the voices of the fragments.'
-            }
+      <svg class="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-40" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path d="M50 12 L20 40" stroke="#00f3ff" stroke-width="0.2" fill="none" />
+        <path d="M50 12 L50 40" stroke="#00f3ff" stroke-width="0.2" fill="none" />
+        <path d="M50 12 L80 40" stroke="#00f3ff" stroke-width="0.2" fill="none" />
+        <path d="M20 56 L50 86" stroke="#22d3ee" stroke-width="0.2" fill="none" />
+        <path d="M50 56 L50 86" stroke="#22d3ee" stroke-width="0.2" fill="none" />
+        <path d="M80 56 L50 86" stroke="#22d3ee" stroke-width="0.2" fill="none" />
+      </svg>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 absolute top-[210px] w-full z-10">
+        <article class="process-card p-5 rounded-lg">
+          <p class="text-xs text-cyan-300 mb-2">VISUAL CORE</p>
+          <h2 class="text-xl font-bold mb-2">ComfyUI + ControlNet</h2>
+          <p class="text-xs text-gray-400 mb-4">
+            {lang === 'de'
+              ? 'Skizzen werden in visuelle Identitäten gerendert. Die Handschrift bleibt menschlich, die Ausführung wird präziser.'
+              : 'Sketches are rendered into visual identities. Human signature stays; execution gets sharper.'}
           </p>
-        </a>
-        <a
-          href={getPermalink(`/${lang}/texte`)}
-          class="group block rounded-lg border border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-slate-900 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition"
-        >
-          <h3 class="text-xl font-semibold mb-2 group-hover:text-primary">{lang === 'de' ? 'Texte' : 'Texts'}</h3>
-          <p class="text-muted">
-            {lang === 'de' ? 'Prosa, Gedichte und Notizen.' : 'Prose, poems and notes.'}
+          <div class="h-1 w-full bg-gray-800 rounded overflow-hidden"><div class="h-full bg-cyan-400 w-2/3 animate-pulse"></div></div>
+        </article>
+
+        <article class="process-card p-5 rounded-lg">
+          <p class="text-xs text-cyan-300 mb-2">NARRATIVE CORE</p>
+          <h2 class="text-xl font-bold mb-2">LLM Iteration</h2>
+          <p class="text-xs text-gray-400 mb-4">
+            {lang === 'de'
+              ? 'Sätze werden hundertfach geschliffen, bis sie tragen. Nicht der erste Output gewinnt, sondern der ehrlichste.'
+              : 'Lines are iterated heavily until they hold. Not first output wins, the most honest one does.'}
           </p>
-        </a>
-        <a
-          href={getPermalink(`/${lang}/fragmente`)}
-          class="group block rounded-lg border border-gray-200 dark:border-gray-700 p-6 bg-white dark:bg-slate-900 hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition"
-        >
-          <h3 class="text-xl font-semibold mb-2 group-hover:text-primary">
-            {lang === 'de' ? 'Fragmente' : 'Fragments'}
-          </h3>
-          <p class="text-muted">
-            {
-              lang === 'de'
-                ? 'Sechs Entitäten mit Profilen, Symbolik und Containment-Protokollen.'
-                : 'Six entities with profiles, symbolism and containment protocols.'
-            }
+          <div class="h-1 w-full bg-gray-800 rounded overflow-hidden"><div class="h-full bg-cyan-400 w-full animate-pulse" style="animation-duration: 2.6s"></div></div>
+        </article>
+
+        <article class="process-card p-5 rounded-lg">
+          <p class="text-xs text-cyan-300 mb-2">AUDIO CORE</p>
+          <h2 class="text-xl font-bold mb-2">Suno + Logic Pro</h2>
+          <p class="text-xs text-gray-400 mb-4">
+            {lang === 'de'
+              ? 'Ideen starten digital und enden in menschlichem Feintuning. Layering, Rauschen und Haltung machen den Unterschied.'
+              : 'Ideas start digitally and finish with human refinement. Layering, noise, and intent create the difference.'}
           </p>
-        </a>
+          <div class="h-1 w-full bg-gray-800 rounded overflow-hidden"><div class="h-full bg-cyan-400 w-1/2 animate-pulse" style="animation-duration: 1.4s"></div></div>
+        </article>
       </div>
 
-      <!-- Highlights -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <!-- Latest Music -->
-        <section>
-          <header class="mb-4">
-            <h2 class="text-2xl font-bold">{lang === 'de' ? 'Neu: Musik' : 'Latest: Music'}</h2>
-          </header>
-          {
-            music.length ? (
-              <ul class="space-y-2">
-                {music.map((it) => {
-                  const cleanSlug = it.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
-                  return (
-                    <li>
-                      <a class="underline hover:no-underline" href={getPermalink(`/${lang}/music/${cleanSlug}`)}>
-                        <span class="inline-flex items-center gap-2">
-                          <span class="inline-block w-2 h-2 rounded-full bg-primary-500" />
-                          {it.data.title}
-                        </span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : (
-              <p class="text-muted">{lang === 'de' ? 'Noch keine Musik verfügbar.' : 'No music yet.'}</p>
-            )
-          }
-        </section>
-
-        <!-- Latest Texts -->
-        <section>
-          <header class="mb-4">
-            <h2 class="text-2xl font-bold">{lang === 'de' ? 'Neu: Texte' : 'Latest: Texts'}</h2>
-          </header>
-          {
-            texts.length ? (
-              <ul class="space-y-2">
-                {texts.map((it) => {
-                  const cleanSlug = it.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
-                  return (
-                    <li>
-                      <a class="underline hover:no-underline" href={getPermalink(`/${lang}/texte/${cleanSlug}`)}>
-                        <span class="inline-flex items-center gap-2">
-                          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500" />
-                          {it.data.title}
-                        </span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : (
-              <p class="text-muted">{lang === 'de' ? 'Noch keine Texte verfügbar.' : 'No texts yet.'}</p>
-            )
-          }
-        </section>
-
-        <!-- Figures Overview -->
-        <section>
-          <header class="mb-4">
-            <h2 class="text-2xl font-bold">{lang === 'de' ? 'Fragmente' : 'Fragments'}</h2>
-          </header>
-          {
-            figures.length ? (
-              <ul class="space-y-2">
-                {figures.map((f) => (
-                  <li>
-                    <a class="underline hover:no-underline" href={getPermalink(`/${lang}/fragmente/${f.id}`)}>
-                      {f.data.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p class="text-muted">{lang === 'de' ? 'Keine Fragmente gefunden.' : 'No fragments found.'}</p>
-            )
-          }
-        </section>
+      <div class="absolute top-[610px] left-1/2 -translate-x-1/2 w-full max-w-4xl text-center z-20 pb-8">
+        <h3 class="text-2xl font-bold mb-6">RESULT: THE SPLINTERS</h3>
+        <div class="flex justify-center gap-3 flex-wrap text-xs uppercase tracking-wide">
+          <a href={`/${lang}/fragmente/drift`} class="tag-chip">DRIFT</a>
+          <a href={`/${lang}/fragmente/splinter`} class="tag-chip">SPLINTER</a>
+          <a href={`/${lang}/fragmente/shift`} class="tag-chip">SHIFT</a>
+          <a href={`/${lang}/fragmente/lume`} class="tag-chip">LUME</a>
+          <a href={`/${lang}/fragmente/sz-006-unknown`} class="tag-chip">UNKNOWN</a>
+          <a href={`/${lang}/fragmente/gl1tch`} class="tag-chip">GL1TCH</a>
+        </div>
       </div>
-    </div>
+    </main>
   </section>
 </Layout>
+
+<style>
+  .core-shell {
+    --bg-color: #030305;
+    background: radial-gradient(circle at 20% 0%, rgba(14, 116, 144, 0.25), transparent 30%), var(--bg-color);
+    color: #e5e7eb;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(0, 243, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 243, 255, 0.06) 1px, transparent 1px);
+    background-size: 38px 38px;
+    transform: perspective(500px) rotateX(60deg) translateY(-100px) scale(2);
+    animation: grid-move 18s linear infinite;
+    opacity: 0.32;
+    pointer-events: none;
+  }
+
+  @keyframes grid-move {
+    0% {
+      transform: perspective(500px) rotateX(60deg) translateY(0) scale(2);
+    }
+    100% {
+      transform: perspective(500px) rotateX(60deg) translateY(38px) scale(2);
+    }
+  }
+
+  .pulse-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    border: 1px solid #22d3ee;
+    animation: pulse-out 2s infinite ease-out;
+    opacity: 0;
+  }
+
+  @keyframes pulse-out {
+    0% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+
+  .process-card {
+    background: rgba(6, 10, 15, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(4px);
+    transition: 0.25s ease;
+  }
+
+  .process-card:hover {
+    border-color: #22d3ee;
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .chip,
+  .tag-chip {
+    border: 1px solid #334155;
+    padding: 0.4rem 0.7rem;
+    transition: 0.2s ease;
+  }
+
+  .chip:hover,
+  .tag-chip:hover {
+    border-color: #22d3ee;
+    color: #67e8f9;
+  }
+
+  .tag-chip:hover {
+    background: #f8fafc;
+    color: #020617;
+  }
+</style>

@@ -1,58 +1,423 @@
 ---
-/**
- * Musik (DE Alias) - Mirrors Music listing at /[lang]/music under /[lang]/musik
- * @route /[lang]/musik
- */
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/PageLayout.astro';
-import ContentCard from '../../../components/content/cards/ContentCard.astro';
-import ComingSoon from '../../../components/ComingSoon.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 
-export const getStaticPaths = () => {
-  return SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
-};
+export const getStaticPaths = (() => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
-// Get all music content and filter by language
-const allMusic = (await getCollection('music')) as CollectionEntry<'music'>[];
-const filteredMusic = allMusic.filter(
-  (item) => !item.data.draft && (item.data.language === lang || (!item.data.language && lang === 'en'))
-);
+function normalizeFigureRef(value: unknown): string {
+  if (!value) return 'SEEZ';
+  if (typeof value === 'string') return value.split('/').pop()?.toUpperCase() || 'SEEZ';
+  if (typeof value === 'object' && value !== null && 'id' in value) {
+    const id = String((value as { id: string }).id);
+    return id.split('/').pop()?.toUpperCase() || 'SEEZ';
+  }
+  return 'SEEZ';
+}
+
+const tracks = (await getCollection('music'))
+  .filter((item) => {
+    return !item.data.draft && item.data.publicationStatus !== 'draft' && (item.data.language === lang || (!item.data.language && lang === 'en'));
+  })
+  .map((item, index) => {
+    const slug = item.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+    return {
+      id: slug,
+      title: item.data.title,
+      subtitle: item.data.description || item.data.subtitle || '',
+      href: `/${lang}/music/${slug}`,
+      audioUrl: item.data.audioUrl || '',
+      figure: normalizeFigureRef(item.data.figureRef),
+      index: String(index + 1).padStart(2, '0'),
+    };
+  });
+
+const initialTrack = tracks.find((track) => track.audioUrl) || tracks[0];
 
 const metadata = {
-  title: lang === 'de' ? 'Musik' : 'Music',
+  title: lang === 'de' ? 'Sonic Archive' : 'Sonic Archive',
   description:
     lang === 'de'
-      ? 'Hör die Stimmen deiner Figuren - Songs und musikalische Experimente aus dem kreativen Kosmos'
-      : 'Hear the voices of your figures - Songs and musical experiments from the creative cosmos',
+      ? 'Immersiver Musikbereich mit Player, Trackliste und direkter Verbindung zu den Inhalten.'
+      : 'Immersive music area with player, tracklist, and direct links into the content.',
 };
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <header class="text-center mb-12">
-      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
-        🎵 {lang === 'de' ? 'Musik' : 'Music'}
-      </h1>
-      <p class="text-xl text-muted dark:text-slate-400">
-        {lang === 'de' ? 'Hör die Stimmen deiner Figuren' : 'Hear the voices of your figures'}
-      </p>
-      <p class="text-muted mt-2">
-        {
-          lang === 'de'
-            ? 'Songs und musikalische Experimente aus dem kreativen Kosmos'
-            : 'Songs and musical experiments from the creative cosmos'
-        }
-      </p>
+  <section class="sonic-shell px-4 sm:px-6 py-10 md:py-16 min-h-screen">
+    <header class="mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-4 max-w-6xl mx-auto">
+      <div>
+        <p class="text-xs text-green-400 mb-1">&gt; MOUNTING: AUDIO_DRIVE_01</p>
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tight uppercase">SONIC ARCHIVE</h1>
+      </div>
+      <div class="text-left md:text-right text-sm">
+        <p class="text-gray-500">{lang === 'de' ? 'Aktuelle Phase' : 'Current phase'}</p>
+        <p class="text-green-400 font-bold">PHASE 1 [ORIGIN]</p>
+      </div>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {filteredMusic.map((item) => <ContentCard item={item} lang={lang} basePath="music" />)}
-    </div>
+    <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <section class="sticky top-8 h-fit">
+        <div class="player-frame">
+          <div id="vinyl" class="vinyl paused">
+            <div class="label">SEEZ<br/>ARCHIVE</div>
+          </div>
 
-    {filteredMusic.length === 0 && <ComingSoon language={lang} section={lang === 'de' ? 'Musik' : 'Music'} />}
+          <div class="now-playing">
+            <div class="flex justify-between items-center mb-2 text-xs">
+              <span id="player-char" class="text-cyan-300">CHARACTER: {initialTrack?.figure || 'SEEZ'}</span>
+              <span id="player-time" class="text-gray-500">00:00</span>
+            </div>
+            <h2 id="player-title" class="text-xl font-bold">{initialTrack?.title || (lang === 'de' ? 'Track wählen' : 'Select a track')}</h2>
+            <p id="player-subtitle" class="text-xs text-gray-400 mt-1">{initialTrack?.subtitle}</p>
+            <div class="visualizer mt-3" id="visualizer">
+              <span style="animation-duration:0.4s"></span>
+              <span style="animation-duration:0.6s"></span>
+              <span style="animation-duration:0.3s"></span>
+              <span style="animation-duration:0.7s"></span>
+              <span style="animation-duration:0.5s"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mt-4 text-center text-sm uppercase tracking-wide">
+          <button class="ctrl" id="prev-btn">[Prev]</button>
+          <button class="ctrl ctrl-active" id="play-btn">[Play]</button>
+          <button class="ctrl" id="next-btn">[Next]</button>
+        </div>
+
+        {initialTrack?.audioUrl && <audio id="archive-audio" src={initialTrack.audioUrl} preload="metadata"></audio>}
+      </section>
+
+      <section>
+        <div class="flex gap-3 text-xs uppercase tracking-wide border-b border-gray-800 pb-3 mb-4">
+          <span class="text-white border-b border-green-400 pb-2">PHASE 1</span>
+          <span class="text-gray-600">PHASE 2 [LOCKED]</span>
+          <span class="text-gray-600">PHASE 3 [LOCKED]</span>
+        </div>
+
+        {
+          tracks.length === 0 ? (
+            <p class="text-sm text-gray-400">{lang === 'de' ? 'Noch keine Tracks veröffentlicht.' : 'No tracks published yet.'}</p>
+          ) : (
+            <ul id="track-list" class="space-y-2">
+              {tracks.map((track) => (
+                <li>
+                  <button
+                    class="track-item w-full text-left"
+                    data-title={track.title}
+                    data-subtitle={track.subtitle}
+                    data-figure={track.figure || 'SEEZ'}
+                    data-audio={track.audioUrl}
+                    data-href={track.href}
+                    type="button"
+                  >
+                    <span class="track-index">{track.index}</span>
+                    <span class="track-main">
+                      <strong class="block text-lg">{track.title}</strong>
+                      <span class="block text-xs text-gray-500 line-clamp-1">{track.subtitle || (lang === 'de' ? 'Song verfügbar' : 'Track available')}</span>
+                    </span>
+                    <span class="track-open text-xs text-cyan-300">OPEN</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        <a class="spotify-link mt-8 block text-center" href={`/${lang}/blog`}>{lang === 'de' ? 'Mehr im Blog >>' : 'More in Blog >>'}</a>
+      </section>
+    </main>
   </section>
 </Layout>
+
+<script>
+  const tracks = Array.from(document.querySelectorAll('.track-item'));
+  const vinyl = document.getElementById('vinyl');
+  const playBtn = document.getElementById('play-btn');
+  const playerTitle = document.getElementById('player-title');
+  const playerSubtitle = document.getElementById('player-subtitle');
+  const playerChar = document.getElementById('player-char');
+  const visualizer = document.getElementById('visualizer');
+  const audio = document.getElementById('archive-audio');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  let currentIndex = tracks.length > 0 ? 0 : -1;
+  let isPlaying = false;
+
+  function syncVisualState() {
+    if (!vinyl || !playBtn || !visualizer) return;
+
+    if (isPlaying) {
+      vinyl.classList.remove('paused');
+      vinyl.classList.add('spinning');
+      playBtn.textContent = '[Pause]';
+      visualizer.classList.add('active');
+    } else {
+      vinyl.classList.add('paused');
+      playBtn.textContent = '[Play]';
+      visualizer.classList.remove('active');
+    }
+  }
+
+  function loadTrack(index) {
+    if (index < 0 || index >= tracks.length) return;
+    currentIndex = index;
+
+    const btn = tracks[index];
+    const title = btn.dataset.title || 'Track';
+    const subtitle = btn.dataset.subtitle || '';
+    const figure = btn.dataset.figure || 'SEEZ';
+    const audioSrc = btn.dataset.audio || '';
+    const href = btn.dataset.href;
+
+    tracks.forEach((item) => item.classList.remove('is-active'));
+    btn.classList.add('is-active');
+
+    if (playerTitle) playerTitle.textContent = title;
+    if (playerSubtitle) playerSubtitle.textContent = subtitle;
+    if (playerChar) playerChar.textContent = `CHARACTER: ${figure}`;
+
+    if (audio && audioSrc) {
+      audio.src = audioSrc;
+      if (isPlaying) {
+        audio.play().catch(() => {
+          isPlaying = false;
+          syncVisualState();
+        });
+      }
+    }
+
+    if (!audioSrc && href) {
+      window.location.href = href;
+    }
+  }
+
+  tracks.forEach((track, idx) => {
+    track.addEventListener('click', () => {
+      loadTrack(idx);
+      if (audio && track.dataset.audio) {
+        isPlaying = true;
+        audio.play().catch(() => {
+          isPlaying = false;
+        });
+        syncVisualState();
+      }
+    });
+  });
+
+  playBtn?.addEventListener('click', () => {
+    if (!audio) return;
+
+    if (audio.paused) {
+      isPlaying = true;
+      audio.play().catch(() => {
+        isPlaying = false;
+      });
+    } else {
+      isPlaying = false;
+      audio.pause();
+    }
+
+    syncVisualState();
+  });
+
+  prevBtn?.addEventListener('click', () => {
+    if (tracks.length === 0) return;
+    const nextIndex = currentIndex <= 0 ? tracks.length - 1 : currentIndex - 1;
+    loadTrack(nextIndex);
+  });
+
+  nextBtn?.addEventListener('click', () => {
+    if (tracks.length === 0) return;
+    const nextIndex = currentIndex >= tracks.length - 1 ? 0 : currentIndex + 1;
+    loadTrack(nextIndex);
+  });
+
+  audio?.addEventListener('ended', () => {
+    isPlaying = false;
+    syncVisualState();
+  });
+
+  if (tracks.length > 0) {
+    loadTrack(0);
+  }
+
+  syncVisualState();
+</script>
+
+<style>
+  .sonic-shell {
+    --bg: #080808;
+    background: radial-gradient(circle at 85% -5%, rgba(34, 197, 94, 0.15), transparent 30%), var(--bg);
+    color: #e5e7eb;
+  }
+
+  .player-frame {
+    background: #0f172a;
+    border: 1px solid #1f2937;
+    border-radius: 0.6rem;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vinyl {
+    width: 65%;
+    aspect-ratio: 1 / 1;
+    border-radius: 999px;
+    border: 3px solid #1f2937;
+    background: #020617;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .vinyl::before,
+  .vinyl::after {
+    content: '';
+    position: absolute;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.26);
+  }
+
+  .vinyl::before {
+    inset: 18%;
+  }
+
+  .vinyl::after {
+    inset: 32%;
+  }
+
+  .label {
+    width: 34%;
+    aspect-ratio: 1 / 1;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #020617;
+    display: grid;
+    place-content: center;
+    font-size: 0.56rem;
+    line-height: 1.1;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .spinning {
+    animation: spin 3s linear infinite;
+  }
+
+  .paused {
+    animation-play-state: paused;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .now-playing {
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    background: rgba(2, 6, 23, 0.82);
+    border: 1px solid #334155;
+    padding: 0.7rem;
+  }
+
+  .visualizer {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 1.9rem;
+    opacity: 0.28;
+  }
+
+  .visualizer.active {
+    opacity: 1;
+  }
+
+  .visualizer span {
+    width: 4px;
+    height: 30%;
+    background: #22c55e;
+    animation: bounce 0.5s infinite ease-in-out alternate;
+  }
+
+  @keyframes bounce {
+    0% {
+      height: 0.3rem;
+      opacity: 0.35;
+    }
+    100% {
+      height: 1.7rem;
+      opacity: 1;
+    }
+  }
+
+  .ctrl {
+    border: 1px solid #374151;
+    padding: 0.5rem;
+    transition: 0.2s ease;
+  }
+
+  .ctrl:hover {
+    border-color: #22d3ee;
+    color: #22d3ee;
+  }
+
+  .ctrl-active {
+    border-color: #22c55e;
+    color: #22c55e;
+  }
+
+  .track-item {
+    border-left: 2px solid transparent;
+    background: rgba(2, 6, 23, 0.6);
+    padding: 0.75rem;
+    display: grid;
+    grid-template-columns: 3.1rem 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    transition: 0.2s ease;
+  }
+
+  .track-item:hover,
+  .track-item.is-active {
+    border-left-color: #22c55e;
+    background: rgba(15, 23, 42, 0.95);
+  }
+
+  .track-index {
+    color: #22d3ee;
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+
+  .spotify-link {
+    border: 1px solid #16a34a;
+    color: #16a34a;
+    padding: 0.75rem;
+    font-weight: 700;
+    transition: 0.2s ease;
+  }
+
+  .spotify-link:hover {
+    background: #16a34a;
+    color: #03120a;
+  }
+</style>

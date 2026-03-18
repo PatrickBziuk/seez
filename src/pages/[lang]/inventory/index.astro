@@ -1,0 +1,263 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../../layouts/PageLayout.astro';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+
+export const getStaticPaths = (() => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+
+const items = [
+  {
+    id: 'book-print',
+    label: 'SEELENSPLITTER (PRINT)',
+    desc: lang === 'de' ? 'Das physische Artefakt. 250 Seiten.' : 'The physical artifact. 250 pages.',
+    price: '15.00 EUR',
+    color: 'var(--item-rare)',
+    colorDim: 'rgba(255, 215, 0, 0.25)',
+    teaser: '[BOOK_PHYSICAL]',
+    href: `/${lang}/blog`,
+  },
+  {
+    id: 'book-epub',
+    label: 'SEELENSPLITTER (EPUB)',
+    desc: lang === 'de' ? 'Digitaler Download fuer Reader.' : 'Instant digital download for readers.',
+    price: '9.99 EUR',
+    color: 'var(--item-epic)',
+    colorDim: 'rgba(189, 0, 255, 0.25)',
+    teaser: '[EBOOK_FILE]',
+    href: `/${lang}/blog`,
+  },
+  {
+    id: 'read-only',
+    label: 'READ_ONLY.PDF',
+    desc: lang === 'de' ? 'Kostenlose Version. Wissen bleibt offen.' : 'Free version. Knowledge stays open.',
+    price: '0.00 EUR',
+    color: 'var(--item-common)',
+    colorDim: 'rgba(255, 255, 255, 0.25)',
+    teaser: '[PDF_HIDDEN]',
+    href: `/${lang}/blog`,
+  },
+  {
+    id: 'discord',
+    label: 'SERVER ACCESS',
+    desc: lang === 'de' ? 'Community Hub und Austausch.' : 'Community hub and exchange.',
+    price: 'FREE',
+    color: 'var(--item-uncommon)',
+    colorDim: 'rgba(0, 255, 65, 0.25)',
+    teaser: '[DISCORD_KEY]',
+    href: `/${lang}/contact`,
+  },
+  {
+    id: 'newsletter',
+    label: 'GL1TCH_LOGS',
+    desc: lang === 'de' ? 'Monatliche Updates aus dem System.' : 'Monthly updates from the system.',
+    price: 'SUB',
+    color: 'var(--item-uncommon)',
+    colorDim: 'rgba(0, 255, 65, 0.25)',
+    teaser: '[EMAIL_LOG]',
+    href: `/${lang}/blog`,
+  },
+];
+
+const metadata = {
+  title: lang === 'de' ? 'Inventory' : 'Inventory',
+  description:
+    lang === 'de'
+      ? 'Gamifizierte Angebotsseite fuer Produkte, Zugriff und kostenlose Ressourcen.'
+      : 'Gamified inventory page for products, access, and free resources.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="inv-shell px-4 sm:px-6 py-10 md:py-16 min-h-screen">
+    <div class="grid-bg" aria-hidden="true"></div>
+
+    <header class="mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-4 max-w-5xl mx-auto border-b border-gray-800 pb-4">
+      <div>
+        <p class="text-xs text-yellow-400 mb-1">&gt; ACCESSING: SUPPLY_CRATE</p>
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tight uppercase">INVENTORY</h1>
+      </div>
+      <div class="text-left md:text-right">
+        <p class="text-xs text-gray-500">Credits:</p>
+        <p class="text-xl font-bold text-green-400">INF (Open Source)</p>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        {
+          items.map((item) => (
+            <a
+              href={item.href}
+              class="inv-slot"
+              style={`--slot-color:${item.color};--slot-color-dim:${item.colorDim};`}
+              aria-label={item.label}
+            >
+              <div class="rarity-corner"></div>
+              <div class="slot-teaser">{item.teaser}</div>
+              <div class="item-desc">
+                <strong class="block mb-1" style={`color:${item.color};`}>{item.label}</strong>
+                <span class="text-gray-400">{item.desc}</span>
+                <div class="mt-2 text-right text-white font-bold">{item.price}</div>
+              </div>
+            </a>
+          ))
+        }
+
+        <div class="inv-slot locked"><div>[LOCKED: PHASE 2]</div></div>
+        <div class="inv-slot locked"><div>[LOCKED: PHASE 3]</div></div>
+        <div class="inv-slot locked"><div>[LOCKED]</div></div>
+      </div>
+
+      <section class="terminal border border-gray-800 bg-black p-5 text-sm">
+        <div class="flex items-center gap-2 mb-4 border-b border-gray-800 pb-2">
+          <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+          <span class="text-green-500">TRANSACTION_TERMINAL</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2 text-gray-400">
+            <p>&gt; {lang === 'de' ? 'Waehle ein Item aus dem Grid.' : 'Select an item from the grid.'}</p>
+            <p>&gt; {lang === 'de' ? 'Digitale Items sind sofort verfuegbar.' : 'Digital items are delivered instantly.'}</p>
+            <p>&gt; {lang === 'de' ? 'Physische Items folgen per Versand.' : 'Physical items are shipped manually.'}</p>
+            <p class="text-yellow-400 mt-4">! NOTE: Revenue supports the architecture.</p>
+          </div>
+
+          <div class="flex flex-col justify-end items-end gap-4">
+            <div class="text-right">
+              <span class="block text-xs text-gray-500">SELECTED ITEM</span>
+              <span id="selected-item" class="text-xl font-bold text-white">NONE</span>
+            </div>
+            <a href={`/${lang}/blog`} class="btn-glitch bg-white text-black px-8 py-3 font-bold uppercase tracking-widest hover:bg-gray-200 transition w-full md:w-auto text-center">
+              INITIATE TRANSFER
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </section>
+</Layout>
+
+<script>
+  const slots = Array.from(document.querySelectorAll('.inv-slot'));
+  const selected = document.getElementById('selected-item');
+
+  slots.forEach((slot) => {
+    slot.addEventListener('mouseenter', () => {
+      const label = slot.querySelector('.item-desc strong')?.textContent || 'NONE';
+      if (selected) selected.textContent = label;
+    });
+  });
+</script>
+
+<style>
+  .inv-shell {
+    --bg-color: #050505;
+    --text-color: #e5e7eb;
+    --item-rare: #ffd700;
+    --item-epic: #bd00ff;
+    --item-common: #a3a3a3;
+    --item-uncommon: #00ff41;
+    background: var(--bg-color);
+    color: var(--text-color);
+    position: relative;
+  }
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(50, 50, 50, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(50, 50, 50, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+  }
+
+  .inv-slot {
+    background: rgba(20, 20, 20, 0.85);
+    border: 1px solid #333;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    overflow: hidden;
+    transition: 0.2s ease;
+  }
+
+  .inv-slot:hover {
+    border-color: var(--slot-color, #fff);
+    box-shadow: 0 0 16px var(--slot-color-dim, rgba(255, 255, 255, 0.2));
+    transform: translateY(-1px);
+  }
+
+  .slot-teaser {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-content: center;
+    color: var(--slot-color, #9ca3af);
+    font-size: 0.72rem;
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  .rarity-corner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 18px 18px 0 0;
+    border-color: var(--slot-color) transparent transparent transparent;
+  }
+
+  .item-desc {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 0.5rem;
+    font-size: 0.66rem;
+    background: rgba(0, 0, 0, 0.9);
+    border-top: 1px solid var(--slot-color);
+    transform: translateY(100%);
+    transition: 0.25s ease;
+  }
+
+  .inv-slot:hover .item-desc {
+    transform: translateY(0);
+  }
+
+  .locked {
+    opacity: 0.32;
+    cursor: not-allowed;
+    filter: grayscale(1);
+    display: grid;
+    place-content: center;
+    font-size: 0.72rem;
+    color: #6b7280;
+  }
+
+  .terminal {
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn-glitch {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-glitch::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transition: left 0.45s;
+  }
+
+  .btn-glitch:hover::after {
+    left: 100%;
+  }
+</style>

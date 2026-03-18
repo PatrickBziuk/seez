@@ -3,12 +3,13 @@ import type { SupportedLanguage } from './utils/i18n';
 
 export const getHeaderData = (locale: SupportedLanguage = 'en') => ({
   links: [
-    { text: locale === 'de' ? 'Musik' : 'Music', href: getLocalizedUrl('/musik', locale) },
-    { text: locale === 'de' ? 'Texte' : 'Texts', href: getLocalizedUrl('/texte', locale) },
+    { text: locale === 'de' ? 'Erlebnis' : 'Experience', href: getLocalizedUrl('/', locale) },
+    { text: locale === 'de' ? 'System Logs' : 'System Logs', href: getLocalizedUrl('/system-logs', locale) },
+    { text: locale === 'de' ? 'Creative Core' : 'Creative Core', href: getLocalizedUrl('/kreatives', locale) },
+    { text: locale === 'de' ? 'Sonic Archive' : 'Sonic Archive', href: getLocalizedUrl('/musik', locale) },
     { text: locale === 'de' ? 'Fragmente' : 'Fragments', href: getLocalizedUrl('/fragmente', locale) },
-    { text: locale === 'de' ? 'Presse' : 'Press', href: getLocalizedUrl('/press', locale) },
-    { text: locale === 'de' ? 'Über' : 'About', href: getLocalizedUrl('/about', locale) },
-    { text: locale === 'de' ? 'Kontakt' : 'Contact', href: getLocalizedUrl('/contact', locale) },
+    { text: locale === 'de' ? 'Inventory' : 'Inventory', href: getLocalizedUrl('/inventory', locale) },
+    { text: locale === 'de' ? 'Blog' : 'Blog', href: getLocalizedUrl('/blog', locale) },
   ],
   actions: [],
   locale,
