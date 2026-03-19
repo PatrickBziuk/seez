@@ -129,7 +129,14 @@ const metadata = {
           )
         }
 
-        <a class="spotify-link mt-8 block text-center" href={`/${lang}/blog`}>{lang === 'de' ? 'Mehr im Blog >>' : 'More in Blog >>'}</a>
+        <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <a class="spotify-link block text-center" href={`/${lang}/lyrics`}>
+            {lang === 'de' ? 'Zum Lyrics Vault >>' : 'Open Lyrics Vault >>'}
+          </a>
+          <a class="spotify-link block text-center" href={`/${lang}/blog`}>
+            {lang === 'de' ? 'Mehr im Blog >>' : 'More in Blog >>'}
+          </a>
+        </div>
       </section>
     </main>
   </section>

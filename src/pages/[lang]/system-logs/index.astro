@@ -10,9 +10,18 @@ const { lang } = Astro.params as { lang: SupportedLanguage };
 
 const t = (de: string, en: string) => (lang === 'de' ? de : en);
 
+const sectionNav = [
+  { id: 'creative-engine', title: t('Creative Engine', 'Creative Engine') },
+  { id: 'evidence-locker', title: t('Evidence Locker', 'Evidence Locker') },
+  { id: 'song-phase-archive', title: t('Song Phase Archive', 'Song Phase Archive') },
+  { id: 'book-dossier', title: t('Book Dossier', 'Book Dossier') },
+  { id: 'character-style-matrix', title: t('Character Style Matrix', 'Character Style Matrix') },
+];
+
 const evidenceCards = [
   {
     id: 'LOG-001',
+    kind: t('REAL ENTRY', 'REAL ENTRY'),
     title: t('Tumblr Era / zeilenliebe', 'Tumblr Era / zeilenliebe'),
     stamp: '2014-2016',
     text: t(
@@ -22,6 +31,7 @@ const evidenceCards = [
   },
   {
     id: 'LOG-002',
+    kind: t('REAL ENTRY', 'REAL ENTRY'),
     title: t('Skizzenarchiv', 'Sketch Archive'),
     stamp: '2015+',
     text: t(
@@ -31,6 +41,7 @@ const evidenceCards = [
   },
   {
     id: 'LOG-003',
+    kind: t('REAL ENTRY', 'REAL ENTRY'),
     title: t('Legacy Wear', 'Legacy Wear'),
     stamp: '2014',
     text: t(
@@ -40,11 +51,32 @@ const evidenceCards = [
   },
   {
     id: 'LOG-004',
+    kind: t('REAL ENTRY', 'REAL ENTRY'),
     title: t('Systemwechsel zu SEEZ', 'Transition to SEEZ'),
     stamp: '2025-2026',
     text: t(
       'Migration von alten Identitaeten in ein gemeinsames Universum aus Text, Musik und Figuren.',
       'Migration from old identities into one universe of text, music, and characters.'
+    ),
+  },
+  {
+    id: 'LOG-TPL-005',
+    kind: t('PLACEHOLDER', 'PLACEHOLDER'),
+    title: t('Neuer Belegslot: Visual Proof', 'New slot: visual proof'),
+    stamp: t('ausstehend', 'pending'),
+    text: t(
+      'Schema: Datum, Quelle, Medium (Bild/Video), Kontext, Verifikation, Link.',
+      'Schema: date, source, medium (image/video), context, verification, link.'
+    ),
+  },
+  {
+    id: 'LOG-TPL-006',
+    kind: t('PLACEHOLDER', 'PLACEHOLDER'),
+    title: t('Neuer Belegslot: Text Proof', 'New slot: text proof'),
+    stamp: t('ausstehend', 'pending'),
+    text: t(
+      'Schema: Datum, Quelle, Medium (Text), Kontext, Verifikation, Link.',
+      'Schema: date, source, medium (text), context, verification, link.'
     ),
   },
 ];
@@ -136,7 +168,7 @@ const metadata = {
     <div class="scanlines" aria-hidden="true"></div>
     <div class="grid-bg" aria-hidden="true"></div>
 
-    <header class="max-w-6xl mx-auto px-4 sm:px-6 pt-10 md:pt-16 pb-10 relative z-10">
+    <header class="max-w-6xl mx-auto px-4 sm:px-6 pt-10 md:pt-16 pb-8 relative z-10">
       <p class="bootline">&gt; SYSTEM BOOT: SEEZ_ARCHIVE // MODULE: PROOF_CORE</p>
       <h1 class="glitch text-4xl md:text-6xl font-bold tracking-tight" data-text="SEEZ // SYSTEM LOGS">
         SEEZ // SYSTEM LOGS
@@ -147,152 +179,186 @@ const metadata = {
           'This is the machine room: proofs, fragments, process, and timeline. The structure is built so you can add new proof entries later without redesign.'
         )}
       </p>
+      <a class="lyrics-jump" href={`/${lang}/lyrics`}>
+        {t('Lyrics Vault oeffnen', 'Open Lyrics Vault')}
+      </a>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20 space-y-16 relative z-10">
-      <section class="panel">
-        <div class="panel-head">
-          <h2>{t('Creative Engine', 'Creative Engine')}</h2>
-          <span class="status">LIVE PROCESS</span>
-        </div>
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20 relative z-10">
+      <nav class="section-nav" aria-label={t('System Logs Abschnittsnavigation', 'System Logs section navigation')}>
+        {sectionNav.map((item) => (
+          <a href={`#${item.id}`} class="section-link" data-section-link={item.id}>
+            {item.title}
+          </a>
+        ))}
+      </nav>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div class="space-y-4">
-            <article class="step step-blue">
-              <h3>INPUT: RAW EMOTION</h3>
-              <p>{t('Gedankenfetzen, alte Notizen, rohe Situationen aus Jugend, Internet und Beziehungen.', 'Thought fragments, old notes, and raw situations from youth, internet, and relationships.')}</p>
-            </article>
-            <article class="step step-purple">
-              <h3>PROCESS: ITERATION</h3>
-              <p>{t('KI als Portal fuer Varianten: Stimme, Perspektive, Rhythmus. Danach harte menschliche Selektion.', 'AI as portal for variations: voice, perspective, rhythm. Then strict human selection.')}</p>
-            </article>
-            <article class="step step-green">
-              <h3>OUTPUT: AUTHENTICITY</h3>
-              <p>{t('Das Endergebnis ist kein Zufall. Es ist kuratiert, geschichtet und final bewusst entschieden.', 'The output is not random. It is curated, layered, and deliberately decided.')}</p>
-            </article>
+      <div class="space-y-16 mt-8">
+        <section class="panel" id="creative-engine" data-section>
+          <div class="panel-head">
+            <h2>{t('Creative Engine', 'Creative Engine')}</h2>
+            <span class="status">LIVE PROCESS</span>
           </div>
 
-          <div class="terminal-window">
-            <div class="terminal-head">
-              <span class="dot red"></span>
-              <span class="dot yellow"></span>
-              <span class="dot green"></span>
-              <span class="terminal-title">gl1tch_core // runtime</span>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <div class="space-y-4">
+              <article class="step step-blue">
+                <h3>INPUT: RAW EMOTION</h3>
+                <p>{t('Gedankenfetzen, alte Notizen, rohe Situationen aus Jugend, Internet und Beziehungen.', 'Thought fragments, old notes, and raw situations from youth, internet, and relationships.')}</p>
+              </article>
+              <article class="step step-purple">
+                <h3>PROCESS: ITERATION</h3>
+                <p>{t('KI als Portal fuer Varianten: Stimme, Perspektive, Rhythmus. Danach harte menschliche Selektion.', 'AI as portal for variations: voice, perspective, rhythm. Then strict human selection.')}</p>
+              </article>
+              <article class="step step-green">
+                <h3>OUTPUT: AUTHENTICITY</h3>
+                <p>{t('Das Endergebnis ist kein Zufall. Es ist kuratiert, geschichtet und final bewusst entschieden.', 'The output is not random. It is curated, layered, and deliberately decided.')}</p>
+              </article>
             </div>
-            <div id="terminal-output" class="terminal-body"></div>
-          </div>
-        </div>
-      </section>
 
-      <section class="panel">
-        <div class="panel-head">
-          <h2>{t('Evidence Locker', 'Evidence Locker')}</h2>
-          <span class="status">PROOF STORAGE</span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {evidenceCards.map((item) => (
-            <article class="evidence-card">
-              <div class="flex items-center justify-between gap-3">
-                <p class="badge">{item.id}</p>
-                <span class="stamp">{item.stamp}</span>
+            <div class="terminal-window">
+              <div class="terminal-head">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="terminal-title">gl1tch_core // runtime</span>
               </div>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </article>
-          ))}
-        </div>
-
-        <details class="expand-block mt-5" open>
-          <summary>{t('Space for future proof entries', 'Space for future proof entries')}</summary>
-          <div class="expand-body">
-            <p>{t('Empfohlene Struktur: Datum, Quelle, Medium (Bild/Video/Text), Kontext, Verifikation, Link.', 'Recommended structure: date, source, medium (image/video/text), context, verification, link.')}</p>
-            <p>{t('Damit kannst du spaeter schnell neue Belege einpflegen, ohne das Layout zu brechen.', 'This keeps future entries consistent without breaking the layout.')}</p>
+              <div id="terminal-output" class="terminal-body"></div>
+            </div>
           </div>
-        </details>
-      </section>
+        </section>
 
-      <section class="panel">
-        <div class="panel-head">
-          <h2>{t('Song Phase Archive', 'Song Phase Archive')}</h2>
-          <span class="status">ROADMAP</span>
-        </div>
+        <section class="panel panel-priority" id="evidence-locker" data-section>
+          <div class="panel-head panel-head-strong">
+            <h2>
+              <span class="anchor">#</span>
+              {t('Evidence Locker', 'Evidence Locker')}
+            </h2>
+            <span class="status">PROOF STORAGE</span>
+          </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <article class="phase-card">
-            <h3>PHASE 1</h3>
-            <p class="phase-sub">{t('Kindheit, Pubertaet, Tumblr. Leitmotiv: Warum bin ich so geworden?', 'Childhood, puberty, Tumblr. Leitmotif: Why did I become this way?')}</p>
-            <ul>
-              {phaseOneSongs.map((song) => (
-                <li><input type="checkbox" disabled /> <span>{song}</span></li>
-              ))}
-            </ul>
-          </article>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {evidenceCards.map((item) => (
+              <article class={`evidence-card ${item.kind === 'PLACEHOLDER' ? 'evidence-card-template' : ''}`}>
+                <div class="flex items-center justify-between gap-3">
+                  <p class="badge">{item.id}</p>
+                  <span class="stamp">{item.stamp}</span>
+                </div>
+                <p class="entry-kind">{item.kind}</p>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
+            ))}
+          </div>
 
-          <article class="phase-card">
-            <h3>PHASE 2</h3>
-            <p class="phase-sub">{t('Systemkritik, Ueberforderung, Beziehungscrash. Leitmotiv: Warum funktioniert Reparieren nicht?', 'System criticism, overload, relationship crash. Leitmotif: Why does repair not work?')}</p>
-            <ul>
-              {phaseTwoSongs.map((song) => (
-                <li><input type="checkbox" disabled /> <span>{song}</span></li>
-              ))}
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <h2>{t('Book Dossier', 'Book Dossier')}</h2>
-          <span class="status">SEELENSPLITTER</span>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <details class="expand-block" open>
-            <summary>{t('Vorwort - Kernfassung', 'Foreword - Core Version')}</summary>
-            <div class="expand-body prose-lite">
-              <p>{t('Seelensplitter ist keine lineare Biografie, sondern eine Autofiktion aus realen Gefuehlen, gebuendelten Erinnerungen und geschuetzten Details.', 'Seelensplitter is not a linear biography but autofiction built from real emotions, compressed memories, and protected details.')}</p>
-              <p>{t('Die sechs Figuren sind Perspektiven auf dasselbe Ich: Drift, Splinter, Shift, Lume, Unknown, Gl1tch.', 'The six figures are perspectives on the same self: Drift, Splinter, Shift, Lume, Unknown, Gl1tch.')}</p>
+          <details class="expand-block mt-5" open>
+            <summary>{t('Space for future proof entries', 'Space for future proof entries')}</summary>
+            <div class="expand-body">
+              <p>{t('Empfohlene Struktur: Datum, Quelle, Medium (Bild/Video/Text), Kontext, Verifikation, Link.', 'Recommended structure: date, source, medium (image/video/text), context, verification, link.')}</p>
+              <p>{t('Damit kannst du spaeter schnell neue Belege einpflegen, ohne das Layout zu brechen.', 'This keeps future entries consistent without breaking the layout.')}</p>
             </div>
           </details>
+        </section>
 
-          <details class="expand-block" open>
-            <summary>{t('Nachwort - Kernfassung', 'Afterword - Core Version')}</summary>
-            <div class="expand-body prose-lite">
-              <p>{t('Das Buch will nicht beweisen, dass alles exakt so passiert ist. Es will emotional wahr sein und Verantwortung sichtbar machen.', 'The book does not try to prove every event happened exactly as told. It aims for emotional truth and visible responsibility.')}</p>
-              <p>{t('Leitidee: Wir sind Fragmente. Getrennt verletzlich. Zusammen ein Panorama.', 'Core idea: We are fragments. Vulnerable apart. A panorama together.')}</p>
-            </div>
-          </details>
-        </div>
-      </section>
+        <section class="panel" id="song-phase-archive" data-section>
+          <div class="panel-head">
+            <h2>{t('Song Phase Archive', 'Song Phase Archive')}</h2>
+            <span class="status">ROADMAP</span>
+          </div>
 
-      <section class="panel">
-        <div class="panel-head">
-          <h2>{t('Character Style Matrix', 'Character Style Matrix')}</h2>
-          <span class="status">WRITING DEVICE MAP</span>
-        </div>
+          <a class="lyrics-cta mb-5" href={`/${lang}/lyrics`}>
+            {t('Alle Songtexte im Lyrics Vault ansehen', 'View all lyrics in Lyrics Vault')}
+          </a>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {styleSystem.map((item) => (
-            <article class="style-card">
-              <p class="style-char">{item.char}</p>
-              <p class="style-device">{item.device}</p>
-              <p class="style-desc">{item.desc}</p>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <article class="phase-card">
+              <h3>PHASE 1</h3>
+              <p class="phase-sub">{t('Kindheit, Pubertaet, Tumblr. Leitmotiv: Warum bin ich so geworden?', 'Childhood, puberty, Tumblr. Leitmotif: Why did I become this way?')}</p>
+              <ul>
+                {phaseOneSongs.map((song) => (
+                  <li><input type="checkbox" disabled /> <span>{song}</span></li>
+                ))}
+              </ul>
             </article>
-          ))}
-        </div>
-      </section>
 
-      <section class="manifesto">
-        <h2 class="glitch" data-text="06.06.2026">06.06.2026</h2>
-        <p>
-          {t(
-            'Ich ersetze kein Team. Ich bin das Team. KI ist Werkzeug, nicht Ursprung.',
-            'I am not replacing a team. I am the team. AI is a tool, not the origin.'
-          )}
-        </p>
-        <a class="manifesto-link" href={`/${lang}/kreatives`}>{t('Zum Creative Core', 'Open Creative Core')}</a>
-      </section>
+            <article class="phase-card">
+              <h3>PHASE 2</h3>
+              <p class="phase-sub">{t('Systemkritik, Ueberforderung, Beziehungscrash. Leitmotiv: Warum funktioniert Reparieren nicht?', 'System criticism, overload, relationship crash. Leitmotif: Why does repair not work?')}</p>
+              <ul>
+                {phaseTwoSongs.map((song) => (
+                  <li><input type="checkbox" disabled /> <span>{song}</span></li>
+                ))}
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel panel-priority" id="book-dossier" data-section>
+          <div class="panel-head panel-head-strong">
+            <h2>
+              <span class="anchor">#</span>
+              {t('Book Dossier', 'Book Dossier')}
+            </h2>
+            <span class="status">SEELENSPLITTER</span>
+          </div>
+
+          <div class="grid grid-cols-1 gap-5">
+            <details class="expand-block" open>
+              <summary>{t('Vorwort - erweiterte Kernfassung', 'Foreword - extended core')}</summary>
+              <div class="expand-body prose-lite">
+                <h4>{t('Narrative Intent', 'Narrative Intent')}</h4>
+                <p>{t('Seelensplitter ist keine lineare Biografie, sondern eine Autofiktion aus realen Gefuehlen, gebuendelten Erinnerungen und geschuetzten Details.', 'Seelensplitter is not a linear biography but autofiction built from real emotions, compressed memories, and protected details.')}</p>
+                <h4>{t('Emotional Truth vs Schutz', 'Emotional truth vs protection')}</h4>
+                <p>{t('Gefuehle und Grundkonstellationen sind real; Dialoge, Ablaufe und Zuordnungen wurden verdichtet, um Privatsphaere zu schuetzen.', 'Core emotions and constellations are real; dialogue, chronology, and assignments are compressed to protect privacy.')}</p>
+                <h4>{t('Character Perspective Map', 'Character perspective map')}</h4>
+                <p>{t('Die sechs Figuren sind Perspektiven auf dasselbe Ich: Drift, Splinter, Shift, Lume, Unknown, Gl1tch.', 'The six figures are perspectives on the same self: Drift, Splinter, Shift, Lume, Unknown, Gl1tch.')}</p>
+                <h4>{t('Content Note (Kurzform)', 'Content note (short form)')}</h4>
+                <p>{t('Themen: Depression, Selbstverletzung, Substanzkonsum, Gewalt, Essstoerung, Suizidgedanken, Mobbing und Identitaetskonflikte.', 'Topics: depression, self-harm, substance use, violence, eating disorders, suicidal ideation, bullying, and identity conflict.')}</p>
+              </div>
+            </details>
+
+            <details class="expand-block" open>
+              <summary>{t('Nachwort - erweiterte Kernfassung', 'Afterword - extended core')}</summary>
+              <div class="expand-body prose-lite">
+                <h4>{t('Verantwortung und Rueckblick', 'Responsibility and retrospective')}</h4>
+                <p>{t('Das Buch will nicht beweisen, dass alles exakt so passiert ist. Es will emotional wahr sein und Verantwortung sichtbar machen.', 'The book does not try to prove every event happened exactly as told. It aims for emotional truth and visible responsibility.')}</p>
+                <h4>{t('Lernkern', 'Core learning')}</h4>
+                <p>{t('Niemand wird alles fuer dich retten. Selbstverantwortung beginnt mit dem Moment, in dem du bleibst, statt wegzuscrollen.', 'No one will fully save you. Self-responsibility starts the moment you stay instead of scrolling away.')}</p>
+                <h4>{t('Leitidee', 'Core idea')}</h4>
+                <p>{t('Leitidee: Wir sind Fragmente. Getrennt verletzlich. Zusammen ein Panorama.', 'Core idea: We are fragments. Vulnerable apart. A panorama together.')}</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section class="panel" id="character-style-matrix" data-section>
+          <div class="panel-head">
+            <h2>{t('Character Style Matrix', 'Character Style Matrix')}</h2>
+            <span class="status">WRITING DEVICE MAP</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {styleSystem.map((item) => (
+              <article class="style-card">
+                <p class="style-char">{item.char}</p>
+                <p class="style-device">{item.device}</p>
+                <p class="style-desc">{item.desc}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="manifesto">
+          <h2 class="glitch" data-text="06.06.2026">06.06.2026</h2>
+          <p>
+            {t(
+              'Ich ersetze kein Team. Ich bin das Team. KI ist Werkzeug, nicht Ursprung.',
+              'I am not replacing a team. I am the team. AI is a tool, not the origin.'
+            )}
+          </p>
+          <a class="manifesto-link" href={`/${lang}/kreatives`}>{t('Zum Creative Core', 'Open Creative Core')}</a>
+        </section>
+      </div>
     </main>
   </section>
 </Layout>
@@ -312,6 +378,9 @@ const metadata = {
     'Result: timeline=stable',
     'System status: OPERATIONAL',
   ];
+
+  const sectionLinks = Array.from(document.querySelectorAll('[data-section-link]'));
+  const sections = Array.from(document.querySelectorAll('[data-section]'));
 
   let index = 0;
   const nextLog = () => {
@@ -339,6 +408,24 @@ const metadata = {
       terminalOutput.appendChild(cursor);
     }
   };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const id = entry.target.id;
+        sectionLinks.forEach((link) => {
+          link.classList.toggle('active', link.getAttribute('data-section-link') === id);
+        });
+      });
+    },
+    {
+      rootMargin: '-35% 0px -55% 0px',
+      threshold: 0,
+    }
+  );
+
+  sections.forEach((section) => observer.observe(section));
 
   window.addEventListener('load', () => setTimeout(nextLog, 350));
 </script>
@@ -382,6 +469,52 @@ const metadata = {
     color: #4ade80;
     font-size: 0.74rem;
     letter-spacing: 0.08em;
+  }
+
+  .lyrics-jump {
+    margin-top: 1rem;
+    display: inline-block;
+    border: 1px solid #22d3ee;
+    color: #22d3ee;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: 0.2s ease;
+  }
+
+  .lyrics-jump:hover {
+    background: rgba(34, 211, 238, 0.2);
+  }
+
+  .section-nav {
+    position: sticky;
+    top: 78px;
+    z-index: 30;
+    border: 1px solid #29405a;
+    background: rgba(7, 12, 22, 0.92);
+    padding: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    backdrop-filter: blur(5px);
+  }
+
+  .section-link {
+    border: 1px solid #334155;
+    color: #93c5fd;
+    font-size: 0.72rem;
+    padding: 0.35rem 0.55rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: 0.2s ease;
+  }
+
+  .section-link:hover,
+  .section-link.active {
+    border-color: #22d3ee;
+    color: #22d3ee;
+    background: rgba(8, 47, 73, 0.45);
   }
 
   .glitch {
@@ -434,6 +567,12 @@ const metadata = {
     padding: 1rem;
   }
 
+  .panel-priority {
+    border-width: 2px;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.25);
+  }
+
   @media (min-width: 768px) {
     .panel {
       padding: 1.25rem;
@@ -450,9 +589,22 @@ const metadata = {
     padding-bottom: 0.7rem;
   }
 
+  .panel-head-strong {
+    border-bottom-color: #22d3ee;
+    border-bottom-width: 2px;
+  }
+
   .panel-head h2 {
     font-size: 1.2rem;
     font-weight: 700;
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
+  }
+
+  .anchor {
+    color: #22d3ee;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   }
 
   .status {
@@ -569,6 +721,12 @@ const metadata = {
     padding: 0.85rem;
   }
 
+  .evidence-card-template {
+    border-style: dashed;
+    border-color: #4b5563;
+    background: rgba(3, 7, 18, 0.4);
+  }
+
   .badge {
     border: 1px solid #f43f5e;
     color: #f43f5e;
@@ -577,13 +735,21 @@ const metadata = {
     letter-spacing: 0.08em;
   }
 
+  .entry-kind {
+    margin-top: 0.45rem;
+    color: #67e8f9;
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
   .stamp {
     color: #93c5fd;
     font-size: 0.72rem;
   }
 
   .evidence-card h3 {
-    margin-top: 0.55rem;
+    margin-top: 0.45rem;
     font-size: 1.03rem;
     font-weight: 600;
   }
@@ -613,6 +779,19 @@ const metadata = {
     color: #cbd5e1;
   }
 
+  .prose-lite h4 {
+    color: #f8fafc;
+    margin-top: 0.7rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .prose-lite h4:first-child {
+    margin-top: 0;
+  }
+
   .expand-body p + p {
     margin-top: 0.5rem;
   }
@@ -621,6 +800,20 @@ const metadata = {
     border: 1px solid #2b3648;
     background: rgba(2, 6, 23, 0.75);
     padding: 0.9rem;
+  }
+
+  .lyrics-cta {
+    display: inline-block;
+    border: 1px solid #22d3ee;
+    color: #22d3ee;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .lyrics-cta:hover {
+    background: rgba(34, 211, 238, 0.2);
   }
 
   .phase-card h3 {
@@ -711,5 +904,14 @@ const metadata = {
   .manifesto-link:hover {
     background: #4ade80;
     color: #020617;
+  }
+
+  @media (max-width: 768px) {
+    .section-nav {
+      top: 70px;
+      overflow-x: auto;
+      white-space: nowrap;
+      flex-wrap: nowrap;
+    }
   }
 </style>

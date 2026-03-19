@@ -7,6 +7,7 @@ export const getHeaderData = (locale: SupportedLanguage = 'en') => ({
     { text: locale === 'de' ? 'System Logs' : 'System Logs', href: getLocalizedUrl('/system-logs', locale) },
     { text: locale === 'de' ? 'Creative Core' : 'Creative Core', href: getLocalizedUrl('/kreatives', locale) },
     { text: locale === 'de' ? 'Sonic Archive' : 'Sonic Archive', href: getLocalizedUrl('/musik', locale) },
+    { text: 'Lyrics Vault', href: getLocalizedUrl('/lyrics', locale) },
     { text: locale === 'de' ? 'Fragmente' : 'Fragments', href: getLocalizedUrl('/fragmente', locale) },
     { text: locale === 'de' ? 'Inventory' : 'Inventory', href: getLocalizedUrl('/inventory', locale) },
     { text: locale === 'de' ? 'Blog' : 'Blog', href: getLocalizedUrl('/blog', locale) },
@@ -24,6 +25,7 @@ export const getFooterData = (locale: SupportedLanguage = 'en') => ({
       title: locale === 'de' ? 'Kreatives' : 'Creative',
       links: [
         { text: locale === 'de' ? 'Musik' : 'Music', href: getLocalizedUrl('/musik', locale) },
+        { text: 'Lyrics Vault', href: getLocalizedUrl('/lyrics', locale) },
         { text: locale === 'de' ? 'Texte' : 'Texts', href: getLocalizedUrl('/texte', locale) },
         { text: locale === 'de' ? 'Fragmente' : 'Fragments', href: getLocalizedUrl('/fragmente', locale) },
         { text: locale === 'de' ? 'Blog' : 'Blog', href: getLocalizedUrl('/blog', locale) },

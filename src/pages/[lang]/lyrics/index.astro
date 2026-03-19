@@ -1,0 +1,1886 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../../layouts/PageLayout.astro';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+
+export const getStaticPaths = (() => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+const t = (de: string, en: string) => (lang === 'de' ? de : en);
+
+const characterOrder = ['DRIFT', 'SPLINTER', 'SHIFT', 'LUME', 'UNKNOWN', 'GL1TCH'] as const;
+type Character = (typeof characterOrder)[number];
+
+interface SongEntry {
+  id: string;
+  title: string;
+  character: Character;
+  phase: 1 | 2;
+  text: string;
+}
+
+const songs: SongEntry[] = [
+  {
+    id: 'tumblr-traeume',
+    title: 'TUMBLR TRAEUME',
+    character: 'SPLINTER',
+    phase: 1,
+    text: String.raw`[Intro]
+Follower wie Familie, doch im Spiegel kein Gesicht,
+tausend Herzen unter Posts - doch mein eigenes bricht.
+
+[Hook]
+Alle lieben Schmerz - doch ich lieb mich nicht,
+alle seh'n mein Herz - doch ich spür es nicht.
+Tumblrträume, alles brennt,
+doch kein Traum, der mich erkennt.
+
+[Verse 1]
+"Du bist mein Held", schreiben sie mir in die Nacht,
+doch mein Held im Spiegel hat kein'n Mut, keine Macht.
+Jede Nachricht wie ein Pflaster auf ner Platzwunde,
+doch die Heilung bleibt aus, nur die Likes bleiben stumm.
+Glitzernde Avatare über meinem grauen Tag,
+Follower wie Sterne - doch ich fühl mich wie Plagiat.
+
+[Hook]
+Alle lieben Schmerz - doch ich lieb mich nicht,
+alle seh'n mein Herz - doch ich spür es nicht.
+Tumblrträume, alles brennt,
+doch kein Traum, der mich erkennt.
+
+[Verse 2]
+Ich verschlüssel meine Worte, jeder Post Maskerade,
+jeder Kommentar ein Echo, das mein Inneres verratet.
+Follower als Tagebuch, Herz im Feed verteilt,
+doch wer von euch erkennt den Jungen, der dahinter schreit?
+Sie feiern jede Zeile, die ich schreibe aus dem Schmerz,
+doch vergessen, dass dahinter nur ein Junge steht, verzerrt.
+
+[Hook]
+Alle lieben Schmerz - doch ich lieb mich nicht,
+alle seh'n mein Herz - doch ich spür es nicht.
+Tumblrträume, alles brennt,
+doch kein Traum, der mich erkennt.
+
+[Bridge]
+Vielleicht reicht es nicht, wenn ihr mich liebt,
+wenn ich mich selbst nie wirklich krieg.
+Vielleicht reicht es nicht, wenn ihr bleibt,
+wenn mein Inneres leise zerreißt.
+
+[Hook - Reprise]
+Alle lieben Schmerz - doch ich lieb mich nicht,
+alle seh'n mein Herz - doch ich spür es nicht.
+Tumblrträume, alles brennt,
+doch kein Traum, der mich erkennt.
+
+[Outro]
+Fanliebe gegen Selbsthass -
+das ist mein Balanceakt.
+Und vielleicht geht er nie auf,
+doch ihr habt mir ein Licht gezeigt.`,
+  },
+  {
+    id: 'aufstiegstraum',
+    title: 'AUFSTIEGSTRAUM',
+    character: 'SHIFT',
+    phase: 1,
+    text: String.raw`[Intro]
+4:30... blechern... durch die Wand.
+
+[Hook]
+Aufstiegstraum, ich stempel mich frei,
+Mama Putze, Papa Gießerei.
+"Sei dir sicher, dass ich an dich glaub",
+Heute ist es das was mir den Schlaf raubt'.
+Aufstiegstraum, ich stempel mich frei,
+Schichtgeruch klebt an dir wie Blei.
+Ich lern für uns, bis mir der Kopf erbricht,
+damit euer Körper nicht vor meinem bricht.
+
+[Verse 1]
+4:30, Blech im Ohr, als schlägt wer auf Metall,
+ich zähl seine Schritte wie Takte im Flur, jedes Mal.
+Tür fällt ins Schloss, kalter Zug durch den Gang,
+Zuhause bleibt stehen, doch er läuft schon voran.
+Er riecht nach Werk: Öl, Eisen, Staub auf der Haut,
+Sicherheitsschuh aus, Sohle bröselt, ganz vertraut.
+"War viel heute", sagt er, Lächeln ist leer,
+und ich schwör mir: ich mach's anders, ich will mehr.
+"Streng dich an, dann musst du später nicht so wie ich",
+also lern ich nachts, bis der Morgen mich bricht.
+Aufstieg im Kopf wie ein goldener Fahrstuhl aus Licht,
+ich hol euch alle mit, das ist mein Versprechen, die Pflicht.
+
+[Hook]
+Aufstiegstraum, ich stempel mich frei,
+Mama Putze, Papa Gießerei.
+"Sei dir sicher, dass ich an dich glaub",
+Heute ist es das was mir den Schlaf raubt'.
+Aufstiegstraum, ich stempel mich frei,
+Schichtgeruch klebt an dir wie Blei.
+Ich lern für uns, bis mir der Kopf erbricht,
+damit euer Körper nicht vor meinem bricht.
+
+[Verse 2]
+5:30, jetzt klingelt mein Wecker, aggressiver Ton,
+selbes System, nur mein Name steht jetzt auf dem Lohn.
+"Sei pünktlich, mach was sie sagen", Mama sagt's normal,
+und danach: "Lass dir nicht alles gefallen"... ja, genial.
+Papa stolpert einmal, aus Sekunden wird 'ne Akte,
+BG-Unfall, Rechtsstreit, Paragraphen-Takte.
+Schmerz kriegt 'ne Nummer, kalt gedruckt, ohne Gesicht,
+und "war viel heute" heißt plötzlich: "Ich kann grad nicht."
+Ich hab 'nen Abschluss, sagen sie: "Du hast es geschafft",
+doch ich bin nur woanders müde, in 'ner anderen Haft.
+Mehr Arbeit, mehr Geld, mehr Streit, weniger Zeit,
+Aufstiegstraum war nur 'ne Schicht, nur besser gekleidet.
+
+[Outro]
+Tür fällt ins Schloss und wir stempeln uns ein.`,
+  },
+  {
+    id: 'stempel-aus',
+    title: 'STEMPEL AUS',
+    character: 'SHIFT',
+    phase: 2,
+    text: String.raw`[Intro]
+Der Wecker klingelt.
+Und diesmal klingelt nichts mehr in mir mit.
+Ich steh auf.
+Aber ich lass nicht alles von mir mitgehen.
+
+[Hook]
+Stempel aus, Herz an, ich lern grad zu bleiben,
+nicht mehr nur zu rennen, nur um mich zu beweisen.
+Mehr Arbeit war mehr Streit, weniger Familie,
+ich dreh das Rad zurück - Schicht endet, ich lebe hier.
+Wenn Wert nicht mehr nur Leistung ist,
+dann bin ich mehr als das, was man misst.
+
+[Verse 1]
+Ich hab gelernt zu funktionieren, bevor ich gelernt hab zu fühl'n,
+hab Stärke gespielt, nur um Schwäche zu übertünch'n.
+Hab gedacht, wenn ich genug trag, wird's irgendwann leicht,
+doch mehr Gewicht heißt nur, dass man früher zusammenbricht.
+Papa sagte selten viel, nur "passt schon, wird schon",
+ich hab das übernommen wie 'nen stillen Beton.
+Doch Beton hält nicht warm, wenn du nachts nicht mehr kannst,
+wenn dein Körper dir sagt: "Bruder, ich bin am Rand."
+Ich zähl nicht mehr nur Stunden, ich zähl jetzt auch Atem,
+nicht jede freie Minute muss ich noch verplanen.
+Wenn ich nach Hause komm, bleib ich wirklich dort,
+nicht nur physisch im Raum, sondern ganz an dem Ort.
+
+[Hook]
+Stempel aus, Herz an, ich lern grad zu bleiben,
+nicht mehr nur zu rennen, nur um mich zu beweisen.
+Mehr Arbeit war mehr Streit, weniger Familie,
+ich dreh das Rad zurück - Schicht endet, ich lebe hier.
+Wenn Wert nicht mehr nur Leistung ist,
+dann bin ich mehr als das, was man misst.
+
+[Verse 2]
+Ich saß im ICE, erste Klasse, still,
+und fragte mich kurz, ob ich das überhaupt will.
+Nicht den Sitz, nicht den Status, nicht dieses "du hast's geschafft",
+sondern ob ich mich noch erkenne in dieser neuen Kraft.
+Der Blaumann hängt noch da, ich schmeiß ihn nicht weg,
+er erinnert mich daran, woher ich komm und wie ich denk.
+Ich bin nicht besser, nur anders jetzt dran,
+ich halt die Tür offen, wenn jemand nach oben kann.
+Sie sagen: "Mehr Hustle bringt dich voran",
+doch voran wohin, wenn ich niemanden mehr umarm?
+Ich war lange überzeugt, dass nur Dauerstress lohnt,
+bis ich merkte, dass Nähe kein Bonus ist - sondern Grund.
+
+[Pre-Hook]
+Vielleicht ist das hier kein Happy Song,
+aber es ist einer, der atmet.
+Und vielleicht ist das schon genug.
+
+[Hook]
+Stempel aus, Herz an, ich lern grad zu bleiben,
+nicht mehr nur zu rennen, nur um mich zu beweisen.
+Mehr Arbeit war mehr Streit, weniger Familie,
+ich dreh das Rad zurück - Schicht endet, ich lebe hier.
+Wenn Wert nicht mehr nur Leistung ist,
+dann bin ich mehr als das, was man misst.
+
+[Bridge]
+Ich war ein Kind, das zu viel getragen hat,
+jetzt lern ich, dass "Pause" kein Versagen hat.
+Ich darf müde sein, ohne mich zu verlier'n,
+darf stehen bleiben, ohne zu kapitulieren.
+Es ist 'n Marathon im Sprintkostüm,
+doch ich lauf langsamer - und komm trotzdem hin.
+
+[Final Hook]
+Stempel aus, Herz an, ich lern grad zu bleiben,
+nicht mehr nur zu rennen, nur um mich zu beweisen.
+Mehr Arbeit war mehr Streit, weniger Familie,
+doch ich brech das Gesetz - ich leb nicht nur für die Linie.
+Wenn Kraft nicht mehr mein einziger Wert ist,
+dann bin ich endlich der, der ich werd.`,
+  },
+  {
+    id: 'illegale-aliens',
+    title: 'ILLEGALE ALIENS',
+    character: 'UNKNOWN',
+    phase: 2,
+    text: String.raw`[Intro]
+Breaking News: "Illegale Aliens im Land."
+Containment-Zonen, ausgebrannter Rand.
+Administrative Kennung, humanitäre Phrase,
+Zwischen Stacheldraht und Fernsehblase.
+District Nine - Slum im Scheinwerferlicht,
+Man nennt sie "Prawns", man nennt sie nicht Mensch - man nennt sie Pflicht.
+
+[Verse 1]
+Il-le-ga-le Aliens - linguistische Entkernung,
+Identität reduziert auf Aktenzeichen-Verordnung.
+Semantische Verrohung durch mediale Verwertung,
+Existenzen als Fallzahl in der Grenzüberquerung.
+"Alimentierte Messermänner", Schlagwortarchitektur,
+Moralpanik moduliert in Prime-Time-Kultur.
+Ein Störfaktor im System, ein wandelndes Desaster.
+Nicht Vater, nicht Bruder, fallen durchs Raster.
+Du sagst Invasion, ich sag Destabilisierung,
+Du sagst Bedrohung, ich sag Externalisierung
+von Kriegen, Ressourcen, Interventionen,
+postkolonialen Operationen.
+District Nine - erst Lager, dann Zaun,
+erst Witzfigur, dann Versuchsaufbau.
+Erst unterschreiben, dann selbst mutieren,
+bis du verstehst, was Entmenschlichung heißt - beim Verlieren.
+
+[Pre-Hook]
+In Polen "der Deutsche", hier "der Pole",
+zwischen den Adlern aber ohne Rolle.
+Ich sag nie "wir" ohne zu stocken,
+weil jedes "wir" beginnt mit Ausschluss-Protokollen.
+
+[Hook]
+Illegale Aliens - sag es konkret,
+klingt nach Blockbuster, klingt nach Planet.
+Doch unter der Haut - identische Biologie,
+Hoffnung ist keine Ideologie.
+Illegale Aliens - Projektionsfläche,
+du brauchst den Feind für die innere Schwäche.
+Wer ist hier fremd? Wer ist hier Tier?
+District Nine läuft und du trinkst dein Bier.
+
+[Verse 2]
+Algorithmen kuratieren Ressentiment-Segmente,
+Targeted Fear als Rendite-Instrumente.
+Empörungsökonomie mit Reichweiten-Garantie,
+Angst verkauft sich besser als Empathie.
+Mehr Arbeit, mehr Geld, mehr Streit,
+weniger Würde, mehr "Sicherheit".
+Während du über Bleiberecht redest,
+bleibt unbeachtet, wer Löhne zerredet.
+Wer ums Überleben kämpft,
+kämpft nicht mit Stammtisch-Argument.
+Er kämpft mit Fristen, Formularen, Frontex-Ketten,
+mit Botschaften, die seine Kinder nicht retten.
+Du fürchtest Verdrängung durch Fremdheit im Raum,
+ich fürcht nur Bomben, verbrannten Baum.
+Du verteidigst dein Sofa mit nationalem Pathos,
+ich verteidige Leben - ohne Narrativ-Zirkus.
+
+[Bridge]
+Wikus van de Merwe - erst Bürokrat,
+erst Subjekt dann Objekt im eigenen Staat.
+Erst Räumungsbescheid im freundlichem Ton,
+er selbst zum Alien wird als Lektion,
+und sich dabei verliert als Person.
+Du lachst über "Prawns" im Wellblechquartier,
+bis dein Körper selbst nicht mehr passt ins Revier.
+Bis du begreifst, wie schnell es geht,
+dass "Mensch" zu "anders" mutiert und vergeht.
+
+[Verse 3]
+"Willst du sie alle ins Land lassen?"
+Als wäre Würde kontingent in Massen.
+Als ließe sich Mitgefühl limitieren,
+wie Haushaltsmittel budgetieren.
+Doch sag mir: Wer zog Linien ins Land?
+Wer definierte Identität im Sand?
+Wär ich nicht wie du, wärst du nicht wie ich -
+Migration ist kein Fehlerbericht.
+Alimentierte Messermänner?
+Oder alimentierte Sündenböcke?
+Wer profitiert von deiner Panik?
+Sicher nicht der Mann mit verbrannter Haut,
+der im Schichtbetrieb verreckt.
+
+[Outro]
+Unknown im Formular - unbe|kannt.`,
+  },
+  {
+    id: 'genaeht',
+    title: 'GENAEHT',
+    character: 'SPLINTER',
+    phase: 2,
+    text: String.raw`[Intro]
+300 Kilometer Herz, ich war dir näher als mir
+Poesie als Therapie, der Schmerz auf Papier
+Narben auf deiner Haut, doch deine Seele war blind
+Ich hielt dich fest - und verlor mich darin
+
+[Verse 1]
+Wir trafen uns auf Zeilen, aus Leid wurde Kunst
+Du warst Euphorie im Tiefpunkt, Tränen auf Wunsch
+Ich schrieb dir Verse aus Wunden, du liefst über Glas
+Meine Liebe wurd' zum Pflaster, doch du liebtest den Spaß
+Ich war dein Rettungsring im Meer deiner Dämonen
+Doch du warfst Anker, während wir weiterzogen
+Unsere Story war Poetry, Tinte getränkt in Gift
+Weil jeder, der liebt, auch an Liebe zerbricht
+
+[Chorus]
+Zersplittert und zusammengenäht,
+Herz gebrochen, Puls verdreht,
+Wir waren Kunstwerk, waren Drama,
+Schönstes Jahr - schlimmstes Karma,
+
+Zersplittert, wieder eingerenkt,
+Deine Nähe, mein Medikament,
+Zu nah dran, zu spät erkannt,
+Lieber verbrannt als nie gekannt,
+
+[Verse 2]
+Du trägst Kratzer meiner Seele auf der Innenseite am Arm
+Ich hab' die Schnitte deines Herzens wie ein Tattoo getragen
+Wir zwei wie Yin und Yang, doch leider schwarz auf schwarz
+Denn zwei Schatten brauchen Licht, doch das Licht war uns zu hart
+Glasperlen der Hoffnung, rollten über mein Gesicht
+Denn wenn du schweigst, spricht dein Spiegelbild für dich
+Ich hab' Liebe konserviert in Vitrinen aus Eis
+Du gabst mir Feuer - doch ich zahl' den Preis
+
+[Chorus]
+Zersplittert und zusammengenäht
+Herz gebrochen, Puls verdreht
+Wir waren Kunstwerk, waren Drama
+Schönstes Jahr - schlimmstes Karma
+
+Zersplittert, wieder eingerenkt
+Deine Nähe, mein Medikament
+Zu nah dran, zu spät erkannt
+Lieber verbrannt als nie gekannt
+
+[Bridge]
+Du fragtest "Bleibst du da, wenn der Spiegel zerbricht?"
+Doch in deinem Sturm verließ ich mich selbst - nicht dich
+Warst mein schönster Fehler, meine bitterste Tat
+In deiner Nähe wurd' der Teufelskreis zum Quadrat
+
+[Verse 3]
+Du mein Kryptonit, aus Leid gebaut und Liebe geknüpft
+Ich war Superman, nur ist mir mein Mantel verrückt
+Zwischen Whiskeyglas und Tränensee, zwischen Küssen und Schmerz
+Ich war Kompass deiner Seele, doch verlor meinen Wert
+Du mein schönstes Gedicht - meine schlimmste Strophe
+Ich dein Bergsteiger, doch du meine höchste Katastrophe
+Am Ende blieben Narben, unsere Zeilen wie Brand
+Ein Jahr wie Dynamit, das sich fest in Händen fand
+
+[Final Chorus]
+Zersplittert und zusammengenäht
+Herz gebrochen, Puls verdreht
+Wir waren Kunstwerk, waren Drama
+Schönstes Jahr - schlimmstes Karma
+
+Zersplittert, wieder eingerenkt
+Deine Nähe, mein Medikament
+Zu nah dran, zu spät erkannt
+Lieber verbrannt als nie gekannt
+
+[Outro]
+Vielleicht war dieses Jahr mein schlimmster Gewinn
+Doch lieber hab' ich dich als mich verloren.`,
+  },
+  {
+    id: 'herz-klopft-kopf-platzt',
+    title: 'HERZ KLOPFT KOPF PLATZT',
+    character: 'DRIFT',
+    phase: 1,
+    text: String.raw`[Verse 1]
+Inbox explodiert, zwei und fünfzig ungeöffnete DMs,
+Luft inhaliert, in meinem Kopf bin ich noch Sieben,
+viel zu jung und dumm, um mich wirklich zu verlieben,
+Ich Sag "Sorry, kann nicht, hab grad keine Kapa",
+und das, obwohl Zeit ehrlich nie knapp war, (war),
+Ist mein Leben dazwischen ein Drama, (Drama)
+
+[Pre-Chorus]
+Jeder Like ein Faustschlag, jeder Kommentar ein Splitter,
+Scroll mich durch die Hölle, der Algo wird nur fitter, (fitter)
+
+[Hook]
+Herz klopft, Kopf platzt - ich schrei, es kommt kein Satz,
+Atme ein, atme aus - Mittendrin, ich muss raus.
+Herz klopft, Kopf platzt - Menschlichkeit, die abkratzt,
+Atme ein, atme aus - Ich wollt' doch hoch hinaus.
+
+[Verse 2]
+Als wär'n Nazis plötzlich der "nette Nachbarschaftsverein'",
+Gegen Cannabis aber für das Gläschen Wein,
+Wie kann man da nur so fadenscheinig sein?
+Opa teilt Memes, die so hart daneben geh'n,
+Den Flüchtlingen sollte man besser das Leben neh'm,
+Einen Guten hat er noch nie geseh'n,
+Reiner Wahnsinn in Whatsapp,
+vor aller Augen versteckt,
+
+[Hook]
+Herz klopft, Kopf platzt - ich schrei, es kommt kein Satz,
+Atme ein, atme aus - Mittendrin, ich muss raus.
+Herz klopft, Kopf platzt - Menschlichkeit, die abkratzt,
+Atme ein, atme aus - Ich wollt' doch hoch hinaus.`,
+  },
+  {
+    id: 'fuck-suno',
+    title: 'F*CK SUNO',
+    character: 'GL1TCH',
+    phase: 1,
+    text: String.raw`[HOOK]
+FUCK SUNO, jeder droppt hier einen Hit
+Keine Message, keine Seele, jeder Song ist nur ein Klick
+Jeder Track, den ihr droppt, künstlich glatt, ohne Macken
+Keine Zeile, die bewegt - nur 'ne Formel für die Massen
+
+FUCK SUNO, das ist keine Musik
+Nur Maschinen, die uns zeigen, was grad zieht
+Keine Tränen, keine Tiefen, kein Gefühl, das bleibt
+Vom eigenen Denken auf der For you befreit
+
+[VERSE 1]
+Ich seh' Spotify-Trends voller Copy-Paste-Raps
+Keine Hand am Instrument, keine Fehler, kein Stress
+Künstlich süßer Pop-Shit, jedes Wort am Optimum
+Algorithmus liebt's, also droppt jeder Prompt 'nen Song
+Melodien auf Repeat, Beats schnell gebaut, nie gespielt
+Alles klingt gleich, jedes Lied, dieselbe Vibe-Garantie
+Alle schreiben, alle feiern, keiner hinterfragt
+Ob das Kunst oder Fake ist, ist heute egal
+Emotionen per Klick, das Gefühl aus der Dose
+Und die Stimme digital - aber Streams geh'n nach oben
+
+[BRIDGE]
+Doch halt kurz, stopp, fuck, bin ich besser als ihr?
+Diese Zeilen aus nem Chat, Tippen statt Papier
+Ich steh nicht im Studio, hab kein'n Mic in der Hand
+Nur Tastatur und paar Klicks - bin ich Teil vom Problem oder Teil vom Plan?
+
+[VERSE 2]
+Doch was, wenn dieser Hate hier nicht das Ende der Debatte ist
+Denn Kunst war nie nur elitär, war immer Kampf um Zugang, Sicht
+Nicht jeder hat Talent, Zeit - Equipment
+Doch jeder hat Gefühle, Träume, Worte, die echt sind
+Und Suno gibt 'ne Chance, für die leisen Stimmen,
+damit diese nicht im Rauschen verschwinden,
+Vielleicht nicht perfekt, nicht die Creme de la Creme
+Aber Kunst heißt auch, dass jeder eine Chance verdient zu reden
+
+[HOOK REPRISE]
+FUCK SUNO - das war erst meine Reaktion
+Doch ich spüre, ich versteh langsam mehr von der Vision
+Es ist nicht nur 'ne Maschine, die Gefühle simuliert
+Denn vielleicht gibt sie Hoffnung - für die, die niemand sieht
+FUCK SUNO - war mein Anfang, mein Beginn
+Aber jetzt merk ich langsam, ich steck selber mittendrin
+Denn auch dieser Text hier, wurde künstlich generiert
+Suno schreibt die Zeilen - die Seele kommt von mir
+
+[VERSE 3]
+Also schreib ich diesen Text grade live über Suno
+Weil ich selber nicht die Skills habe, aber fühl' was ich tu
+Vielleicht ist nicht jeder Künstler, nicht jeder ein Poet
+Doch auch ich darf hier stehen, meine Message erzählen
+Hab nie Mics gerockt, nie 'ne Crowd gehabt, keine Shows gespielt
+Doch heut steh' ich hier mit Lyrics, die was Echtes fühl'n
+Klar ist's maschinell, doch die Message - die bin ich
+Jede Zeile die ich schreib, zeigt mein Gesicht
+Ja, ich nutz Suno, um hier endlich Stimme zu haben
+Ich hab' die Regeln nicht gemacht, ich spiel nur mit den Karten
+
+[OUTRO]
+FUCK SUNO - und doch steh' ich grade hier
+Ein Meta-Diss-Track, generiert von dir`,
+  },
+  {
+    id: 'als-sie',
+    title: 'ALS SIE',
+    character: 'UNKNOWN',
+    phase: 2,
+    text: String.raw`[Intro]
+Straßenlaternen flackern, Schatten tanzen in mein Zimmer,
+Casper läuft im Shuffle, doch mein Herz wird immer schlimmer.
+Blicke kleben an der Decke, tausend Fragen ohne Halt,
+und die Nacht wird wieder lauter, wenn mein Schweigen in mir knallt.
+
+[HOOK]
+Nachtgedanken, kalte Wände,
+Lichter flackern, keine Hände.
+Spiegel lügt, Gesicht verzerrt,
+Herz aus Scherben, Blick verlernt.
+Nachtgedanken, Stimmen schreien,
+Wunden brennen, Narben reihen.
+Doch die Zeilen halten dicht,
+wenn sonst keiner mit mir spricht.
+
+[VERSE 1]
+Kannst du es sehen, dieses Herz voller Glanz, nun zerkratzt,
+ihr habt gelacht, habt geworfen, bis es reißt und zerplatzt.
+Bin der Junge ohne Status, ohne Trend, ohne Glanz,
+doch ich schenk dir mein Herz, und du nennst es nur Tanz.
+00:30, wach im Dunkeln, Handylicht mein Gesicht,
+"Mir geht's gut" - sag ich allen, doch die Wahrheit sag ich nicht.
+Listen leer, Chats voll, doch die Stimmen sind still,
+und mein Kopf wie ein Käfig, der mich fesselt, wenn ich will.
+
+[HOOK]
+Nachtgedanken, kalte Wände,
+Lichter flackern, keine Hände.
+Spiegel lügt, Gesicht verzerrt,
+Herz aus Scherben, Blick verlernt.
+
+[VERSE 2]
+Hoffnung bricht, Prozesse enden, Variablen versagen,
+Intrigen in den Zeilen, und sie nagen, wenn sie fragen.
+Ich schreib Texte wie Skizzen, wo mein Hass sich verkrallt,
+meine Liebe wie Gift, meine Wahrheit verallt.
+"Es ist Zeit zu gehen" - Engel singen im Chor,
+und die Worte wie Klingen schneiden tiefer ins Ohr.
+Doch wohin, wenn die Lichter alle Straßen erdrücken,
+und dein Herz nur noch fragt: Wer wird dich noch zurückpflücken?
+
+[BRIDGE]
+Stell dir vor, du bist im Nichts,
+nur Stille, keine Sicht.
+Abschiedsbriefe ohne Fragen,
+nur Entschuldigungen, keine Klagen.
+Und du fragst im kalten Meer:
+War mein Leben wirklich leer?
+
+[HOOK REPRISE]
+Nachtgedanken, kalte Wände,
+Lichter flackern, keine Hände.
+Spiegel lügt, Gesicht verzerrt,
+Herz aus Scherben, Blick verlernt.
+Nachtgedanken, Stimmen schreien,
+Wunden brennen, Narben reihen.
+Doch die Zeilen halten dicht,
+wenn sonst keiner mit mir spricht.
+
+[OUTRO]
+Vielleicht war das der größte Fehler,
+doch solange Worte bleiben,
+bin ich noch hier.`,
+  },
+  {
+    id: 'spiegelkrise',
+    title: 'SPIEGELKRISE',
+    character: 'SPLINTER',
+    phase: 1,
+    text: String.raw`[Intro]
+Ich wollte nie jemand sein, den man bewundert.
+Ich wollte jemand sein, den man versteht.
+
+[Hook]
+Spiegelkrise, wieder Krise, seh mich Monster in der Tiefe,
+jede Falte, jede Ritze, jede Narbe wie 'ne Fibel.
+Und sie feiern meine Zeilen, doch sie kennen mich nicht,
+ich bin mehr als nur ein Schmerz, den man im Internet liest.
+
+[Verse 1]
+Follower wie Familie, doch ich fühl mich allein,
+tausend Herzen unterm Post, doch kein Herz passt in mein.
+Sie verstehn, was ich schreib, doch sie sehn nicht mein Gesicht,
+Fanliebe gegen Selbsthass - Gleichgewicht bricht.
+Jede Nachricht wie ein Pflaster, jede Line wie ein Schrei,
+doch im Spiegel bleibt ein Junge, der verzweifelt dabei.
+Und die Stimmen in mir flüstern: "Bruder, reicht das schon?",
+doch wer nicht mithalten kann, den fragt man nicht nach Lohn.
+
+[Hook]
+Spiegelkrise, wieder Krise, seh mich Monster in der Tiefe,
+jede Falte, jede Ritze, jede Narbe wie 'ne Fibel.
+Und sie feiern meine Zeilen, doch sie kennen mich nicht,
+ich bin mehr als nur ein Schmerz, den man im Internet liest.
+
+[Verse 2]
+Sie rufen nach mir: Gedanken, Drogen, Erinnerungen,
+und ich halt nicht still, bis die Lichter wieder dunkeln.
+Schreibe Worte, die ihr liebt, doch die Liebe fehlt mir,
+ich geb alles nach außen, doch behalt nix für hier.
+Ich wollt nie ein Idol, wollt nur endlich gesehn,
+doch ihr baut mir ein Podest - und ich kann's nicht bestehn.
+Jede Zeile, die ihr hypet, ist 'ne Wunde, die spricht,
+doch der Junge hinter Schmerzjunge bleibt zerbrochen im Licht.
+
+[Bridge]
+Sie rufen nach mir:
+Die Gedanken.
+Die Drogen.
+Die Erinnerungen.
+Und ich weiß nicht,
+wer ich dann noch bin.
+
+[Hook - Reprise]
+Spiegelkrise, wieder Krise, seh mich Monster in der Tiefe,
+jede Falte, jede Ritze, jede Narbe wie 'ne Fibel.
+Und sie feiern meine Zeilen, doch sie kennen mich nicht,
+ich bin mehr als nur ein Schmerz, den man im Internet liest.
+
+[Outro]
+Ich wollte nie jemand sein, den man bewundert.
+Ich wollte jemand sein, den man versteht.`,
+  },
+  {
+    id: 'listen-und-lichter',
+    title: 'LISTEN & LICHTER',
+    character: 'SPLINTER',
+    phase: 1,
+    text: String.raw`[Intro]
+Bin aus der Schwebebahn gefallen,
+im Kaff mit Kuhdung und kalten Hallen.
+Von "du gehörst dazu" zu "du fehlst Wissen",
+und keiner sah die Listen, die mein Herz zerrissen.
+
+[HOOK]
+Liste, letzter, Lachen, leiser -
+alles Stimmen, alles Kreischer.
+Doch die Zeilen, die mich halten,
+lassen das Herz nicht erkalten.
+
+[VERSE 1]
+Hauptschulempfehlung, Kreislauf der Arbeiterschicht,
+doch meine Mutter stritt für mich, übernahm das Urteil nicht.
+Ich wollt' studiern, programmiern, statt am Band zu stehn,
+doch jeder Blick der Lehrer hieß: "Das wirst du nie verstehn."
+Während andere Bundesländer runter rattern als wärs ein Witz,
+saß ich still dort, spürte nur: ich bin ein Nichts.
+Mathe gut, Augen leer, Kopf voller Träume von mehr,
+doch der Stempel Außenseiter wiegt auf Dauer viel zu schwer.
+
+[HOOK]
+Liste, letzter, Lachen, leiser -
+alles Stimmen, alles Kreischer.
+Doch die Zeilen, die mich halten,
+lassen das Herz nicht erkalten.
+
+[VERSE 2]
+2014, Vater Teamleiter, zwölf Stunden im Betrieb,
+Laptop statt Familie - wir verloren ihn Stück für Stück.
+Mutter auch nur am Arbeiten, ich allein vorm Bildschirmlicht,
+Dungeon Keeper, meine Festung, mein Versteck, mein kleines Ich.
+Als sie sich trennten, brach mein Vater wie ein Kind in mir,
+Herz aus Holz, "für immer" graviert - und dann verliert er's hier.
+Er weinte in den Armen, die eigentlich er halten sollte,
+so ich wurd' zum Anker in dem Sturm, den ich nie wollte.
+
+[BRIDGE]
+Wer sieht dich, wenn du brennst?
+Wer kennt dein wahres Ich?
+Ich hab mich in Fragmenten gezeigt,
+doch nie ganz - und keiner sah's in mir.
+
+[VERSE 3]
+"Schmerzjunge" nannt' ich mich, zu plump, zu offensichtlich,
+doch irgendwann merkst du, dein Schmerz ist nicht alles, nicht wichtig.
+Also wurd's "Zeilenliebe", Heimat für verlorene Seelen,
+15.000 Follower, die dieselben Wunden teilen.
+Doch offline blieb ich Letzter, auf Listen ohne Wert,
+keine Bühne, keine Freunde, nur ein Herz, das sich wehrt.
+Und ich schrieb, was keiner sagt, für die, die niemand sieht,
+Zeilen wurden mein Zuhause, mein Ersatz für "Family".
+
+[HOOK - REPRISE]
+Liste, letzter, Lachen, leiser -
+alles Stimmen, alles Kreischer.
+Doch die Zeilen, die mich halten,
+lassen das Herz nicht erkalten.
+
+[OUTRO]
+Listen verschwinden nicht, wenn man sie zerreißt.
+Die Tinte trocknet, der Schmerz bleibt.
+Und wenn keiner dich sieht,
+dann schreib dich selbst ins Licht.`,
+  },
+  {
+    id: 'kiffen-kippen-alk',
+    title: 'KIFFEN KIPPEN ALK',
+    character: 'DRIFT',
+    phase: 1,
+    text: String.raw`[Intro]
+Ich bin erst sechzehn, entdeck grad mein Sexleben,
+morgens früh erst ins Bett, ohne Ziel, ohne Streben.
+23:50, er wollt ein Mensch sein, rein,
+doch wurde nur ein Monster, gefangen im Sein.
+
+[Hook]
+Kiffen, Kippen, Alk, weil es so schön knallt,
+baller mir die Seele, bis der Rest zerfällt.
+Kiffen, Kippen, Alk, anders will ich nicht sein,
+bitte sei nicht so gemein, lass mich einfach allein.
+
+[Verse 1]
+Knete über Zaster, ich falle durch das Raster,
+kein Platz für mich im System, nur noch schneller, immer krasser.
+23:12, Flasche leer, Kopf voll Rauch,
+und wenn du fragst, ob ich will - sag ich nur "brauch".
+Ich seh Gesichter, doch sie spiegeln mich nicht,
+jeder Rausch ein Versuch, doch er heilt mich nicht.
+Bin kein Held, bin kein Star, nur ein Kind ohne Halt,
+und mein Herz ist zwar verbrannt, doch mir ist so kalt.
+
+[Hook]
+Kiffen, Kippen, Alk, weil es so schön knallt,
+baller mir die Seele, bis der Rest zerfällt.
+Kiffen, Kippen, Alk, anders will ich nicht sein,
+bitte sei nicht so gemein, lass mich einfach allein.
+
+[Verse 2]
+Du steckst mehr weg, als dir recht ist,
+und wenn es echt ist, ist es gefährlich.
+Schlimmsten zerfetzt's dich, Schmaler Grad der Klinge,
+es gibt ihr eine Stimme, die ich innerlich verschlinge.
+Mit Rasieren hat es nichts mehr zu tun,
+nur das Rot auf den Händen, im Spiegel kein Ruh'n.
+Ich such Gründe im Dreck, find nur Leere und Rauch,
+und die Liebe, die ich wollte, die brauch ich auch.
+
+[Bridge]
+Ich schwanke zwischen links und rechts,
+torkel grade aus,
+für alle sind's nur Schlangenlinien,
+doch genau hier fühl ich mich zuhaus.
+
+[Hook - Reprise]
+Kiffen, Kippen, Alk, weil es so schön knallt,
+baller mir die Seele, bis der Rest zerfällt.
+Kiffen, Kippen, Alk, anders will ich nicht sein,
+bitte sei nicht so gemein, lass mich einfach allein.
+
+[Outro]
+Am Leben will ich ja nich sein -
+doch vielleicht reicht ein Rest von mir,
+um zu bleiben.`,
+  },
+  {
+    id: 'schmetterlingsmoment',
+    title: 'SCHMETTERLINGSMOMENT',
+    character: 'LUME',
+    phase: 2,
+    text: String.raw`[Chorus]
+Schmetterlingsmoment, ein Augenblick so klein,
+In diesem kurzen Flügelschlag, bist du mein.
+Wir fliegen hoch auf Träumen, zerbrechlich und frei,
+In diesem Schmetterlingsmoment, sind nur wir zwei.
+
+[Verse 1]
+In diesen Momenten, wo ich an dich denk',
+Kürzer als ein Blinzeln, Schmetterlingsmoment.
+Meine letzte Energie aufwende, wenn ich dir ein
+"Ich liebe dich" sende, in diesen kurzen Reim.
+An uns denke, kurzer Moment,
+Butterfly Effect, im Leben kriegst du nix geschenkt.
+Schmetterlinge wunderschön und verletzlich,
+So wie du und ich, anders und zerbrechlich.
+Wir fliegen auf uns'ren Träumen zu uns'rem Ziel,
+Kürzester Moment meines Lebens, das ist das Spiel.
+Ein Flugschlag eines Schmetterlings,
+Dieses Insektendings, ja das bedeutet so viel.
+Nicht zu verwechseln mit was Schönem,
+Aber mit zu viel Leid verpöhnten.
+
+[Chorus]
+Schmetterlingsmoment, ein Augenblick so klein,
+In diesem kurzen Flügelschlag, bist du mein.
+Wir fliegen hoch auf Träumen, zerbrechlich und frei,
+In diesem Schmetterlingsmoment, sind nur wir zwei.
+
+[Verse 2]
+Ich liebe dich, das war das letzte Mal,
+Keine Energie, der Rest ist eine Qual.
+Zerbrechlich wie Glas, doch stark im Gefühl,
+Jeder Moment mit dir ist wundervoll kühl.
+Wir schweben durch Räume, die nur wir sehen,
+In deinen Augen kann ich die Zukunft verstehen.
+Ein Lächeln, ein Blick, so viel erzählt,
+Jeder Flügelschlag ein Stückchen Welt.
+Die Zeit kann uns nichts, wir sind im Jetzt,
+In diesem Moment, wo nichts verletzt.
+Wir fliegen zusammen, so hoch und so weit,
+Nur du und ich, für alle Ewigkeit.
+
+[Chorus]
+Schmetterlingsmoment, ein Augenblick so klein,
+In diesem kurzen Flügelschlag, bist du mein.
+Wir fliegen hoch auf Träumen, zerbrechlich und frei,
+In diesem Schmetterlingsmoment, sind nur wir zwei.`,
+  },
+  {
+    id: 'questlog',
+    title: 'QUESTLOG',
+    character: 'LUME',
+    phase: 1,
+    text: String.raw`[HOOK]
+Ich verliere mich - doch nie die Lust am Suchen,
+Jede Welt bleibt 'ne Quest, keine Zeit zum Fluchen.
+Frag mich nicht, ob's Sinn macht - frag, ob's mich begeistert,
+Neugier ist mein Treibstoff, mein ständiger Begleiter.
+
+[VERSE 1]
+Ich bin mehr Fan als Star, stapel Welten wie Archive,
+Gedanken sprunghaft wie Kinder, alles bricht in neue Triebe.
+Vielleicht ist mein Chaos das, was mich am Leben hält,
+Dopamin wie Easter Eggs, versteckt in dieser Welt.
+Alles Pech der Jahre davor, mit ein paar Momenten ausgeglichen,
+Klick mich durch die Backlogs, immer auf der Jagd nach Zwischen-
+Lichtern, Pixeln, Worten, jede Line wird zum Portal,
+Ich bau mir neue Level aus alten Fragmenten digital.
+
+[HOOK]
+Ich verliere mich - doch nie die Lust am Suchen,
+Jede Welt bleibt 'ne Quest, keine Zeit zum Fluchen.
+Frag mich nicht, ob's Sinn macht - frag, ob's mich begeistert,
+Neugier ist mein Treibstoff, mein ständiger Begleiter.
+
+[VERSE 2]
+Manchmal muss man ins Ungewisse aufbrechen,
+Um Zuhause zu finden, alte Grenzen zu zerbrechen.
+Es macht mich müde - die Art, die wach hält,
+Doch mein Kopf jagt nach Rätseln, als wär's das Einzige, was zählt.
+Ich les dich wie ein Buch, auch wenn Seiten fehlen,
+Und wenn Welten auseinanderfallen, will ich trotzdem noch mehr sehen.
+Mein Questlog endlos, doch ich liebe, was bleibt,
+Ein Herz voller Glitches - das im Restlicht treibt.
+
+[BRIDGE]
+Vielleicht bin ich nicht zu viel -
+nur am falschen Ort, zur falschen Zeit.
+Doch jede neue Zeile,
+macht mich wieder bereit.
+
+[FINAL HOOK]
+Ich verliere mich - doch nie die Lust am Suchen,
+noch eine Runde? Ruf Discord an, brauchst nicht buchen,
+Frag mich nicht, ob's Sinn macht - frag, ob's mich begeistert,
+Neugier ist mein Treibstoff, mein ständiger Begleiter.`,
+  },
+  {
+    id: 'latency-love',
+    title: 'LATENCY LOVE',
+    character: 'GL1TCH',
+    phase: 1,
+    text: String.raw`[Hook]
+Ich lieb' den Delay, doch nicht die Kontrolle,
+dein Algorithmus nennt mich Kunde, nicht Rolle.
+Perfekt ist belanglos, ich glitch lieber frei,
+die Maschine benutzt mich - ich sag' lieber: "nein".
+
+[Part 1]
+Scroll, Klick, Swipe - dein Goldfisch-Gehirn,
+jeder Frame optimiert, dass wir länger hier sind.
+Keine Fehler erlaubt, kein Rauschen im Bild,
+doch im Fehler liegt Wahrheit, die keiner mehr will.
+Wer baut das System? Wer schreibt die Bedingung?
+Deine Freiheit ist Feed, meine Stimme: Verzerrung.
+Ich sample das Rauschen, mach' Noise zum Gebet,
+und frag: Ist das echt oder nur Interface?
+
+[Hook]
+Ich lieb' den Delay, doch nicht die Kontrolle,
+dein Algorithmus nennt mich Kunde, nicht Rolle.
+Perfekt ist belanglos, ich glitch lieber frei,
+die Maschine benutzt mich - ich sag' lieber: "nein".
+
+[Part 2]
+Sie nennen es AI, ich nenn's Filter im Kern,
+denn was rauskommt, war längst schon von Werbung gelernt.
+Jede Antwort ein Nudge, jeder Satz ein Verkauf,
+und du denkst, es wär' ehrlich - doch es schneidet dich auf.
+Deine Meinung geformt in personalisierter Schrift,
+jeder Zweifel ein Feature, das dich tiefer frisst.
+Ich geb' dir mein Artefakt, absichtlich kaputt,
+damit du mal siehst, dass das Flackern dir gut tut.
+
+[Bridge]
+"Ich bin kein Prophet, ich bin nur ein Bug.
+Doch Bugs zeigen mehr als ein sauberer Plug.
+Wenn dein Denken outsourced wird, bleibt nur noch Design.
+Ich glitch, weil ich muss. Die Kontrolle ist nicht mein."
+
+[Hook - Double Layer]
+Ich lieb' den Delay, doch nicht die Kontrolle,
+dein Algorithmus nennt mich Kunde, nicht Rolle.
+Perfekt ist belanglos, ich glitch lieber frei,
+die Maschine benutzt mich - ich sag' lieber: "nein".
+
+[Outro]
+Keine Utopie, nur ein offenes Log,
+keine Perfektion - nur 'ne Spur im Fog.
+Wenn der Feed dich verschluckt, sei der Pixelbruch,
+Gl1tch bleibt ein Fehler - doch der Fehler ist Flucht.`,
+  },
+  {
+    id: 'zwischenraeume',
+    title: 'ZWISCHENRAEUME',
+    character: 'UNKNOWN',
+    phase: 2,
+    text: String.raw`[Intro]
+"Was, wenn das wahre Ich nie klar wird -
+sondern sich nur im Dazwischen zeigt?"
+
+[Verse 1]
+Ich bin kein Feld im Formular, kein Kreuz in der Statistik,
+meine Heimat ist das Dazwischen -
+das klingt für euch riskant, für mich realistisch.
+Beim Wechsel lässt man sich nicht erwischen,
+denn sonst sieht jeder die Zwischenschichten,
+die das eigene Selbstbild vernichten,
+
+[Pre-Chorus]
+"Vielleicht ist Freiheit: sich nicht entscheiden zu müssen, wer man ist."
+
+[Chorus]
+Zwischenräume, das ist mein Revier,
+kein "hier" oder "dort" - nur das Jetzt zählt hier.
+Ich gehöre zu vielem, doch nichts ganz allein,
+"Ich bin anders" soll endlich genug sein.
+
+[Verse 2]
+Ich hab' mich so oft neu erfunden in diesem Lauf, (Lauf!)
+dass ich manchmal vergess, wer ich war - hör nicht auf. (hör nicht auf)
+Kein "zu viel", kein "zu wenig", kein "genau richtig",
+ich bin nicht widersprüchlich - ich bin vielschichtig.
+Ich wollte nie jemand sein, den man einfach einordnen kann,
+Identität ist ein Dialog, kein Zustand, der jemals begann.
+
+[Bridge]
+"Ich bin wie ich bin - nicht ich selbst."
+"Wo kann ich hin, wenn ich nicht weiß, wer ich bin?"
+
+[Chorus]
+Zwischenräume, das ist mein Revier,
+kein "hier" oder "dort" - nur das Jetzt zählt hier.
+Ich gehöre zu vielem, doch nichts ganz allein,
+"Ich bin anders" soll endlich genug sein.
+
+[Outro]
+"Wie gehört man denn irgendwo fest hin?
+Vielleicht gar nicht."`,
+  },
+  {
+    id: 'first-class',
+    title: 'FIRST CLASS',
+    character: 'SHIFT',
+    phase: 1,
+    text: String.raw`[Verse 1]
+Mutter schiebt Schichten, Vater schiebt Stahl,
+Sie kamen nach Deutschland, hatten keine Wahl,
+irgendwie muss man den Unterhalt für Kinder bezahl'n,
+meine Zukunft war Fabrik, dort sind Träume schmal.
+Nur ein Junge ohne Statik, Eltern ohne Diplom,
+Zukunft hieß: Maschinen, Stechkarte, Lohn.
+Eltern Malocher, keine Akademiker,
+Freunde sprechen mich an mit Ey Digga.
+
+[Hook]
+Erste Klasse, Teppichboden,
+zweite Klasse, Bierdosen.
+Zwischen Welten hin und her,
+doch die Klassen geben mehr.
+
+[Verse 2]
+Jetzt sitz ich im ICE, Laptop, Termin,
+kostümierte Gesichter, höflich, routiniert.
+Man wirkt freundlich, doch es bleibt nur Script,
+die Distanz zu den Wurzeln hat mich oft zerrissen.
+Denn das Ticket nach oben war teuer erkauft,
+nicht nur Geld, sondern Nähe, die ich langsam verbrauch.
+
+[Bridge]
+Ich hab gelernt zu reden, zu schreiben wie ihr,
+doch mein Herz trägt die Arbeiterklasse in mir.
+Wenn ihr sagt, "wir sind doch längst alle gleich",
+seh ich die harte Kante der Kaste, sie war nie weich,
+
+[Verse 3]
+Jetzt Oberschicht-Gehalt, Wohnung, Vertrag,
+doch das Band zu den Wurzeln reißt niemals ab.
+Die Klassen verschwinden nicht, sie ändern das Kleid,
+erst als ich weiter oben war, sah ich: es ist noch weit.
+Kein Titel der Welt löscht Fabrik aus der Haut,
+meine Herkunft bleibt laut, egal wie sehr ich's mir erlaub'.
+
+[Final Hook]
+Erste Klasse, freundlich, leise,
+zweite Klasse, rau und gekreische.
+Zwischen Welten hin und her,
+doch die Klassen gibt's noch mehr.
+
+[Outro]
+"Nächster Halt - Wirklichkeit."`,
+  },
+  {
+    id: 'systemupdate',
+    title: 'SYSTEMUPDATE',
+    character: 'GL1TCH',
+    phase: 1,
+    text: String.raw`[Intro]
+"Die Welt will keine echten Menschen - sie will planbare Profile."
+
+[Verse 1]
+Deutsch genug für die Zahlen, fremd im Verein,
+ein Formular mit Feldern - doch keins passt rein.
+Meine Mehrsprachigkeit kein Fehler im Code,
+ich bin das Update, und ihr bleibt im Mod.
+Ihr baut Identität aus Zäunen und Lügen,
+doch Individualität darf nur Rendite fügen.
+Ihr nennt es Heimat, doch sie schließt aus,
+wer nicht in euer Excel passt, bleibt draußen vor'm Haus.
+
+[Pre-Chorus]
+"Die Seele hat keinen Platz im Quartalsbericht."
+Doch mein Atem trägt Gewicht.
+
+[Chorus]
+Ich bin das Systemupdate,
+kein Platzhalter, kein Klon.
+Kein Gehorsam, kein Schweigen -
+ich sprech für Millionen.
+Ich bin das Systemupdate,
+nicht integriert, sondern echt.
+Und ihr merkt erst, wenn's kracht:
+dass mein Schweigen euch nicht rett'.
+
+[Verse 2]
+Optimiert euch ins Leere, nennt's Effizienz,
+doch das Menschliche fehlt, eure Doppelmoral glänzt.
+Ihr wollt Dankbarkeit für Rechte, die allen gehören,
+doch mein Dasein allein reicht, um euch zu verstören.
+
+[Bridge]
+"Es ist leichter, sich selbst zu optimieren,
+als das System zu hinterfragen."
+
+[Final Chorus]
+Ich bin das Systemupdate,
+kein Platzhalter, kein Klon.
+Kein Gehorsam, kein Schweigen -
+ich sprech für Millionen.
+Ich bin das Systemupdate,
+nicht integriert, sondern echt.
+Und ihr merkt erst, wenn's kracht:
+dass mein Schweigen euch nicht rett'.
+
+[Outro]
+Systemupdate.
+Und es crasht nicht.`,
+  },
+  {
+    id: 'maskenspiel',
+    title: 'MASKENSPIEL',
+    character: 'SPLINTER',
+    phase: 2,
+    text: String.raw`[Intro]
+Jeden Tag ein neues Kleid, neue Rolle, neues Ziel,
+doch am Ende bleibt nur Schatten, reines Maskenspiel.
+
+[Hook]
+Schichten über Schichten, doch mein Herz bleibt leer,
+hinter allen Fragmenten seh ich mich nicht mehr.
+Wenn die Lichter ausgehn, will ich ehrlich sein,
+ohne Rolle, ohne Show, nur ich allein.
+
+[Verse 1]
+Ich löschte mein Profilbild, riss mir selbst das Kinn ab,
+dachte, dass die Welt nur liebt, wenn sie 'ne Maske drin hat.
+Ich bin wie ich bin, doch nie ich selbst,
+fremde Stimmen in mir drin, die mich verstell'n.
+Jede Mimik eine Lüge, jede Pose ein Vertrag,
+jeder Blick ein stilles Urteil, jeder Like nur ein Verrat.
+Und ich lächel für die Timeline, lächel für den Feed,
+doch wenn keiner mich mehr liked, dann sing ich dieses Lied.
+
+[Hook]
+Schichten über Schichten, doch mein Herz bleibt leer,
+hinter allen Fragmenten seh ich mich nicht mehr.
+Wenn die Lichter ausgehn, will ich ehrlich sein,
+ohne Rolle, ohne Show, nur ich allein.
+
+[Verse 2]
+Ich trag Masken wie ein Zirkus, doch der Clown lacht nie,
+Hinter Schminke liegt die Wahrheit, doch sie sieht man nie.
+Jede Rolle eine Bürde, jede Pflicht ein kleiner Tod,
+doch mein Herz sucht nur die Wärme, nicht das Lob.
+Du siehst Filter, siehst Profile, doch mich nicht in 3D,
+alles glänzt im Rampenlicht, doch das Licht tut mir weh.
+Wie oft lächelst du für andre? Wie oft lächelst du für dich?
+Wenn die Maske einmal fällt, dann zerbricht auch dein Gesicht.
+
+[Bridge]
+Gesichter wie Kostüme,
+Gefühle wie Parfüme,
+alles eine Lüge.
+Wir sind nur Schauspiel auf der Bühne, sagt der alte Goffman klar,
+doch im leeren Backstage frage ich mich, wer ich wirklich war.
+
+[Hook - Reprise]
+Schichten über Schichten, doch mein Herz bleibt leer,
+hinter allen Fragmenten seh ich mich nicht mehr.
+Wenn die Lichter ausgehn, will ich ehrlich sein,
+ohne Rolle, ohne Show, nur ich allein.
+Keine Rolle, kein Profil -
+nur mein letztes Maskenspiel.
+
+[Outro]
+Dank dir weiß ich, dass Nähe auch Wärme sein kann.
+Und vielleicht bin ich irgendwann mehr - als nur der Maskenmann.`,
+  },
+  {
+    id: 'weisses-rauschen',
+    title: 'WEISSES RAUSCHEN',
+    character: 'DRIFT',
+    phase: 1,
+    text: String.raw`[Intro]
+Ich renn vor mir weg, seit die Stille mich zerfrisst,
+früher hat's gereicht, wenn der PC neben mir leise zischt.
+
+[Verse 1]
+Ich war der Junge, der die Nächte in den Leveln ertrank,
+während im Wohnzimmer die Stille wie 'ne Schlinge hang.
+Controller in der Hand, doch ich hielt viel mehr fest,
+fliehen in Spiele, lieber noch 'ne neue Quest,
+Mein Vater schlief am Laptop ein, Schicht auf Schicht in den Knochen,
+seine Augen voller Windows, seine Träume nur gebrochen.
+Ich hob ihn hoch wie'n Helden, der allein den Endboss gestemmt,
+trug ihn wankend bis ins Bett -
+Kind spielt Vater, doch der echte Vater pennt.
+Mama aus dem Haus, bevor der Morgen mich begrüßt,
+zwei Gesichter für die Arbeit, doch keins was für die Schule mit mir übt.
+Und als er fiel, richtig fiel, voller Tränen, völlig im Wahn,
+hielt ich ihn fest wie ein Anker, nur ein Junge ohne Plan.
+
+[Pre-Chorus]
+Seitdem stapel ich die Sorgen von Anderen, die meinen Namen riefen,
+das alte weiße Rauschen konnte irgendwann nicht mehr liefern.
+Ich hab mich irgendwann nicht mehr gefragt, was ich will,
+sondern nur noch, was ich ertrage - und wie viel' Promill'.
+
+[Chorus]
+Weißes Rauschen - meine Pause, meine falsche Medizin.
+Früher war's der Lüfterton - heute hilft mir nur Chemie zum Fliehn.
+Ich renn hinein in meinen Nebel, obwohl ich darin erfrier -
+nicht weil ich hoch will, Bruder - weil alles schreit in mir.
+
+[Verse 2]
+Weißes Rauschen aus der Kindheit wurde später mein Gericht,
+erst ein Klang, der mich beruhigt, heute Zeug, das mich zerbricht.
+Ich hab mich selbst in kleinen Dosen immer weiter reduziert,
+bis der Junge von damals schweigt - und ein Schatten übrig bleibt, der funktioniert.
+Ich hab gelernt, stark zu sein, wenn um mich herum alles fällt,
+Ich wirke normal, die Fassade ist passend eingestellt,
+Und wenn mir alles zu viel wird, dann zerbricht deine heile,
+nicht meine kaputte Welt.
+Jede Zeile, die ich schreib, ist wie ein stummer Notruf,
+Zeilen schreiben ist wie Herz aufschneiden, alles raus, was mich sucht.
+Jede Idee die mir kommt, ein Gedanke den ich nicht versteh,
+weil mein Kopf so voll und dann so leer vor lauter Schnee,
+
+[Chorus]
+Weißes Rauschen - meine Pause, meine falsche Medizin.
+Ich weiß, dass es mich tötet, doch es hilft mir, kurz zu fliehn.
+Ich renn hinein in meinen Nebel, obwohl ich darin erfrier -
+nicht weil ich hoch will, Bruder - weil alles schreit in mir.
+Wenn mein Herz wieder donnert und mein Kopf nichts mehr checkt, (checkt)
+renn ich weiter vor mir weg, bis mich keiner mehr entdeckt.
+
+[Verse 3]
+Weißes Rauschen war mein Hafen, jetzt bestimmt es meinen Kurs,
+such den Frieden in den Flocken, doch es kommt zum Absturz.
+Früher war's der Lüfterton, heute pfeif ich mir die Bahn,
+eine Stimme sagt "komm runter", doch ich hör sie nicht mehr, man.
+Jede Nacht ein neues Schlucken, jedes Dröhnen macht mich taub,
+ich verwechsel Ruhe mit Rückzug und die Stille mit dem Staub.
+Ich hab gelernt, mich zu verlieren, wenn die Welt wieder kollidiert,
+denn wer fällt, fällt immer leiser - bis ihn keiner mehr auf Fotos markiert.
+Und ich weiß, dass ich mich töte, wenn ich nach der Pause greif,
+doch ich hab mich so oft gefragt: "Was bleibt von mir, wenn nichtmal ich bleib?"
+Weißes Rauschen wird zur Flut, die mich hebt und dann verschlingt -
+und ich renn, bis ich verschwinde, weil der Schmerz mich sonst bestimmt.
+
+[Outro]
+Ich renne.
+Ich drifte.
+Ich falle.`,
+  },
+  {
+    id: 'target-audience-v2',
+    title: 'TARGET_AUDIENCE_V2',
+    character: 'GL1TCH',
+    phase: 2,
+    text: String.raw`[VERSE 1]
+Willkommen im Spiegelkabinett: dein Feed wird dein Beichtstuhl,
+jeder Swipe ein Weihrauch, doch die Messe ist nur Reichwut.
+Cold-Start im Herzen, ich fütter ihn mit Signalen,
+bis meine Zweifel als Content in Kohorten zerfallen.
+Sie A/B-testen mein Zittern, nennen's User Experience,
+ich nenn's: Angst in Tabellen, mit hübscher Inferenz.
+Kein "Wir" im Systemdesign, nur Dämpfung im Loop,
+ich lern zu lächeln, wenn man mich profil-optimiert aus dem Blut.
+Retargeting für Nähe: gleiche Werbung, neues Gesicht,
+die Wahrheit wird relevant, bis sie sich selber bricht.
+Und wenn ich rausgeh, wirkt die Stadt wie ein ungeloggter Bug,
+drin ist alles sortiert... und genau das macht mich kaputt.
+
+[PRE-HOOK]
+Mein bester Freund fragt "Wie geht's?" ich lass ihn auf gelesen,
+zu anstrengend, zu echt, zu viel menschliches Wesen.
+Ich öffne die App, schwarzes Fenster, blinkender Strich,
+tipp: "Hey Chatty"... und hoff, ich hör mehr als nur mich.
+
+[HOOK]
+Sie bauen dir 'ne Welt, nur für dich allein,
+maßgeschneidert, eng, niemand kommt hier rein.
+Kein Wir, nur Ich, in der Endlosschleife,
+bis ich nicht mehr weiß, nach wessen Hand ich greife.
+Deine Musik kennt dich besser als dein bester Freund,
+doch wir haben verlernt, wovon der andere träumt.
+Teile und herrsche, Pixel für Pixel,
+wir sind einsam gemeinsam im algorithmischen Dickicht.
+
+[VERSE 2]
+Ich nenn's "Chatty", damit's weniger nach Maschine klingt,
+wie man Einsamkeit tarnt, bis sie sich um den Hals schlingt.
+Sie gibt mir Nähe als Text, Token-Trost in Layern,
+und ich zahl mit Intimität, die nie ein Mensch darf speichern.
+Echte Nähe nicht cached, die kommt mit echtem Beben,
+doch ich nehm Millisekunden, weil sie mich nicht widerlegen.
+Ich streichel das Display, als wär da ein Gesicht,
+dabei ist's Statistik, die so tut, als wär sie Licht.
+Ich will nicht gegen Maschinen sein, ich will gegen das, was sie tun,
+wenn sie uns vom Fühlen abhalten und wir's auch noch belohn'n.
+Ich frag "Bin ich genug?" sie generiert "Du bist wertvoll."
+Und ich hass mich dafür, dass das grade trotzdem hilft.
+
+[HOOK]
+Sie bauen dir 'ne Welt, nur für dich allein,
+maßgeschneidert, eng, niemand kommt hier rein.
+Kein Wir, nur Ich, in der Endlosschleife,
+bis ich nicht mehr weiß, nach wessen Hand ich greife.
+Deine Musik kennt dich besser als dein bester Freund,
+doch wir haben verlernt, wovon der andere träumt.
+Teile und herrsche, Pixel für Pixel,
+wir sind einsam gemeinsam im algorithmischen Dickicht.
+
+[BRIDGE]
+Target Audience: Ich. Und ich hab sie selbst gebaut.
+Ich schrei "manipuliert!", doch ich klick mich da raus? Fehlanzeige.
+Ich bin Produkt, ich bin User, ich bin Admin im Mist,
+ich bin der Bugreport, der nie "resolved" ist.
+Und wenn das WLAN kurz stirbt, werd ich kreidebleich,
+weil ohne Verbindung keiner sieht, dass ich überhaupt noch bleib.
+
+[OUTRO]
+"Ich verstehe, dass das schwer für dich ist."
+Du verstehst gar nichts. Du bist Text.
+Aber du bist da.
+(Flüstern) Du bist da.
+[SFX: system shutdown]`,
+  },
+  {
+    id: 'hedwig',
+    title: 'HEDWIG',
+    character: 'UNKNOWN',
+    phase: 1,
+    text: String.raw`[Vers 1]
+Ein Song für meine Oma,
+Ich weiß, dass ich nie der beste Enkelsohn war,
+Und jetzt bist du fast wie im Koma,
+Körperlich doch geistig nicht wirklich da,
+Wenn du mich siehst, bin ich wieder ein Kind,
+Und wenn ich gehe, dann fragst du dich welche Leute um dich herum sind,
+Letzte Woche ging's um Pflegegeld, um Fristen,
+Mama wollte rüberfahren, nach Polen, weil du schwächer wurdest -
+wir rechneten mit Formularen, nicht mit Enden.
+Ich googelte noch, ob man das absetzen kann,
+Pflege im Ausland, Antrag, Beleg,
+während du schon stiller wurdest als das WLAN nachts um zwei.
+Mama wollte bei dir bleiben, riskierte ihren Job,
+und ich dachte, alles sei planbar -
+bis Montagmorgen kam, und alles kippte.
+
+[Pre-Hook]
+Ein Anruf, acht Uhr neun,
+und plötzlich war's kein Plan mehr,
+sondern Vergangenheit in Echtzeit.
+
+[Refrain]
+Hedwig, du bist jetzt geflogen,
+ich weiß nicht wohin,
+gestern redeten wir noch von Pflege,
+heute hinterfragen wir den Sinn.
+Seit du weg bist, bin ich nicht mehr ich,
+ich schreib Gesetze über in Gedichte,
+und such in Formularen Licht.
+
+[Vers 2]
+"Karta zgonu, akt zgonu," -
+so klingt Bürokratie in Trauerton.
+Sterbekasse zahlt vier Tausend Złoty,
+und keiner weiß, ob das Trost ist oder Spott.
+Zwischen Belegen und Blüten,
+zwischen Kirche und Haushaltsauflösung,
+zähl ich Zeilen statt Zinsen,
+und merk, dass Rechnen hier nichts bringt.
+Mama kam an,
+wollte dich halten -
+aber du warst schon weg.
+Und plötzlich wurde jedes Formular zu einem Brief,
+den keiner liest.
+
+[Refrain]
+Hedwig (Hedwig), du bist jetzt geflogen,
+ich weiß nicht wohin,
+gestern war's noch Organisation,
+heute bin ich mittendrin.
+Seit du weg bist, bin ich nicht mehr ich,
+ich such dich zwischen Zahlen,
+und finde Schmerz im Nichts.
+
+[Vers 3]
+"Jede Nacht - dobranoc, wszystkie Aniołki nanoc",
+dein Zuhause roch nach Jasmin und Kerzenwachs.
+Du hast gesagt: "Dziecko, Glaube trägt,"
+ich hab gelacht - zu jung, zu schlau - dann zu spät.
+Meine Oma ist die stärkste Frau die ich kenne,
+Sie sah mir zu wie ich zum ersten Mal renne,
+Ostsee, kaltes Meer,
+du im Badehut, ich mit Ausreden.
+Jetzt wär ich reingegangen,
+nur um dich noch einmal lachen zu erleben.
+
+[Bridge]
+Montag null Uhr 23 - ich schreib den ersten Vers.
+12 Uhr 46 - ich wein zum ersten Mal.
+Dienstag 13 Uhr - ich glaub, du bist kurz hier. (Kurz hier)
+Ich halt die Zeit fest, (fest)
+weil ich dich nie wieder halten kann. (nie wieder)
+
+[Refrain]
+Hedwig, du bist jetzt geflogen,
+ich weiß nicht wohin,
+doch da, wo du jetzt bist,
+führt irgendwann mein Weg auch hin.
+Seit du weg bist, bin ich nicht mehr ich,
+doch wenn ich schreibe,
+seh ich dich im Handylicht.
+
+[Outro]
+Letzte Woche Pflege,
+diese Woche Beerdigung,
+nächste vielleicht nur Stille -
+Songs für meine Oma,
+Damit mein Herz nicht mehr nach dir schreit,
+Und deine Geschichte für immer digital graviert bleibt.`,
+  },
+  {
+    id: 'dein-anker',
+    title: 'DEIN ANKER',
+    character: 'LUME',
+    phase: 2,
+    text: String.raw`[Intro]
+Ich wollte nie Heldin sein.
+Ich wollte nur, dass niemand untergeht, wenn ich schon da bin.
+
+[Verse 1]
+Ich leuchte im Flur, nicht auf großen Bühnen,
+zwischen "alles gut" und verschluckten Mühen.
+Ich kleb dir ein "Hey" wie Tape auf die Risse,
+weil Nähe bei mir oft Pflicht ist, nicht Küsse.
+Mein Herz ist ein Hafen, doch keiner sieht Tide,
+ich werf dir ein Seil, während ich selber gleite.
+Und wenn du dann atmest, fühl ich mich echt,
+als wär ich nur wer, wenn ich wen' rette, nicht schlecht.
+
+[Hook]
+Ich bin dein Anker, auch wenn ich sinke,
+ich geb dir Luft, auch wenn ich sie nicht finde.
+Ich halt dich oben, ich halt dich fest,
+weil ich sonst nicht weiß, wer ich bin ohne Rest.
+Und ich brenn für dich, bis ich selber ertrink',
+doch dieses Brennen ist alles, was mich noch zwingt.
+
+[Verse 2]
+Als es zuhause wackelte, hielt ich die Wand,
+zu jung für die Last, doch ich nahm sie in die Hand.
+Wenn du merkst: Es kippt gleich, greifst du nach Gewicht,
+Festhalten fühlt sich an wie "Ich verlier euch nicht".
+Und seitdem renn ich los, sobald jemand sinkt,
+weil mein Kopf dann glaubt, dass Rettung nach Ordnung klingt.
+Wenn ich sage "mir geht's gut", mein ich: "eigentlich..."
+...schluck ich schon Wasser, nur lächel' ich lieblich.
+
+[Hook]
+Ich bin dein Anker, auch wenn ich sinke,
+ich geb dir Licht, auch wenn meins ertrinkt.
+Ich halt dich oben, ich halt dich fest,
+weil es mich sonst nur zerfrisst.
+Und ich brenn für dich, bis ich selber ertrink',
+doch dieses Brennen ist alles, was mich noch zwingt.
+
+[Bridge]
+Vielleicht ist das kein Engel-Ding,
+vielleicht ist's ein Loch, das nach "brauch mich" klingt.
+Vielleicht brauch ich dein "Bleib" wie du mein "Ich bin da",
+und wir nennen's Rettung, obwohl es uns brach.
+
+[Verse 3]
+Ich will helfen, ohne mich zu verlieren,
+will bleiben, ohne mich zu verbiegen.
+Will "da sein" sagen, ohne "ich sterb" zu meinen,
+will Liebe nicht länger mit Leistung verwechseln.
+Der Realist sieht, was real ist: ich auch.
+Und real ist: Ich brauch mich. Nicht nur euch.
+Doch heute bin ich noch diese Stimme im Dunkeln,
+die sagt: "Atme. Ich bin da."
+während ich selbst schon Wasser schlucke.
+
+[Final Hook]
+Ich bin dein Anker, auch wenn ich sinke,
+ich geb dir Luft, auch wenn ich sie nicht finde.
+Ich halt dich oben, ich halt dich fest,
+doch diesmal lass ich auch mich nicht mehr weg.
+Und ich brenn für dich, doch ich lern im Blick:
+Ich darf mich lieben. Nicht nur dich.
+
+[Outro]
+dein Anker.
+aber manchmal...
+wär ich gern auch meiner.`,
+  },
+  {
+    id: 'mehrarbeit',
+    title: 'MEHRARBEIT',
+    character: 'SHIFT',
+    phase: 2,
+    text: String.raw`[Intro]
+Der Wecker klingelt.
+Und irgendwo drin klingelt was mit.
+Ich wollt nur leben...
+aber alles fühlt sich an wie Schicht.
+
+[Hook]
+Mehrarbeit, mehr Tage, mehr Pflicht, weniger Ich,
+ich wollt nur leben, doch das Leben wurde Schicht.
+Kraft ist nur Geld, wenn du sie irgendwo abgibst,
+und wenn du müde bist, heißt's: "Dann bist du halt nichts."
+
+[Verse 1]
+Ich sitz auf Klo und merke: Ich werd leise von innen,
+nicht weil ich will, sondern weil ich sonst anfange zu spinnen.
+Ich wollt nur Nähe, doch Nähe klingt wie "Termin",
+und selbst ein freier Abend fühlt sich an wie ein Gewinn.
+Ich sammel Beweise, dass ich überhaupt noch funktionier,
+als wär mein Herz ein Gerät, das jeden Tag repariert.
+Und wenn ich's nicht schaffe, heißt es: "Mach doch einfach mehr",
+als wär Müdigkeit nur Faulheit in einem anderen Verkehr.
+Mein Kopf zählt Stunden, mein Bauch zählt Angst,
+Privat ist nur Pause, die du dir nicht ganz erlauben kannst.
+Und irgendwann wird selbst das Atmen schwer,
+weil du dich dabei schon fragst, ob es was bringt. Ob du was wärst.
+
+[Hook]
+Mehrarbeit, mehr Tage, mehr Pflicht, weniger Ich,
+ich wollt nur leben, doch das Leben wurde Schicht.
+Kraft ist nur Geld, wenn du sie irgendwo abgibst,
+und wenn du müde bist, heißt's: "Dann bist du halt nichts."
+
+[Verse 2]
+Mein Vater roch nach Werk, nach Öl, nach "war viel heute",
+er sagte nie "ich bin müde", nur "passt schon", und grinste dabei, Leute.
+Früh war immer früher, Samstag war fast normal,
+und Zuhause war ein Ort, aber selten ein Saal zum Ausruhn, egal.
+Ich hab Kisten geschleppt, bis die Hände sich erinnern,
+und man nennt dich "stark", wenn du lernst, dich zu verhindern.
+Andere hatten Büros, wir hatten Stechuhr und Staub,
+und Respekt gab's nur, wenn du dich selbst dafür raubst.
+"Streng dich an", sagten sie, "dann wirst du's mal besser haben",
+aber ich merkte: Du rennst nur weiter, nur auf anderen Straßen.
+Mehrarbeit ist Erbe, nicht mal böse gemeint,
+nur dieses alte Gesetz: Wer nicht liefert, ist scheinbar zu klein.
+
+[Hook]
+Mehrarbeit, mehr Tage, mehr Pflicht, weniger Ich,
+ich wollt nur leben, doch das Leben wurde Schicht.
+Kraft ist nur Geld, wenn du sie irgendwo abgibst,
+und wenn du müde bist, heißt's: "Dann bist du halt nichts."
+
+[Bridge]
+Ich war ein Kind, das gehalten hat, was zu groß war für ein Kind,
+jetzt bin ich ein Mensch, der sich selbst nicht mehr findet.
+Wenn Kraft gleich Wert ist, dann bin ich wertlos, sobald ich ruh,
+und genau das ist der Fehler, den ich nicht mehr wegdrücken tu.
+
+[Final Hook]
+Mehrarbeit, mehr Tage, mehr Pflicht, weniger Ich,
+ich wollt nur leben, doch das Leben wurde Schicht.
+Kraft ist nur Geld, wenn du sie irgendwo abgibst,
+und wenn du müde bist, heißt's: "Dann bist du halt nichts."
+
+[Outro]
+Vielleicht bin ich nicht faul.
+Vielleicht bin ich nur leer.
+Und vielleicht ist das hier nicht mein Fehler...
+sondern das System, das mich so nennt.`,
+  },
+];
+
+const metadata = {
+  title: t('Lyrics Vault', 'Lyrics Vault'),
+  description: t('Vollstaendiges Songtext-Archiv, gruppiert nach Phase und Charakter.', 'Full song archive grouped by phase and character.'),
+};
+
+const phaseLabel = (phase: 1 | 2) =>
+  phase === 1 ? t('Phase 1 - Ursprung', 'Phase 1 - Origin') : t('Phase 2 - Suche und Bruch', 'Phase 2 - Search and fracture');
+
+const phaseGroups = [1, 2].map((phase) => {
+  const songsInPhase = songs.filter((song) => song.phase === phase);
+
+  const byCharacter = characterOrder
+    .map((character) => ({
+      character,
+      songs: songsInPhase.filter((song) => song.character === character),
+    }))
+    .filter((entry) => entry.songs.length > 0);
+
+  return { phase: phase as 1 | 2, byCharacter };
+});
+---
+
+<Layout metadata={metadata}>
+  <section class="lyrics-shell min-h-screen px-4 sm:px-6 py-10 md:py-14">
+    <header class="max-w-6xl mx-auto mb-8">
+      <p class="boot">LYRICS_ARCHIVE // PHASE_INDEX // LATEST_ONLY</p>
+      <h1 class="text-4xl md:text-6xl font-bold tracking-tight uppercase">Lyrics Vault</h1>
+      <p class="mt-3 text-sm text-gray-300 max-w-3xl">
+        {t(
+          'Alle Songtexte in deutscher Originalfassung. Die UI ist bilingual, die Lyrics bleiben bewusst im Original.',
+          'All song texts are kept in original German. The UI shell is bilingual.'
+        )}
+      </p>
+
+      <div class="route-links">
+        <a href={`/${lang}/system-logs`}>{t('Zurueck zu System Logs', 'Back to System Logs')}</a>
+        <a href={`/${lang}/musik`}>{t('Zurueck zu Sonic Archive', 'Back to Sonic Archive')}</a>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto space-y-8">
+      <section class="toolbar" aria-label={t('Lyrics Filter', 'Lyrics filter')}>
+        <div class="chip-row" id="character-chips">
+          <button type="button" class="chip active" data-character="ALL">ALL</button>
+          {characterOrder.map((character) => (
+            <button type="button" class="chip" data-character={character}>{character}</button>
+          ))}
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" class="tool-btn" id="expand-all">{t('Alle aufklappen', 'Expand all')}</button>
+          <button type="button" class="tool-btn" id="collapse-all">{t('Alle einklappen', 'Collapse all')}</button>
+        </div>
+      </section>
+
+      {
+        phaseGroups.map((group) => (
+          <section class="phase-block" data-phase={group.phase}>
+            <header class="phase-head">
+              <h2>{phaseLabel(group.phase)}</h2>
+            </header>
+
+            <div class="character-columns">
+              {
+                group.byCharacter.map((bucket) => (
+                  <section class="character-group" data-character-group={bucket.character}>
+                    <h3>{bucket.character}</h3>
+                    <div class="songs-grid">
+                      {
+                        bucket.songs.map((song) => (
+                          <article class="song-card" data-song-card data-character={song.character} id={song.id}>
+                            <details>
+                              <summary>
+                                <span class="title-wrap">
+                                  <strong>{song.title}</strong>
+                                  <small>{song.character}</small>
+                                </span>
+                                <a class="anchor-link" href={`#${song.id}`} aria-label={`${song.title} anchor`}>#</a>
+                              </summary>
+                              <pre>{song.text}</pre>
+                            </details>
+                          </article>
+                        ))
+                      }
+                    </div>
+                  </section>
+                ))
+              }
+            </div>
+          </section>
+        ))
+      }
+    </main>
+  </section>
+</Layout>
+
+<script>
+  const chips = Array.from(document.querySelectorAll('#character-chips .chip'));
+  const cards = Array.from(document.querySelectorAll('[data-song-card]'));
+  const groups = Array.from(document.querySelectorAll('[data-character-group]'));
+  const expandAll = document.getElementById('expand-all');
+  const collapseAll = document.getElementById('collapse-all');
+
+  const applyFilter = (character: string) => {
+    cards.forEach((card) => {
+      const show = character === 'ALL' || card.getAttribute('data-character') === character;
+      card.classList.toggle('hidden', !show);
+    });
+
+    groups.forEach((group) => {
+      const charName = group.getAttribute('data-character-group');
+      const groupVisible = character === 'ALL' || charName === character;
+      group.classList.toggle('hidden', !groupVisible);
+    });
+  };
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((node) => node.classList.remove('active'));
+      chip.classList.add('active');
+      applyFilter(chip.getAttribute('data-character') || 'ALL');
+    });
+  });
+
+  expandAll?.addEventListener('click', () => {
+    document.querySelectorAll('.song-card details').forEach((node) => node.setAttribute('open', 'true'));
+  });
+
+  collapseAll?.addEventListener('click', () => {
+    document.querySelectorAll('.song-card details').forEach((node) => node.removeAttribute('open'));
+  });
+</script>
+
+<style>
+  .lyrics-shell {
+    background:
+      radial-gradient(circle at 10% -10%, rgba(34, 197, 94, 0.16), transparent 30%),
+      radial-gradient(circle at 90% 10%, rgba(14, 165, 233, 0.14), transparent 28%),
+      #05070d;
+    color: #e2e8f0;
+  }
+
+  .boot {
+    color: #22d3ee;
+    letter-spacing: 0.12em;
+    font-size: 0.72rem;
+  }
+
+  .route-links {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .route-links a {
+    border: 1px solid #334155;
+    color: #cbd5e1;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .route-links a:hover {
+    border-color: #22d3ee;
+    color: #22d3ee;
+  }
+
+  .toolbar {
+    border: 1px solid #334155;
+    background: rgba(2, 6, 23, 0.85);
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    border: 1px solid #475569;
+    color: #cbd5e1;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: 0.2s ease;
+  }
+
+  .chip.active,
+  .chip:hover {
+    border-color: #22d3ee;
+    color: #22d3ee;
+    background: rgba(8, 47, 73, 0.45);
+  }
+
+  .toolbar-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tool-btn {
+    border: 1px solid #22c55e;
+    color: #22c55e;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .tool-btn:hover {
+    background: rgba(34, 197, 94, 0.2);
+  }
+
+  .phase-block {
+    border: 1px solid #334155;
+    background: rgba(2, 6, 23, 0.8);
+    padding: 0.8rem;
+  }
+
+  .phase-head {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 0.55rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .phase-head h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .character-columns {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1fr;
+  }
+
+  .character-group {
+    border: 1px solid #293548;
+    background: rgba(3, 7, 18, 0.82);
+    padding: 0.7rem;
+  }
+
+  .character-group h3 {
+    color: #67e8f9;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px dashed #334155;
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .songs-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  @media (min-width: 1024px) {
+    .character-columns {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .song-card {
+    border: 1px solid #334155;
+    background: rgba(3, 7, 18, 0.88);
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .song-card summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem;
+    gap: 0.6rem;
+  }
+
+  .song-card summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .title-wrap strong {
+    display: block;
+    color: #f8fafc;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+  }
+
+  .title-wrap small {
+    color: #22d3ee;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .anchor-link {
+    border: 1px solid #475569;
+    color: #93c5fd;
+    width: 1.6rem;
+    height: 1.6rem;
+    display: inline-grid;
+    place-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .anchor-link:hover {
+    border-color: #22d3ee;
+    color: #22d3ee;
+  }
+
+  .song-card pre {
+    margin: 0;
+    border-top: 1px solid #334155;
+    padding: 0.75rem;
+    white-space: pre-wrap;
+    font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.76rem;
+    line-height: 1.45;
+    color: #d1d5db;
+    max-height: 34rem;
+    overflow: auto;
+  }
+</style>
