@@ -165,7 +165,7 @@ const metadata = {
     }
   }
 
-  function loadTrack(index: number) {
+  function loadTrack(index: number, shouldNavigate = false) {
     if (index < 0 || index >= tracks.length) return;
     currentIndex = index;
 
@@ -193,14 +193,14 @@ const metadata = {
       }
     }
 
-    if (!audioSrc && href) {
+    if (shouldNavigate && !audioSrc && href) {
       window.location.href = href;
     }
   }
 
   tracks.forEach((track, idx) => {
     track.addEventListener('click', () => {
-      loadTrack(idx);
+      loadTrack(idx, true);
       if (audio && track.dataset.audio) {
         isPlaying = true;
         audio.play().catch(() => {
@@ -230,13 +230,13 @@ const metadata = {
   prevBtn?.addEventListener('click', () => {
     if (tracks.length === 0) return;
     const nextIndex = currentIndex <= 0 ? tracks.length - 1 : currentIndex - 1;
-    loadTrack(nextIndex);
+    loadTrack(nextIndex, false);
   });
 
   nextBtn?.addEventListener('click', () => {
     if (tracks.length === 0) return;
     const nextIndex = currentIndex >= tracks.length - 1 ? 0 : currentIndex + 1;
-    loadTrack(nextIndex);
+    loadTrack(nextIndex, false);
   });
 
   audio?.addEventListener('ended', () => {
@@ -245,7 +245,7 @@ const metadata = {
   });
 
   if (tracks.length > 0) {
-    loadTrack(0);
+    loadTrack(0, false);
   }
 
   syncVisualState();

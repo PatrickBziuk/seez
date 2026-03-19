@@ -1,6 +1,5 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/PageLayout.astro';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
@@ -9,111 +8,380 @@ export const getStaticPaths = (() => SUPPORTED_LANGUAGES.map((lang) => ({ params
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
-const lifeEntries = (await getCollection('life'))
-  .filter((entry) => {
-    const data = entry.data as { language?: string; draft?: boolean; publicationStatus?: string };
-    return !data.draft && data.publicationStatus !== 'draft' && (data.language === lang || (!data.language && lang === 'en'));
-  })
-  .sort((a, b) => {
-    const aDate = new Date((a.data.firstPublishedAt || a.data.publishDate || a.data.date || 0) as string | number | Date).getTime();
-    const bDate = new Date((b.data.firstPublishedAt || b.data.publishDate || b.data.date || 0) as string | number | Date).getTime();
-    return bDate - aDate;
-  })
-  .slice(0, 3)
-  .map((entry) => ({
-    title: entry.data.title,
-    description: entry.data.description,
-    href: `/${lang}/life/${entry.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`,
-  }));
+const t = (de: string, en: string) => (lang === 'de' ? de : en);
+
+const evidenceCards = [
+  {
+    id: 'LOG-001',
+    title: t('Tumblr Era / zeilenliebe', 'Tumblr Era / zeilenliebe'),
+    stamp: '2014-2016',
+    text: t(
+      '15k Follower, Q&A Fragmente, alte Posts als Ursprung der Splinter-Stimme.',
+      '15k followers, Q&A fragments, legacy posts as source of the Splinter voice.'
+    ),
+  },
+  {
+    id: 'LOG-002',
+    title: t('Skizzenarchiv', 'Sketch Archive'),
+    stamp: '2015+',
+    text: t(
+      'Unknown, Drift und weitere Charakter-Skizzen als Rohmaterial fuer die heutige Visual Pipeline.',
+      'Unknown, Drift and other character sketches as raw material for today\'s visual pipeline.'
+    ),
+  },
+  {
+    id: 'LOG-003',
+    title: t('Legacy Wear', 'Legacy Wear'),
+    stamp: '2014',
+    text: t(
+      'Fruehe Hoodie- und Merch-Versuche als erster Community-Beweis.',
+      'Early hoodie and merch attempts as first community proof.'
+    ),
+  },
+  {
+    id: 'LOG-004',
+    title: t('Systemwechsel zu SEEZ', 'Transition to SEEZ'),
+    stamp: '2025-2026',
+    text: t(
+      'Migration von alten Identitaeten in ein gemeinsames Universum aus Text, Musik und Figuren.',
+      'Migration from old identities into one universe of text, music, and characters.'
+    ),
+  },
+];
+
+const phaseOneSongs = [
+  'Aufstiegstraum (Shift)',
+  'Listen & Lichter (Splinter)',
+  'Weisses Rauschen (Drift)',
+  'Hedwig (Unknown)',
+  'Mondstein (Drift)',
+  'Questlog (Lume)',
+  'CVE-10 (Gl1tch)',
+  'Tumblr Traeume (Splinter)',
+  'Fuck Suno (Gl1tch)',
+  'Kiffen Kippen Alk (Drift)',
+  'Illegale Aliens (Unknown)',
+  'Spiegelkrise (Splinter)',
+];
+
+const phaseTwoSongs = [
+  'Maskenspiel (Splinter)',
+  'Schichtliebe (Shift)',
+  'Genaeht (Splinter)',
+  'Als sie (Unknown)',
+  'Herz klopft, Kopf platzt (Drift)',
+  'Ich will leuchten (Lume)',
+  'Dein Anker (Lume)',
+  'Target Audience (Gl1tch)',
+  'Schmetterlingsmoment (Lume)',
+  'Nachtgedanken (Splinter)',
+  'Zwischenraeume (Unknown)',
+  'Mehrarbeit (Shift)',
+];
+
+const styleSystem = [
+  {
+    char: 'Splinter',
+    device: t('Notizblock', 'Notebook'),
+    desc: t(
+      'Skizzen, Szenen, Gedanken, Entwuerfe, Poesie und roher Schmerz.',
+      'Sketches, scenes, thoughts, drafts, poetry, and raw pain.'
+    ),
+  },
+  {
+    char: 'Gl1tch',
+    device: t('Codeblock', 'Code Block'),
+    desc: t(
+      'Tech-Liebe und der Versuch, Liebe, Ethik und Identitaet zu formalisieren.',
+      'Love for tech and the attempt to formalize love, ethics, and identity.'
+    ),
+  },
+  {
+    char: 'Lume',
+    device: t('Klappentexte', 'Blurb Fragments'),
+    desc: t(
+      'Lume denkt in Buechern und Fandom-Arcs, als waere jedes Kapitel ein Portal.',
+      'Lume thinks in books and fandom arcs, as if every chapter were a portal.'
+    ),
+  },
+  {
+    char: 'Lume',
+    device: t('Wiki/Fandomartikel', 'Wiki/Fandom Article'),
+    desc: t(
+      'Lume pflegt die Wissensbasis der Splitter, Gl1tch liefert die Infrastruktur.',
+      'Lume curates the splitter knowledge base, Gl1tch builds the infrastructure.'
+    ),
+  },
+  {
+    char: 'Drift',
+    device: t('Tumblr-Post', 'Tumblr Post'),
+    desc: t(
+      'Affekt, Geschwindigkeit, keine Schutzschicht: raus in die Welt, sofort.',
+      'Impulse, speed, no guardrails: straight into the world.'
+    ),
+  },
+];
 
 const metadata = {
-  title: lang === 'de' ? 'System Logs' : 'System Logs',
-  description:
-    lang === 'de'
-      ? 'Archivseite mit Zeitleiste, Fragmenten und Legacy-Einträgen.'
-      : 'Archive page with timeline, fragments and legacy entries.',
+  title: 'System Logs',
+  description: t(
+    'Erweitertes Archiv mit Beweis-Locker, Creative Engine, Song-Phasen und Buch-Dossier.',
+    'Expanded archive with evidence locker, creative engine, song phases, and book dossier.'
+  ),
 };
 ---
 
 <Layout metadata={metadata}>
   <section class="logs-shell min-h-screen">
     <div class="scanlines" aria-hidden="true"></div>
+    <div class="grid-bg" aria-hidden="true"></div>
 
-    <header class="max-w-5xl mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-10">
-      <p class="text-xs text-lime-400 opacity-80 font-mono">&gt; MOUNTING: /mnt/legacy_data</p>
-      <h1 class="text-4xl md:text-6xl font-bold tracking-tight mt-3 glitch" data-text="SYSTEM LOGS: SEEZ_ARCHIVE">
-        SYSTEM LOGS: SEEZ_ARCHIVE
+    <header class="max-w-6xl mx-auto px-4 sm:px-6 pt-10 md:pt-16 pb-10 relative z-10">
+      <p class="bootline">&gt; SYSTEM BOOT: SEEZ_ARCHIVE // MODULE: PROOF_CORE</p>
+      <h1 class="glitch text-4xl md:text-6xl font-bold tracking-tight" data-text="SEEZ // SYSTEM LOGS">
+        SEEZ // SYSTEM LOGS
       </h1>
-      <p class="text-gray-400 max-w-2xl mt-5 text-sm md:text-base border-l-2 border-lime-500 pl-4">
-        {
-          lang === 'de'
-            ? 'Beschädigte Datenspur. Hier liegen Ursprung, Brüche und der Übergang in das heutige Seez-Universum.'
-            : 'Corrupted data trail. This archive holds origin, fractures, and the transition into today’s Seez universe.'
-        }
+      <p class="text-gray-300 text-sm md:text-base max-w-3xl mt-5 border-l-2 border-lime-500 pl-4">
+        {t(
+          'Dies ist der Maschinenraum: Beweise, Fragmente, Prozess und Timeline. Die Struktur ist so aufgebaut, dass du spaeter neue Proof-Entries modular ergaenzen kannst.',
+          'This is the machine room: proofs, fragments, process, and timeline. The structure is built so you can add new proof entries later without redesign.'
+        )}
       </p>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 pb-20 space-y-14">
-      <section class="log-card">
-        <p class="badge">LOG_ID: SPLINTER_ORIGIN</p>
-        <h2 class="text-2xl md:text-3xl font-bold mt-3">{lang === 'de' ? 'Der Riss im Selbstbild' : 'The fracture in self-image'}</h2>
-        <p class="text-sm text-gray-300 mt-4 leading-relaxed">
-          {lang === 'de'
-            ? 'Kein Branding-Mythos. Ein echter Bruchpunkt, aus dem später Figuren, Songs und Texte entstanden sind.'
-            : 'Not a branding myth. A real breaking point that later evolved into characters, songs, and texts.'}
-        </p>
-      </section>
-
-      <section>
-        <div class="flex items-center justify-between gap-3 mb-4">
-          <h2 class="text-2xl font-bold">{lang === 'de' ? 'Legacy Timeline' : 'Legacy Timeline'}</h2>
-          <a class="text-xs text-cyan-300 hover:underline" href={`/${lang}/blog`}>{lang === 'de' ? 'Zum Blog' : 'Open Blog'}</a>
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20 space-y-16 relative z-10">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>{t('Creative Engine', 'Creative Engine')}</h2>
+          <span class="status">LIVE PROCESS</span>
         </div>
 
-        {
-          lifeEntries.length === 0 ? (
-            <p class="text-sm text-gray-400">{lang === 'de' ? 'Noch keine Legacy-Einträge.' : 'No legacy entries yet.'}</p>
-          ) : (
-            <ul class="space-y-3">
-              {lifeEntries.map((entry) => (
-                <li>
-                  <a href={entry.href} class="timeline-item block">
-                    <h3 class="font-semibold text-white">{entry.title}</h3>
-                    {entry.description && <p class="text-sm text-gray-400 mt-1 line-clamp-2">{entry.description}</p>}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )
-        }
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div class="space-y-4">
+            <article class="step step-blue">
+              <h3>INPUT: RAW EMOTION</h3>
+              <p>{t('Gedankenfetzen, alte Notizen, rohe Situationen aus Jugend, Internet und Beziehungen.', 'Thought fragments, old notes, and raw situations from youth, internet, and relationships.')}</p>
+            </article>
+            <article class="step step-purple">
+              <h3>PROCESS: ITERATION</h3>
+              <p>{t('KI als Portal fuer Varianten: Stimme, Perspektive, Rhythmus. Danach harte menschliche Selektion.', 'AI as portal for variations: voice, perspective, rhythm. Then strict human selection.')}</p>
+            </article>
+            <article class="step step-green">
+              <h3>OUTPUT: AUTHENTICITY</h3>
+              <p>{t('Das Endergebnis ist kein Zufall. Es ist kuratiert, geschichtet und final bewusst entschieden.', 'The output is not random. It is curated, layered, and deliberately decided.')}</p>
+            </article>
+          </div>
+
+          <div class="terminal-window">
+            <div class="terminal-head">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+              <span class="terminal-title">gl1tch_core // runtime</span>
+            </div>
+            <div id="terminal-output" class="terminal-body"></div>
+          </div>
+        </div>
       </section>
 
-      <section class="terminal">
-        <p>&gt; root@seez:~$ check_integrity</p>
-        <p class="ok">✓ Evidence verified</p>
-        <p class="ok">✓ Timeline consistent</p>
-        <p>&gt; root@seez:~$ next_step</p>
-        <p class="text-gray-400">_ waiting for phase progression ...</p>
+      <section class="panel">
+        <div class="panel-head">
+          <h2>{t('Evidence Locker', 'Evidence Locker')}</h2>
+          <span class="status">PROOF STORAGE</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {evidenceCards.map((item) => (
+            <article class="evidence-card">
+              <div class="flex items-center justify-between gap-3">
+                <p class="badge">{item.id}</p>
+                <span class="stamp">{item.stamp}</span>
+              </div>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+
+        <details class="expand-block mt-5" open>
+          <summary>{t('Space for future proof entries', 'Space for future proof entries')}</summary>
+          <div class="expand-body">
+            <p>{t('Empfohlene Struktur: Datum, Quelle, Medium (Bild/Video/Text), Kontext, Verifikation, Link.', 'Recommended structure: date, source, medium (image/video/text), context, verification, link.')}</p>
+            <p>{t('Damit kannst du spaeter schnell neue Belege einpflegen, ohne das Layout zu brechen.', 'This keeps future entries consistent without breaking the layout.')}</p>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>{t('Song Phase Archive', 'Song Phase Archive')}</h2>
+          <span class="status">ROADMAP</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <article class="phase-card">
+            <h3>PHASE 1</h3>
+            <p class="phase-sub">{t('Kindheit, Pubertaet, Tumblr. Leitmotiv: Warum bin ich so geworden?', 'Childhood, puberty, Tumblr. Leitmotif: Why did I become this way?')}</p>
+            <ul>
+              {phaseOneSongs.map((song) => (
+                <li><input type="checkbox" disabled /> <span>{song}</span></li>
+              ))}
+            </ul>
+          </article>
+
+          <article class="phase-card">
+            <h3>PHASE 2</h3>
+            <p class="phase-sub">{t('Systemkritik, Ueberforderung, Beziehungscrash. Leitmotiv: Warum funktioniert Reparieren nicht?', 'System criticism, overload, relationship crash. Leitmotif: Why does repair not work?')}</p>
+            <ul>
+              {phaseTwoSongs.map((song) => (
+                <li><input type="checkbox" disabled /> <span>{song}</span></li>
+              ))}
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>{t('Book Dossier', 'Book Dossier')}</h2>
+          <span class="status">SEELENSPLITTER</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <details class="expand-block" open>
+            <summary>{t('Vorwort - Kernfassung', 'Foreword - Core Version')}</summary>
+            <div class="expand-body prose-lite">
+              <p>{t('Seelensplitter ist keine lineare Biografie, sondern eine Autofiktion aus realen Gefuehlen, gebuendelten Erinnerungen und geschuetzten Details.', 'Seelensplitter is not a linear biography but autofiction built from real emotions, compressed memories, and protected details.')}</p>
+              <p>{t('Die sechs Figuren sind Perspektiven auf dasselbe Ich: Drift, Splinter, Shift, Lume, Unknown, Gl1tch.', 'The six figures are perspectives on the same self: Drift, Splinter, Shift, Lume, Unknown, Gl1tch.')}</p>
+            </div>
+          </details>
+
+          <details class="expand-block" open>
+            <summary>{t('Nachwort - Kernfassung', 'Afterword - Core Version')}</summary>
+            <div class="expand-body prose-lite">
+              <p>{t('Das Buch will nicht beweisen, dass alles exakt so passiert ist. Es will emotional wahr sein und Verantwortung sichtbar machen.', 'The book does not try to prove every event happened exactly as told. It aims for emotional truth and visible responsibility.')}</p>
+              <p>{t('Leitidee: Wir sind Fragmente. Getrennt verletzlich. Zusammen ein Panorama.', 'Core idea: We are fragments. Vulnerable apart. A panorama together.')}</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>{t('Character Style Matrix', 'Character Style Matrix')}</h2>
+          <span class="status">WRITING DEVICE MAP</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {styleSystem.map((item) => (
+            <article class="style-card">
+              <p class="style-char">{item.char}</p>
+              <p class="style-device">{item.device}</p>
+              <p class="style-desc">{item.desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="manifesto">
+        <h2 class="glitch" data-text="06.06.2026">06.06.2026</h2>
+        <p>
+          {t(
+            'Ich ersetze kein Team. Ich bin das Team. KI ist Werkzeug, nicht Ursprung.',
+            'I am not replacing a team. I am the team. AI is a tool, not the origin.'
+          )}
+        </p>
+        <a class="manifesto-link" href={`/${lang}/kreatives`}>{t('Zum Creative Core', 'Open Creative Core')}</a>
       </section>
     </main>
   </section>
 </Layout>
 
+<script>
+  const terminalOutput = document.getElementById('terminal-output');
+  const logs = [
+    '> init_archive --domain=seez.eu',
+    'Loading memory fragments...',
+    'Found Tumblr backups: 15k follower traces',
+    '> run_pipeline --mode=creative_core',
+    'Input stream: sketches, logs, songs, chapters',
+    'Processing style matrix... OK',
+    'Mapping splitters to song phases... OK',
+    '> validate_truth_consistency',
+    'Result: emotional_truth=verified',
+    'Result: timeline=stable',
+    'System status: OPERATIONAL',
+  ];
+
+  let index = 0;
+  const nextLog = () => {
+    if (!terminalOutput || index >= logs.length) return;
+
+    const line = document.createElement('p');
+    line.className = 'terminal-line';
+    line.textContent = logs[index];
+
+    if (logs[index].includes('>')) line.classList.add('cmd');
+    if (logs[index].includes('OK') || logs[index].includes('verified') || logs[index].includes('OPERATIONAL')) {
+      line.classList.add('ok');
+    }
+
+    terminalOutput.appendChild(line);
+    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    index += 1;
+
+    if (index < logs.length) {
+      setTimeout(nextLog, 520);
+    } else {
+      const cursor = document.createElement('p');
+      cursor.className = 'terminal-line cursor';
+      cursor.textContent = '_';
+      terminalOutput.appendChild(cursor);
+    }
+  };
+
+  window.addEventListener('load', () => setTimeout(nextLog, 350));
+</script>
+
 <style>
   .logs-shell {
-    background: #050505;
+    --bg: #050505;
+    --line: rgba(34, 211, 238, 0.15);
+    background:
+      radial-gradient(circle at 15% -10%, rgba(0, 255, 65, 0.1), transparent 30%),
+      radial-gradient(circle at 90% 10%, rgba(0, 243, 255, 0.12), transparent 30%),
+      var(--bg);
     color: #e5e7eb;
     position: relative;
+    overflow: hidden;
+  }
+
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.25;
+    z-index: 0;
   }
 
   .scanlines {
     position: fixed;
     inset: 0;
-    pointer-events: none;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.24) 50%, rgba(0, 0, 0, 0.24));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.2));
     background-size: 100% 4px;
+    z-index: 40;
+    pointer-events: none;
     opacity: 0.35;
-    z-index: 1;
+  }
+
+  .bootline {
+    color: #4ade80;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
   }
 
   .glitch {
@@ -130,54 +398,318 @@ const metadata = {
 
   .glitch::before {
     transform: translateX(2px);
-    color: rgba(34, 211, 238, 0.45);
-    clip-path: inset(35% 0 50% 0);
+    color: rgba(255, 0, 85, 0.5);
+    clip-path: inset(42% 0 40% 0);
+    animation: glitch-a 2.5s infinite linear alternate-reverse;
   }
 
   .glitch::after {
     transform: translateX(-2px);
-    color: rgba(244, 63, 94, 0.5);
-    clip-path: inset(60% 0 10% 0);
+    color: rgba(0, 255, 65, 0.5);
+    clip-path: inset(8% 0 74% 0);
+    animation: glitch-b 3.1s infinite linear alternate-reverse;
   }
 
-  .log-card {
-    border: 1px solid #27272a;
-    background: rgba(12, 12, 12, 0.9);
-    padding: 1.1rem;
+  @keyframes glitch-a {
+    0% {
+      clip-path: inset(16% 0 74% 0);
+    }
+    100% {
+      clip-path: inset(70% 0 10% 0);
+    }
+  }
+
+  @keyframes glitch-b {
+    0% {
+      clip-path: inset(72% 0 6% 0);
+    }
+    100% {
+      clip-path: inset(8% 0 65% 0);
+    }
+  }
+
+  .panel {
+    border: 1px solid #243042;
+    background: rgba(9, 11, 18, 0.84);
+    padding: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .panel {
+      padding: 1.25rem;
+    }
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #1f2937;
+    padding-bottom: 0.7rem;
+  }
+
+  .panel-head h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .status {
+    font-size: 0.68rem;
+    color: #67e8f9;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .step {
+    border-left: 3px solid #334155;
+    background: rgba(2, 6, 23, 0.75);
+    padding: 0.8rem;
+  }
+
+  .step h3 {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.35rem;
+  }
+
+  .step p {
+    color: #cbd5e1;
+    font-size: 0.82rem;
+  }
+
+  .step-blue {
+    border-left-color: #0ea5e9;
+  }
+
+  .step-purple {
+    border-left-color: #a855f7;
+  }
+
+  .step-green {
+    border-left-color: #22c55e;
+  }
+
+  .terminal-window {
+    border: 1px solid #2d3748;
+    background: rgba(2, 6, 23, 0.88);
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .terminal-head {
+    border-bottom: 1px solid #2d3748;
+    padding: 0.45rem 0.65rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+  }
+
+  .red {
+    background: #f43f5e;
+  }
+
+  .yellow {
+    background: #fbbf24;
+  }
+
+  .green {
+    background: #22c55e;
+  }
+
+  .terminal-title {
+    margin-left: 0.45rem;
+    font-size: 0.72rem;
+    color: #94a3b8;
+  }
+
+  .terminal-body {
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    overflow: auto;
+    max-height: 320px;
+  }
+
+  .terminal-line {
+    color: #cbd5e1;
+    margin-bottom: 0.3rem;
+  }
+
+  .terminal-line.cmd {
+    color: #60a5fa;
+  }
+
+  .terminal-line.ok {
+    color: #4ade80;
+  }
+
+  .terminal-line.cursor {
+    animation: blink 1s step-start infinite;
+    color: #4ade80;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .evidence-card {
+    border: 1px solid #293548;
+    background: rgba(3, 7, 18, 0.76);
+    padding: 0.85rem;
   }
 
   .badge {
-    display: inline-block;
-    border: 1px solid #ef4444;
-    color: #ef4444;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.45rem;
+    border: 1px solid #f43f5e;
+    color: #f43f5e;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.45rem;
     letter-spacing: 0.08em;
   }
 
-  .timeline-item {
-    border-left: 2px solid #3f3f46;
-    padding-left: 0.75rem;
-    background: rgba(9, 9, 11, 0.8);
-    padding-top: 0.55rem;
-    padding-bottom: 0.55rem;
+  .stamp {
+    color: #93c5fd;
+    font-size: 0.72rem;
+  }
+
+  .evidence-card h3 {
+    margin-top: 0.55rem;
+    font-size: 1.03rem;
+    font-weight: 600;
+  }
+
+  .evidence-card p {
+    margin-top: 0.45rem;
+    font-size: 0.86rem;
+    color: #cbd5e1;
+  }
+
+  .expand-block {
+    border: 1px solid #293548;
+    background: rgba(2, 6, 23, 0.65);
+  }
+
+  .expand-block summary {
+    cursor: pointer;
+    padding: 0.75rem;
+    font-size: 0.86rem;
+    color: #67e8f9;
+  }
+
+  .expand-body {
+    border-top: 1px solid #293548;
+    padding: 0.75rem;
+    font-size: 0.86rem;
+    color: #cbd5e1;
+  }
+
+  .expand-body p + p {
+    margin-top: 0.5rem;
+  }
+
+  .phase-card {
+    border: 1px solid #2b3648;
+    background: rgba(2, 6, 23, 0.75);
+    padding: 0.9rem;
+  }
+
+  .phase-card h3 {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #e2e8f0;
+  }
+
+  .phase-sub {
+    font-size: 0.78rem;
+    color: #93c5fd;
+    margin-top: 0.35rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .phase-card ul {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .phase-card li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.83rem;
+    color: #cbd5e1;
+  }
+
+  .phase-card input {
+    accent-color: #22c55e;
+  }
+
+  .style-card {
+    border: 1px solid #283548;
+    background: rgba(2, 6, 23, 0.72);
+    padding: 0.8rem;
+  }
+
+  .style-char {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #22d3ee;
+  }
+
+  .style-device {
+    font-size: 1rem;
+    margin-top: 0.3rem;
+    font-weight: 600;
+    color: #f8fafc;
+  }
+
+  .style-desc {
+    margin-top: 0.4rem;
+    font-size: 0.84rem;
+    color: #cbd5e1;
+  }
+
+  .manifesto {
+    text-align: center;
+    border-top: 1px solid #1f2937;
+    padding-top: 2rem;
+  }
+
+  .manifesto h2 {
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    font-weight: 700;
+  }
+
+  .manifesto p {
+    margin-top: 0.6rem;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+  }
+
+  .manifesto-link {
+    margin-top: 1rem;
+    display: inline-block;
+    border: 1px solid #4ade80;
+    color: #4ade80;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     transition: 0.2s ease;
   }
 
-  .timeline-item:hover {
-    border-left-color: #22d3ee;
-    transform: translateX(3px);
-  }
-
-  .terminal {
-    border: 1px solid #27272a;
-    background: #040404;
-    padding: 1rem;
-    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.78rem;
-  }
-
-  .ok {
-    color: #4ade80;
+  .manifesto-link:hover {
+    background: #4ade80;
+    color: #020617;
   }
 </style>
