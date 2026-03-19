@@ -141,8 +141,8 @@ const {
           console.groupEnd();
         }
 
-        // Send alerts for critical regressions
-        if (report.regressions.length > 0) {
+        // Avoid noisy console warnings in production; keep alerts available for debug sessions.
+        if (this.debug && report.regressions.length > 0) {
           this.sendAlert(report);
         }
       }
