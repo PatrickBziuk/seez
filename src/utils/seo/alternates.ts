@@ -21,12 +21,14 @@ export function buildAlternates(
 ): AlternateLink[] {
   // Extract pathname without language prefix
   const pathname = astroAPI.url.pathname;
-  const stripped = pathname.replace(/^\/(en|de)\//, '');
+  const stripped = pathname.replace(/^\/(en|de)(\/|$)/, '/');
+  const normalizedStripped = stripped.replace(/^\/+/, '').replace(/\/+$/, '');
+  const suffix = normalizedStripped ? `/${normalizedStripped}` : '';
 
   // Build alternates for all supported languages
   return supportedLanguages.map((lang) => ({
     hreflang: lang,
-    href: new URL(`/${lang}/${stripped}`, astroAPI.site || 'https://seez.eu').toString(),
+    href: new URL(`/${lang}${suffix}`, astroAPI.site || 'https://seez.eu').toString(),
   }));
 }
 

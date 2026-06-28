@@ -14,7 +14,7 @@ import type { CollectionEntry } from 'astro:content';
 import ContentMetadata from '../../../components/content/metadata/ContentMetadata.astro';
 import { getPermalink } from '../../../utils/permalinks';
 
-type ContentEntry = CollectionEntry<'projects' | 'music' | 'texts' | 'fragments'>;
+type ContentEntry = CollectionEntry<'music' | 'texts' | 'fragments'>;
 
 export async function getStaticPaths() {
   const paths: Array<{
@@ -24,15 +24,14 @@ export async function getStaticPaths() {
 
   for (const lang of SUPPORTED_LANGUAGES) {
     // Get all content from relevant collections
-    const [projects, music, texts, figures] = await Promise.all([
-      getCollection('projects'),
+    const [music, texts, figures] = await Promise.all([
       getCollection('music'),
       getCollection('texts'),
       getCollection('fragments'),
     ]);
 
     // Combine and filter by language
-    const allContent: ContentEntry[] = [...projects, ...music, ...texts, ...figures].filter(
+    const allContent: ContentEntry[] = [...music, ...texts, ...figures].filter(
       (item) => item.data.language === lang
     );
 

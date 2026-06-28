@@ -105,7 +105,7 @@ import { UI } from 'astrowind:config';
       newlink.click();
     });
 
-    const screenSize = window.matchMedia('(max-width: 767px)');
+    const screenSize = window.matchMedia('(max-width: 1279px)');
     screenSize.addEventListener('change', function () {
       // Always reset mobile nav state when crossing breakpoints
       document.querySelector('[data-aw-toggle-menu]')?.classList.remove('expanded');
@@ -166,10 +166,14 @@ import { UI } from 'astrowind:config';
   /* Inspired by: https://github.com/heidkaemper/tailwindcss-intersect */
   const Observer = {
     observer: null,
-    delayBetweenAnimations: 100,
+    delayBetweenAnimations: 40,
     animationCounter: 0,
 
     start() {
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+
       const selectors = [
         '[class*=" intersect:"]',
         '[class*=":intersect:"]',
@@ -190,7 +194,10 @@ import { UI } from 'astrowind:config';
       };
 
       elements.forEach((el) => {
-        el.setAttribute('no-intersect', '');
+        const isOneShotAnimated = el.classList.contains('intersect-once') && el.hasAttribute('data-animated');
+        if (!isOneShotAnimated) {
+          el.setAttribute('no-intersect', '');
+        }
         el._intersectionThreshold = getThreshold(el);
       });
 
@@ -218,7 +225,7 @@ import { UI } from 'astrowind:config';
                 target.removeAttribute('no-intersect');
                 target.setAttribute('data-animated', 'true');
 
-                const delay = this.animationCounter * this.delayBetweenAnimations;
+                const delay = Math.min(this.animationCounter * this.delayBetweenAnimations, 240);
                 this.animationCounter++;
 
                 target.style.transitionDelay = `${delay}ms`;
@@ -228,7 +235,7 @@ import { UI } from 'astrowind:config';
                   this.observer.unobserve(target);
                 }
               }
-            } else {
+            } else if (!target.classList.contains('intersect-once')) {
               target.setAttribute('no-intersect', '');
               target.removeAttribute('data-animated');
               target.style.transitionDelay = '';

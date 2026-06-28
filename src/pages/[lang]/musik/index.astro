@@ -19,22 +19,147 @@ function normalizeFigureRef(value: unknown): string {
   return 'SEEZ';
 }
 
-const tracks = (await getCollection('music'))
-  .filter((item) => {
-    return !item.data.draft && item.data.publicationStatus !== 'draft' && (item.data.language === lang || (!item.data.language && lang === 'en'));
-  })
+const contentTracks = (await getCollection('music'))
+  .filter((item) => !item.data.draft && item.data.publicationStatus !== 'draft')
   .map((item, index) => {
     const slug = item.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+    const entryLang = item.data.language || 'en';
     return {
       id: slug,
       title: item.data.title,
       subtitle: item.data.description || item.data.subtitle || '',
-      href: `/${lang}/music/${slug}`,
+      lang: entryLang,
+      href: `/${entryLang}/music/${slug}`,
       audioUrl: item.data.audioUrl || '',
       figure: normalizeFigureRef(item.data.figureRef),
       index: String(index + 1).padStart(2, '0'),
     };
   });
+
+const tracksById = new Map<string, (typeof contentTracks)[number]>();
+for (const track of contentTracks) {
+  const existing = tracksById.get(track.id);
+  if (!existing || track.lang === lang) {
+    tracksById.set(track.id, track);
+  }
+}
+const spotifyEpUrl = 'https://open.spotify.com/intl-de/album/47aAj0XEtEJnmJqFDswAp0?si=BrvL2mSxQNWD7ER5QBa7MA';
+
+const curatedTrackSpecs = [
+  {
+    id: 'scherbenprotokoll',
+    title: 'Scherbenprotokoll',
+    figure: 'SPLINTER / UNKNOWN / GL1TCH',
+    subtitle:
+      lang === 'de'
+        ? 'Crossover-Protokoll: soziale Sortierung, Systembruch und beweisbarer Schmerz.'
+        : 'Crossover protocol: social sorting, system fracture, and documented pain.',
+  },
+  {
+    id: 'aufstiegstraum',
+    title: 'Aufstiegstraum',
+    figure: 'SHIFT',
+    subtitle:
+      lang === 'de'
+        ? 'Arbeiterklasse, Elternarbeit und der Traum, sich freizustempeln.'
+        : 'Working-class origin, parental labor, and the dream of clocking out for good.',
+  },
+  {
+    id: 'als-sie-kamen',
+    title: 'Als sie kamen',
+    figure: 'UNKNOWN',
+    subtitle:
+      lang === 'de'
+        ? 'Politische Angst, Schweigen und die Kosten bedingter Zugehörigkeit.'
+        : 'Political fear, silence, and the cost of conditional belonging.',
+  },
+  {
+    id: 'kiffen-kippen-alk',
+    title: 'Kiffen Kippen Alk',
+    figure: 'DRIFT',
+    subtitle:
+      lang === 'de'
+        ? 'Rausch als schlechtes Werkzeug gegen Kälte, Leere und frühe Haltlosigkeit.'
+        : 'Intoxication as a broken tool against coldness, emptiness, and early instability.',
+  },
+  {
+    id: 'questlog',
+    title: 'Questlog',
+    figure: 'LUME',
+    subtitle:
+      lang === 'de'
+        ? 'Games, Backlogs, Discord und Neugier als Restlicht-Methode.'
+        : 'Games, backlogs, Discord, and curiosity as a residual-light method.',
+  },
+  {
+    id: 'spiegelkrise',
+    title: 'Spiegelkrise',
+    figure: 'SPLINTER',
+    subtitle:
+      lang === 'de'
+        ? 'Fanliebe, Selbsthass und Sichtbarkeit, die nicht automatisch heilt.'
+        : 'Fan love, self-hate, and visibility that does not automatically heal.',
+  },
+  {
+    id: 'fck-suno',
+    title: 'FCK SUNO',
+    figure: 'GL1TCH',
+    subtitle:
+      lang === 'de'
+        ? 'Meta-Track über KI-Musik, Zugang und das Werkzeug, das zugleich Stimme gibt.'
+        : 'Meta track about AI music, access, and the tool that also gives a voice.',
+  },
+];
+
+const tracks = curatedTrackSpecs.map((spec, index) => {
+  const contentTrack = tracksById.get(spec.id);
+  return {
+    ...spec,
+    title: contentTrack?.title || spec.title,
+    subtitle: contentTrack?.subtitle || spec.subtitle,
+    href: contentTrack?.href || `/${lang}/music/${spec.id}`,
+    audioUrl: contentTrack?.audioUrl || '',
+    index: String(index + 1).padStart(2, '0'),
+  };
+});
+
+const epQuotes = [
+  {
+    quote: 'Bevor er schrieb, wurde er beschrieben.',
+    song: 'Scherbenprotokoll',
+    href: `/${lang}/music/scherbenprotokoll`,
+  },
+  {
+    quote: 'Aufstiegstraum, ich stempel mich frei.',
+    song: 'Aufstiegstraum',
+    href: `/${lang}/music/aufstiegstraum`,
+  },
+  {
+    quote: 'Doch die Zeilen halten dicht, wenn sonst keiner mit mir spricht.',
+    song: 'Als sie kamen',
+    href: `/${lang}/music/als-sie-kamen`,
+  },
+  {
+    quote: 'Jeder Rausch ein Versuch, doch er heilt mich nicht.',
+    song: 'Kiffen Kippen Alk',
+    href: `/${lang}/music/kiffen-kippen-alk`,
+  },
+  {
+    quote: 'Ich verliere mich, doch nie die Lust am Suchen.',
+    song: 'Questlog',
+    href: `/${lang}/music/questlog`,
+  },
+  {
+    quote: 'Ich wollte jemand sein, den man versteht.',
+    song: 'Spiegelkrise',
+    href: `/${lang}/music/spiegelkrise`,
+  },
+  {
+    quote: 'Suno singt die Zeilen, die Seele kommt von mir.',
+    song: 'FCK SUNO',
+    href: `/${lang}/music/fck-suno`,
+  },
+];
 
 const initialTrack = tracks.find((track) => track.audioUrl) || tracks[0];
 
@@ -42,8 +167,8 @@ const metadata = {
   title: lang === 'de' ? 'Sonic Archive' : 'Sonic Archive',
   description:
     lang === 'de'
-      ? 'Immersiver Musikbereich mit Player, Trackliste und direkter Verbindung zu den Inhalten.'
-      : 'Immersive music area with player, tracklist, and direct links into the content.',
+      ? 'GENERIERUNG LÄUFT, die Seez-EP auf Spotify, plus die geplanten Seelensplitter-Songs.'
+      : 'GENERIERUNG LÄUFT, the Seez EP on Spotify, plus the planned Seelensplitter songs.',
 };
 ---
 
@@ -51,12 +176,20 @@ const metadata = {
   <section class="sonic-shell px-4 sm:px-6 py-10 md:py-16 min-h-screen">
     <header class="mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-4 max-w-6xl mx-auto">
       <div>
-        <p class="text-xs text-green-400 mb-1">&gt; MOUNTING: AUDIO_DRIVE_01</p>
+        <p class="text-xs text-green-400 mb-1">&gt; MOUNTING: GENERIERUNG_LAEUFT</p>
         <h1 class="text-4xl md:text-6xl font-bold tracking-tight uppercase">SONIC ARCHIVE</h1>
+        <p class="text-gray-400 mt-3 max-w-2xl">
+          {
+            lang === 'de'
+              ? 'Die EP ist seit dem 27.06.2026 live. Dieses Archiv verbindet den Spotify-Release mit den Figuren, Themen und geplanten Albumknoten von SEELENSPLITTER PHASE 1.'
+              : 'The EP has been live since 2026-06-27. This archive connects the Spotify release with the figures, themes, and planned album nodes of SEELENSPLITTER PHASE 1.'
+          }
+        </p>
       </div>
       <div class="text-left md:text-right text-sm">
-        <p class="text-gray-500">{lang === 'de' ? 'Aktuelle Phase' : 'Current phase'}</p>
-        <p class="text-green-400 font-bold">PHASE 1 [ORIGIN]</p>
+        <p class="text-gray-500">{lang === 'de' ? 'Aktueller Release' : 'Current release'}</p>
+        <p class="text-green-400 font-bold">EP LIVE [27.06.2026]</p>
+        <a class="text-xs text-lime-300 hover:underline" href={spotifyEpUrl}>Spotify</a>
       </div>
     </header>
 
@@ -88,6 +221,19 @@ const metadata = {
           <button class="ctrl" id="prev-btn">[Prev]</button>
           <button class="ctrl ctrl-active" id="play-btn">[Play]</button>
           <button class="ctrl" id="next-btn">[Next]</button>
+        </div>
+
+        <div class="release-panel mt-4">
+          <p class="text-xs text-amber-300 uppercase tracking-wide">{lang === 'de' ? 'Out now' : 'Out now'}</p>
+          <h2>GENERIERUNG LÄUFT</h2>
+          <p>
+            {
+              lang === 'de'
+                ? 'Sechs Stimmen. Ein Bruch. Die Frage ist nicht, warum du zersplitterst, sondern was du aus den Splittern baust.'
+                : 'Six voices. One fracture. The question is not why you splinter, but what you build from the shards.'
+            }
+          </p>
+          <a href={spotifyEpUrl}>{lang === 'de' ? 'Auf Spotify hören' : 'Listen on Spotify'}</a>
         </div>
 
         {initialTrack?.audioUrl && <audio id="archive-audio" src={initialTrack.audioUrl} preload="metadata"></audio>}
@@ -130,13 +276,28 @@ const metadata = {
         }
 
         <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <a class="spotify-link block text-center" href={spotifyEpUrl}>
+            {lang === 'de' ? 'EP auf Spotify >>' : 'EP on Spotify >>'}
+          </a>
           <a class="spotify-link block text-center" href={`/${lang}/lyrics`}>
             {lang === 'de' ? 'Zum Lyrics Vault >>' : 'Open Lyrics Vault >>'}
           </a>
-          <a class="spotify-link block text-center" href={`/${lang}/blog`}>
-            {lang === 'de' ? 'Mehr im Blog >>' : 'More in Blog >>'}
-          </a>
         </div>
+
+        <section class="quote-strip mt-8" aria-labelledby="ep-quotes-title">
+          <div class="quote-strip-head">
+            <p>{lang === 'de' ? 'Tumblr-Potenzial' : 'Quote layer'}</p>
+            <h2 id="ep-quotes-title">{lang === 'de' ? 'Zitate aus der EP' : 'Quotes from the EP'}</h2>
+          </div>
+          <div class="grid grid-cols-1 gap-3">
+            {epQuotes.map((item) => (
+              <a class="quote-card" href={item.href}>
+                <blockquote>“{item.quote}”</blockquote>
+                <span>{item.song} →</span>
+              </a>
+            ))}
+          </div>
+        </section>
       </section>
     </main>
   </section>
@@ -261,7 +422,8 @@ const metadata = {
 <style>
   .sonic-shell {
     --bg: #080808;
-    background: radial-gradient(circle at 85% -5%, rgba(34, 197, 94, 0.15), transparent 30%), var(--bg);
+    background: radial-gradient(circle at 85% -5%, rgba(34, 197, 94, 0.15), transparent 30%),
+      radial-gradient(circle at 10% 8%, rgba(217, 119, 6, 0.13), transparent 26%), var(--bg);
     color: #e5e7eb;
   }
 
@@ -390,6 +552,92 @@ const metadata = {
   .ctrl-active {
     border-color: #22c55e;
     color: #22c55e;
+  }
+
+  .release-panel {
+    border: 1px solid rgba(190, 242, 100, 0.35);
+    background: linear-gradient(135deg, rgba(20, 83, 45, 0.55), rgba(69, 26, 3, 0.55));
+    padding: 1rem;
+  }
+
+  .release-panel h2 {
+    color: white;
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin-top: 0.25rem;
+  }
+
+  .release-panel p {
+    color: #d1d5db;
+    font-size: 0.86rem;
+    margin-top: 0.5rem;
+    line-height: 1.55;
+  }
+
+  .release-panel a {
+    display: inline-block;
+    margin-top: 0.75rem;
+    color: #bef264;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+  }
+
+  .quote-strip {
+    border-top: 1px solid #1f2937;
+    padding-top: 1.5rem;
+  }
+
+  .quote-strip-head {
+    margin-bottom: 0.9rem;
+  }
+
+  .quote-strip-head p {
+    color: #bef264;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .quote-strip-head h2 {
+    color: #fff;
+    font-size: 1.35rem;
+    font-weight: 900;
+    margin-top: 0.25rem;
+  }
+
+  .quote-card {
+    border: 1px solid rgba(34, 211, 238, 0.22);
+    background: rgba(15, 23, 42, 0.72);
+    color: #e5e7eb;
+    display: block;
+    padding: 0.95rem;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .quote-card:hover {
+    border-color: #22d3ee;
+    transform: translateY(-1px);
+  }
+
+  .quote-card blockquote {
+    color: white;
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .quote-card span {
+    color: #67e8f9;
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    margin-top: 0.7rem;
+    text-transform: uppercase;
   }
 
   .track-item {

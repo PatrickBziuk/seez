@@ -8,7 +8,7 @@
     "node": "^18.17.1 || ^20.3.0 || >= 21.0.0"
   },
   "scripts": {
-    "dev": "astro dev",
+    "dev": "portless seez astro dev",
     "start": "astro dev",
     "build": "pnpm run generate:version && astro build",
     "generate:version": "npx tsx scripts/utils/generate-version.ts",

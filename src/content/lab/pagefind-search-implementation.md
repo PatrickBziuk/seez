@@ -11,7 +11,8 @@ tags:
   - performance
   - javascript
   - astro
-publicationStatus: published
+publicationStatus: archived
+draft: true
 canonicalId: slug-20250826-pagefind-search-experiment
 subtitle: "Implementing fast, client-side search for static sites without external dependencies"
 publishDate: '2025-02-10T14:30:00.000Z'

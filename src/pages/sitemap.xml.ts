@@ -1,26 +1,37 @@
 import { getCollection } from 'astro:content';
 import { SITE } from 'astrowind:config';
 
-// List only valid collection keys
-const collections = ['books', 'projects', 'lab', 'life', 'pages'] as const;
 const languages = ['en', 'de'];
+const staticRoutes = [
+  '',
+  'musik',
+  'lyrics',
+  'fragmente',
+  'kreatives',
+  'system-logs',
+  'inventory',
+  'press',
+  'about',
+  'contact',
+];
 
 export async function GET() {
   const urls: string[] = [];
-  for (const collection of collections) {
-    const entries = await getCollection(collection);
-    for (const entry of entries) {
-      for (const lang of languages) {
-        // Use entry.id for URL
-        urls.push(`${SITE.url}/${lang}/${collection}/${entry.id}`);
-      }
+
+  for (const lang of languages) {
+    for (const route of staticRoutes) {
+      urls.push(`${SITE.url}/${lang}/${route}`.replace(/\/$/, '/'));
     }
   }
-  // Add homepage for each language
-  for (const lang of languages) {
-    urls.push(`${SITE.url}/${lang}/`);
+
+  const musicEntries = await getCollection('music');
+  for (const entry of musicEntries) {
+    if (entry.data.draft || entry.data.publicationStatus === 'draft') continue;
+    const lang = entry.data.language || 'en';
+    const slug = entry.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+    urls.push(`${SITE.url}/${lang}/music/${slug}`);
   }
-  // Build XML
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url) => `<url><loc>${url}</loc></url>`).join('\n')}\n</urlset>`;
   return new Response(xml, {
     headers: {

@@ -1,0 +1,107 @@
+name: Build and sync Codeberg
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeberg-sync-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-sync:
+    name: Build, mirror source, deploy pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      CODEBERG_SOURCE_REMOTE: ${{ vars.CODEBERG_SOURCE_REMOTE }}
+      CODEBERG_PAGES_REMOTE: ${{ vars.CODEBERG_PAGES_REMOTE }}
+      CODEBERG_SSH_PRIVATE_KEY: ${{ secrets.CODEBERG_SSH_PRIVATE_KEY || secrets.CODEBERG_SSH_KEY }}
+
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Astro check
+        run: pnpm run check:astro
+
+      - name: Build site
+        run: pnpm run build
+
+      - name: Configure Codeberg SSH
+        run: |
+          if [ -z "${CODEBERG_SSH_PRIVATE_KEY}" ]; then
+            echo "Missing required GitHub secret: CODEBERG_SSH_PRIVATE_KEY" >&2
+            exit 1
+          fi
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${CODEBERG_SSH_PRIVATE_KEY}" > ~/.ssh/codeberg
+          chmod 600 ~/.ssh/codeberg
+          ssh-keyscan codeberg.org >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+          cat > ~/.ssh/config <<'EOF'
+          Host codeberg.org
+            HostName codeberg.org
+            User git
+            IdentityFile ~/.ssh/codeberg
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+          EOF
+
+      - name: Resolve Codeberg remotes
+        run: |
+          source_remote="${CODEBERG_SOURCE_REMOTE:-git@codeberg.org:${GITHUB_REPOSITORY}.git}"
+          pages_remote="${CODEBERG_PAGES_REMOTE:-${source_remote}}"
+
+          echo "CODEBERG_SOURCE_REMOTE_RESOLVED=${source_remote}" >> "${GITHUB_ENV}"
+          echo "CODEBERG_PAGES_REMOTE_RESOLVED=${pages_remote}" >> "${GITHUB_ENV}"
+
+      - name: Mirror source branch to Codeberg
+        run: |
+          git remote remove codeberg-source 2>/dev/null || true
+          git remote add codeberg-source "${CODEBERG_SOURCE_REMOTE_RESOLVED}"
+
+          remote_sha="$(git ls-remote --heads codeberg-source main | awk '{print $1}')"
+          if [ -n "${remote_sha}" ]; then
+            git push --force-with-lease=refs/heads/main:${remote_sha} codeberg-source HEAD:main
+          else
+            git push codeberg-source HEAD:main
+          fi
+
+      - name: Deploy dist to Codeberg Pages branch
+        run: |
+          worktree="$(mktemp -d)"
+          cp -a dist/. "${worktree}/"
+          cd "${worktree}"
+
+          git init
+          git checkout -b pages
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Deploy seez.eu ${GITHUB_SHA}"
+          git remote add codeberg-pages "${CODEBERG_PAGES_REMOTE_RESOLVED}"
+          git push --force codeberg-pages pages:pages

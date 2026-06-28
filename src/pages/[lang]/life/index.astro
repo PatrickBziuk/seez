@@ -1,47 +1,47 @@
 ---
 import Layout from '../../../layouts/PageLayout.astro';
-import ContentCard from '../../../components/content/cards/ContentCard.astro';
-import ComingSoon from '../../../components/ComingSoon.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
-import { SUPPORTED_LANGUAGES, getTranslations } from '../../../utils/i18n';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 
-export const getStaticPaths = () => {
-  return SUPPORTED_LANGUAGES.map((lang) => ({
-    params: { lang },
-  }));
-};
+export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
-
-// Load translations for the current language
-const t = await getTranslations(lang);
-
-// Get all life content and filter by language
-const allLife = (await getCollection('life')) as CollectionEntry<'life'>[];
-const filteredLife = allLife.filter(
-  (item) => !item.data.draft && (item.data.language === lang || (!item.data.language && lang === 'en'))
-);
+const t = (de: string, en: string) => (lang === 'de' ? de : en);
 
 const metadata = {
-  title: t.navigation.Life,
-  description: 'Personal thoughts and life experiences.',
+  title: t('Life Archive', 'Life Archive'),
+  description: t('Persönliche Fragmente erscheinen nur, wenn sie Teil des Seez-Kosmos sind.', 'Personal fragments appear only when they are part of the Seez cosmos.'),
+  robots: { index: true, follow: true },
 };
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <header class="text-center mb-12">
-      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
-        🌱 {t.navigation.Life}
-      </h1>
-      <p class="text-xl text-muted dark:text-slate-400">Personal thoughts and life experiences</p>
-    </header>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {filteredLife.map((item) => <ContentCard item={item} lang={lang} basePath="life" />)}
+  <section class="min-h-screen bg-[#07080b] px-4 py-14 text-slate-100 sm:px-6 lg:py-20">
+    <div class="mx-auto max-w-4xl">
+      <p class="text-xs uppercase tracking-[0.28em] text-lime-300">&gt; LIFE_ROUTE / FILTERED</p>
+      <h1 class="mt-4 text-4xl font-black tracking-tight md:text-6xl">{t('Kein Tagebuch. Nur Fragmente.', 'No diary. Only fragments.')}</h1>
+      <p class="mt-5 max-w-2xl text-base leading-7 text-slate-300">
+        {t(
+          'Private Texte werden nicht als eigener Lifestyle-Bereich ausgespielt. Was öffentlich ist, muss Seez tragen: Figuren, Songs, Logs, Splitter.',
+          'Private writing is not published as a lifestyle section. Public material must serve Seez: figures, songs, logs, fragments.'
+        )}
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="portal" href={`/${lang}/fragmente`}>{t('Fragmente öffnen', 'Open fragments')}</a>
+        <a class="portal" href={`/${lang}/lyrics`}>Lyrics Vault</a>
+      </div>
     </div>
-
-    {filteredLife.length === 0 && <ComingSoon language={lang} section={t.navigation.Life} />}
   </section>
 </Layout>
+
+<style>
+  .portal {
+    border: 1px solid rgba(190, 242, 100, 0.35);
+    color: #d9f99d;
+    display: inline-block;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 0.8rem 1rem;
+    text-transform: uppercase;
+  }
+</style>

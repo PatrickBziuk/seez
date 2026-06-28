@@ -10,54 +10,59 @@ const { lang } = Astro.params as { lang: SupportedLanguage };
 
 const items = [
   {
-    id: 'book-print',
-    label: 'SEELENSPLITTER (PRINT)',
-    desc: lang === 'de' ? 'Das physische Artefakt. 250 Seiten.' : 'The physical artifact. 250 pages.',
-    price: '15.00 EUR',
+    id: 'ep-spotify',
+    label: 'GENERIERUNG LÄUFT',
+    desc: lang === 'de' ? 'Die EP ist seit dem 27.06.2026 live.' : 'The EP has been live since 2026-06-27.',
+    price: 'SPOTIFY',
     color: 'var(--item-rare)',
     colorDim: 'rgba(255, 215, 0, 0.25)',
-    teaser: '[BOOK_PHYSICAL]',
-    href: `/${lang}/blog`,
+    teaser: '[EP_STREAM]',
+    actionHref: 'https://open.spotify.com/intl-de/album/47aAj0XEtEJnmJqFDswAp0?si=BrvL2mSxQNWD7ER5QBa7MA',
+    actionLabel: lang === 'de' ? 'EP HÖREN' : 'LISTEN TO EP',
   },
   {
-    id: 'book-epub',
-    label: 'SEELENSPLITTER (EPUB)',
-    desc: lang === 'de' ? 'Digitaler Download fuer Reader.' : 'Instant digital download for readers.',
-    price: '9.99 EUR',
+    id: 'lyrics-vault',
+    label: 'LYRICS VAULT',
+    desc: lang === 'de' ? 'Songtexte, Motive und Zitatkarten.' : 'Lyrics, motifs, and quote cards.',
+    price: 'OPEN',
     color: 'var(--item-epic)',
     colorDim: 'rgba(189, 0, 255, 0.25)',
-    teaser: '[EBOOK_FILE]',
-    href: `/${lang}/blog`,
+    teaser: '[QUOTE_KEYS]',
+    actionHref: `/${lang}/lyrics`,
+    actionLabel: lang === 'de' ? 'ZITATE ÖFFNEN' : 'OPEN QUOTES',
   },
   {
-    id: 'read-only',
-    label: 'READ_ONLY.PDF',
-    desc: lang === 'de' ? 'Kostenlose Version. Wissen bleibt offen.' : 'Free version. Knowledge stays open.',
-    price: '0.00 EUR',
+    id: 'fragment-dossiers',
+    label: 'FRAGMENT DOSSIERS',
+    desc: lang === 'de' ? 'Figuren, Stimmen und innere Brüche.' : 'Figures, voices, and inner fractures.',
+    price: 'OPEN',
     color: 'var(--item-common)',
     colorDim: 'rgba(255, 255, 255, 0.25)',
-    teaser: '[PDF_HIDDEN]',
-    href: `/${lang}/blog`,
+    teaser: '[SPLINTERS]',
+    actionHref: `/${lang}/fragmente`,
+    actionLabel: lang === 'de' ? 'FRAGMENTE LESEN' : 'READ FRAGMENTS',
   },
   {
-    id: 'discord',
-    label: 'SERVER ACCESS',
-    desc: lang === 'de' ? 'Community Hub und Austausch.' : 'Community hub and exchange.',
-    price: 'FREE',
+    id: 'system-logs',
+    label: 'SYSTEM LOGS',
+    desc: lang === 'de' ? 'Timeline, Proofs und Releaseplan.' : 'Timeline, proofs, and release plan.',
+    price: 'OPEN',
     color: 'var(--item-uncommon)',
     colorDim: 'rgba(0, 255, 65, 0.25)',
-    teaser: '[DISCORD_KEY]',
-    href: `/${lang}/contact`,
+    teaser: '[PROOF_CORE]',
+    actionHref: `/${lang}/system-logs`,
+    actionLabel: lang === 'de' ? 'LOGS ÖFFNEN' : 'OPEN LOGS',
   },
   {
     id: 'newsletter',
     label: 'GL1TCH_LOGS',
-    desc: lang === 'de' ? 'Monatliche Updates aus dem System.' : 'Monthly updates from the system.',
+    desc: lang === 'de' ? 'Kontakt für Presse, Kollab und Updates.' : 'Contact for press, collabs, and updates.',
     price: 'SUB',
     color: 'var(--item-uncommon)',
     colorDim: 'rgba(0, 255, 65, 0.25)',
     teaser: '[EMAIL_LOG]',
-    href: `/${lang}/blog`,
+    actionHref: `/${lang}/contact?topic=gl1tch-logs`,
+    actionLabel: lang === 'de' ? 'KONTAKT ÖFFNEN' : 'OPEN CONTACT',
   },
 ];
 
@@ -65,8 +70,8 @@ const metadata = {
   title: lang === 'de' ? 'Inventory' : 'Inventory',
   description:
     lang === 'de'
-      ? 'Gamifizierte Angebotsseite fuer Produkte, Zugriff und kostenlose Ressourcen.'
-      : 'Gamified inventory page for products, access, and free resources.',
+      ? 'Gamifiziertes Inventar für die öffentlichen Seez-Artefakte: EP, Lyrics, Fragmente und System Logs.'
+      : 'Gamified inventory for the public Seez artifacts: EP, lyrics, fragments, and system logs.',
 };
 ---
 
@@ -89,11 +94,15 @@ const metadata = {
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
         {
           items.map((item) => (
-            <a
-              href={item.href}
+            <button
+              type="button"
               class="inv-slot"
               style={`--slot-color:${item.color};--slot-color-dim:${item.colorDim};`}
               aria-label={item.label}
+              data-item-id={item.id}
+              data-item-label={item.label}
+              data-action-href={item.actionHref}
+              data-action-label={item.actionLabel}
             >
               <div class="rarity-corner"></div>
               <div class="slot-teaser">{item.teaser}</div>
@@ -102,7 +111,7 @@ const metadata = {
                 <span class="text-gray-400">{item.desc}</span>
                 <div class="mt-2 text-right text-white font-bold">{item.price}</div>
               </div>
-            </a>
+            </button>
           ))
         }
 
@@ -119,10 +128,10 @@ const metadata = {
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-2 text-gray-400">
-            <p>&gt; {lang === 'de' ? 'Waehle ein Item aus dem Grid.' : 'Select an item from the grid.'}</p>
-            <p>&gt; {lang === 'de' ? 'Digitale Items sind sofort verfuegbar.' : 'Digital items are delivered instantly.'}</p>
-            <p>&gt; {lang === 'de' ? 'Physische Items folgen per Versand.' : 'Physical items are shipped manually.'}</p>
-            <p class="text-yellow-400 mt-4">! NOTE: Revenue supports the architecture.</p>
+            <p>&gt; {lang === 'de' ? 'Wähle ein Artefakt aus dem Grid.' : 'Select an artifact from the grid.'}</p>
+            <p>&gt; {lang === 'de' ? 'Alle öffentlichen Module führen in den Seez-Kosmos.' : 'Every public module leads into the Seez cosmos.'}</p>
+            <p>&gt; {lang === 'de' ? 'Aktueller Fokus: EP, Songs, Figuren, Proofs.' : 'Current focus: EP, songs, figures, proofs.'}</p>
+            <p class="text-yellow-400 mt-4">! NOTE: NO SHOPPING CART. ONLY PORTALS.</p>
           </div>
 
           <div class="flex flex-col justify-end items-end gap-4">
@@ -130,8 +139,13 @@ const metadata = {
               <span class="block text-xs text-gray-500">SELECTED ITEM</span>
               <span id="selected-item" class="text-xl font-bold text-white">NONE</span>
             </div>
-            <a href={`/${lang}/blog`} class="btn-glitch bg-white text-black px-8 py-3 font-bold uppercase tracking-widest hover:bg-gray-200 transition w-full md:w-auto text-center">
-              INITIATE TRANSFER
+            <a
+              id="selected-action"
+              href={`/${lang}/contact`}
+              aria-disabled="true"
+              class="btn-glitch btn-disabled bg-white text-black px-8 py-3 font-bold uppercase tracking-widest hover:bg-gray-200 transition w-full md:w-auto text-center"
+            >
+              {lang === 'de' ? 'ARTEFAKT WÄHLEN' : 'SELECT ARTIFACT'}
             </a>
           </div>
         </div>
@@ -141,13 +155,57 @@ const metadata = {
 </Layout>
 
 <script>
-  const slots = Array.from(document.querySelectorAll('.inv-slot'));
+  const slots = Array.from(document.querySelectorAll<HTMLButtonElement>('.inv-slot[data-item-id]'));
   const selected = document.getElementById('selected-item');
+  const action = document.getElementById('selected-action') as HTMLAnchorElement | null;
+  let activeSlot: HTMLButtonElement | null = null;
+
+  const setActionState = (href: string, label: string, disabled: boolean) => {
+    if (!action) return;
+
+    if (disabled) {
+      action.href = '#';
+      action.setAttribute('aria-disabled', 'true');
+      action.classList.add('btn-disabled');
+      action.textContent = label;
+      return;
+    }
+
+    action.href = href;
+    action.setAttribute('aria-disabled', 'false');
+    action.classList.remove('btn-disabled');
+    action.textContent = label;
+  };
+
+  const selectSlot = (slot: HTMLButtonElement) => {
+    if (!slot) return;
+
+    const label = slot.getAttribute('data-item-label') || 'NONE';
+    const actionHref = slot.getAttribute('data-action-href') || `/${location.pathname.split('/')[1]}/contact`;
+    const actionLabel = slot.getAttribute('data-action-label') || 'INITIATE TRANSFER';
+
+    slots.forEach((entry) => entry.classList.remove('is-selected'));
+    slot.classList.add('is-selected');
+    activeSlot = slot;
+
+    if (selected) selected.textContent = label;
+    setActionState(actionHref, actionLabel, false);
+  };
 
   slots.forEach((slot) => {
     slot.addEventListener('mouseenter', () => {
-      const label = slot.querySelector('.item-desc strong')?.textContent || 'NONE';
+      if (activeSlot) return;
+      const label = slot.getAttribute('data-item-label') || 'NONE';
       if (selected) selected.textContent = label;
+    });
+
+    slot.addEventListener('mouseleave', () => {
+      if (activeSlot || !selected) return;
+      selected.textContent = 'NONE';
+    });
+
+    slot.addEventListener('click', () => {
+      selectSlot(slot);
     });
   });
 </script>
@@ -175,6 +233,11 @@ const metadata = {
   }
 
   .inv-slot {
+    width: 100%;
+    appearance: none;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
     background: rgba(20, 20, 20, 0.85);
     border: 1px solid #333;
     aspect-ratio: 1 / 1;
@@ -187,6 +250,17 @@ const metadata = {
     border-color: var(--slot-color, #fff);
     box-shadow: 0 0 16px var(--slot-color-dim, rgba(255, 255, 255, 0.2));
     transform: translateY(-1px);
+  }
+
+  .inv-slot.is-selected {
+    border-color: var(--slot-color, #fff);
+    box-shadow: 0 0 22px var(--slot-color-dim, rgba(255, 255, 255, 0.22));
+    transform: translateY(-1px);
+  }
+
+  .inv-slot:focus-visible {
+    outline: 2px solid var(--slot-color, #fff);
+    outline-offset: 2px;
   }
 
   .slot-teaser {
@@ -259,5 +333,11 @@ const metadata = {
 
   .btn-glitch:hover::after {
     left: 100%;
+  }
+
+  .btn-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    filter: saturate(0.7);
   }
 </style>

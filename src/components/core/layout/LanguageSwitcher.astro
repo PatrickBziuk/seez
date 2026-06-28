@@ -23,6 +23,8 @@ const languageCodes = {
   en: 'US',
   de: 'DE',
 } as const;
+const currentLanguageActionLabel = currentLanguage === 'de' ? 'Sprache wählen' : 'Choose language';
+const summaryA11yLabel = `${languageCodes[currentLanguage]} - ${currentLanguageActionLabel}`;
 ---
 
 <div class="language-switcher-wrapper">
@@ -31,7 +33,7 @@ const languageCodes = {
       class="language-switcher-button"
       role="button"
       aria-haspopup="listbox"
-      aria-label={currentLanguage === 'de' ? 'Sprache wählen' : 'Choose language'}
+      aria-label={summaryA11yLabel}
     >
       <span class="minimal-code">{languageCodes[currentLanguage]}</span>
       <svg class="chevron" viewBox="0 0 20 20" fill="currentColor">
@@ -52,7 +54,7 @@ const languageCodes = {
                 <a
                   href={languageUrl}
                   class={`language-option ${lang === currentLanguage ? 'current' : ''}`}
-                  aria-label={`${currentLanguage === 'de' ? 'Wechseln zu' : 'Switch to'} ${info?.label}`}
+                  aria-label={info?.label}
                 >
                   <span class="flag">{info?.flag}</span>
                   <span class="label">{info?.label}</span>
@@ -94,7 +96,7 @@ const languageCodes = {
     cursor: pointer;
     transition: all 0.15s ease;
     list-style: none;
-    color: rgb(107 114 128);
+    color: rgb(55 65 81);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     min-height: 44px;
@@ -198,7 +200,7 @@ const languageCodes = {
   /* Dark mode support */
   @media (prefers-color-scheme: dark) {
     .language-switcher-button {
-      color: rgb(156 163 175);
+      color: rgb(209 213 219);
     }
 
     .language-switcher-button:hover,

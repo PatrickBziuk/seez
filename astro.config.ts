@@ -46,6 +46,21 @@ export default defineConfig({
           de: 'de',
         },
       },
+      filter: (page) => {
+        const pathname = new URL(page).pathname;
+        // Keep sitemap focused on primary public content, exclude demo/legacy/admin routes.
+        return ![
+          /^\/admin\/?$/,
+          /^\/homes\//,
+          /^\/landing\//,
+          /^\/projects\/de\//,
+          /^\/(en|de)\/projects\/de\//,
+          /^\/(en|de)\/pages\//,
+          /^\/(en|de)\/(books|projects|lab|life|music)\/(en|de)\//,
+          /^\/(en|de)\/(books|projects|lab|life|music)\/[^/]+-slug-[^/]+\/?$/,
+          /^\/(en|de)\/(books|projects|lab|life|music)\/canonical\//,
+        ].some((pattern) => pattern.test(pathname));
+      },
     }),
     mdx(),
     icon({

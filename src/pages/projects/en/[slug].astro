@@ -1,32 +1,13 @@
 ---
-import { getEntry, getCollection, render } from 'astro:content';
-import MarkdownLayout from '../../../layouts/MarkdownLayout.astro';
+import { getCollection } from 'astro:content';
+import SeezRedirect from '../../../components/SeezRedirect.astro';
 
 export async function getStaticPaths() {
   const entries = await getCollection('projects');
   return entries
-    .filter((e) => !e.data.draft && e.data.language === 'en')
-    .map((entry) => ({
-      params: { slug: entry.id.replace('en/', '').replace(/\.mdx?$/, '') },
-    }));
+    .filter((entry) => !entry.data.draft && entry.data.language === 'en')
+    .map((entry) => ({ params: { slug: entry.id.replace('en/', '').replace(/\.mdx?$/, '') } }));
 }
-
-const { slug } = Astro.params;
-const entry = (await getEntry('projects', `en/${slug}.mdx`)) || (await getEntry('projects', `en/${slug}`));
-if (!entry) throw new Error(`Project not found: en/${slug}`);
-
-const { Content } = await render(entry);
-
-// Convert string dates to Date objects for MarkdownLayout compatibility
-const frontmatterWithDateObjects = {
-  ...entry.data,
-  publishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
-  firstPublishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
-  modifiedDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
-  lastChangeDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
-};
 ---
 
-<MarkdownLayout frontmatter={frontmatterWithDateObjects}>
-  <Content />
-</MarkdownLayout>
+<SeezRedirect target="/en/projects" title="SEEZ Project Index" />

@@ -10,7 +10,8 @@ tags:
   - psychology
   - behavior-change
   - personal-development
-publicationStatus: published
+publicationStatus: archived
+draft: true
 canonicalId: slug-20250826-atomic-habits
 subtitle: 'Small changes that make a big difference in building lasting habits'
 publishDate: '2025-01-22T10:00:00.000Z'

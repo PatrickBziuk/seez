@@ -18,13 +18,13 @@ import { getCollection, render } from 'astro:content';
 import MarkdownLayout from '../../../layouts/MarkdownLayout.astro';
 
 export async function getStaticPaths() {
-  const collections = ['books', 'projects', 'lab', 'life', 'music']; // Only content collections, not authors
+  const collections = ['music'] as const;
   const allEntries = [];
 
   // Collect all entries from content collections only
   for (const collection of collections) {
     try {
-      const entries = await getCollection(collection as 'books' | 'projects' | 'lab' | 'life' | 'music');
+      const entries = await getCollection(collection);
       for (const entry of entries) {
         // Skip drafts
         if (entry.data.draft === true || entry.data.publicationStatus === 'draft') continue;

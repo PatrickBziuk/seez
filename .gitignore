@@ -9,6 +9,10 @@ dist/
 # Test Results
 playwright-report/
 test-results/*
+.playwright-mcp/
+
+# Private unreleased manuscripts
+manuscript/
 
 # dependencies
 node_modules/

@@ -14,7 +14,7 @@ const sectionNav = [
   { id: 'creative-engine', title: t('Creative Engine', 'Creative Engine') },
   { id: 'evidence-locker', title: t('Evidence Locker', 'Evidence Locker') },
   { id: 'song-phase-archive', title: t('Song Phase Archive', 'Song Phase Archive') },
-  { id: 'book-dossier', title: t('Book Dossier', 'Book Dossier') },
+  { id: 'release-dossier', title: t('Release Dossier', 'Release Dossier') },
   { id: 'character-style-matrix', title: t('Character Style Matrix', 'Character Style Matrix') },
 ];
 
@@ -103,7 +103,6 @@ const phaseTwoSongs = [
   'Als sie (Unknown)',
   'Herz klopft, Kopf platzt (Drift)',
   'Ich will leuchten (Lume)',
-  'Dein Anker (Lume)',
   'Target Audience (Gl1tch)',
   'Schmetterlingsmoment (Lume)',
   'Nachtgedanken (Splinter)',
@@ -157,8 +156,8 @@ const styleSystem = [
 const metadata = {
   title: 'System Logs',
   description: t(
-    'Erweitertes Archiv mit Beweis-Locker, Creative Engine, Song-Phasen und Buch-Dossier.',
-    'Expanded archive with evidence locker, creative engine, song phases, and book dossier.'
+    'Erweitertes Archiv mit Beweis-Locker, Creative Engine, Song-Phasen und Release-Dossier.',
+    'Expanded archive with evidence locker, creative engine, song phases, and release dossier.'
   ),
 };
 ---
@@ -293,39 +292,37 @@ const metadata = {
           </div>
         </section>
 
-        <section class="panel panel-priority" id="book-dossier" data-section>
+        <section class="panel panel-priority" id="release-dossier" data-section>
           <div class="panel-head panel-head-strong">
             <h2>
               <span class="anchor">#</span>
-              {t('Book Dossier', 'Book Dossier')}
+              {t('Release Dossier', 'Release Dossier')}
             </h2>
-            <span class="status">SEELENSPLITTER</span>
+            <span class="status">GENERIERUNG LÄUFT</span>
           </div>
 
           <div class="grid grid-cols-1 gap-5">
             <details class="expand-block" open>
-              <summary>{t('Vorwort - erweiterte Kernfassung', 'Foreword - extended core')}</summary>
+              <summary>{t('EP-Status', 'EP status')}</summary>
               <div class="expand-body prose-lite">
-                <h4>{t('Narrative Intent', 'Narrative Intent')}</h4>
-                <p>{t('Seelensplitter ist keine lineare Biografie, sondern eine Autofiktion aus realen Gefuehlen, gebuendelten Erinnerungen und geschuetzten Details.', 'Seelensplitter is not a linear biography but autofiction built from real emotions, compressed memories, and protected details.')}</p>
-                <h4>{t('Emotional Truth vs Schutz', 'Emotional truth vs protection')}</h4>
-                <p>{t('Gefuehle und Grundkonstellationen sind real; Dialoge, Ablaufe und Zuordnungen wurden verdichtet, um Privatsphaere zu schuetzen.', 'Core emotions and constellations are real; dialogue, chronology, and assignments are compressed to protect privacy.')}</p>
-                <h4>{t('Character Perspective Map', 'Character perspective map')}</h4>
-                <p>{t('Die sechs Figuren sind Perspektiven auf dasselbe Ich: Drift, Splinter, Shift, Lume, Unknown, Gl1tch.', 'The six figures are perspectives on the same self: Drift, Splinter, Shift, Lume, Unknown, Gl1tch.')}</p>
-                <h4>{t('Content Note (Kurzform)', 'Content note (short form)')}</h4>
-                <p>{t('Themen: Depression, Selbstverletzung, Substanzkonsum, Gewalt, Essstoerung, Suizidgedanken, Mobbing und Identitaetskonflikte.', 'Topics: depression, self-harm, substance use, violence, eating disorders, suicidal ideation, bullying, and identity conflict.')}</p>
+                <h4>{t('Öffentlicher Einstieg', 'Public entry point')}</h4>
+                <p>{t('GENERIERUNG LÄUFT wurde am 27.06.2026 veröffentlicht und bündelt die ersten Seez-Songs als hörbares Systemprotokoll.', 'GENERIERUNG LÄUFT was released on 2026-06-27 and bundles the first Seez songs as an audible system protocol.')}</p>
+                <h4>{t('Track-Knoten', 'Track nodes')}</h4>
+                <p>{t('Scherbenprotokoll, Aufstiegstraum, Als sie kamen, Kiffen Kippen Alk, Questlog, Spiegelkrise und FCK SUNO bilden aktuell die öffentliche EP-Schicht.', 'Scherbenprotokoll, Aufstiegstraum, Als sie kamen, Kiffen Kippen Alk, Questlog, Spiegelkrise, and FCK SUNO currently form the public EP layer.')}</p>
+                <h4>{t('Nächster Meilenstein', 'Next milestone')}</h4>
+                <p>{t('Der 06.06.2026 wurde nicht gehalten. Der Album-Meilenstein ist jetzt auf den 06.08.2026 geplant.', 'The 2026-06-06 deadline was missed. The album milestone is now planned for 2026-08-06.')}</p>
               </div>
             </details>
 
             <details class="expand-block" open>
-              <summary>{t('Nachwort - erweiterte Kernfassung', 'Afterword - extended core')}</summary>
+              <summary>{t('Release-Regeln für die Website', 'Website release rules')}</summary>
               <div class="expand-body prose-lite">
-                <h4>{t('Verantwortung und Rueckblick', 'Responsibility and retrospective')}</h4>
-                <p>{t('Das Buch will nicht beweisen, dass alles exakt so passiert ist. Es will emotional wahr sein und Verantwortung sichtbar machen.', 'The book does not try to prove every event happened exactly as told. It aims for emotional truth and visible responsibility.')}</p>
-                <h4>{t('Lernkern', 'Core learning')}</h4>
-                <p>{t('Niemand wird alles fuer dich retten. Selbstverantwortung beginnt mit dem Moment, in dem du bleibst, statt wegzuscrollen.', 'No one will fully save you. Self-responsibility starts the moment you stay instead of scrolling away.')}</p>
-                <h4>{t('Leitidee', 'Core idea')}</h4>
-                <p>{t('Leitidee: Wir sind Fragmente. Getrennt verletzlich. Zusammen ein Panorama.', 'Core idea: We are fragments. Vulnerable apart. A panorama together.')}</p>
+                <h4>{t('Jetzt sichtbar', 'Visible now')}</h4>
+                <p>{t('EP, Songs, Lyrics, Figuren, Fragmente, Proofs und Prozessnotizen dürfen öffentlich auf die Hauptseiten.', 'EP, songs, lyrics, figures, fragments, proofs, and process notes can be public on the main pages.')}</p>
+                <h4>{t('Noch gesperrt', 'Still locked')}</h4>
+                <p>{t('Nicht freigegebene Artefakte bleiben bewusst außerhalb der Hauptseiten, bis sie wirklich Teil des öffentlichen Releaseplans sind.', 'Unreleased artifacts stay off the main pages until they are truly part of the public release plan.')}</p>
+                <h4>{t('Positionierung', 'Positioning')}</h4>
+                <p>{t('seez.eu steht für den kreativen Kosmos: kein Portfolio-Sammelsurium, kein Tech-Blog, kein Shop-Frontend.', 'seez.eu stands for the creative cosmos: not a portfolio dump, not a tech blog, not a shop frontend.')}</p>
               </div>
             </details>
           </div>
@@ -349,7 +346,7 @@ const metadata = {
         </section>
 
         <section class="manifesto">
-          <h2 class="glitch" data-text="06.06.2026">06.06.2026</h2>
+          <h2 class="glitch" data-text="27.06.2026">27.06.2026</h2>
           <p>
             {t(
               'Ich ersetze kein Team. Ich bin das Team. KI ist Werkzeug, nicht Ursprung.',

@@ -8,7 +8,7 @@ export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params:
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
-const collections = ['books', 'projects', 'lab', 'life', 'music', 'pages'] as const;
+const collections = ['projects', 'life', 'music', 'texts'] as const;
 type Coll = (typeof collections)[number];
 type Entry = Awaited<ReturnType<typeof getCollection<Coll>>>[number];
 type EntryData = {
@@ -21,6 +21,16 @@ type EntryData = {
   publishDate?: string;
   date?: Date | string;
 };
+
+const lowQualityPattern = /(coming soon|placeholder|demo page|sample\b|tbd|lorem ipsum|stay tuned)/i;
+
+function isLowQualityEntry(data: EntryData): boolean {
+  const title = (data.title || '').trim();
+  const description = (data.description || '').trim();
+  const combined = `${title} ${description}`;
+  if (!title) return true;
+  return lowQualityPattern.test(combined);
+}
 
 function toDate(entry: Entry): Date | null {
   const data = entry.data as unknown as EntryData;
@@ -39,11 +49,6 @@ function toUrl(entry: Entry): string {
   const idNoExt = entry.id.replace(/\.(md|mdx)$/i, '');
   const cleanSlug = idNoExt.replace(/^[a-z]{2}\//, '');
 
-  if (entry.collection === 'pages') {
-    if (cleanSlug.startsWith('about/')) return `/${entryLang}/about`;
-    if (cleanSlug.startsWith('tech-stack/')) return `/${entryLang}/tech-stack`;
-  }
-
   return `/${entryLang}/${entry.collection}/${cleanSlug}`;
 }
 
@@ -51,7 +56,12 @@ const latestBlogItems = (await Promise.all(collections.map((c) => getCollection(
   .flat()
   .filter((entry) => {
     const data = entry.data as unknown as EntryData;
-    return data.language === lang && !data.draft && data.publicationStatus !== 'draft';
+    return (
+      data.language === lang &&
+      !data.draft &&
+      data.publicationStatus === 'published' &&
+      !isLowQualityEntry(data)
+    );
   })
   .map((entry) => {
     const data = entry.data as unknown as EntryData;
@@ -112,12 +122,100 @@ const modules = [
   },
 ];
 
+const spotifyEpUrl = 'https://open.spotify.com/intl-de/album/47aAj0XEtEJnmJqFDswAp0?si=BrvL2mSxQNWD7ER5QBa7MA';
+
+const epTracks = [
+  {
+    title: 'Scherbenprotokoll',
+    figure: 'Splinter / Unknown / Gl1tch',
+    note:
+      lang === 'de'
+        ? 'Crossover-Protokoll über Sortierung, Systembrüche und den ersten gemeinsamen Riss.'
+        : 'Crossover protocol about social sorting, system fractures, and the first shared break.',
+  },
+  {
+    title: 'Aufstiegstraum',
+    figure: 'Shift',
+    note:
+      lang === 'de'
+        ? 'Arbeiterklasse, Elternarbeit und die Frage, ob Aufstieg wirklich Befreiung ist.'
+        : 'Working-class origin, parental labor, and the question whether ascent is liberation.',
+  },
+  {
+    title: 'Als sie kamen',
+    figure: 'Unknown',
+    note:
+      lang === 'de'
+        ? 'Politische Angst, Schweigen und der Moment, in dem Nichtgesehenwerden benannt wird.'
+        : 'Political fear, silence, and the moment invisibility becomes nameable.',
+  },
+  {
+    title: 'Kiffen Kippen Alk',
+    figure: 'Drift',
+    note:
+      lang === 'de'
+        ? 'Rausch nicht als Partybild, sondern als schlechtes Werkzeug gegen Leere.'
+        : 'Intoxication not as party image, but as a broken tool against emptiness.',
+  },
+  {
+    title: 'Questlog',
+    figure: 'Lume',
+    note:
+      lang === 'de'
+        ? 'Games, Backlogs, Discord und kleine Pixellichter als Restlicht-Strategie.'
+        : 'Games, backlogs, Discord, and small pixel lights as a residual-light strategy.',
+  },
+  {
+    title: 'Spiegelkrise',
+    figure: 'Splinter',
+    note:
+      lang === 'de'
+        ? 'Online-Resonanz, Selbsthass und die Maske zwischen Fanliebe und Sichtbarkeit.'
+        : 'Online resonance, self-hate, and the mask between fan love and visibility.',
+  },
+  {
+    title: 'FCK SUNO',
+    figure: 'Gl1tch',
+    note:
+      lang === 'de'
+        ? 'KI-Musik als Streitfall: Kritik am Werkzeug, das zugleich Stimme gibt.'
+        : 'AI music as a conflict: critique of the tool that also gives a voice.',
+  },
+];
+
+const phases = [
+  {
+    title: 'GENERIERUNG LÄUFT',
+    status: lang === 'de' ? 'EP live seit 27.06.2026' : 'EP live since 2026-06-27',
+    body:
+      lang === 'de'
+        ? 'Sechs Stimmen. Ein Bruch. Der Einstieg in Seelensplitter ist jetzt auf Spotify.'
+        : 'Six voices. One fracture. The entry point into Seelensplitter is now on Spotify.',
+  },
+  {
+    title: 'SEELENSPLITTER PHASE 1',
+    status: lang === 'de' ? 'Album geplant: 06.08.2026' : 'Album planned: 2026-08-06',
+    body:
+      lang === 'de'
+        ? 'Kindheit, Pubertaet und Tumblr-Logik: Warum bin ich so geworden?'
+        : 'Childhood, puberty, and Tumblr logic: why did I become like this?',
+  },
+  {
+    title: 'BUGREPORT ERSTELLT',
+    status: lang === 'de' ? 'nächste Problemzone' : 'next problem space',
+    body:
+      lang === 'de'
+        ? 'Young Adult, Systemkritik, Ueberforderung und der Versuch, Reparatur zu verstehen.'
+        : 'Young adulthood, systems critique, overload, and the attempt to understand repair.',
+  },
+];
+
 const metadata = {
-  title: lang === 'de' ? 'Seez Erlebnis' : 'Seez Experience',
+  title: lang === 'de' ? 'Seez - Kreativer Kosmos' : 'Seez - Creative Cosmos',
   description:
     lang === 'de'
-      ? 'Ein kreatives Erlebnis mit System Logs, Creative Core, Sonic Archive, Fragments, Inventory und Blog.'
-      : 'An immersive creative experience with System Logs, Creative Core, Sonic Archive, Fragments, Inventory and Blog.',
+      ? 'Seez ist der kreative Kosmos aus Musik, Figuren, Texten, System Logs und Seelensplitter.'
+      : 'Seez is the creative cosmos of music, figures, texts, system logs, and Seelensplitter.',
   ignoreTitleTemplate: true,
 };
 ---
@@ -127,22 +225,59 @@ const metadata = {
     <div class="bg-grid" aria-hidden="true"></div>
 
     <header class="hero max-w-6xl mx-auto px-4 sm:px-6 pt-12 md:pt-20 pb-10">
-      <p class="boot">&gt; BOOTING EXPERIENCE_PROTOCOL v2</p>
+      <p class="boot">&gt; CREATIVE_COSMOS ONLINE</p>
       <h1 class="text-4xl md:text-7xl font-bold tracking-tight uppercase">
-        {lang === 'de' ? 'Seez Universe' : 'Seez Universe'}
+        {lang === 'de' ? 'Seez ist kein Projekt.' : 'Seez is not a project.'}
+        <span>{lang === 'de' ? 'Seez ist ein System.' : 'Seez is a system.'}</span>
       </h1>
       <p class="max-w-3xl text-gray-300 mt-5 text-sm md:text-base leading-relaxed">
         {
           lang === 'de'
-            ? 'Kein normales Portfolio. Ein begehbares System aus Vergangenheit, Prozess, Musik, Charakteren, Aktionen und dem vollständigen Blog-Feed.'
-            : 'Not a standard portfolio. A navigable system of past, process, music, characters, action, and the full blog feed.'
+            ? 'Musik, Figuren, Texte, System Logs und visuelle Fragmente greifen ineinander. Der erste öffentliche Einstieg ist die EP GENERIERUNG LÄUFT; das Album SEELENSPLITTER PHASE 1 ist der nächste geplante Knoten.'
+            : 'Music, figures, texts, system logs, and visual fragments interlock. The first public entry point is the EP GENERIERUNG LÄUFT; the album SEELENSPLITTER PHASE 1 is the next planned node.'
         }
       </p>
       <div class="mt-6 flex flex-wrap gap-3">
-        <a class="cta cta-primary" href={`/${lang}/kreatives`}>{lang === 'de' ? 'Erlebnis starten' : 'Enter experience'}</a>
-        <a class="cta" href={`/${lang}/blog`}>{lang === 'de' ? 'Zum Blog' : 'Open blog'}</a>
+        <a class="cta cta-primary" href={spotifyEpUrl}>{lang === 'de' ? 'EP auf Spotify hören' : 'Listen on Spotify'}</a>
+        <a class="cta" href={`/${lang}/musik`}>{lang === 'de' ? 'Sonic Archive öffnen' : 'Open Sonic Archive'}</a>
+        <a class="cta" href={`/${lang}/fragmente`}>{lang === 'de' ? 'Figuren betreten' : 'Enter fragments'}</a>
       </div>
     </header>
+
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-10">
+      <div class="release-strip">
+        <div>
+          <p class="text-xs text-lime-300 uppercase tracking-wide">{lang === 'de' ? 'Jetzt draußen' : 'Out now'}</p>
+          <h2 class="text-2xl md:text-4xl font-bold mt-2">GENERIERUNG LÄUFT</h2>
+          <p class="text-sm text-gray-300 mt-2">
+            {
+              lang === 'de'
+                ? 'Veröffentlicht am 27.06.2026. Sieben Tracks als Einladung in Seelensplitter: kein glattes Debüt, sondern ein Protokoll aus Stimmen, Brüchen und Werkzeugen.'
+                : 'Released on 2026-06-27. Seven tracks as an invitation into Seelensplitter: not a polished debut, but a protocol of voices, fractures, and tools.'
+            }
+          </p>
+        </div>
+        <a class="release-button" href={spotifyEpUrl}>Spotify</a>
+      </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-10">
+      <div class="section-heading">
+        <p class="boot">&gt; EP_TRACKS</p>
+        <h2>{lang === 'de' ? 'Sieben geplante Einstiegspunkte' : 'Seven planned entry points'}</h2>
+      </div>
+      <div class="track-grid">
+        {
+          epTracks.map((track) => (
+            <article class="track-card">
+              <p class="text-xs text-amber-300 uppercase">{track.figure}</p>
+              <h3>{track.title}</h3>
+              <p>{track.note}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
 
     <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-10">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -154,6 +289,20 @@ const metadata = {
               <p class="text-sm text-gray-400 mt-2">{module.subtitle}</p>
               <span class="open-link mt-5 inline-block text-xs">&gt;&gt; OPEN</span>
             </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
+      <div class="phase-grid">
+        {
+          phases.map((phase) => (
+            <article class="phase-card">
+              <p>{phase.status}</p>
+              <h3>{phase.title}</h3>
+              <span>{phase.body}</span>
+            </article>
           ))
         }
       </div>
@@ -196,14 +345,15 @@ const metadata = {
 
 <style>
   .experience-shell {
-    --bg: #05070d;
-    --panel: rgba(8, 10, 17, 0.86);
+    --bg: #060707;
+    --panel: rgba(10, 12, 14, 0.88);
     --line: rgba(0, 224, 255, 0.25);
     --text: #d9e2ec;
     position: relative;
     color: var(--text);
-    background: radial-gradient(circle at 20% -10%, rgba(0, 194, 255, 0.2), transparent 35%),
-      radial-gradient(circle at 90% 10%, rgba(22, 78, 99, 0.25), transparent 30%), var(--bg);
+    background: radial-gradient(circle at 18% -8%, rgba(0, 194, 255, 0.18), transparent 32%),
+      radial-gradient(circle at 88% 4%, rgba(132, 204, 22, 0.13), transparent 28%),
+      linear-gradient(135deg, rgba(127, 29, 29, 0.14), transparent 38%), var(--bg);
     min-height: calc(100vh - 6rem);
   }
 
@@ -219,9 +369,17 @@ const metadata = {
 
   .hero,
   .timeline-shell,
+  .release-strip,
+  .track-card,
+  .phase-card,
   .module-card {
     position: relative;
     z-index: 1;
+  }
+
+  .hero h1 span {
+    display: block;
+    color: #bef264;
   }
 
   .boot {
@@ -262,6 +420,86 @@ const metadata = {
     border: 1px solid #21283b;
     padding: 1.2rem;
     transition: 0.2s ease;
+  }
+
+  .release-strip {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(20, 83, 45, 0.78), rgba(69, 26, 3, 0.72));
+    border: 1px solid rgba(190, 242, 100, 0.35);
+    padding: 1.25rem;
+  }
+
+  .release-button {
+    border: 1px solid #bef264;
+    color: #bef264;
+    padding: 0.7rem 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 640px) {
+    .release-strip {
+      grid-template-columns: 1fr;
+    }
+
+    .release-button {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  .section-heading {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1rem;
+  }
+
+  .section-heading h2 {
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .track-grid,
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .track-card,
+  .phase-card {
+    background: rgba(13, 15, 18, 0.88);
+    border: 1px solid #27272a;
+    padding: 1rem;
+  }
+
+  .track-card h3,
+  .phase-card h3 {
+    margin-top: 0.3rem;
+    color: white;
+    font-weight: 800;
+    font-size: 1.15rem;
+  }
+
+  .track-card p:last-child,
+  .phase-card span {
+    display: block;
+    margin-top: 0.5rem;
+    color: #cbd5e1;
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .phase-card p {
+    color: #fbbf24;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
   .module-card:hover {

@@ -1,130 +1,100 @@
 ---
-/**
- * About – Multilingual, content-driven About page with proper metadata, alt links,
- * JSON-LD, reading stats, graceful fallbacks, related projects, and a clean source link.
- * @route /[lang]/about
- */
 import Layout from '../../layouts/PageLayout.astro';
-import { getEntry, render } from 'astro:content';
-import { SUPPORTED_LANGUAGES, getTranslations } from '../../utils/i18n';
-import RelatedProjects from '../../components/content/RelatedProjects.astro';
-import { extractMentionedProjects, getProjectLinks, type ProjectLink } from '../../utils/content/projectLinks';
+import { SUPPORTED_LANGUAGES } from '../../utils/i18n';
 import type { SupportedLanguage } from '../../utils/i18n';
-import type { MetaData } from '~/types';
 
-// Build-time constants
 export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
-const t = await getTranslations(lang);
+const t = (de: string, en: string) => (lang === 'de' ? de : en);
 
-// Load content entry (content collection: pages/about/{lang}.md[x])
-const pageEntry = await getEntry('pages', `about/${lang}`);
-
-// Render markdown to components + headings (if available)
-const rendered = pageEntry ? await render(pageEntry) : null;
-const Content = rendered?.Content ?? null;
-
-// Build canonical + hreflang alternates
-const baseUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://seez.eu';
-const canonical = `${baseUrl}/${lang}/about`;
-const alternates = SUPPORTED_LANGUAGES.filter((l) => l !== lang).map((l) => ({
-  lang: l,
-  url: `${baseUrl}/${l}/about`,
-}));
-
-// Metadata
-const title = pageEntry?.data.title || t.navigation.About || (lang === 'de' ? 'Über' : 'About');
-const description =
-  pageEntry?.data.description ||
-  (lang === 'de'
-    ? 'Über dieses Projekt: digitale Souveränität, offene Werkzeuge, poetische Systeme.'
-    : 'About this project: digital sovereignty, open tools, poetic systems.');
-
-const metadata: MetaData = {
-  title,
-  description,
-  canonical,
-  openGraph: {
-    type: 'article',
-    url: canonical,
-  },
-  twitter: {
-    cardType: 'summary_large_image',
-  },
+const metadata = {
+  title: t('Über Seez', 'About Seez'),
+  description: t(
+    'Seez ist ein kreativer Kosmos aus Musik, Figuren, Texten, System Logs und visuellen Fragmenten.',
+    'Seez is a creative cosmos of music, figures, texts, system logs, and visual fragments.'
+  ),
 };
 
-// Extract mentioned projects from content and get their links
-let relatedProjects: ProjectLink[] = [];
-if (pageEntry?.body) {
-  const mentionedProjectNames = extractMentionedProjects(pageEntry.body);
-  relatedProjects = await getProjectLinks(mentionedProjectNames, lang);
-}
+const pillars = [
+  {
+    label: 'MUSIC',
+    title: t('Songs als Beweisstücke', 'Songs as evidence pieces'),
+    text: t(
+      'GENERIERUNG LÄUFT ist der öffentliche Einstieg: sieben Tracks, sechs Stimmen, ein Systembruch.',
+      'GENERIERUNG LÄUFT is the public entry point: seven tracks, six voices, one system fracture.'
+    ),
+  },
+  {
+    label: 'FIGURES',
+    title: t('Figuren statt Persona', 'Figures instead of persona'),
+    text: t(
+      'Drift, Splinter, Shift, Lume, Unknown und Gl1tch sind Perspektiven, keine Maskottchen.',
+      'Drift, Splinter, Shift, Lume, Unknown, and Gl1tch are perspectives, not mascots.'
+    ),
+  },
+  {
+    label: 'LOGS',
+    title: t('Prozess bleibt sichtbar', 'The process stays visible'),
+    text: t(
+      'System Logs, Fragmente und Lyrics zeigen nicht nur Ergebnisse, sondern auch Brüche, Methoden und Entscheidungen.',
+      'System logs, fragments, and lyrics show not only results, but fractures, methods, and decisions.'
+    ),
+  },
+];
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <header class="mb-8 sm:mb-10">
-      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter font-heading dark:text-gray-200">
-        {title}
-      </h1>
-      <p class="mt-3 text-base text-gray-600 dark:text-gray-400">
-        {description}
-      </p>
-    </header>
+  <section class="min-h-screen bg-[#06070a] text-slate-100">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
+      <header class="max-w-3xl">
+        <p class="text-xs uppercase tracking-[0.28em] text-lime-300">&gt; SEEZ_ARCHIVE / ABOUT</p>
+        <h1 class="mt-4 text-4xl font-black tracking-tight md:text-6xl">{t('Seez ist kein Nebenprojekt.', 'Seez is not a side project.')}</h1>
+        <p class="mt-5 border-l border-lime-400 pl-4 text-base leading-7 text-slate-300 md:text-lg">
+          {t(
+            'Seez ist der kreative Kosmos, in dem Musik, Figuren, Texte, KI-Werkzeuge und alte Fragmente zu einer zusammenhängenden Welt werden.',
+            'Seez is the creative cosmos where music, figures, texts, AI tools, and legacy fragments become one connected world.'
+          )}
+        </p>
+      </header>
 
-    <div class="prose prose-lg dark:prose-invert mx-auto">
-      {
-        Content ? (
-          <Content />
-        ) : (
-          <div class="rounded-xl border border-dashed border-gray-300/60 p-6 text-gray-600 dark:border-gray-700 dark:text-gray-300">
-            <p class="mb-2">
-              {lang === 'de'
-                ? 'Kein Inhalt gefunden. Lege in der Content-Collection eine Datei unter'
-                : 'No content found. Create a file in the content collection at'}{' '}
-              <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">src/content/pages/about/{lang}.mdx</code>{' '}
-              {lang === 'de' ? 'oder' : 'or'}{' '}
-              <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">src/content/pages/about/{lang}.md</code>.
-            </p>
-            <p class="mt-2">
-              {lang === 'de'
-                ? 'Danach neu bauen. Ich weiß, es ist nervig. Willkommen im Web.'
-                : 'Then rebuild. Yes, it’s annoying. Welcome to the web.'}
-            </p>
-          </div>
-        )
-      }
-    </div>
-
-    <!-- Related Projects Section -->
-    {
-      relatedProjects.length > 0 && (
-        <div class="mt-12">
-          <RelatedProjects
-            projects={relatedProjects}
-            title={lang === 'de' ? 'Erwähnte Projekte' : 'Mentioned Projects'}
-          />
-        </div>
-      )
-    }
-
-    <div class="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
-      <div class="text-sm text-gray-500 dark:text-gray-400">
-        {lang === 'de' ? 'Auch verfügbar auf:' : 'Also available in:'}
+      <div class="mt-10 grid gap-4 md:grid-cols-3">
+        {pillars.map((pillar) => (
+          <article class="border border-slate-800 bg-slate-950/70 p-5">
+            <p class="text-xs font-bold tracking-[0.22em] text-cyan-300">{pillar.label}</p>
+            <h2 class="mt-4 text-xl font-bold">{pillar.title}</h2>
+            <p class="mt-3 text-sm leading-6 text-slate-400">{pillar.text}</p>
+          </article>
+        ))}
       </div>
-      <div class="flex items-center gap-3">
-        {
-          alternates.map((a) => (
-            <a
-              href={a.url}
-              class="text-sm underline underline-offset-2 hover:no-underline text-gray-700 dark:text-gray-200"
-            >
-              {a.lang.toUpperCase()}
-            </a>
-          ))
-        }
+
+      <div class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <a class="portal" href={`/${lang}/musik`}>Sonic Archive</a>
+        <a class="portal" href={`/${lang}/lyrics`}>Lyrics Vault</a>
+        <a class="portal" href={`/${lang}/fragmente`}>{t('Fragmente', 'Fragments')}</a>
+        <a class="portal" href={`/${lang}/system-logs`}>System Logs</a>
       </div>
     </div>
   </section>
 </Layout>
+
+<style>
+  .portal {
+    border: 1px solid rgba(190, 242, 100, 0.32);
+    background: rgba(15, 23, 42, 0.72);
+    color: #ecfccb;
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 0.95rem 1rem;
+    text-align: center;
+    text-transform: uppercase;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .portal:hover {
+    border-color: #bef264;
+    transform: translateY(-1px);
+  }
+</style>

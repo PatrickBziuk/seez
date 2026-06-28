@@ -22,23 +22,26 @@ export const headerData = getHeaderData();
 export const getFooterData = (locale: SupportedLanguage = 'en') => ({
   links: [
     {
-      title: locale === 'de' ? 'Kreatives' : 'Creative',
+      title: locale === 'de' ? 'Kosmos' : 'Cosmos',
       links: [
-        { text: locale === 'de' ? 'Musik' : 'Music', href: getLocalizedUrl('/musik', locale) },
-        { text: 'Lyrics Vault', href: getLocalizedUrl('/lyrics', locale) },
-        { text: locale === 'de' ? 'Texte' : 'Texts', href: getLocalizedUrl('/texte', locale) },
+        { text: locale === 'de' ? 'Erlebnis' : 'Experience', href: getLocalizedUrl('/', locale) },
+        { text: 'Creative Core', href: getLocalizedUrl('/kreatives', locale) },
+        { text: 'System Logs', href: getLocalizedUrl('/system-logs', locale) },
         { text: locale === 'de' ? 'Fragmente' : 'Fragments', href: getLocalizedUrl('/fragmente', locale) },
-        { text: locale === 'de' ? 'Blog' : 'Blog', href: getLocalizedUrl('/blog', locale) },
-        { text: locale === 'de' ? 'Presse' : 'Press', href: getLocalizedUrl('/press', locale) },
+        { text: 'Inventory', href: getLocalizedUrl('/inventory', locale) },
       ],
     },
     {
-      title: locale === 'de' ? 'Technisches' : 'Technical',
+      title: 'Release',
       links: [
-        { text: locale === 'de' ? 'Projekte' : 'Projects', href: getLocalizedUrl('/projects', locale) },
-        { text: 'Lab', href: getLocalizedUrl('/lab', locale) },
-        { text: locale === 'de' ? 'Leben' : 'Life', href: getLocalizedUrl('/life', locale) },
-        { text: locale === 'de' ? 'Über' : 'About', href: getLocalizedUrl('/about', locale) },
+        { text: 'Sonic Archive', href: getLocalizedUrl('/musik', locale) },
+        { text: 'Lyrics Vault', href: getLocalizedUrl('/lyrics', locale) },
+        {
+          text: 'GENERIERUNG LÄUFT',
+          href: 'https://open.spotify.com/intl-de/album/47aAj0XEtEJnmJqFDswAp0?si=BrvL2mSxQNWD7ER5QBa7MA',
+        },
+        { text: locale === 'de' ? 'Presse' : 'Press', href: getLocalizedUrl('/press', locale) },
+        { text: locale === 'de' ? 'Über Seez' : 'About Seez', href: getLocalizedUrl('/about', locale) },
       ],
     },
     {
@@ -52,34 +55,22 @@ export const getFooterData = (locale: SupportedLanguage = 'en') => ({
       title: 'Socials',
       links: [
         {
-          text: locale === 'de' ? '@seez - Spotify' : '@seez - Spotify',
-          href: 'https://open.spotify.com/intl-de/artist/2i9qFi0ArJgbyYbRqqcOgq?si=dsY0gbxgTHKEEHGehupkww',
+          text: 'GENERIERUNG LÄUFT - Spotify',
+          href: 'https://open.spotify.com/intl-de/album/47aAj0XEtEJnmJqFDswAp0?si=BrvL2mSxQNWD7ER5QBa7MA',
           icon: 'tabler:brand-spotify',
-          ariaLabel: 'Spotify',
+          ariaLabel: 'Spotify EP',
         },
         {
-          text: '@PatrickBziuk - GitHub',
-          href: 'https://github.com/PatrickBziuk/seez',
-          icon: 'tabler:brand-github',
-          ariaLabel: 'GitHub',
-        },
-        {
-          text: locale === 'de' ? 'Art, Musik & Schreibt' : '@seezerino - Art, Music & Writing',
+          text: locale === 'de' ? '@seezerino - Art, Musik & Schreiben' : '@seezerino - Art, Music & Writing',
           href: 'https://www.instagram.com/seezerino/',
           icon: 'tabler:brand-instagram',
-          ariaLabel: locale === 'de' ? 'Art, Musik & Schreibt (Instagram)' : 'Art, Music & Writing (Instagram)',
+          ariaLabel: locale === 'de' ? 'Seez auf Instagram' : 'Seez on Instagram',
         },
         {
-          text: locale === 'de' ? 'Art, Musik & Schreibt' : '@seezerino - Art, Music & Writing',
+          text: locale === 'de' ? '@seezerino - Art, Musik & Schreiben' : '@seezerino - Art, Music & Writing',
           href: 'https://www.tiktok.com/@seezerino',
           icon: 'tabler:brand-tiktok',
-          ariaLabel: locale === 'de' ? 'Art, Musik & Schreibt (TikTok)' : 'Art, Music & Writing (TikTok)',
-        },
-        {
-          text: locale === 'de' ? 'Dein Anker' : '@deinanker - Your safe harbor',
-          href: 'https://www.instagram.com/deinanker/',
-          icon: 'tabler:brand-instagram',
-          ariaLabel: locale === 'de' ? 'Dein Anker (Instagram)' : 'Your safe harbor (Instagram)',
+          ariaLabel: locale === 'de' ? 'Seez auf TikTok' : 'Seez on TikTok',
         },
       ],
     },
@@ -92,7 +83,10 @@ export const getFooterData = (locale: SupportedLanguage = 'en') => ({
     { text: 'Impressum', href: getLocalizedUrl('/legal/impressum', locale) },
   ],
   socialLinks: [], // Keep empty array for backward compatibility
-  footNote: locale === 'de' ? 'Mit Leidenschaft und Neugier erstellt' : 'Built with passion and curiosity',
+  footNote:
+    locale === 'de'
+      ? 'Seez ist ein kreativer Kosmos aus Musik, Figuren, Texten und System Logs.'
+      : 'Seez is a creative cosmos of music, figures, texts, and system logs.',
   locale,
 });
 

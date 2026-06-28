@@ -1,0 +1,57 @@
+---
+interface Props {
+  target?: string;
+  title?: string;
+}
+
+const { target = '/de', title = 'SEEZ' } = Astro.props;
+---
+
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,follow" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main>
+      <p>SEEZ_ROUTE_MERGED</p>
+      <a href={target}>Zum Seez-Kosmos</a>
+    </main>
+  </body>
+</html>
+
+<style>
+  body {
+    background: #06070a;
+    color: #e5e7eb;
+    display: grid;
+    font-family: system-ui, sans-serif;
+    min-height: 100vh;
+    place-items: center;
+  }
+
+  main {
+    border: 1px solid rgba(190, 242, 100, 0.35);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  p {
+    color: #bef264;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
+
+  a {
+    color: white;
+    display: inline-block;
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-top: 1rem;
+    text-decoration: none;
+  }
+</style>

@@ -12,7 +12,7 @@ export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params:
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
-const collections = ['books', 'projects', 'lab', 'life', 'music', 'pages'] as const;
+const collections = ['projects', 'life', 'music', 'texts'] as const;
 
 type Coll = (typeof collections)[number];
 type Entry = Awaited<ReturnType<typeof getCollection<Coll>>>[number];
@@ -28,6 +28,16 @@ type EntryData = {
   date?: Date | string;
 };
 
+const lowQualityPattern = /(coming soon|placeholder|demo page|sample\b|tbd|lorem ipsum|stay tuned)/i;
+
+function isLowQualityEntry(data: EntryData): boolean {
+  const title = (data.title || '').trim();
+  const description = (data.description || '').trim();
+  const combined = `${title} ${description}`;
+  if (!title) return true;
+  return lowQualityPattern.test(combined);
+}
+
 function toDate(entry: Entry): Date | null {
   const data = entry.data as unknown as EntryData;
   const d = data.firstPublishedAt || data.publishDate || data.date;
@@ -41,14 +51,10 @@ function toDate(entry: Entry): Date | null {
 
 function toUrl(entry: Entry): string {
   const data = entry.data as unknown as EntryData;
-  const lang = data.language || 'en';
+  const itemLang = data.language || 'en';
   const idNoExt = entry.id.replace(/\.(md|mdx)$/i, '');
   const cleanSlug = idNoExt.replace(/^[a-z]{2}\//, '');
-  if (entry.collection === 'pages') {
-    if (cleanSlug.startsWith('about/')) return `/${lang}/about`;
-    if (cleanSlug.startsWith('tech-stack/')) return `/${lang}/tech-stack`;
-  }
-  return `/${lang}/${entry.collection}/${cleanSlug}`;
+  return `/${itemLang}/${entry.collection}/${cleanSlug}`;
 }
 
 // Load, filter by language and publication state, then sort
@@ -56,7 +62,12 @@ const items = (await Promise.all(collections.map((c) => getCollection(c))))
   .flat()
   .filter((e) => {
     const data = e.data as unknown as EntryData;
-    return data.language === lang && !data.draft && data.publicationStatus !== 'draft';
+    return (
+      data.language === lang &&
+      !data.draft &&
+      data.publicationStatus === 'published' &&
+      !isLowQualityEntry(data)
+    );
   })
   .map((e) => {
     const data = e.data as unknown as EntryData;

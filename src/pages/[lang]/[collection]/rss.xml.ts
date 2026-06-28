@@ -2,11 +2,11 @@ import { getRssString } from '@astrojs/rss';
 import { buildRssItems, getRssChannelMeta } from '~/utils/rss';
 import type { SupportedLanguage } from '~/utils/i18n';
 
-type CollectionName = 'books' | 'projects' | 'lab' | 'life' | 'music';
+type CollectionName = 'music';
 
 export async function getStaticPaths() {
   const languages: SupportedLanguage[] = ['en', 'de'];
-  const collections: CollectionName[] = ['books', 'projects', 'lab', 'life', 'music'];
+  const collections: CollectionName[] = ['music'];
 
   return languages.flatMap((lang) =>
     collections.map((collection) => ({

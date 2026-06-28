@@ -1,365 +1,99 @@
 ---
 import Layout from '../../layouts/PageLayout.astro';
-import { SUPPORTED_LANGUAGES, getTranslations } from '../../utils/i18n';
+import { SUPPORTED_LANGUAGES } from '../../utils/i18n';
 import type { SupportedLanguage } from '../../utils/i18n';
 
-export const getStaticPaths = () => {
-  return SUPPORTED_LANGUAGES.map((lang) => ({
-    params: { lang },
-  }));
-};
+export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
+const t = (de: string, en: string) => (lang === 'de' ? de : en);
 
-// Load translations for the current language
-const t = await getTranslations(lang);
+const topic = Astro.url.searchParams.get('topic') || 'seez';
+const subject = encodeURIComponent(`SEEZ // ${topic}`);
 
 const metadata = {
-  title: t.navigation.Contact,
-  description:
-    lang === 'de'
-      ? 'Kontaktiere mich für Fragen, Kooperationen oder einfach um Hallo zu sagen.'
-      : 'Get in touch with me for questions, collaborations, or just to say hello.',
-  robots: {
-    index: true,
-    follow: true,
-  },
+  title: t('Kontakt', 'Contact'),
+  description: t(
+    'Kontakt für Seez: Presse, Musik, visuelle Kollaboration, Releasefragen und System-Updates.',
+    'Contact for Seez: press, music, visual collaboration, release questions, and system updates.'
+  ),
 };
+
+const lanes = [
+  {
+    title: t('Presse & Kontext', 'Press & context'),
+    text: t('Releaseinfos, Projektbeschreibung, Bild-/Textanfragen.', 'Release info, project context, image and text requests.'),
+  },
+  {
+    title: t('Musik & Kollab', 'Music & collabs'),
+    text: t('Feature-Ideen, Visuals, Remixe, Kuratierung, Playlists.', 'Feature ideas, visuals, remixes, curation, playlists.'),
+  },
+  {
+    title: t('System Updates', 'System updates'),
+    text: t('Feedback, Fehlerfunde, neue Log-Einträge und Community-Spuren.', 'Feedback, corrections, new log entries, and community traces.'),
+  },
+];
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-2xl">
-    <header class="text-center mb-12">
-      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
-        {t.navigation.Contact}
-      </h1>
-      <p class="text-xl text-muted dark:text-slate-400">
-        {
-          lang === 'de'
-            ? 'Kontaktiere mich für Fragen, Kooperationen oder einfach um Hallo zu sagen.'
-            : 'Get in touch for questions, collaborations, or just to say hello.'
-        }
-      </p>
-    </header>
+  <section class="min-h-screen bg-[#07080b] px-4 py-14 text-slate-100 sm:px-6 lg:py-20">
+    <div class="mx-auto max-w-5xl">
+      <header class="max-w-3xl">
+        <p class="text-xs uppercase tracking-[0.28em] text-cyan-300">&gt; CONTACT_CHANNEL / SEEZ</p>
+        <h1 class="mt-4 text-4xl font-black tracking-tight md:text-6xl">{t('Kontakt zum Kosmos', 'Contact the cosmos')}</h1>
+        <p class="mt-5 text-base leading-7 text-slate-300 md:text-lg">
+          {t(
+            'Für alles, was direkt mit Seez zu tun hat: EP, Figuren, Lyrics, visuelle Zusammenarbeit, Presse und System Logs.',
+            'For everything directly tied to Seez: EP, figures, lyrics, visual collaboration, press, and system logs.'
+          )}
+        </p>
+      </header>
 
-    <!-- Contact Form -->
-    <form
-      id="contact-form"
-      class="space-y-6 bg-white dark:bg-gray-800 p-8 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg"
-    >
-      <!-- Name Field -->
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {lang === 'de' ? 'Name' : 'Name'}
-          <span class="text-red-500" aria-label="required">*</span>
-        </label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          required
-          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder={lang === 'de' ? 'Ihr Name' : 'Your name'}
-        />
+      <div class="mt-10 grid gap-4 md:grid-cols-3">
+        {lanes.map((lane) => (
+          <article class="border border-slate-800 bg-slate-950/70 p-5">
+            <h2 class="text-xl font-bold">{lane.title}</h2>
+            <p class="mt-3 text-sm leading-6 text-slate-400">{lane.text}</p>
+          </article>
+        ))}
       </div>
 
-      <!-- Email Field -->
-      <div>
-        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {lang === 'de' ? 'E-Mail' : 'Email'}
-          <span class="text-red-500" aria-label="required">*</span>
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          required
-          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder={lang === 'de' ? 'ihre.email@beispiel.de' : 'your.email@example.com'}
-        />
-      </div>
-
-      <!-- Subject Field -->
-      <div>
-        <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {lang === 'de' ? 'Betreff' : 'Subject'}
-        </label>
-        <input
-          type="text"
-          id="subject"
-          name="subject"
-          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder={lang === 'de' ? 'Worum geht es?' : "What's this about?"}
-        />
-      </div>
-
-      <!-- Message Field -->
-      <div>
-        <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {lang === 'de' ? 'Nachricht' : 'Message'}
-          <span class="text-red-500" aria-label="required">*</span>
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          rows="6"
-          required
-          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"
-          placeholder={lang === 'de' ? 'Ihre Nachricht...' : 'Your message...'}></textarea>
-      </div>
-
-      <!-- Privacy Notice -->
-      <div class="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-        {
-          lang === 'de' ? (
-            <>
-              <p class="mb-2">
-                <strong>Datenschutzhinweis:</strong> Dieses Formular öffnet Ihr E-Mail-Programm mit vorausgefüllten
-                Daten. Keine Daten werden an Dritte übertragen, bis Sie die E-Mail aktiv versenden.
-              </p>
-              <p>
-                Diese Website verwendet keine Tracking-Cookies. Durch Ausfüllen dieses Formulars werden keine
-                personenbezogenen Daten gespeichert oder verarbeitet.
-              </p>
-            </>
-          ) : (
-            <>
-              <p class="mb-2">
-                <strong>Privacy Notice:</strong> This form opens your email client with pre-filled data. No data is
-                transmitted to third parties until you actively send the email.
-              </p>
-              <p>
-                No tracking cookies are used on this website. By filling out this form, no personal data is stored or
-                processed.
-              </p>
-            </>
-          )
-        }
-      </div>
-
-      <!-- Submit Button -->
-      <div class="text-center">
-        <button
-          type="submit"
-          class="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-        >
-          <svg
-            class="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            ></path>
-          </svg>
-          {lang === 'de' ? 'E-Mail öffnen' : 'Open Email'}
-        </button>
-      </div>
-    </form>
-
-    <!-- Alternative Contact Methods -->
-    <div class="mt-12 text-center">
-      <h2 class="text-xl font-semibold mb-6 dark:text-gray-200">
-        {lang === 'de' ? 'Weitere Kontaktmöglichkeiten' : 'Other Ways to Reach Me'}
-      </h2>
-      <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8">
-        <!-- Email -->
-        <a
-          href="mailto:info@seez.eu"
-          class="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200"
-        >
-          <svg
-            class="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            ></path>
-          </svg>
+      <div class="mt-10 border border-lime-300/30 bg-lime-950/20 p-6">
+        <p class="text-xs uppercase tracking-[0.22em] text-lime-300">PRIMARY CHANNEL</p>
+        <a class="mt-3 inline-block text-2xl font-black text-white hover:text-lime-200" href={`mailto:info@seez.eu?subject=${subject}`}>
           info@seez.eu
         </a>
-
-        <!-- GitHub -->
-        <a
-          href="https://github.com/PatrickBziuk"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex items-center text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200"
-        >
-          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
-            ></path>
-          </svg>
-          GitHub
-        </a>
+        <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
+          {t(
+            'Der Link öffnet dein Mailprogramm mit einem Seez-Betreff. Diese Seite nutzt kein eigenes Kontakttracking.',
+            'The link opens your mail app with a Seez subject. This page does not use contact tracking.'
+          )}
+        </p>
       </div>
 
-      <!-- Social Media Links -->
-      <div class="mt-8">
-        <h3 class="text-lg font-medium mb-4 dark:text-gray-200">
-          {lang === 'de' ? 'Folge mir auch hier' : 'Follow me on social media'}
-        </h3>
-        <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
-          <!-- Art, Music & Writing Instagram -->
-          <a
-            href="https://www.instagram.com/seezerino/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center text-pink-600 dark:text-pink-400 hover:text-pink-800 dark:hover:text-pink-300 transition-colors duration-200"
-          >
-            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-              ></path>
-            </svg>
-            {lang === 'de' ? 'Art, Musik & Schreibt' : 'Art, Music & Writing'}
-          </a>
-
-          <!-- Art, Music & Writing TikTok -->
-          <a
-            href="https://www.tiktok.com/@seezerino"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200"
-          >
-            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"
-              ></path>
-            </svg>
-            {lang === 'de' ? 'Art, Musik & Schreibt' : 'Art, Music & Writing'}
-          </a>
-
-          <!-- Your safe harbor Instagram -->
-          <a
-            href="https://www.instagram.com/deinanker/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200"
-          >
-            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-              ></path>
-            </svg>
-            {lang === 'de' ? 'Dein Anker' : 'Your safe harbor'}
-          </a>
-        </div>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="link-chip" href="https://open.spotify.com/intl-de/album/47aAj0XEtEJnmJqFDswAp0?si=BrvL2mSxQNWD7ER5QBa7MA">Spotify EP</a>
+        <a class="link-chip" href="https://www.instagram.com/seezerino/">Instagram</a>
+        <a class="link-chip" href="https://www.tiktok.com/@seezerino">TikTok</a>
+        <a class="link-chip" href={`/${lang}/press`}>{t('Presse', 'Press')}</a>
       </div>
     </div>
   </section>
 </Layout>
 
 <style>
-  /* Enhanced form styling */
-  form {
-    position: relative;
+  .link-chip {
+    border: 1px solid rgba(125, 211, 252, 0.35);
+    color: #bae6fd;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 0.75rem 0.9rem;
+    text-transform: uppercase;
   }
 
-  /* Focus indicator improvements */
-  input:focus,
-  textarea:focus {
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  /* Form validation styling */
-  input:valid {
-    border-color: #10b981;
-  }
-
-  input:invalid:not(:placeholder-shown) {
-    border-color: #ef4444;
-  }
-
-  /* Loading state for submit button */
-  button[type='submit']:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  /* Hover effects for contact links */
-  a:hover svg {
-    transform: translateY(-1px);
-    transition: transform 0.2s ease;
+  .link-chip:hover {
+    border-color: #7dd3fc;
+    color: #fff;
   }
 </style>
-
-<!-- Client-side form enhancement -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('contact-form');
-
-    if (form) {
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        // Get form values
-        const name = (document.getElementById('name') as HTMLInputElement)?.value || '';
-        const email = (document.getElementById('email') as HTMLInputElement)?.value || '';
-        const subject = (document.getElementById('subject') as HTMLInputElement)?.value || '';
-        const message = (document.getElementById('message') as HTMLTextAreaElement)?.value || '';
-
-        // Validate required fields
-        if (!name.trim() || !email.trim() || !message.trim()) {
-          const lang = document.documentElement.lang || 'en';
-          const errorMessage =
-            lang === 'de' ? 'Bitte füllen Sie alle erforderlichen Felder aus.' : 'Please fill in all required fields.';
-          alert(errorMessage);
-          return;
-        }
-
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-          const lang = document.documentElement.lang || 'en';
-          const errorMessage =
-            lang === 'de' ? 'Bitte geben Sie eine gültige E-Mail-Adresse ein.' : 'Please enter a valid email address.';
-          alert(errorMessage);
-          return;
-        }
-
-        // Construct email body with sender information
-        const emailBody = `Name: ${name}\nE-Mail: ${email}\n\n${message}`;
-
-        // Use provided subject or default
-        const emailSubject =
-          subject.trim() || (document.documentElement.lang === 'de' ? 'Nachricht von seez.eu' : 'Message from seez.eu');
-
-        // Create mailto URL
-        const mailto = `mailto:info@seez.eu?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-
-        // Open email client
-        window.location.href = mailto;
-
-        // Optional: Reset form after successful submission
-        setTimeout(() => {
-          (form as HTMLFormElement).reset();
-        }, 100);
-      });
-    }
-
-    // Simple form validation feedback
-    const inputs = form?.querySelectorAll('input[required], textarea[required]');
-    inputs?.forEach((input) => {
-      input.addEventListener('blur', function (this: HTMLInputElement | HTMLTextAreaElement) {
-        if (this.value.trim() === '') {
-          this.setAttribute('aria-invalid', 'true');
-        } else {
-          this.setAttribute('aria-invalid', 'false');
-        }
-      });
-    });
-  });
-</script>

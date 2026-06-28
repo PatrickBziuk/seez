@@ -3,13 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/MarkdownLayout.astro';
 
 export async function getStaticPaths() {
-  const allContent = await Promise.all([
-    getCollection('books'),
-    getCollection('projects'),
-    getCollection('lab'),
-    getCollection('life'),
-    getCollection('pages'),
-  ]);
+  const allContent = await Promise.all([getCollection('music')]);
 
   const paths = [];
 

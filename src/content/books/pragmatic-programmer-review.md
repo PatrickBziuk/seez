@@ -10,7 +10,8 @@ tags:
   - craftsmanship
   - best-practices
   - career-development
-publicationStatus: published
+publicationStatus: archived
+draft: true
 canonicalId: slug-20250826-pragmatic-programmer
 subtitle: 'A foundational text that transforms how developers think about their craft'
 publishDate: '2025-01-15T09:00:00.000Z'

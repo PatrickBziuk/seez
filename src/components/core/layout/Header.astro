@@ -101,6 +101,7 @@ const showDebugIndicator = import.meta.env.DEV;
     position: relative;
     display: inline-flex;
     align-items: center;
+    min-height: 44px;
     padding: 0.75rem 1rem;
     transition: color 0.2s ease;
   }
@@ -170,7 +171,7 @@ const showDebugIndicator = import.meta.env.DEV;
   }
 
   /* Hardening: unconditional desktop enforcement via media query */
-  @media (min-width: 768px) {
+  @media (min-width: 1280px) {
     nav[data-nav='desktop'] {
       display: flex !important;
     }
@@ -197,8 +198,8 @@ const showDebugIndicator = import.meta.env.DEV;
   <div
     class:list={[
       'relative text-default py-3 px-3 md:px-6 mx-auto w-full',
-      { 'md:flex md:justify-between': position !== 'center' },
-      { 'md:grid md:grid-cols-3 md:items-center': position === 'center' },
+      { 'xl:flex xl:justify-between': position !== 'center' },
+      { 'xl:grid xl:grid-cols-[auto_1fr_auto] xl:items-center': position === 'center' },
       { 'max-w-7xl': !isFullWidth },
     ]}
   >
@@ -206,17 +207,17 @@ const showDebugIndicator = import.meta.env.DEV;
       <a class="flex items-center" href={cleanLogoUrl}>
         <Logo />
       </a>
-      <div class="flex items-center md:hidden">
+      <div class="flex items-center xl:hidden">
         <ToggleMenu />
       </div>
     </div>
     <nav
       aria-label={locale === 'de' ? 'Hauptnavigation' : 'Main navigation'}
-      class="main-nav items-center w-full md:w-auto hidden md:flex md:mx-5 text-default overflow-y-auto overflow-x-hidden md:overflow-y-visible md:overflow-x-auto md:justify-self-center"
+      class="main-nav items-center w-full xl:w-auto hidden xl:flex xl:mx-5 text-default overflow-y-auto overflow-x-hidden xl:overflow-y-visible xl:overflow-x-auto xl:justify-self-center"
       data-nav="desktop"
     >
       <ul
-        class="nav-list flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium md:justify-center"
+        class="nav-list flex flex-col xl:flex-row xl:self-center w-full xl:w-auto text-xl xl:text-[0.875rem] tracking-[0.01rem] font-medium xl:justify-center"
       >
         {
           links.map(({ text, href, links }: MenuLink) => (
@@ -231,7 +232,7 @@ const showDebugIndicator = import.meta.env.DEV;
                     {text}{' '}
                     <Icon name="tabler:chevron-down" class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline" />
                   </button>
-                  <ul class="dropdown-menu md:backdrop-blur-md dark:md:bg-dark rounded md:absolute pl-4 md:pl-0 md:hidden font-medium md:bg-white/90 md:min-w-[200px] drop-shadow-xl">
+                  <ul class="dropdown-menu xl:backdrop-blur-md dark:xl:bg-dark rounded xl:absolute pl-4 xl:pl-0 xl:hidden font-medium xl:bg-white/90 xl:min-w-[200px] drop-shadow-xl">
                     {links.map(({ text: text2, href: href2 }: MenuLink) => (
                       <li>
                         <a
@@ -269,7 +270,7 @@ const showDebugIndicator = import.meta.env.DEV;
     <!-- Mobile Navigation -->
     <nav
       aria-label={locale === 'de' ? 'Mobile Navigation' : 'Mobile navigation'}
-      class="mobile-nav md:hidden w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg mt-2 hidden"
+      class="mobile-nav xl:hidden w-full bg-white dark:bg-gray-800 shadow-xl rounded-xl mt-3 border border-gray-200 dark:border-gray-700 overflow-hidden hidden"
       data-nav="mobile"
       id="mobile-navigation"
     >
@@ -282,7 +283,7 @@ const showDebugIndicator = import.meta.env.DEV;
                   <button
                     type="button"
                     aria-label={text}
-                    class="w-full text-left hover:bg-gray-100 dark:hover:bg-gray-700 px-4 py-3 flex items-center justify-between"
+                    class="w-full text-left hover:bg-gray-100 dark:hover:bg-gray-700 px-5 py-3.5 min-h-[44px] flex items-center justify-between text-[0.95rem] leading-6"
                   >
                     {text}
                     <Icon name="tabler:chevron-down" class="w-4 h-4" />
@@ -293,7 +294,7 @@ const showDebugIndicator = import.meta.env.DEV;
                         <a
                           aria-label={text2}
                           class:list={[
-                            'block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600',
+                            'block px-5 py-3 min-h-[44px] text-[0.95rem] leading-6 hover:bg-gray-100 dark:hover:bg-gray-600',
                             {
                               'active bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400':
                                 href2 === currentPath,
@@ -311,7 +312,7 @@ const showDebugIndicator = import.meta.env.DEV;
                 <a
                   aria-label={text}
                   class:list={[
-                    'block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 border-l-4 border-transparent',
+                    'block px-5 py-3.5 min-h-[44px] text-[0.95rem] leading-6 hover:bg-gray-100 dark:hover:bg-gray-700 border-l-4 border-transparent',
                     {
                       'active bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400 border-blue-500':
                         isLinkActive(href || ''),
@@ -340,7 +341,7 @@ const showDebugIndicator = import.meta.env.DEV;
           <!-- Search Button -->
           <button
             id="search-button"
-            class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+            class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 min-h-[44px] min-w-[44px] inline-flex items-center justify-center"
             aria-label="Search"
             title="Search (Press / to open)"
           >
@@ -349,7 +350,7 @@ const showDebugIndicator = import.meta.env.DEV;
           {
             showRssFeed && (
               <a
-                class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+                class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 min-h-[44px] min-w-[44px] inline-flex items-center justify-center"
                 aria-label="RSS Feed"
                 href={getAsset('/rss.xml')}
               >
@@ -400,6 +401,8 @@ const showDebugIndicator = import.meta.env.DEV;
 </div>
 
 <script>
+  const DESKTOP_NAV_QUERY = '(min-width: 1280px)';
+
   // Mobile navigation toggle functionality
   document.addEventListener('DOMContentLoaded', () => {
     // Minimal Pagefind typings to avoid using `any` and satisfy ESLint
@@ -736,7 +739,7 @@ const showDebugIndicator = import.meta.env.DEV;
     });
 
     // Initialize nav mode indicator on first load
-    const mqInitial = window.matchMedia('(min-width: 768px)');
+    const mqInitial = window.matchMedia(DESKTOP_NAV_QUERY);
     if (mqInitial.matches) {
       updateNavModeIndicator('desktop');
     } else {
@@ -783,7 +786,7 @@ const showDebugIndicator = import.meta.env.DEV;
   };
 
   const applyMode = () => {
-    const mq = window.matchMedia('(min-width: 768px)');
+    const mq = window.matchMedia(DESKTOP_NAV_QUERY);
     if (mq.matches) {
       // Synchronously enforce desktop mode
       updateNavModeIndicator('desktop');
@@ -799,7 +802,7 @@ const showDebugIndicator = import.meta.env.DEV;
     await new Promise(requestAnimationFrame);
 
     // If we are at/above desktop breakpoint, ensure mobile nav is hidden
-    const mq = window.matchMedia('(min-width: 768px)');
+    const mq = window.matchMedia(DESKTOP_NAV_QUERY);
     if (mq.matches) {
       forceMobileNavHidden();
       updateNavModeIndicator('desktop');
@@ -826,7 +829,7 @@ const showDebugIndicator = import.meta.env.DEV;
   });
 
   // Watch for viewport changes explicitly
-  const mediaQuery = window.matchMedia('(min-width: 768px)');
+  const mediaQuery = window.matchMedia('(min-width: 1280px)');
   const mqHandler = (e: MediaQueryList | MediaQueryListEvent) => {
     const matches = 'matches' in e ? e.matches : (e as MediaQueryList).matches;
     if (matches) {
@@ -854,7 +857,7 @@ const showDebugIndicator = import.meta.env.DEV;
 
   // Fallback: on resize, enforce state when entering desktop
   window.addEventListener('resize', () => {
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 1280) {
       forceMobileNavHidden();
       updateNavModeIndicator('desktop');
     } else {

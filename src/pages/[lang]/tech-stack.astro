@@ -1,111 +1,47 @@
 ---
-/**
- * Tech Stack – Multilingual tech stack page with proper metadata, alt links,
- * JSON-LD, and clean source link.
- * @route /[lang]/tech-stack
- */
 import Layout from '../../layouts/PageLayout.astro';
-import { getEntry, render } from 'astro:content';
 import { SUPPORTED_LANGUAGES } from '../../utils/i18n';
 import type { SupportedLanguage } from '../../utils/i18n';
-import type { MetaData } from '../../types';
 
-// Build-time constants
 export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
+const t = (de: string, en: string) => (lang === 'de' ? de : en);
 
-// Load content entry (content collection: pages/tech-stack/{lang}.md[x])
-const pageEntry = await getEntry('pages', `tech-stack/${lang}`);
-
-// Render markdown to components + headings (if available)
-const rendered = pageEntry ? await render(pageEntry) : null;
-const Content = rendered?.Content ?? null;
-
-// Build canonical + hreflang alternates
-const baseUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://seez.eu';
-const canonical = `${baseUrl}/${lang}/tech-stack`;
-const alternates = SUPPORTED_LANGUAGES.filter((l) => l !== lang).map((l) => ({
-  lang: l,
-  url: `${baseUrl}/${l}/tech-stack`,
-}));
-
-// Metadata
-const title = pageEntry?.data.title || (lang === 'de' ? 'Tech Stack' : 'Tech Stack');
-const description =
-  pageEntry?.data.description ||
-  (lang === 'de'
-    ? 'Die Technologien, Frameworks und Prinzipien hinter dieser Website und meinen Projekten.'
-    : 'The technologies, frameworks, and principles behind this website and my projects.');
-
-const metadata: MetaData = {
-  title,
-  description,
-  canonical,
-  openGraph: {
-    type: 'article',
-    url: canonical,
-  },
-  twitter: {
-    cardType: 'summary_large_image',
-  },
+const metadata = {
+  title: t('Werkzeuge', 'Tools'),
+  description: t('Die Werkzeuge hinter Seez werden als Produktionsnotizen eingeordnet.', 'The tools behind Seez are framed as production notes.'),
+  robots: { index: true, follow: true },
 };
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <header class="mb-8 sm:mb-10">
-      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter font-heading dark:text-gray-200">
-        {title}
-      </h1>
-      <p class="mt-3 text-base text-gray-600 dark:text-gray-400">
-        {description}
+  <section class="min-h-screen bg-[#07080b] px-4 py-14 text-slate-100 sm:px-6 lg:py-20">
+    <div class="mx-auto max-w-4xl">
+      <p class="text-xs uppercase tracking-[0.28em] text-cyan-300">&gt; TOOLCHAIN / ART_CONTEXT</p>
+      <h1 class="mt-4 text-4xl font-black tracking-tight md:text-6xl">{t('Werkzeuge sind nicht der Ursprung.', 'Tools are not the origin.')}</h1>
+      <p class="mt-5 max-w-2xl text-base leading-7 text-slate-300">
+        {t(
+          'KI, Webtechnik und Automatisierung sind Produktionsmittel im Seez-Kosmos. Die Hauptsache bleibt: Stimme, Figur, Song, Fragment.',
+          'AI, web tech, and automation are production means inside the Seez cosmos. The core remains voice, figure, song, fragment.'
+        )}
       </p>
-    </header>
-
-    <div class="prose prose-lg dark:prose-invert mx-auto">
-      {
-        Content ? (
-          <Content />
-        ) : (
-          <div class="rounded-xl border border-dashed border-gray-300/60 p-6 text-gray-600 dark:border-gray-700 dark:text-gray-300">
-            <p class="mb-2">
-              {lang === 'de'
-                ? 'Kein Inhalt gefunden. Lege in der Content-Collection eine Datei unter'
-                : 'No content found. Create a file in the content collection at'}{' '}
-              <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">
-                src/content/pages/tech-stack/{lang}.mdx
-              </code>{' '}
-              {lang === 'de' ? 'oder' : 'or'}{' '}
-              <code class="px-2 py-1 rounded bg-gray-100 dark:bg-gray-800">src/content/pages/tech-stack/{lang}.md</code>
-              .
-            </p>
-            <p class="mt-2">
-              {lang === 'de'
-                ? 'Danach neu bauen. Ich weiß, es ist nervig. Willkommen im Web.'
-                : "Then rebuild. Yes, it's annoying. Welcome to the web."}
-            </p>
-          </div>
-        )
-      }
-    </div>
-
-    <div class="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
-      <div class="text-sm text-gray-500 dark:text-gray-400">
-        {lang === 'de' ? 'Auch verfügbar auf:' : 'Also available in:'}
-      </div>
-      <div class="flex items-center gap-3">
-        {
-          alternates.map((a) => (
-            <a
-              href={a.url}
-              class="text-sm underline underline-offset-2 hover:no-underline text-gray-700 dark:text-gray-200"
-            >
-              {a.lang.toUpperCase()}
-            </a>
-          ))
-        }
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="portal" href={`/${lang}/system-logs`}>System Logs</a>
+        <a class="portal" href={`/${lang}/kreatives`}>Creative Core</a>
       </div>
     </div>
   </section>
 </Layout>
+
+<style>
+  .portal {
+    border: 1px solid rgba(34, 211, 238, 0.35);
+    color: #a5f3fc;
+    display: inline-block;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 0.8rem 1rem;
+    text-transform: uppercase;
+  }
+</style>
