@@ -68,22 +68,24 @@ const metadata = {
         <span aria-current="page">{title}</span>
       </nav>
 
-      <div class="song__hero">
-        <div class="song__visual">
-          {
-            films[0] ? (
-              <img src={films[0].media.poster} alt="" loading="eager" />
-            ) : main ? (
-              <img
-                src={main.portrait.src}
-                alt={main.portrait.alt[lang]}
-                width={main.portrait.width}
-                height={main.portrait.height}
-                loading="eager"
-              />
-            ) : null
-          }
-        </div>
+      <div class:list={['song__hero', { 'song__hero--text': !films[0] && !main }]}>
+        {
+          (films[0] || main) && (
+            <div class="song__visual">
+              {films[0] ? (
+                <img src={films[0].media.poster} alt="" loading="eager" />
+              ) : (
+                <img
+                  src={main!.portrait.src}
+                  alt={main!.portrait.alt[lang]}
+                  width={main!.portrait.width}
+                  height={main!.portrait.height}
+                  loading="eager"
+                />
+              )}
+            </div>
+          )
+        }
         <div class="song__intro" lang={lang}>
           <p class="sz-label">
             {
@@ -394,6 +396,9 @@ const metadata = {
     .song__hero {
       grid-template-columns: minmax(260px, 380px) 1fr;
       align-items: end;
+    }
+    .song__hero--text {
+      grid-template-columns: 1fr;
     }
   }
 </style>
