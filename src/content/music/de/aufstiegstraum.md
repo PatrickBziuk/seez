@@ -10,9 +10,16 @@ genre: ['Deutschrap', 'Industrial Rap', 'Seelensplitter']
 tags: ['song', 'ep1', 'generierung-laeuft', 'shift', 'arbeiterklasse', 'aufstieg']
 figureRef: fragments/shift
 linerNotes: 'SP1-Shift-Ursprungssong über Arbeiterklasse, Elternarbeit und das Versprechen, es einmal anders zu machen.'
+lastChangeDate: '2026-11-24T12:47:33.525Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.525Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-`Aufstiegstraum` beginnt mit Frühschicht, Werkgeruch und dem Versprechen, die Eltern eines Tages mitzunehmen. Der Track kippt diesen Traum in Ernüchterung: mehr Abschluss, mehr Arbeit, mehr Geld, aber nicht automatisch mehr Freiheit.
+Aufstiegstraum beginnt mit Frühschicht, Werkgeruch und dem Versprechen, die Eltern eines Tages mitzunehmen. Der Track kippt diesen Traum in Ernüchterung: mehr Abschluss, mehr Arbeit, mehr Geld, aber nicht automatisch mehr Freiheit.
 
 Shift will raus, ohne die Herkunft zu verraten. Genau dort sitzt der Bruch.
 

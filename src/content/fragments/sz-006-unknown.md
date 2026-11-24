@@ -24,9 +24,16 @@ voiceCharacteristics:
 movementGrammar: ['Kontrolliert', 'dichte Präsenz', 'präzise Gestik']
 primarySongs: ['als-sie']
 containmentNote: 'Mehrsprachige politische Stimme - wechselt zwischen Sprachen, spiegelt systematische Ausgrenzung chirurgisch präzise zurück.'
+lastChangeDate: '2026-11-24T12:47:33.507Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.507Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# Ich bin das Feld, das ihr vergessen habt
+## Ich bin das Feld, das ihr vergessen habt
 
 Mein Name ist Unknown. Nicht, weil ich meinen Namen nicht kenne, sondern weil euer System für mich kein Feld hat.
 

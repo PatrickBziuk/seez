@@ -18,7 +18,7 @@ firstPublishedAt: '2025-01-12T19:59:08.408Z'
 publishDate: '2025-01-12T19:59:08.408Z'
 ---
 
-# The Tech Stack Behind This Project
+## The Tech Stack Behind This Project
 
 This site and most of my projects are built with a deliberate focus on **simplicity**, **performance**, **maintainability**, and **digital sovereignty**. Here's what powers everything and why I chose these technologies.
 

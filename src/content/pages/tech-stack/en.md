@@ -16,9 +16,16 @@ draft: false
 canonicalId: 01k2jadmvq8mn9ckpav7jsd6t
 firstPublishedAt: '2025-01-12T19:59:08.408Z'
 publishDate: '2025-01-12T19:59:08.408Z'
+lastChangeDate: '2026-11-24T12:47:33.585Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.585Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# The Tech Stack Behind This Project
+## The Tech Stack Behind This Project
 
 This site and most of my projects are built with a deliberate focus on **simplicity**, **performance**, **maintainability**, and **digital sovereignty**. Here's what powers everything and why I chose these technologies.
 

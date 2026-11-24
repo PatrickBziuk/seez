@@ -22,9 +22,16 @@ voiceCharacteristics:
 movementGrammar: ['entdecken', 'begeistern', 'verbinden']
 containmentNote: 'Lume repräsentiert die neugierige Fan-Energie der Digital Natives. Ihre Begeisterungsfähigkeit ist ansteckend, aber ihre schnelle Erschöpfung bei Routine erfordert konstante Stimulation durch neue Inhalte und Erfahrungen.'
 tags: ['figure', 'character', 'music', 'discovery', 'gaming', 'books', 'dreamer']
+lastChangeDate: '2026-11-24T12:47:33.481Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.481Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# Ich bin das Licht, das sucht
+## Ich bin das Licht, das sucht
 
 Hi! Ich bin Lume. Ich sammle Lichtspuren in dunklen Welten und verwandle sie in Songs, die anderen Hoffnung geben. Auch wenn manchmal alles kaputt scheint.
 

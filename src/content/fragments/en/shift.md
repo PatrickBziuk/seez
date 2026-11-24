@@ -17,9 +17,16 @@ symbolism:
     meaning: 'Energy drinks - artificial wakefulness to survive the shift'
 containmentNote: 'Working-class experience; themes may trigger socioeconomic frustration.'
 tags: ['fragment', 'character', 'music', 'working-class', 'social-commentary', 'labor']
+lastChangeDate: '2026-11-24T12:47:33.446Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.446Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# I clock in, I clock out
+## I clock in, I clock out
 
 Name: Shift. Shift by shift, year by year. I'm the one who keeps the place running while others talk about dreams.
 

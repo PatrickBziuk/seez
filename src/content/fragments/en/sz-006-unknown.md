@@ -19,9 +19,16 @@ symbolism:
     meaning: 'Unknown stamp - official distancing as self-empowerment'
 containmentNote: 'Multilingual political voice - switches between languages, surgically reflects systemic exclusion patterns.'
 tags: ['fragment', 'politics', 'migration', 'identity', 'borders', 'belonging']
+lastChangeDate: '2026-11-24T12:47:33.463Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.463Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# I am the field you forgot
+## I am the field you forgot
 
 My name is Unknown. Not because I don't know my name, but because your system has no field for me.
 

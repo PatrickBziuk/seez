@@ -10,9 +10,16 @@ genre: ['Deutschrap', 'Industrial Rap', 'Seelensplitter']
 tags: ['song', 'ep1', 'generierung-laeuft', 'splinter', 'unknown', 'gl1tch']
 figureRef: fragments/splinter
 linerNotes: 'Crossover-Protokoll über die Entstehung einer fragmentierten Seele.'
+lastChangeDate: '2026-11-24T12:47:33.550Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.550Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-`Scherbenprotokoll` ist kein einzelner Charaktertrack, sondern ein Aktenstück. Unknown sieht die sozialen Sortierungen, Gl1tch erkennt die Systembrüche, Splinter schreibt den Schmerz beweisbar auf.
+Scherbenprotokoll ist kein einzelner Charaktertrack, sondern ein Aktenstück. Unknown sieht die sozialen Sortierungen, Gl1tch erkennt die Systembrüche, Splinter schreibt den Schmerz beweisbar auf.
 
 Der Song bündelt Phase-1-Wunden und Phase-2-Analyse zu einem gemeinsamen Ursprungstext für das Seez-Kollektiv.
 

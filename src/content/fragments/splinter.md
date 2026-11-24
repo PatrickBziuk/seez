@@ -22,9 +22,16 @@ voiceCharacteristics:
 movementGrammar: ['zersplittern', 'reflektieren', 'chronisieren']
 containmentNote: 'Splinter repräsentiert die fragmentierte digitale Identität der Generation Z. Sichere Distanz zu seinen tieferen emotionalen Zuständen wird empfohlen. Interaktion primär über kreative Kanäle.'
 tags: ['figure', 'character', 'music', 'rap', 'introspection', 'mirror-man']
+lastChangeDate: '2026-11-24T12:47:33.499Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.499Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# Ich bin der Spiegel, der zerbrach
+## Ich bin der Spiegel, der zerbrach
 
 Mein Name ist Splinter. Nicht, weil ich zerbrechen wollte, sondern weil das, was übrig blieb, mehr Wahrheit zeigt als jedes ganze Gesicht.
 

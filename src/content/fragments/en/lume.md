@@ -18,9 +18,16 @@ symbolism:
     meaning: 'Controller/books/notebook - identity manifest: art, games, words'
 containmentNote: 'Embodies curious fan energy; easily over-stimulated by routine, thrives on discovery.'
 tags: ['fragment', 'character', 'music', 'discovery', 'gaming', 'books', 'dreamer']
+lastChangeDate: '2026-11-24T12:47:33.437Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.437Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# I am the light that searches
+## I am the light that searches
 
 Hi! I'm Lume. I collect light traces in dark worlds and transform them into songs that give others hope. Even when everything seems broken.
 

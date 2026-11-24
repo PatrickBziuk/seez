@@ -21,9 +21,16 @@ voiceCharacteristics:
 movementGrammar: ['stempeln', 'durchhalten', 'aufbegehren']
 containmentNote: 'Shift repräsentiert die working class experience und Klassenschranken. Seine Themen können starke sozioökonomische Emotionen auslösen. Behandlung erfordert Sensibilität für Klassenunterschiede und wirtschaftliche Prekarität.'
 tags: ['figure', 'character', 'music', 'working-class', 'social-commentary', 'labor']
+lastChangeDate: '2026-11-24T12:47:33.490Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.490Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# Ich stemple ein, ich stemple aus
+## Ich stemple ein, ich stemple aus
 
 Name: Shift. Schicht um Schicht, Jahr um Jahr. Ich bin der, der den Laden am Laufen hält, während andere über Träume reden.
 
