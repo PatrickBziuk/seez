@@ -8,6 +8,7 @@
  * Media slots (components from the media branch; placeholders here render nothing):
  *   - TrackPlayer (compact): inside FragmentCard, under the card's move (the EP track)
  *   - FilmPlayer: section "Auftritte" → "Musikvideo" (#musikvideo) below
+ * Early sketches (Skizzenbuch 2011–2013, shared motifs): end of "Wissenswertes", see FigureSketches.
  */
 import { render, type CollectionEntry } from 'astro:content';
 import Layout from '~/layouts/PageLayout.astro';
@@ -20,6 +21,7 @@ import FragmentCard from '~/components/seez/figure/FragmentCard.astro';
 import FigureInfobox from '~/components/seez/figure/FigureInfobox.astro';
 import MotionToggle from '~/components/seez/figure/MotionToggle.astro';
 import FilmPlayer from '~/components/seez/media/FilmPlayer.astro';
+import FigureSketches from '~/components/seez/sketch/FigureSketches.astro';
 import { FIGURES, getFigure, figureStyle, type Figure } from '~/data/figures';
 import { EP, SONG_EXTRAS } from '~/data/songs';
 import { getSongRecords, pickEntry, isSong } from '~/utils/music';
@@ -444,6 +446,7 @@ const metadata = {
         <ul class="wiki-trivia">
           {trivia.map((t) => <li>{t}</li>)}
         </ul>
+        <FigureSketches figure={f.id} lang={lang} />
       </section>
     </article>
   </div>
