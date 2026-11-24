@@ -8,6 +8,13 @@ tags: [essay, music, ai, suno]
 excerpt: Ein Text über Wut auf maschinelle Musik — und darüber, was passiert, wenn man genauer hinschaut.
 figureRefs: []
 songRefs: ['de/fck-suno.md']
+lastChangeDate: '2026-11-24T14:33:02.253Z'
+changeLog:
+  - date: '2026-11-24T14:33:02.253Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
 Dieser Text begleitet den Track „FUCK SUNO“ und untersucht das Spannungsfeld zwischen Abwehr und Öffnung: Ist KI-Musik nur leere Simulation — oder auch ein Zugang für leise Stimmen?
