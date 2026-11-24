@@ -30,7 +30,7 @@ Singles: KIFFEN KIPPEN ALK (2025-08-24, 3:31)
 
 ## Songtexte ohne Songseite (lyrics.json, alle in Arbeit)
 
-TUMBLR TRÄUME (splinter, Phase 1) · STEMPEL AUS (shift, Phase 2) · ILLEGALE ALIENS (unknown, Phase 2) · ALS SIE (unknown, Phase 2) · LISTEN & LICHTER (splinter, Phase 1) · LATENCY LOVE (gl1tch, Phase 1) · ZWISCHENRÄUME (unknown, Phase 2) · FIRST CLASS (shift, Phase 1) · SYSTEMUPDATE (gl1tch, Phase 1) · MASKENSPIEL (splinter, Phase 2) · WEISSES RAUSCHEN (drift, Phase 1) · TARGET_AUDIENCE_V2 (gl1tch, Phase 2) · HEDWIG (unknown, Phase 1) · DEIN ANKER (lume, Phase 2) · MEHRARBEIT (shift, Phase 2)
+TUMBLR TRÄUME (splinter, Phase 1) · STEMPEL AUS (shift, Phase 3) · ILLEGALE ALIENS (unknown, Phase 2) · ALS SIE (unknown, Phase 2) · LISTEN & LICHTER (splinter, Phase 1) · LATENCY LOVE (gl1tch, Phase 3) · ZWISCHENRÄUME (unknown, Phase 1) · FIRST CLASS (shift, Phase 2) · SYSTEMUPDATE (lume, Phase offen) · MASKENSPIEL (splinter, Phase 2) · WEISSES RAUSCHEN (drift, Phase 1) · TARGET_AUDIENCE_V2 (gl1tch, Phase 2) · HEDWIG (unknown, Phase 1) · DEIN ANKER (lume, Phase 2) · MEHRARBEIT (shift, Phase 2) · ATTENTION BABY (gl1tch, Phase offen) · ERSTE SPRACHE (splinter, Phase offen) · NICHT GEFRAGT (shift, Phase offen) · DREI VON DREI (lume, Phase offen) · SOMMERSCHLUSSVERKAUF (lume, Phase offen) · ZU GEFÄHRLICH (gl1tch, Phase offen) · ZU FRÜH, ZU SPÄT (splinter, Phase offen) · VATERLAND (unknown, Phase offen) · KLEINES LEBEN (–, Phase offen) · ECHT GENUG (gl1tch, Phase offen) · BEACH IS CLOSED (gl1tch, Phase offen) · NICHT KOMPLETT (lume, Phase offen) · NENN ES (gl1tch, Phase 2) · SOLCHE KINDER (unknown, Phase 3) · SPERRMÜLL (gl1tch, Phase 3) · ABBLENDLICHT (lume, Phase 3)
 
 ## Figuren
 

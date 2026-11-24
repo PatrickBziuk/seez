@@ -39,49 +39,59 @@ const items = LYRICS.map((l) => {
 );
 ---
 
-  <div class="ly">
-    <div class="ly__filter" role="group" aria-label={de ? 'Nach Figur filtern' : 'Filter by figure'} data-ly-filter hidden>
-      <button type="button" aria-pressed="true" data-fig="">{de ? 'Alle' : 'All'}</button>
-      {
-        FIGURES.map((f) => (
-          <button type="button" aria-pressed="false" data-fig={f.id} style={`--fig:${f.accent.dark}`}>
-            <FigureGlyph id={f.id} size={16} />
-            {f.name}
-          </button>
-        ))
-      }
-    </div>
-    <p class="sz-muted ly__count" aria-live="polite" data-ly-count></p>
-
-    {!de && <p class="sz-muted">Lyrics are in German.</p>}
-    <ul class="ly__list reveal-stagger" lang="de">
-      {
-        items.map((l) => (
-          <li class="ly__item" data-fig={l.figure} style={`--fig:${getFigure(l.figure)?.accent.dark}`}>
-            <div class="ly__head">
-              <h3 class="ly__title">{l.title}</h3>
-              <FigureChip figure={l.figure} lang={lang} />
-              <span class="sz-label" lang={lang}>
-                {l.onEp ? `EP · Track ${l.no}` : de ? 'in Arbeit' : 'in progress'}
-              </span>
-            </div>
-            <div class="ly__actions">
-              <details class="ly__details">
-                <summary lang={lang}>{de ? 'Text anzeigen' : 'Show lyrics'}</summary>
-                <LyricsBlock text={l.text} idPrefix={`all-${l.id}`} />
-              </details>
-              {l.href && (
-                <a class="sz-link ly__go" href={l.href} lang={lang}>
-                  {de ? 'Zur Songseite' : 'Song page'} →
-                </a>
-              )}
-            </div>
-          </li>
-        ))
-      }
-    </ul>
+<div class="ly">
+  <div
+    class="ly__filter"
+    role="group"
+    aria-label={de ? 'Nach Figur filtern' : 'Filter by figure'}
+    data-ly-filter
+    hidden
+  >
+    <button type="button" aria-pressed="true" data-fig="">{de ? 'Alle' : 'All'}</button>
+    {
+      FIGURES.map((f) => (
+        <button type="button" aria-pressed="false" data-fig={f.id} style={`--fig:${f.accent.dark}`}>
+          <FigureGlyph id={f.id} size={16} />
+          {f.name}
+        </button>
+      ))
+    }
   </div>
+  <p class="sz-muted ly__count" aria-live="polite" data-ly-count></p>
 
+  {!de && <p class="sz-muted">Lyrics are in German.</p>}
+  <ul class="ly__list reveal-stagger" lang="de">
+    {
+      items.map((l) => (
+        <li
+          class="ly__item"
+          id={`lyrics-${l.id}`}
+          data-fig={l.figure}
+          style={`--fig:${getFigure(l.figure)?.accent.dark}`}
+        >
+          <div class="ly__head">
+            <h3 class="ly__title">{l.title}</h3>
+            <FigureChip figure={l.figure} lang={lang} />
+            <span class="sz-label" lang={lang}>
+              {l.onEp ? `EP · Track ${l.no}` : de ? 'in Arbeit' : 'in progress'}
+            </span>
+          </div>
+          <div class="ly__actions">
+            <details class="ly__details">
+              <summary lang={lang}>{de ? 'Text anzeigen' : 'Show lyrics'}</summary>
+              <LyricsBlock text={l.text} idPrefix={`all-${l.id}`} />
+            </details>
+            {l.href && (
+              <a class="sz-link ly__go" href={l.href} lang={lang}>
+                {de ? 'Zur Songseite' : 'Song page'} →
+              </a>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</div>
 
 <script is:inline define:vars={{ de }}>
   (() => {
@@ -97,17 +107,32 @@ const items = LYRICS.map((l) => {
         li.hidden = !show;
         if (show) n += 1;
       });
-      bar.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.fig || '') === fig)));
+      bar
+        .querySelectorAll('button')
+        .forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.fig || '') === fig)));
       if (count) count.textContent = fig ? (de ? `${n} Texte` : `${n} lyrics`) : '';
     };
     bar.addEventListener('click', (e) => {
       const b = e.target.closest('button');
       if (b) apply(b.dataset.fig || '');
     });
+    // Links from the song overview (#lyrics-<id>): show the text and open it.
+    const openFromHash = () => {
+      const li = location.hash.startsWith('#lyrics-') && document.getElementById(location.hash.slice(1));
+      if (!li) return;
+      if (li.hidden) apply('');
+      const d = li.querySelector('details');
+      if (d) d.open = true;
+    };
+    window.addEventListener('hashchange', openFromHash);
+    openFromHash();
   })();
 </script>
 
 <style>
+  .ly__item {
+    scroll-margin-top: 80px;
+  }
   .ly__filter {
     display: flex;
     flex-wrap: wrap;

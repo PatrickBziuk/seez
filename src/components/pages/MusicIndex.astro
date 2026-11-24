@@ -13,6 +13,7 @@ import FigureStrip from '~/components/seez/FigureStrip.astro';
 import AudioPlayer from '~/components/seez/media/AudioPlayer.astro';
 import FilmPlayer from '~/components/seez/media/FilmPlayer.astro';
 import LyricsIndex from '~/components/seez/LyricsIndex.astro';
+import SongbookOverview from '~/components/seez/SongbookOverview.astro';
 import SketchInk from '~/components/seez/sketch/SketchInk.astro';
 import { INK } from '~/data/sketches';
 import { playableEp } from '~/utils/media';
@@ -80,7 +81,14 @@ const metadata = {
       <p class="sz-lead ep__claim">{EP.claim[lang]}</p>
       <div class="sz-btn-row ep__actions">
         <a class="sz-btn" href={EP.spotify} rel="noopener">{de ? 'Auf Spotify' : 'On Spotify'}</a>
-        {withFilm.length > 0 && <a class="sz-btn" href="#videos">{de ? 'Musikvideos' : 'Music videos'}</a>}
+        {
+          withFilm.length > 0 && (
+            <a class="sz-btn" href="#videos">
+              {de ? 'Musikvideos' : 'Music videos'}
+            </a>
+          )
+        }
+        <a class="sz-btn" href="#songbuch">{de ? 'Alle Songs' : 'All songs'}</a>
         <a class="sz-btn" href="#lyrics">Lyrics</a>
       </div>
     </div>
@@ -113,7 +121,11 @@ const metadata = {
             explicit={t.explicit}
             listen={t.spotify}
             play={playIndex.has(t.slug) ? { player: 'ep', index: playIndex.get(t.slug)! } : undefined}
-            videoHref={bySlug.has(t.slug) && filmsForSong(t.filmKey).some((f) => f.released) ? `${sectionUrl(lang, 'music', t.slug)}#video` : undefined}
+            videoHref={
+              bySlug.has(t.slug) && filmsForSong(t.filmKey).some((f) => f.released)
+                ? `${sectionUrl(lang, 'music', t.slug)}#video`
+                : undefined
+            }
             lyricsHref={t.lyricsId && bySlug.has(t.slug) ? `${sectionUrl(lang, 'music', t.slug)}#lyrics` : undefined}
             hasVideo={filmsForSong(t.filmKey).length > 0}
           />
@@ -121,11 +133,9 @@ const metadata = {
       }
     </ol>
     <p class="sz-muted ep__source">
-      {
-        de
-          ? 'Reihenfolge, Titel und Laufzeiten wie auf Spotify.'
-          : 'Order, titles and running times as on Spotify.'
-      }{' '}
+      {de ? 'Reihenfolge, Titel und Laufzeiten wie auf Spotify.' : 'Order, titles and running times as on Spotify.'}{
+        ' '
+      }
       {
         SINGLES.map((x) => (
           <>
@@ -146,7 +156,9 @@ const metadata = {
       <section class="sz-container sz-section" id="videos" aria-labelledby="videos-title">
         <div class="sz-section-head">
           <div>
-            <p class="sz-label">{de ? `${withFilm.length} Filme · Figuren-Reihe` : `${withFilm.length} films · figure series`}</p>
+            <p class="sz-label">
+              {de ? `${withFilm.length} Filme · Figuren-Reihe` : `${withFilm.length} films · figure series`}
+            </p>
             <h2 class="sz-h2" id="videos-title">
               {de ? 'Musikvideos' : 'Music videos'}
             </h2>
@@ -160,6 +172,23 @@ const metadata = {
       </section>
     )
   }
+
+  <section class="sz-container sz-section" id="songbuch" aria-labelledby="songbook-title">
+    <div class="sz-section-head">
+      <div>
+        <p class="sz-label">{de ? 'Figuren · Phasen · Songs' : 'Figures · phases · songs'}</p>
+        <h2 class="sz-h2" id="songbook-title">{de ? 'Alle Songs im Überblick' : 'All songs at a glance'}</h2>
+      </div>
+    </div>
+    <p class="sz-muted sz-measure">
+      {
+        de
+          ? 'Seelensplitter ist in drei Phasen geplant. Hier steht jeder Song bei seiner Figur und seiner Phase, auch die, an denen gerade gearbeitet wird.'
+          : 'Seelensplitter is planned in three phases. Every song sits here with its figure and its phase, including the ones still in progress.'
+      }
+    </p>
+    <SongbookOverview lang={lang} />
+  </section>
 
   <section class="sz-container sz-section" id="lyrics" aria-labelledby="lyrics-title">
     <div class="sz-section-head">
@@ -227,12 +256,18 @@ const metadata = {
       <li>
         <a class="sz-link" href={sectionUrl(lang, 'license')}>{de ? 'Lizenz für Auftritte' : 'Performer license'}</a>
         <span class="sz-muted">
-          – {de ? 'Songs von Seez live performen: Sinn fix, Form frei.' : 'Performing Seez songs live: meaning fixed, form free.'}
+          – {
+            de
+              ? 'Songs von Seez live performen: Sinn fix, Form frei.'
+              : 'Performing Seez songs live: meaning fixed, form free.'
+          }
         </span>
       </li>
       <li>
         <a class="sz-link" href={sectionUrl(lang, 'workshop')}>{de ? 'Werkstatt' : 'Workshop'}</a>
-        <span class="sz-muted">– {de ? 'Wie die Songs und Videos entstehen.' : 'How the songs and videos are made.'}</span>
+        <span class="sz-muted"
+          >– {de ? 'Wie die Songs und Videos entstehen.' : 'How the songs and videos are made.'}</span
+        >
       </li>
     </ul>
   </section>
@@ -289,6 +324,7 @@ const metadata = {
     gap: var(--sp-6) var(--sp-5);
     margin-top: var(--sp-5);
   }
+  #songbuch,
   #lyrics,
   #videos {
     scroll-margin-top: 80px;
