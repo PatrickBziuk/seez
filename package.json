@@ -16,6 +16,8 @@
     "postbuild": "pagefind --site dist/",
     "guard": "node scripts/ci/publish-guard.mjs",
     "check:redirects": "node scripts/ci/check-redirects.mjs",
+    "inventory": "tsx scripts/inventory/build-inventory.ts",
+    "inventory:check": "tsx scripts/inventory/build-inventory.ts --check",
     "videothek:import": "node scripts/videothek/import-catalog.mjs",
     "videothek:release": "node scripts/videothek/release.mjs",
     "preview": "astro preview",
