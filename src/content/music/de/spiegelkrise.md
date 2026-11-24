@@ -1,5 +1,5 @@
 ---
-title: 'Spiegelkrise'
+title: 'SPIEGELKRISE'
 subtitle: 'Splinter zwischen Fanliebe, Selbsthass und Sichtbarkeit'
 language: de
 authors: ['seez']
@@ -10,9 +10,14 @@ genre: ['Deutschrap', 'Dark Pop', 'Seelensplitter']
 tags: ['song', 'ep1', 'generierung-laeuft', 'splinter', 'spiegel', 'tumblr']
 figureRef: fragments/splinter
 linerNotes: 'SP1-Splinter-Song über Online-Resonanz als instabiles Pflaster.'
-lastChangeDate: '2026-11-24T12:47:33.559Z'
+lastChangeDate: '2026-11-24T14:33:02.229Z'
 changeLog:
   - date: '2026-11-24T12:47:33.559Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
+  - date: '2026-11-24T14:33:02.229Z'
     description: Content updated
     author: seez
     type: content
@@ -27,5 +32,5 @@ Der Track ist zentral für Splinters Tumblr-Logik, weil Sichtbarkeit hier nicht 
 
 - **Figur:** Splinter
 - **Phase:** SEELENSPLITTER PHASE 1
-- **EP:** GENERIERUNG LÄUFT
+- **EP:** GENERIERUNG LÄUFT, Track 5
 - **Themen:** Spiegel, Selbstbild, Fragmentierung, Masken, Sichtbarkeit

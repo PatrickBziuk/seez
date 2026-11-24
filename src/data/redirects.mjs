@@ -25,9 +25,16 @@ const r = {};
 // Music: one overview per language, songs below it (/de/musik/<slug>, /en/music/<slug>)
 r['/de/music'] = '/de/musik';
 r['/en/musik'] = '/en/music';
+// Renamed songs (old slug -> new slug); old URLs point straight to the new page, no chains.
+const RENAMED = { 'als-sie-kamen': 'als-sie' };
+const current = (s) => RENAMED[s] || s;
 for (const s of MUSIC_DE) {
-  r[`/de/music/${s}`] = `/de/musik/${s}`;
-  if (s !== 'meine-musik' && s !== 'kiffen-kippen-alk') r[`/de/music/de/${s}`] = `/de/musik/${s}`;
+  r[`/de/music/${s}`] = `/de/musik/${current(s)}`;
+  if (s !== 'meine-musik' && s !== 'kiffen-kippen-alk') r[`/de/music/de/${s}`] = `/de/musik/${current(s)}`;
+}
+for (const [old, now] of Object.entries(RENAMED)) {
+  r[`/de/musik/${old}`] = `/de/musik/${now}`;
+  r[`/en/music/${old}`] = `/en/music/${now}`;
 }
 r['/de/music/de/meine-musik'] = '/de/musik/meine-musik';
 r['/de/music/meine-musik-slug-20250805-bf655b06'] = '/de/musik/meine-musik';

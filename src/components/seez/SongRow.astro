@@ -17,16 +17,50 @@ interface Props {
   lyricsHref?: string;
   hasVideo?: boolean;
   headingLevel?: 'h2' | 'h3';
+  /** Track number on the release (Spotify) */
+  no?: number;
+  /** Duration m:ss (Spotify) */
+  length?: string;
+  explicit?: boolean;
 }
-const { lang, title, href, figures, note, status, listen, lyricsHref, hasVideo, headingLevel = 'h3' } = Astro.props;
+const {
+  lang,
+  title,
+  href,
+  figures,
+  note,
+  status,
+  listen,
+  lyricsHref,
+  hasVideo,
+  headingLevel = 'h3',
+  no,
+  length,
+  explicit,
+} = Astro.props;
 const de = lang === 'de';
 const H = headingLevel;
 ---
 
-<li class="sz-songrow">
+<li class:list={['sz-songrow', no != null && 'sz-songrow--numbered']}>
+  {
+    no != null && (
+      <span class="sz-songrow__no" aria-hidden="true">
+        {String(no).padStart(2, '0')}
+      </span>
+    )
+  }
   <div class="sz-songrow__main">
     <H class="sz-songrow__title">
+      {no != null && <span class="sr-only">{de ? `Track ${no}: ` : `Track ${no}: `}</span>}
       {href ? <a href={href}>{title}</a> : title}
+      {
+        explicit && (
+          <abbr class="sz-songrow__e" title={de ? 'Explizit' : 'Explicit'}>
+            E
+          </abbr>
+        )
+      }
     </H>
     {note && <p class="sz-songrow__note">{note}</p>}
   </div>
@@ -34,6 +68,7 @@ const H = headingLevel;
     {figures.map((f) => <FigureChip figure={f} lang={lang} compact />)}
   </div>
   <div class="sz-songrow__meta">
+    {length && <span class="sz-mono sz-songrow__len">{length}</span>}
     {status && <span class="sz-label">{status}</span>}
     {hasVideo && <span class="sz-label">▶ Video</span>}
   </div>
@@ -115,9 +150,50 @@ const H = headingLevel;
   .sz-songrow__actions a:hover {
     border-color: var(--text);
   }
+  .sz-songrow--numbered {
+    grid-template-columns: 2.2em minmax(0, 1fr);
+  }
+  .sz-songrow--numbered > :not(.sz-songrow__no):not(.sz-songrow__main) {
+    grid-column: 2;
+  }
+  .sz-songrow__no {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    align-self: start;
+    padding-top: 0.35em;
+  }
+  .sz-songrow__e {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5em;
+    width: 1.3em;
+    height: 1.3em;
+    border-radius: 2px;
+    background: var(--text-muted);
+    color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 0.5em;
+    font-weight: 600;
+    text-decoration: none;
+    vertical-align: middle;
+  }
+  .sz-songrow__len {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    font-variant-numeric: tabular-nums;
+  }
   @media (min-width: 900px) {
     .sz-songrow {
       grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.5fr) 110px 170px;
+    }
+    .sz-songrow--numbered {
+      grid-template-columns: 2.6em minmax(0, 2.2fr) minmax(0, 1.5fr) 110px 170px;
+    }
+    .sz-songrow--numbered > :not(.sz-songrow__no):not(.sz-songrow__main) {
+      grid-column: auto;
     }
   }
 </style>

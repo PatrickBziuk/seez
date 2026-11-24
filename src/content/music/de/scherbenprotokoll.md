@@ -1,5 +1,5 @@
 ---
-title: 'Scherbenprotokoll'
+title: 'SCHERBENPROTOKOLL'
 subtitle: 'Crossover-Protokoll von Splinter, Unknown und Gl1tch'
 language: de
 authors: ['seez']
@@ -7,12 +7,17 @@ publicationStatus: published
 firstPublishedAt: '2026-06-27T00:00:00.000Z'
 artist: 'Seez'
 genre: ['Deutschrap', 'Industrial Rap', 'Seelensplitter']
-tags: ['song', 'ep1', 'generierung-laeuft', 'splinter', 'unknown', 'gl1tch']
+tags: ['song', 'splinter', 'unknown', 'gl1tch']
 figureRef: fragments/splinter
 linerNotes: 'Crossover-Protokoll über die Entstehung einer fragmentierten Seele.'
-lastChangeDate: '2026-11-24T12:47:33.550Z'
+lastChangeDate: '2026-11-24T14:33:02.221Z'
 changeLog:
   - date: '2026-11-24T12:47:33.550Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
+  - date: '2026-11-24T14:33:02.221Z'
     description: Content updated
     author: seez
     type: content
@@ -26,6 +31,6 @@ Der Song bündelt Phase-1-Wunden und Phase-2-Analyse zu einem gemeinsamen Urspru
 ## Im Kosmos
 
 - **Figuren:** Splinter, Unknown, Gl1tch
-- **Phase:** EP1 / SEELENSPLITTER
-- **EP:** GENERIERUNG LÄUFT
+- **Phase:** SEELENSPLITTER
+- **Stand:** in Arbeit, nicht auf der EP GENERIERUNG LÄUFT
 - **Themen:** Scherben, Fragmentierung, Beobachtung, Systembruch, Protokoll

@@ -35,6 +35,7 @@ const figures: FigureId[] =
   track?.figures || extra?.figures || (getFigure(figureFromRef) ? [getFigure(figureFromRef)!.id] : []);
 const main = getFigure(figures[0]);
 const lyrics = getLyrics(track?.lyricsId || extra?.lyricsId);
+const quote = track?.quote || extra?.quote;
 const films = filmsForSong(track?.filmKey);
 const song = isSong(entry);
 const audio = (entry.data as { audioUrl?: string }).audioUrl;
@@ -58,7 +59,7 @@ const metadata = {
         <span aria-hidden="true"> / </span>
         {
           track ? (
-            <span>{EP.title}</span>
+            <a href={`${sectionUrl(lang, 'music')}#ep-title`}>{EP.title}</a>
           ) : (
             <span>{song ? (de ? 'In Arbeit' : 'Work in progress') : de ? 'Archiv' : 'Archive'}</span>
           )
@@ -87,7 +88,7 @@ const metadata = {
           <p class="sz-label">
             {
               track
-                ? `EP · ${EP.title}`
+                ? `EP · ${EP.title} · Track ${track.no} · ${track.length}`
                 : song
                   ? de
                     ? 'Song · in Arbeit, nicht auf der EP'
@@ -97,7 +98,16 @@ const metadata = {
                     : 'Text'
             }
           </p>
-          <h1 class="sz-display song__title">{title}</h1>
+          <h1 class="sz-display song__title">
+            {title}
+            {
+              track?.explicit && (
+                <abbr class="song__e" title={de ? 'Explizit' : 'Explicit'}>
+                  E
+                </abbr>
+              )
+            }
+          </h1>
           {
             entry.data.subtitle && (
               <p class="sz-lead song__sub" lang={isFallbackLang ? entry.data.language : undefined}>
@@ -118,8 +128,8 @@ const metadata = {
           <div class="sz-btn-row song__actions">
             {
               track && (
-                <a class="sz-btn sz-btn--primary" href={EP.spotify} rel="noopener">
-                  {de ? 'EP auf Spotify hören' : 'Listen to the EP on Spotify'}
+                <a class="sz-btn sz-btn--primary" href={track.spotify} rel="noopener">
+                  {de ? 'Auf Spotify hören' : 'Listen on Spotify'}
                 </a>
               )
             }
@@ -164,9 +174,9 @@ const metadata = {
         )
       }
       {
-        track?.quote && (
+        quote && (
           <blockquote class="song__quote" lang="de">
-            „{track.quote}“
+            „{quote}“
           </blockquote>
         )
       }
@@ -241,7 +251,9 @@ const metadata = {
                     title={t.title}
                     href={exists(t.slug) ? sectionUrl(lang, 'music', t.slug) : undefined}
                     figures={t.figures}
-                    note={t.note[lang]}
+                    note={t.note?.[lang]}
+                    no={t.no}
+                    length={t.length}
                   />
                 ))}
               </ul>
@@ -290,6 +302,21 @@ const metadata = {
   }
   .song__title {
     margin-top: var(--sp-3);
+  }
+  .song__e {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 0.9em;
+    height: 0.9em;
+    margin-left: 0.15em;
+    border-radius: 2px;
+    background: var(--text-muted);
+    color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 0.32em;
+    vertical-align: middle;
+    text-decoration: none;
   }
   .song__sub {
     margin-top: var(--sp-4);

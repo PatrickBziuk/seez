@@ -121,11 +121,14 @@ const metadata = {
         EP_TRACKS.map((t) => (
           <SongRow
             lang={lang}
+            no={t.no}
             title={t.title}
             href={has(t.slug) ? sectionUrl(lang, 'music', t.slug) : undefined}
             figures={t.figures}
-            note={t.note[lang]}
-            listen={EP.spotify}
+            note={t.note?.[lang]}
+            length={t.length}
+            explicit={t.explicit}
+            listen={t.spotify}
             lyricsHref={t.lyricsId && has(t.slug) ? `${sectionUrl(lang, 'music', t.slug)}#lyrics` : undefined}
             hasVideo={filmsForSong(t.filmKey).length > 0}
           />

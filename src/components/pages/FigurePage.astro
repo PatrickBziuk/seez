@@ -112,9 +112,11 @@ const metadata = {
               title={t.title}
               href={has(t.slug) ? sectionUrl(lang, 'music', t.slug) : undefined}
               figures={t.figures}
-              note={t.note[lang]}
-              status={`EP · ${EP.title}`}
-              listen={EP.spotify}
+              note={t.note?.[lang]}
+              status={`EP · Track ${t.no}`}
+              length={t.length}
+              explicit={t.explicit}
+              listen={t.spotify}
             />
           ))}
           {otherSongs.map(({ r, e }) => (

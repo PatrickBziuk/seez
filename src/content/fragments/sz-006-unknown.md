@@ -24,9 +24,14 @@ voiceCharacteristics:
 movementGrammar: ['Kontrolliert', 'dichte Präsenz', 'präzise Gestik']
 primarySongs: ['als-sie']
 containmentNote: 'Mehrsprachige politische Stimme - wechselt zwischen Sprachen, spiegelt systematische Ausgrenzung chirurgisch präzise zurück.'
-lastChangeDate: '2026-11-24T12:47:33.507Z'
+lastChangeDate: '2026-11-24T14:33:02.173Z'
 changeLog:
   - date: '2026-11-24T12:47:33.507Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
+  - date: '2026-11-24T14:33:02.173Z'
     description: Content updated
     author: seez
     type: content
@@ -69,7 +74,7 @@ Das Comic-Bild zeigt mich als Teil größerer Erzählungen über Migration, Gren
 
 ## Meine Songs — Chirurgische Präzision
 
-**Als Sie** ist mein Manifest. Der Song über das Schweigen, wenn Ungerechtigkeit passiert. "Als sie kamen" — wann schaut ihr weg, wann sprecht ihr auf? Der Refrain ist simple Wahrheit: Stille ist bequem, aber gefährlich.
+**ALS SIE** ist mein Manifest. Der Song über das Schweigen, wenn Ungerechtigkeit passiert. "Als sie kamen" — wann schaut ihr weg, wann sprecht ihr auf? Der Refrain ist simple Wahrheit: Stille ist bequem, aber gefährlich.
 
 Zwischen den Songs der anderen liefere ich politischen Kontext. Wenn Splinter sich selbst hasst, erkläre ich die gesellschaftlichen Ursachen. Wenn Shift wütend wird, zeige ich die Klassenmechanismen. Ich verwandle persönliche Schmerzen in politische Analyse.
 

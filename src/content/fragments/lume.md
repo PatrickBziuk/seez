@@ -22,9 +22,14 @@ voiceCharacteristics:
 movementGrammar: ['entdecken', 'begeistern', 'verbinden']
 containmentNote: 'Lume repräsentiert die neugierige Fan-Energie der Digital Natives. Ihre Begeisterungsfähigkeit ist ansteckend, aber ihre schnelle Erschöpfung bei Routine erfordert konstante Stimulation durch neue Inhalte und Erfahrungen.'
 tags: ['figure', 'character', 'music', 'discovery', 'gaming', 'books', 'dreamer']
-lastChangeDate: '2026-11-24T12:47:33.481Z'
+lastChangeDate: '2026-11-24T14:33:02.155Z'
 changeLog:
   - date: '2026-11-24T12:47:33.481Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
+  - date: '2026-11-24T14:33:02.155Z'
     description: Content updated
     author: seez
     type: content
@@ -74,7 +79,7 @@ Das Comic-Bild zeigt mich als Teil einer größeren Geschichte — nicht die Hau
 Bei den anderen bin ich die Hook-Sängerin:
 - In **Nachtgedanken** von Splinter bringe ich das Licht in seine 3-Uhr-Verzweiflung
 - In **Maskenspiel** singe ich darüber, was passiert, wenn wir die Masken ablegen
-- In **Als Sie** von Unknown gebe ich der politischen Wut eine emotionale Brücke
+- In **ALS SIE** von Unknown gebe ich der politischen Wut eine emotionale Brücke
 
 Meine Stimme ist der Beweis, dass man hoffnungsvoll sein kann, ohne naiv zu sein.
 

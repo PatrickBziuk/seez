@@ -20,9 +20,14 @@ voiceCharacteristics:
 movementGrammar: ['treiben', 'fallen', 'festhalten']
 containmentNote: 'Embodies youth self-destruction without glamorization; handle carefully.'
 tags: ['figure', 'character', 'music', 'substance', 'youth-crisis', 'anchor-lost']
-lastChangeDate: '2026-11-24T12:47:33.407Z'
+lastChangeDate: '2026-11-24T14:33:02.143Z'
 changeLog:
   - date: '2026-11-24T12:47:33.407Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
+  - date: '2026-11-24T14:33:02.143Z'
     description: Content updated
     author: seez
     type: content
@@ -53,7 +58,7 @@ Wir sind alle kaputt, nur auf verschiedene Art.
 
 **Gl1tch** nervt mich manchmal mit seiner Meta-Scheiße. "Das ist nicht nur dein Problem, das ist Generational Trauma." Jo, danke, hilft mir auch nicht weiter. Aber wenn er über Tools und Authentizität labert, höre ich zu. Wenigstens einer, der nicht so tut, als wäre alles einfach.
 
-**Unknown** respektiere ich, weil er kämpft. Ich bin zu kaputt zum Kämpfen, aber ich verstehe seine Wut. Wenn er *Als Sie* rappt, denke ich: so hätte ich auch werden können, wenn ich nicht so früh aufgegeben hätte.
+**Unknown** respektiere ich, weil er kämpft. Ich bin zu kaputt zum Kämpfen, aber ich verstehe seine Wut. Wenn er *ALS SIE* rappt, denke ich: so hätte ich auch werden können, wenn ich nicht so früh aufgegeben hätte.
 
 ## Meine Bilder — Momente des Zerfalls
 

@@ -7,7 +7,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
 import SongRow from '~/components/seez/SongRow.astro';
 import FigureStrip from '~/components/seez/FigureStrip.astro';
-import { EP, EP_TRACKS, SONG_EXTRAS } from '~/data/songs';
+import { EP, EP_TRACKS, SONG_EXTRAS, SINGLES } from '~/data/songs';
 import { getFigure } from '~/data/figures';
 import { getSongRecords, pickEntry, isSong } from '~/utils/music';
 import { filmsForSong } from '~/utils/videothek';
@@ -31,6 +31,7 @@ const others = records
       title: e.data.title,
       figures: SONG_EXTRAS[r.slug]?.figures || (ref ? [ref.id] : []),
       lyrics: SONG_EXTRAS[r.slug]?.lyricsId,
+      note: SONG_EXTRAS[r.slug]?.note?.[lang],
     };
   })
   .sort((a, b) => a.title.localeCompare(b.title, 'de'));
@@ -58,8 +59,10 @@ const metadata = {
 
   <section class="sz-container sz-section ep" aria-labelledby="ep-title">
     <div class="ep__head">
-      <p class="sz-label">EP · {released}</p>
-      <h2 class="sz-display" id="ep-title">{EP.title}</h2>
+      <p class="sz-label">
+        EP · {released} · {EP_TRACKS.length} Tracks · {EP.length}
+      </p>
+      <h2 class="sz-h1 ep__title" id="ep-title">{EP.title}</h2>
       <FigureStrip height={6} class="ep__strip" />
       <p class="sz-lead ep__claim">{EP.claim[lang]}</p>
       <div class="sz-btn-row ep__actions">
@@ -74,17 +77,39 @@ const metadata = {
         EP_TRACKS.map((t) => (
           <SongRow
             lang={lang}
+            no={t.no}
             title={t.title}
             href={bySlug.has(t.slug) ? sectionUrl(lang, 'music', t.slug) : undefined}
             figures={t.figures}
-            note={t.note[lang]}
-            listen={EP.spotify}
+            note={t.note?.[lang]}
+            length={t.length}
+            explicit={t.explicit}
+            listen={t.spotify}
             lyricsHref={t.lyricsId && bySlug.has(t.slug) ? `${sectionUrl(lang, 'music', t.slug)}#lyrics` : undefined}
             hasVideo={filmsForSong(t.filmKey).length > 0}
           />
         ))
       }
     </ol>
+    <p class="sz-muted ep__source">
+      {
+        de
+          ? 'Reihenfolge, Titel und Laufzeiten wie auf Spotify.'
+          : 'Order, titles and running times as on Spotify.'
+      }{' '}
+      {
+        SINGLES.map((x) => (
+          <>
+            {de ? 'Vorab als Single: ' : 'Earlier single: '}
+            <a class="sz-link" href={x.spotify} rel="noopener">
+              {x.title}
+            </a>{' '}
+            ({new Date(x.released).toLocaleDateString(de ? 'de-DE' : 'en-GB')}, {x.length}
+            {de ? ', längere Fassung' : ', longer version'}).
+          </>
+        ))
+      }
+    </p>
   </section>
 
   {
@@ -110,6 +135,7 @@ const metadata = {
               title={o.title}
               href={sectionUrl(lang, 'music', o.slug)}
               figures={o.figures}
+              note={o.note}
               status={de ? 'in Arbeit' : 'in progress'}
               lyricsHref={o.lyrics ? `${sectionUrl(lang, 'music', o.slug)}#lyrics` : undefined}
             />
@@ -147,8 +173,18 @@ const metadata = {
 </Layout>
 
 <style>
+  .ep {
+    padding-top: 0;
+  }
   .ep__head {
     max-width: 880px;
+  }
+  .ep__title {
+    margin-top: var(--sp-2);
+  }
+  .ep__source {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-sm);
   }
   .ep :global(.ep__strip) {
     margin-top: var(--sp-4);
@@ -161,7 +197,7 @@ const metadata = {
     margin-top: var(--sp-5);
   }
   .ep__listlabel {
-    margin-top: var(--sp-7);
+    margin-top: var(--sp-6);
     margin-bottom: var(--sp-2);
   }
   .sz-songlist {

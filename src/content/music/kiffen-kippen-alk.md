@@ -11,9 +11,14 @@ genre: ['Dark Trap', 'Conscious Rap', 'Seelensplitter']
 linerNotes: 'SP1-Drift-Kernsong aus der Rausch-und-Flucht-Phase.'
 tags: ['song', 'ep1', 'generierung-laeuft', 'drift', 'rausch', 'jugend', 'selbstzerstoerung']
 figureRef: fragments/drift
-lastChangeDate: '2026-11-24T12:47:33.567Z'
+lastChangeDate: '2026-11-24T14:33:02.245Z'
 changeLog:
   - date: '2026-11-24T12:47:33.567Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
+  - date: '2026-11-24T14:33:02.245Z'
     description: Content updated
     author: seez
     type: content
@@ -28,7 +33,7 @@ Drift will nicht glänzen, sondern unterbrochen werden: Der Refrain ist weniger 
 
 - **Figur:** Drift
 - **Phase:** SEELENSPLITTER PHASE 1
-- **EP:** GENERIERUNG LÄUFT
+- **EP:** GENERIERUNG LÄUFT, Track 4
 - **Themen:** Rausch, Substanzen, Jugend, Absturz, Selbstzerstörung
 
 ## Textauszug
