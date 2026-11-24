@@ -6,6 +6,8 @@
  *   node scripts/videothek/release.mjs <id> --upload        also upload them to GitHub
  *   node scripts/videothek/release.mjs --withdraw <id>     remove the film from the site
  *   node scripts/videothek/release.mjs --list              show what is released
+ *   node scripts/videothek/release.mjs --track <slug> [--upload]   pin an EP track's audio
+ *   node scripts/videothek/release.mjs --withdraw-track <slug>     remove a track's audio
  *
  * Pinning copies the film's current local media (full, cover, clip, thumbs) into
  * .videothek-cache/ under versioned names and records their sha256 in
@@ -40,9 +42,85 @@ const data = readReleases(root);
 const save = () => fs.writeFileSync(releasesFile, JSON.stringify(data, null, 2) + '\n');
 const mib = (b) => (b / 1048576).toFixed(1) + ' MiB';
 
+function upload(files) {
+  try {
+    execFileSync('gh', ['release', 'view', RELEASE_TAG, '-R', RELEASE_REPO], { stdio: 'ignore' });
+  } catch {
+    execFileSync(
+      'gh',
+      [
+        'release',
+        'create',
+        RELEASE_TAG,
+        '-R',
+        RELEASE_REPO,
+        '--title',
+        'Videothek media',
+        '--notes',
+        'Released Videothek media for seez.eu. Files are pinned by sha256 in src/data/videothek/releases.json.',
+        '--latest=false',
+      ],
+      { stdio: 'inherit' }
+    );
+  }
+  execFileSync('gh', ['release', 'upload', RELEASE_TAG, '-R', RELEASE_REPO, '--clobber', ...files], {
+    stdio: 'inherit',
+  });
+  console.log(
+    `Uploaded to github.com/${RELEASE_REPO}/releases/tag/${RELEASE_TAG}. Commit releases.json and deploy to put it on seez.eu.`
+  );
+}
+
+// EP track audio: only tracks of the released EP (songs.ts EP_TRACKS) can be released.
+if (opt('--withdraw-track')) {
+  const slug = opt('--withdraw-track');
+  if (!data.tracks?.[slug]) {
+    console.error(`${slug} has no released audio.`);
+    process.exit(1);
+  }
+  const asset = data.tracks[slug].audio.asset;
+  delete data.tracks[slug];
+  save();
+  console.log(`Withdrawn audio of ${slug}. Asset stays in the GitHub release until removed:`);
+  console.log(`  gh release delete-asset ${RELEASE_TAG} ${asset} -R ${RELEASE_REPO} -y`);
+  process.exit(0);
+}
+if (opt('--track')) {
+  const slug = opt('--track');
+  const songs = fs.readFileSync(path.join(root, 'src/data/songs.ts'), 'utf8');
+  const epBlock = songs.slice(songs.indexOf('export const EP_TRACKS'), songs.indexOf('];', songs.indexOf('export const EP_TRACKS')));
+  if (!new RegExp(`slug: '${slug}'`).test(epBlock)) {
+    console.error(`"${slug}" is not an EP track in src/data/songs.ts (EP_TRACKS). Only released EP tracks can have audio.`);
+    process.exit(1);
+  }
+  const src = localMediaPath(slug, 'audio');
+  if (!fs.existsSync(src)) {
+    console.error(`Missing local file: ${src}`);
+    process.exit(1);
+  }
+  const sha256 = sha256File(src);
+  const version = sha256.slice(0, 8);
+  const asset = `track-${slug}--${version}${path.extname(src)}`;
+  fs.mkdirSync(path.join(root, CACHE_DIR), { recursive: true });
+  fs.copyFileSync(src, path.join(root, CACHE_DIR, asset));
+  const before = data.tracks?.[slug];
+  data.tracks = data.tracks || {};
+  data.tracks[slug] = {
+    approvedAt: new Date().toISOString().slice(0, 10),
+    version,
+    audio: { asset, sha256, bytes: fs.statSync(src).size },
+  };
+  save();
+  console.log(`${before ? 'Re-pinned' : 'Pinned'} audio of ${slug} as v${version} (${mib(fs.statSync(src).size)}).`);
+  if (flag('--upload')) upload([path.join(root, CACHE_DIR, asset)]);
+  process.exit(0);
+}
+
 if (flag('--list')) {
   const ids = Object.keys(data.films);
   if (!ids.length) console.log('No film released.');
+  for (const [slug, t] of Object.entries(data.tracks || {}))
+    console.log(`track ${slug}  v${t.version}  approved ${t.approvedAt}  ${mib(t.audio.bytes)}`);
   for (const k of ids) {
     const r = data.films[k];
     const bytes = releaseAssets(r).reduce((s, a) => s + a.bytes, 0);
@@ -117,44 +195,7 @@ console.log(
 );
 
 if (flag('--upload')) {
-  try {
-    execFileSync('gh', ['release', 'view', RELEASE_TAG, '-R', RELEASE_REPO], { stdio: 'ignore' });
-  } catch {
-    execFileSync(
-      'gh',
-      [
-        'release',
-        'create',
-        RELEASE_TAG,
-        '-R',
-        RELEASE_REPO,
-        '--title',
-        'Videothek media',
-        '--notes',
-        'Released Videothek media for seez.eu. Files are pinned by sha256 in src/data/videothek/releases.json.',
-        '--latest=false',
-      ],
-      { stdio: 'inherit' }
-    );
-  }
-  execFileSync(
-    'gh',
-    [
-      'release',
-      'upload',
-      RELEASE_TAG,
-      '-R',
-      RELEASE_REPO,
-      '--clobber',
-      ...pinned.map((a) => path.join(root, CACHE_DIR, a.asset)),
-    ],
-    {
-      stdio: 'inherit',
-    }
-  );
-  console.log(
-    `Uploaded to github.com/${RELEASE_REPO}/releases/tag/${RELEASE_TAG}. Commit releases.json and deploy to put it on seez.eu.`
-  );
+  upload(pinned.map((a) => path.join(root, CACHE_DIR, a.asset)));
 } else {
   console.log(
     'Not uploaded yet (local only). Re-run with --upload after the yes, then commit releases.json and deploy.'

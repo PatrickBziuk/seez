@@ -17,15 +17,22 @@ import {
   CACHE_DIR,
   PUBLIC_PREFIX,
   assetDownloadUrl,
+  allReleasedAssets,
   localMediaPath,
   readReleases,
   releaseAssets,
   sha256File,
+  trackAssets,
 } from '../utils/videothek-media.mjs';
 
 type Asset = { asset: string; sha256: string; bytes: number };
 
-const MIME: Record<string, string> = { '.mp4': 'video/mp4', '.jpg': 'image/jpeg', '.png': 'image/png' };
+const MIME: Record<string, string> = {
+  '.mp4': 'video/mp4',
+  '.m4a': 'audio/mp4',
+  '.jpg': 'image/jpeg',
+  '.png': 'image/png',
+};
 
 function serveFile(req: IncomingMessage, res: ServerResponse, file: string) {
   const stat = fs.statSync(file);
@@ -91,7 +98,7 @@ export default function videothek(): AstroIntegration {
             return res.end('no local file');
           }
           // Released asset: serve from cache (fetched on demand).
-          const all = Object.values(readReleases(root).films || {}).flatMap((r) => releaseAssets(r)) as Asset[];
+          const all = allReleasedAssets(readReleases(root)) as Asset[];
           const a = all.find((x) => x.asset === rel);
           if (!a) return next();
           ensureCached(root, a)
@@ -104,7 +111,9 @@ export default function videothek(): AstroIntegration {
       },
       'astro:build:done': async ({ dir, logger }) => {
         const out = path.join(fileURLToPath(dir), PUBLIC_PREFIX);
-        const releases = readReleases(root).films || {};
+        const data = readReleases(root);
+        const releases = data.films || {};
+        const tracks = data.tracks || {};
         let n = 0;
         let bytes = 0;
         for (const [id, rel] of Object.entries(releases)) {
@@ -118,8 +127,19 @@ export default function videothek(): AstroIntegration {
             bytes += a.bytes;
           }
         }
+        for (const [slug, t] of Object.entries(tracks)) {
+          for (const a of trackAssets(t) as Asset[]) {
+            if (!a.asset.startsWith(`track-${slug}--`))
+              throw new Error(`[videothek] asset ${a.asset} does not belong to track ${slug}`);
+            const src = await ensureCached(root, a);
+            fs.mkdirSync(out, { recursive: true });
+            fs.copyFileSync(src, path.join(out, a.asset));
+            n++;
+            bytes += a.bytes;
+          }
+        }
         logger.info(
-          `${Object.keys(releases).length} released film(s), ${n} media file(s), ${(bytes / 1048576).toFixed(1)} MiB`
+          `${Object.keys(releases).length} released film(s), ${Object.keys(tracks).length} track(s), ${n} media file(s), ${(bytes / 1048576).toFixed(1)} MiB`
         );
       },
     },

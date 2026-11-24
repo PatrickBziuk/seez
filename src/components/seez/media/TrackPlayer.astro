@@ -1,0 +1,18 @@
+---
+/** Player for one EP track. Renders nothing when the track has no released audio. */
+import AudioPlayer from './AudioPlayer.astro';
+import type { EpTrack } from '~/data/songs';
+import { trackAudio } from '~/utils/media';
+
+export interface Props {
+  track: EpTrack;
+  lang: 'de' | 'en';
+  variant?: 'full' | 'compact';
+  class?: string;
+}
+
+const { track, lang, variant = 'full', class: className } = Astro.props;
+const audio = trackAudio(track.slug);
+---
+
+{audio && <AudioPlayer items={[{ track, audio }]} lang={lang} variant={variant} class={className} />}

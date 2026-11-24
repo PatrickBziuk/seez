@@ -422,7 +422,7 @@
       "song": "kka",
       "length": "2:35",
       "workStatus": "final",
-      "released": false
+      "released": true
     },
     {
       "id": "shift_planer",
@@ -430,7 +430,7 @@
       "song": "aufstieg",
       "length": "2:56",
       "workStatus": "final",
-      "released": false
+      "released": true
     },
     {
       "id": "latency_love",
@@ -454,7 +454,7 @@
       "song": "questlog",
       "length": "2:51",
       "workStatus": "final",
-      "released": false
+      "released": true
     },
     {
       "id": "unknown_weltmeister",
@@ -462,7 +462,7 @@
       "song": "weltmeister",
       "length": "2:28",
       "workStatus": "final",
-      "released": false
+      "released": true
     },
     {
       "id": "splinter_spiegelkrise",
@@ -470,7 +470,7 @@
       "song": "spiegelkrise",
       "length": "2:40",
       "workStatus": "final",
-      "released": false
+      "released": true
     },
     {
       "id": "cve10_march",
@@ -526,7 +526,7 @@
       "song": "fcksuno",
       "length": "1:17",
       "workStatus": "final",
-      "released": false
+      "released": true
     },
     {
       "id": "kka_etage",
@@ -777,6 +777,14 @@
     {
       "from": "/de/music",
       "to": "/de/musik"
+    },
+    {
+      "from": "/de/lyrics",
+      "to": "/de/musik#lyrics"
+    },
+    {
+      "from": "/en/lyrics",
+      "to": "/en/music#lyrics"
     },
     {
       "from": "/en/musik",
@@ -1179,7 +1187,6 @@
     "/[lang]",
     "/[lang]/legal/impressum.astro",
     "/[lang]/legal/privacy.astro",
-    "/[lang]/lyrics",
     "/[lang]/press.astro",
     "/[lang]/rss.xml.ts",
     "/[lang]/tags/[tag].astro",

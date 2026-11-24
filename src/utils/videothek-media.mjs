@@ -27,6 +27,9 @@ export function localMediaPath(id, kind, n) {
       return path.join(base, 'clips', `${id}.mp4`);
     case 'thumb':
       return path.join(base, 'thumbs', `${id}_${n}.jpg`);
+    case 'audio':
+      // EP track audio (AAC), encoded from the masters; id = EP track slug
+      return path.join(base, 'audio', `${id}.m4a`);
     default:
       throw new Error(`unknown media kind ${kind}`);
   }
@@ -44,6 +47,19 @@ export function sha256File(file) {
 export function releaseAssets(release) {
   const m = release.media || {};
   return [m.full, m.cover, m.clip, ...(m.thumbs || [])].filter(Boolean);
+}
+
+/** Audio of one released EP track (releases.json "tracks"). */
+export function trackAssets(track) {
+  return [track?.audio].filter(Boolean);
+}
+
+/** Every pinned asset of releases.json: films and EP track audio. */
+export function allReleasedAssets(data) {
+  return [
+    ...Object.values(data.films || {}).flatMap((r) => releaseAssets(r)),
+    ...Object.values(data.tracks || {}).flatMap((t) => trackAssets(t)),
+  ];
 }
 
 export function readReleases(root = process.cwd()) {

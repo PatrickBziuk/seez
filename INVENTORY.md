@@ -43,24 +43,24 @@ TUMBLR TRÄUME (splinter, Phase 1) · STEMPEL AUS (shift, Phase 2) · ILLEGALE A
 | SZ-005 | Gl1tch | `#3FD8F0` | /images/figures/gl1tch-sheet.webp | en, de | 6 FUCK SUNO |
 | SZ-006 | Unknown | `#F39A4C` | /images/figures/unknown-sheet.webp | en, de | 1 WELTMEISTER |
 
-## Videos (23 im Katalog, 0 freigegeben)
+## Videos (23 im Katalog, 6 freigegeben)
 
 | ID | Titel | Song | Länge | Arbeitsstand | freigegeben |
 |---|---|---|---|---|---|
-| drift_seezler | KIFFEN KIPPEN ALK | kka | 2:35 | final | nein |
-| shift_planer | AUFSTIEGSTRAUM | aufstieg | 2:56 | final | nein |
+| drift_seezler | KIFFEN KIPPEN ALK | kka | 2:35 | final | ja |
+| shift_planer | AUFSTIEGSTRAUM | aufstieg | 2:56 | final | ja |
 | latency_love | LATENCY LOVE | latency | 2:30 | final | nein |
 | lume_abblendlicht | ABBLENDLICHT | abblendlicht | 3:47 | final | nein |
-| lume_questlog | QUESTLOG | questlog | 2:51 | final | nein |
-| unknown_weltmeister | Weltmeister | weltmeister | 2:28 | final | nein |
-| splinter_spiegelkrise | SPIEGELKRISE | spiegelkrise | 2:40 | final | nein |
+| lume_questlog | QUESTLOG | questlog | 2:51 | final | ja |
+| unknown_weltmeister | Weltmeister | weltmeister | 2:28 | final | ja |
+| splinter_spiegelkrise | SPIEGELKRISE | spiegelkrise | 2:40 | final | ja |
 | cve10_march | CVE-10 | cve10 | 0:08 | test | nein |
 | cve10 | CVE-10 | cve10 | 3:11 | final | nein |
 | fck_suno_anime3 | F*CK SUNO | fcksuno | 3:05 | final | nein |
 | fck_suno_anime | F*CK SUNO | fcksuno | 3:05 | draft | nein |
 | fck_suno_mv | F*CK SUNO | fcksuno | 3:05 | dropped | nein |
 | fck_suno_wan | F*CK SUNO | fcksuno | 0:12 | test | nein |
-| gen_laeuft | GENERIERUNG LÄUFT | fcksuno | 1:17 | final | nein |
+| gen_laeuft | GENERIERUNG LÄUFT | fcksuno | 1:17 | final | ja |
 | kka_etage | Kiffen Kippen Alk | kka | 2:35 | final | nein |
 | kka_platz | Kiffen Kippen Alk | kka | 2:35 | final | nein |
 | kka_anime | Kiffen Kippen Alk | kka | 2:35 | draft | nein |
@@ -90,13 +90,13 @@ Bilder: 22 Dateien, 14655 KB, davon 6 ohne Verwendung.
 | /sounds/schmetterlingsmoment.mp3 | 5664 | Schmetterlingsmoment | nein |
 | /sounds/time-to-leave.mp3 | 4369 | Time to Leave | nein |
 
-## Weiterleitungen (98)
+## Weiterleitungen (100)
 
 Tabelle: `src/data/redirects.mjs`. Jede alte URL führt in einem Sprung zum Ziel (`pnpm check:redirects` nach dem Build).
 
-## Seiten-Routen (37)
+## Seiten-Routen (36)
 
-`/[...blog]/[...page].astro` · `/[...blog]/[category]/[...page].astro` · `/[...blog]/[tag]/[...page].astro` · `/[...blog]` · `/[lang]/about.astro` · `/[lang]/authors/[authorId].astro` · `/[lang]/blog` · `/[lang]/contact.astro` · `/[lang]` · `/[lang]/legal/impressum.astro` · `/[lang]/legal/privacy.astro` · `/[lang]/lyrics` · `/[lang]/press.astro` · `/[lang]/rss.xml.ts` · `/[lang]/tags/[tag].astro` · `/[lang]/tags` · `/[lang]/texte/[slug].astro` · `/[lang]/texte` · `/[lang]/videothek` · `/404.astro` · `/de/archiv` · `/de/fragmente/[slug].astro` · `/de/fragmente` · `/de/lizenz` · `/de/musik/[slug].astro` · `/de/musik` · `/de/werkstatt` · `/en/archive` · `/en/fragments/[slug].astro` · `/en/fragments` · `/en/license` · `/en/music/[slug].astro` · `/en/music` · `/en/workshop` · `/` · `/rss.xml.ts` · `/sitemap.xml.ts`
+`/[...blog]/[...page].astro` · `/[...blog]/[category]/[...page].astro` · `/[...blog]/[tag]/[...page].astro` · `/[...blog]` · `/[lang]/about.astro` · `/[lang]/authors/[authorId].astro` · `/[lang]/blog` · `/[lang]/contact.astro` · `/[lang]` · `/[lang]/legal/impressum.astro` · `/[lang]/legal/privacy.astro` · `/[lang]/press.astro` · `/[lang]/rss.xml.ts` · `/[lang]/tags/[tag].astro` · `/[lang]/tags` · `/[lang]/texte/[slug].astro` · `/[lang]/texte` · `/[lang]/videothek` · `/404.astro` · `/de/archiv` · `/de/fragmente/[slug].astro` · `/de/fragmente` · `/de/lizenz` · `/de/musik/[slug].astro` · `/de/musik` · `/de/werkstatt` · `/en/archive` · `/en/fragments/[slug].astro` · `/en/fragments` · `/en/license` · `/en/music/[slug].astro` · `/en/music` · `/en/workshop` · `/` · `/rss.xml.ts` · `/sitemap.xml.ts`
 
 ## Befunde
 

@@ -12,6 +12,9 @@ import LyricsBlock from '~/components/seez/LyricsBlock.astro';
 import Notice from '~/components/seez/Notice.astro';
 import SongRow from '~/components/seez/SongRow.astro';
 import HelpNotice from '~/components/seez/HelpNotice.astro';
+import TrackPlayer from '~/components/seez/media/TrackPlayer.astro';
+import FilmPlayer from '~/components/seez/media/FilmPlayer.astro';
+import { trackAudio } from '~/utils/media';
 import { EP, EP_TRACKS, SONG_EXTRAS, epTrack, getLyrics } from '~/data/songs';
 import { getFigure, figureStyle, type FigureId } from '~/data/figures';
 import { pickEntry, isSong, type SongRecord } from '~/utils/music';
@@ -40,6 +43,7 @@ const films = filmsForSong(track?.filmKey);
 const song = isSong(entry);
 const audio = (entry.data as { audioUrl?: string }).audioUrl;
 const title = entry.data.title;
+const playable = Boolean(track && trackAudio(track.slug));
 
 const related = EP_TRACKS.filter((t) => t.slug !== record.slug && t.figures.some((f) => figures.includes(f)));
 const exists = (slug: string) => all.some((r) => r.slug === slug);
@@ -130,13 +134,13 @@ const metadata = {
           <div class="sz-btn-row song__actions">
             {
               track && (
-                <a class="sz-btn sz-btn--primary" href={track.spotify} rel="noopener">
-                  {de ? 'Auf Spotify hören' : 'Listen on Spotify'}
+                <a class:list={['sz-btn', { 'sz-btn--primary': !playable }]} href={track.spotify} rel="noopener">
+                  {playable ? (de ? 'Auf Spotify' : 'On Spotify') : de ? 'Auf Spotify hören' : 'Listen on Spotify'}
                 </a>
               )
             }
             {
-              films.length > 0 && (
+              films.some((f) => f.released) && (
                 <a class="sz-btn" href="#video">
                   ▶ Video
                 </a>
@@ -150,6 +154,7 @@ const metadata = {
               )
             }
           </div>
+          {track && playable && <TrackPlayer track={track} lang={lang} class="song__player" />}
           {
             audio && (
               <div class="song__audio">
@@ -195,26 +200,18 @@ const metadata = {
     </section>
 
     {
-      films.length > 0 && (
+      films.some((f) => f.released) && (
         <section class="sz-section sz-container" id="video" aria-labelledby="video-h" lang={lang}>
           <h2 class="sz-h2" id="video-h">
             Video
           </h2>
           <div class="song__films">
-            {films.map((f) => (
-              <figure class="song__film">
-                <video controls preload="none" poster={f.media.poster} src={f.media.full} />
-                <figcaption>
-                  <strong>{f.title}</strong> · {f.subtitle} · {f.length}
-                  <br />
-                  <span class="sz-muted">
-                    {de
-                      ? 'Musik und Figurenbilder KI-gestützt · Apps und Marken im Bild sind erfunden'
-                      : 'Music and figure art AI-assisted · apps and brands shown are fictional'}
-                  </span>
-                </figcaption>
-              </figure>
-            ))}
+            <FilmPlayer filmKey={track?.filmKey} lang={lang} title={title} />
+            <p class="sz-muted song__filmnote">
+              {de
+                ? 'Musik und Figurenbilder KI-gestützt · Apps und Marken im Bild sind erfunden'
+                : 'Music and figure art AI-assisted · apps and brands shown are fictional'}
+            </p>
           </div>
         </section>
       )
@@ -340,6 +337,12 @@ const metadata = {
   .song__audio {
     margin-top: var(--sp-5);
   }
+  .song__intro :global(.song__player) {
+    margin-top: var(--sp-5);
+  }
+  .song__filmnote {
+    font-size: var(--fs-sm);
+  }
   .song__audio audio {
     width: 100%;
     max-width: 420px;
@@ -363,8 +366,9 @@ const metadata = {
   }
   .song__films {
     display: grid;
-    gap: var(--sp-6);
+    gap: var(--sp-3);
     margin-top: var(--sp-5);
+    max-width: 960px;
   }
   .song__film video {
     width: 100%;

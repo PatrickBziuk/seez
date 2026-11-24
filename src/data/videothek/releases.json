@@ -1,4 +1,355 @@
 {
   "$comment": "Public allowlist for the Videothek. Only films listed here appear on seez.eu, and only with exactly these media files (sha256-pinned). Add entries with scripts/videothek/release.mjs after an explicit yes; never by hand-copying.",
-  "films": {}
+  "films": {
+    "unknown_weltmeister": {
+      "approvedAt": "2026-11-24",
+      "version": "90d56402",
+      "note": "Figuren-Reihe, Freigabe 24.11.2026",
+      "media": {
+        "full": {
+          "asset": "unknown_weltmeister--90d56402--full.mp4",
+          "sha256": "90d56402a8ea422dd8cd3ebb4f48cdc7a7c8a949f88a5d546993f2d9197c8a11",
+          "bytes": 19402174
+        },
+        "cover": {
+          "asset": "unknown_weltmeister--90d56402--cover.jpg",
+          "sha256": "8a5da9a875334218ef2b5bee883a74bf7a17064af5e3e029d8d81f97f7ed2e6c",
+          "bytes": 24623
+        },
+        "clip": {
+          "asset": "unknown_weltmeister--90d56402--clip.mp4",
+          "sha256": "7add7fffd97d1f8cf89805cd52eb3ddfc4e31d732b26568d33514a64d302805a",
+          "bytes": 103285
+        },
+        "thumbs": [
+          {
+            "asset": "unknown_weltmeister--90d56402--thumb1.jpg",
+            "sha256": "ed1a688f9c65ae2f583de77ed48e06096f0ec0d3720af15da37e2acb58c37fb2",
+            "bytes": 10907
+          },
+          {
+            "asset": "unknown_weltmeister--90d56402--thumb2.jpg",
+            "sha256": "e00f2fd2eedc08005b105dd0daa7ef747cb5756ac3ea4f9e564782e0f9206ec1",
+            "bytes": 8518
+          },
+          {
+            "asset": "unknown_weltmeister--90d56402--thumb3.jpg",
+            "sha256": "697b35b5180f17a431236e87516b03ed34bc9ad6e657f13408fe37c965f4395a",
+            "bytes": 8235
+          },
+          {
+            "asset": "unknown_weltmeister--90d56402--thumb4.jpg",
+            "sha256": "fb1996667aae56b2eff274644732aced145795a3b834252c96246d72221693b6",
+            "bytes": 7539
+          },
+          {
+            "asset": "unknown_weltmeister--90d56402--thumb5.jpg",
+            "sha256": "44dfdd2ba308a5ca26cfb46fc93b658e8f39f6a1242b98816e68a77c13f239df",
+            "bytes": 10954
+          }
+        ]
+      }
+    },
+    "lume_questlog": {
+      "approvedAt": "2026-11-24",
+      "version": "253210a7",
+      "note": "Figuren-Reihe, Freigabe 24.11.2026",
+      "media": {
+        "full": {
+          "asset": "lume_questlog--253210a7--full.mp4",
+          "sha256": "253210a723be5faf7b0a73ba0be6227f62bdf4f15dc7c0c1e910d84d3ddd33a4",
+          "bytes": 19366994
+        },
+        "cover": {
+          "asset": "lume_questlog--253210a7--cover.jpg",
+          "sha256": "5e14ff9dd152847cb07d3d126be963860126780124d80bc6ac6c41ef7c64534d",
+          "bytes": 35970
+        },
+        "clip": {
+          "asset": "lume_questlog--253210a7--clip.mp4",
+          "sha256": "7fc0ad92c056d3dd685fb9a6908461636aeab612440849bb510c101b03264a19",
+          "bytes": 168076
+        },
+        "thumbs": [
+          {
+            "asset": "lume_questlog--253210a7--thumb1.jpg",
+            "sha256": "8fe7708dd3cd3ea8acbec8bce2dae54a844c8a4a5417c4d04988a4497288e5e5",
+            "bytes": 20858
+          },
+          {
+            "asset": "lume_questlog--253210a7--thumb2.jpg",
+            "sha256": "c973b0208f7b1c10c0b494fd112f6d90dc0a95e41e8d8d655f19c68cb4de54a3",
+            "bytes": 12238
+          },
+          {
+            "asset": "lume_questlog--253210a7--thumb3.jpg",
+            "sha256": "0b0332ef16c05e0ccbe7555a9a5407307404ef0e021e1ba8832e60c68bd81e98",
+            "bytes": 20592
+          },
+          {
+            "asset": "lume_questlog--253210a7--thumb4.jpg",
+            "sha256": "9d147007cb3880f3c4f80c2e7f7c0a2dd972b24e61a421ae549b26ce8273f99d",
+            "bytes": 16456
+          },
+          {
+            "asset": "lume_questlog--253210a7--thumb5.jpg",
+            "sha256": "b461c6ff52c033bbae24d17fea1e3e01a35e21dae3f1fba12d2f413f49e3a235",
+            "bytes": 18656
+          }
+        ]
+      }
+    },
+    "shift_planer": {
+      "approvedAt": "2026-11-24",
+      "version": "b643bd2b",
+      "note": "Figuren-Reihe, Freigabe 24.11.2026",
+      "media": {
+        "full": {
+          "asset": "shift_planer--b643bd2b--full.mp4",
+          "sha256": "b643bd2b926b595d266336d27f34d7fef9f85c7838d54c3f360e849f3ca28bd7",
+          "bytes": 19326678
+        },
+        "cover": {
+          "asset": "shift_planer--b643bd2b--cover.jpg",
+          "sha256": "f4ed627643eb80d0824a89d5d0c3e720f1ddec384abb2dafdd7882feb5b1604c",
+          "bytes": 14927
+        },
+        "clip": {
+          "asset": "shift_planer--b643bd2b--clip.mp4",
+          "sha256": "47b9c66a3e4311c5eb823c4b2b65db70d67a2ba76fcd1475a9a441405e55ec44",
+          "bytes": 64969
+        },
+        "thumbs": [
+          {
+            "asset": "shift_planer--b643bd2b--thumb1.jpg",
+            "sha256": "db5ac9b487b3eac11e18e4b3465bfced685e40687c141d347036a1d2da94bd78",
+            "bytes": 7084
+          },
+          {
+            "asset": "shift_planer--b643bd2b--thumb2.jpg",
+            "sha256": "814f4512667203d4149323d09bb82275a4448bd861a16bb2cada3368c4452b01",
+            "bytes": 10244
+          },
+          {
+            "asset": "shift_planer--b643bd2b--thumb3.jpg",
+            "sha256": "cce1858e75bd8821309f2c544acee6fd1b2f093101cd1181842e5184ba0d181b",
+            "bytes": 10169
+          },
+          {
+            "asset": "shift_planer--b643bd2b--thumb4.jpg",
+            "sha256": "5e846131b94eda8fa3863ac80c4cc29522978550295506e7c698317e5c3b05f8",
+            "bytes": 6377
+          },
+          {
+            "asset": "shift_planer--b643bd2b--thumb5.jpg",
+            "sha256": "cc4047d84e7d1d1fe61676f646728c98257901456c48e2034f8be62570be4ef3",
+            "bytes": 3683
+          }
+        ]
+      }
+    },
+    "drift_seezler": {
+      "approvedAt": "2026-11-24",
+      "version": "f2e6e788",
+      "note": "Figuren-Reihe, Freigabe 24.11.2026",
+      "media": {
+        "full": {
+          "asset": "drift_seezler--f2e6e788--full.mp4",
+          "sha256": "f2e6e78820a3234d382e7c5ff6d258656b630d3895585406e79b072f7b22bc37",
+          "bytes": 19348370
+        },
+        "cover": {
+          "asset": "drift_seezler--f2e6e788--cover.jpg",
+          "sha256": "517d1a6a64af6b6357cbd1d96e0e6152047b69b54b44cd4933fe13c2718b92cd",
+          "bytes": 34645
+        },
+        "clip": {
+          "asset": "drift_seezler--f2e6e788--clip.mp4",
+          "sha256": "167237b7674b5d5708656559856e825e39700e5dd99bfc2c8f3b529b9e7d0812",
+          "bytes": 159483
+        },
+        "thumbs": [
+          {
+            "asset": "drift_seezler--f2e6e788--thumb1.jpg",
+            "sha256": "14862fc85485eef3aeee5a3a01afccfb7fadb4f3a23ca467fa661342f3c4e884",
+            "bytes": 15389
+          },
+          {
+            "asset": "drift_seezler--f2e6e788--thumb2.jpg",
+            "sha256": "8bc6c5f02666243d5745d6c35041e327ce136206e0d9be019e622780c4bcf17f",
+            "bytes": 15620
+          },
+          {
+            "asset": "drift_seezler--f2e6e788--thumb3.jpg",
+            "sha256": "631b6fccd89af840d7b4792f2852158335e52f9f9b96a44061eb62c21bf8c3af",
+            "bytes": 15836
+          },
+          {
+            "asset": "drift_seezler--f2e6e788--thumb4.jpg",
+            "sha256": "3cae0da2fa331d9db38a431f387dbafc6979bb7ef4dc25162ec4020307c5ebc6",
+            "bytes": 13715
+          },
+          {
+            "asset": "drift_seezler--f2e6e788--thumb5.jpg",
+            "sha256": "7df1327ea536396db5af204386b8cbd195a05caaa7afbea644d8e5d00d57e4fa",
+            "bytes": 8874
+          }
+        ]
+      }
+    },
+    "splinter_spiegelkrise": {
+      "approvedAt": "2026-11-24",
+      "version": "350226b2",
+      "note": "Figuren-Reihe, Freigabe 24.11.2026",
+      "media": {
+        "full": {
+          "asset": "splinter_spiegelkrise--350226b2--full.mp4",
+          "sha256": "350226b2d7e3ce95eab7c62dd2df707b10350fb1b37d5ca9a33e4d2c91dae5e0",
+          "bytes": 19339608
+        },
+        "cover": {
+          "asset": "splinter_spiegelkrise--350226b2--cover.jpg",
+          "sha256": "5ebd0a053febc9f5063d25f5eb616fc7dc08ac66f2cd4bdd337423c61879db6f",
+          "bytes": 21157
+        },
+        "clip": {
+          "asset": "splinter_spiegelkrise--350226b2--clip.mp4",
+          "sha256": "8f2cd0601f27b4a0212889bce729ed06fe202512747e4332ff11d77afe7b0e99",
+          "bytes": 181447
+        },
+        "thumbs": [
+          {
+            "asset": "splinter_spiegelkrise--350226b2--thumb1.jpg",
+            "sha256": "9b83f074714ade7d0a569a69d31cc0054f62ef8fb9705a13df5fbbb2576fbb9f",
+            "bytes": 10606
+          },
+          {
+            "asset": "splinter_spiegelkrise--350226b2--thumb2.jpg",
+            "sha256": "fbead2dc39cfd43b9aaff3871993502220d9feb5f8f7aaa1292e14072fc80f43",
+            "bytes": 12109
+          },
+          {
+            "asset": "splinter_spiegelkrise--350226b2--thumb3.jpg",
+            "sha256": "fe554d565847723bceae4a864e8d5b45192a88f59d6d67ce97b18272b4ea10cd",
+            "bytes": 7935
+          },
+          {
+            "asset": "splinter_spiegelkrise--350226b2--thumb4.jpg",
+            "sha256": "4de2dfb03422417f915befed8a6797fda3522007ad2c4ae0b3c9014937d315bf",
+            "bytes": 7443
+          },
+          {
+            "asset": "splinter_spiegelkrise--350226b2--thumb5.jpg",
+            "sha256": "14118dca910655edbc5220cc41cb2ec7c8ac773cce35f7ef520f2531f43a9cef",
+            "bytes": 11779
+          }
+        ]
+      }
+    },
+    "gen_laeuft": {
+      "approvedAt": "2026-11-24",
+      "version": "e29e3aa7",
+      "note": "Figuren-Reihe, Freigabe 24.11.2026",
+      "media": {
+        "full": {
+          "asset": "gen_laeuft--e29e3aa7--full.mp4",
+          "sha256": "e29e3aa7531fe88be531af8b5e0d799a3243b173e4dfa8544cb651e18850026b",
+          "bytes": 19447228
+        },
+        "cover": {
+          "asset": "gen_laeuft--e29e3aa7--cover.jpg",
+          "sha256": "5293c88f091d5a24b0ab5a7b4f1ab901f8639f061977336f886b0f3327918c48",
+          "bytes": 29287
+        },
+        "clip": {
+          "asset": "gen_laeuft--e29e3aa7--clip.mp4",
+          "sha256": "59ab86997db6d1e6228f3d5f8b0396ea069b2a23529e8b758db4ac39f670392b",
+          "bytes": 223416
+        },
+        "thumbs": [
+          {
+            "asset": "gen_laeuft--e29e3aa7--thumb1.jpg",
+            "sha256": "70cff67ab0d354f9b56791fe6acaa21dcee0bc386cab682cf2c4c3899a1878fb",
+            "bytes": 11901
+          },
+          {
+            "asset": "gen_laeuft--e29e3aa7--thumb2.jpg",
+            "sha256": "c4d17615e4df70568dc17967fd9533b76ef55c653fc9c3c6898b2fa64fff6a9e",
+            "bytes": 12233
+          },
+          {
+            "asset": "gen_laeuft--e29e3aa7--thumb3.jpg",
+            "sha256": "1cf9d662ac925c01fa57a1b3307a1facfc77d45810a8b4a8753a6b9c00c2cecf",
+            "bytes": 10928
+          },
+          {
+            "asset": "gen_laeuft--e29e3aa7--thumb4.jpg",
+            "sha256": "eb90c1a547b95be4627c6062fa7eab7fe7ac18e29574e2e58e1ee7329f5d19bd",
+            "bytes": 15532
+          },
+          {
+            "asset": "gen_laeuft--e29e3aa7--thumb5.jpg",
+            "sha256": "014c7e8b64d50f8cf4eb620d9865ce4faabbc6d6152a7dd636f9ef08b2da2516",
+            "bytes": 17223
+          }
+        ]
+      }
+    }
+  },
+  "tracks": {
+    "weltmeister": {
+      "approvedAt": "2026-11-24",
+      "version": "c28e4cea",
+      "audio": {
+        "asset": "track-weltmeister--c28e4cea.m4a",
+        "sha256": "c28e4cea5ea5bc25a6942fc6d0098e9ab5ab7a8c5dc9319e0ac9b1b77387de9a",
+        "bytes": 3052744
+      }
+    },
+    "questlog": {
+      "approvedAt": "2026-11-24",
+      "version": "29776f5f",
+      "audio": {
+        "asset": "track-questlog--29776f5f.m4a",
+        "sha256": "29776f5ffda1ba8f7aa19fdafd6b22831c8d4a64d5650f8f751cccfce8be5ec4",
+        "bytes": 3537679
+      }
+    },
+    "aufstiegstraum": {
+      "approvedAt": "2026-11-24",
+      "version": "25550d43",
+      "audio": {
+        "asset": "track-aufstiegstraum--25550d43.m4a",
+        "sha256": "25550d43f684284165ed6ab739beac3ba6ade710d6a4b929ff102f6efe2c3208",
+        "bytes": 3641406
+      }
+    },
+    "kiffen-kippen-alk": {
+      "approvedAt": "2026-11-24",
+      "version": "6a32b7eb",
+      "audio": {
+        "asset": "track-kiffen-kippen-alk--6a32b7eb.m4a",
+        "sha256": "6a32b7eb5db4bdf3dece105f9f9de808d2f3ccdb8fad42b54eb9a7e73a8fa9b3",
+        "bytes": 3190864
+      }
+    },
+    "spiegelkrise": {
+      "approvedAt": "2026-11-24",
+      "version": "0e5da27d",
+      "audio": {
+        "asset": "track-spiegelkrise--0e5da27d.m4a",
+        "sha256": "0e5da27db144474a626923f7ac7b775691d37180b62066bf1c4c367748055164",
+        "bytes": 3281442
+      }
+    },
+    "fck-suno": {
+      "approvedAt": "2026-11-24",
+      "version": "c8cb7046",
+      "audio": {
+        "asset": "track-fck-suno--c8cb7046.m4a",
+        "sha256": "c8cb7046805844f2c8ebd8905e317fa3b4a493db31e711165d9a4464c70aa540",
+        "bytes": 3792945
+      }
+    }
+  }
 }
