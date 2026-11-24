@@ -5,6 +5,7 @@
  * there is no floating toolbar any more.
  */
 import Wordmark from './Wordmark.astro';
+import { FIGURES } from '~/data/figures';
 import { sectionUrl, homeUrl, counterpartPath, type Lang, type Section } from '~/utils/routes';
 import { showVideothek } from '~/utils/videothek';
 
@@ -26,6 +27,8 @@ const links = items.map((i) => {
   const href = sectionUrl(lang, i.section);
   return { ...i, href, current: path === href || path.startsWith(href + '/') };
 });
+// Reading progress as a thin Splitterleiste (CSS scroll timeline, see styles below)
+const stripGradient = `linear-gradient(90deg, ${FIGURES.map((f, i) => `${f.accent.dark} ${((i * 100) / 6).toFixed(2)}% ${(((i + 1) * 100) / 6).toFixed(2)}%`).join(', ')})`;
 const other: Lang = de ? 'en' : 'de';
 const otherHref = counterpartPath(path, other);
 const t = {
@@ -59,6 +62,7 @@ const t = {
             <li>
               <a href={l.href} aria-current={l.current ? 'page' : undefined}>
                 {l.text}
+                {l.current && <span class="sz-header__ul" aria-hidden="true" />}
               </a>
             </li>
           ))
@@ -82,6 +86,7 @@ const t = {
       </button>
     </div>
   </div>
+  <span class="sz-header__progress" style={`background:${stripGradient}`} aria-hidden="true"></span>
 
   <div id="sz-menu" class="sz-menu" hidden data-sz-menu>
     <nav aria-label={t.nav}>
@@ -210,6 +215,36 @@ const t = {
     background: rgba(11, 11, 16, 0.94);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(6px);
+    /* stays still during page transitions (motion.css) */
+    view-transition-name: sz-header;
+  }
+  /* Reading progress: the Splitterleiste fills with the scroll position. Only where scroll
+     timelines exist and motion is welcome; otherwise (and on short pages) it stays empty. */
+  .sz-header__progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    pointer-events: none;
+  }
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .sz-header__progress {
+        animation: sz-progress linear both;
+        animation-timeline: scroll(root block);
+      }
+    }
+  }
+  @keyframes sz-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
   }
   .sz-header__bar {
     display: flex;
@@ -250,6 +285,10 @@ const t = {
     letter-spacing: 0.02em;
     border-bottom: 2px solid transparent;
   }
+  .sz-header__nav a,
+  .sz-menu a:not(.sz-btn) {
+    transition: color var(--motion-fast) var(--ease-out);
+  }
   .sz-header__nav a:hover,
   .sz-menu a:not(.sz-btn):hover {
     color: var(--text);
@@ -257,7 +296,37 @@ const t = {
   .sz-header__nav a[aria-current='page'],
   .sz-menu a[aria-current='page'] {
     color: var(--text);
+  }
+  .sz-menu a[aria-current='page'] {
     border-bottom-color: var(--text);
+  }
+  /* Desktop nav: hover underline grows from the left; the current section has a solid
+     line that slides to the next section during a page transition (motion.css). */
+  .sz-header__nav a {
+    position: relative;
+  }
+  .sz-header__nav a::after,
+  .sz-header__ul {
+    content: '';
+    position: absolute;
+    left: var(--sp-3);
+    right: var(--sp-3);
+    bottom: -2px;
+    height: 2px;
+    pointer-events: none;
+  }
+  .sz-header__nav a::after {
+    background: var(--text-muted);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--motion-base) var(--ease-out);
+  }
+  .sz-header__nav a:is(:hover, :focus-visible):not([aria-current='page'])::after {
+    transform: scaleX(1);
+  }
+  .sz-header__ul {
+    background: var(--text);
+    view-transition-name: sz-nav-underline;
   }
   .sz-header__tools {
     margin-left: auto;
@@ -298,11 +367,57 @@ const t = {
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
+  /* Menu icon: three lines fold into a cross */
+  .sz-menubtn path {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      transform var(--motion-base) var(--ease-out),
+      opacity var(--motion-fast) var(--ease-out);
+  }
   .sz-menubtn[aria-expanded='true'] .l1 {
-    transform: translate(0, 5px);
+    transform: translate(0, 5px) rotate(45deg);
+  }
+  .sz-menubtn[aria-expanded='true'] .l2 {
+    opacity: 0;
   }
   .sz-menubtn[aria-expanded='true'] .l3 {
-    transform: translate(0, -5px);
+    transform: translate(0, -5px) rotate(-45deg);
+  }
+  .sz-iconbtn,
+  .sz-langlink {
+    transition: border-color var(--motion-fast) var(--ease-out);
+  }
+  /* Menu panel: links arrive one after another */
+  @media (prefers-reduced-motion: no-preference) {
+    .sz-menu:not([hidden]) li,
+    .sz-menu:not([hidden]) .sz-menu__tools {
+      animation: sz-menu-in var(--motion-slow) var(--ease-out) both;
+    }
+    .sz-menu li:nth-child(2) {
+      animation-delay: 30ms;
+    }
+    .sz-menu li:nth-child(3) {
+      animation-delay: 60ms;
+    }
+    .sz-menu li:nth-child(4) {
+      animation-delay: 90ms;
+    }
+    .sz-menu li:nth-child(5) {
+      animation-delay: 120ms;
+    }
+    .sz-menu li:nth-child(6) {
+      animation-delay: 150ms;
+    }
+    .sz-menu .sz-menu__tools {
+      animation-delay: 180ms;
+    }
+  }
+  @keyframes sz-menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
   }
   .sz-menu {
     border-top: 1px solid var(--line);
@@ -350,6 +465,25 @@ const t = {
   }
   .sz-search::backdrop {
     background: rgba(0, 0, 0, 0.7);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sz-search[open] {
+      animation: sz-dialog-in var(--motion-slow) var(--ease-out) both;
+    }
+    .sz-search[open]::backdrop {
+      animation: sz-backdrop-in var(--motion-base) var(--ease-out) both;
+    }
+  }
+  @keyframes sz-dialog-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.985);
+    }
+  }
+  @keyframes sz-backdrop-in {
+    from {
+      opacity: 0;
+    }
   }
   .sz-search__head {
     display: flex;
