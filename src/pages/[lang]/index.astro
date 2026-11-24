@@ -57,7 +57,7 @@ const metadata = {
 <Layout metadata={metadata}>
   <section class="hero sz-container sz-container--wide" aria-labelledby="hero-title">
     <div class="hero__text">
-      <p class="sz-label">EP · {released}</p>
+      <p class="sz-label">EP · {released} · {EP_TRACKS.length} Tracks · {EP.length}</p>
       <h1 class="sz-display hero__title" id="hero-title">{EP.title}</h1>
       <FigureStrip height={6} class="hero__strip" />
       <p class="sz-lead hero__claim">{EP.claim[lang]}</p>
@@ -100,7 +100,7 @@ const metadata = {
         {
           dossiers.map(({ figure }) => (
             <li>
-              <FigureCard figure={figure.id} lang={lang} />
+              <FigureCard figure={figure.id} lang={lang} song={EP_TRACKS.find((t) => t.figures.includes(figure.id))} />
             </li>
           ))
         }

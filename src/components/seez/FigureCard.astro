@@ -14,8 +14,10 @@ interface Props {
   showQuote?: boolean;
   headingLevel?: 'h2' | 'h3';
   eager?: boolean;
+  /** EP track of this figure, shown as a mono line (e.g. "EP 05 · SPIEGELKRISE") */
+  song?: { no: number; title: string };
 }
-const { figure: key, lang, showQuote = true, headingLevel = 'h3', eager = false } = Astro.props;
+const { figure: key, lang, showQuote = true, headingLevel = 'h3', eager = false, song } = Astro.props;
 const f = getFigure(key)!;
 const H = headingLevel;
 ---
@@ -40,10 +42,22 @@ const H = headingLevel;
     <span class="sz-fcard__alias">{f.alias[lang]}</span>
     <span class="sz-label sz-fcard__medium">{f.medium[lang]}</span>
     {showQuote && <span class="sz-fcard__quote">„{f.quote[lang]}“</span>}
+    {
+      song && (
+        <span class="sz-label sz-fcard__song">
+          EP {String(song.no).padStart(2, '0')} · {song.title}
+        </span>
+      )
+    }
   </span>
 </a>
 
 <style>
+  .sz-fcard__song {
+    margin-top: auto;
+    padding-top: var(--sp-3);
+    color: var(--fig);
+  }
   .sz-fcard {
     display: flex;
     flex-direction: column;
