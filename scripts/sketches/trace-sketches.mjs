@@ -138,6 +138,7 @@ const SKETCHES = [
     id: 'riss-gesicht',
     file: 'riss-gesicht.jpg',
     crop: { left: 0, top: 0, width: 1457, height: 1960 },
+    erase: [{ left: 0, top: 120, width: 34, height: 1840 }],
     width: 1100,
     threshold: 214,
     turdSize: 24,
