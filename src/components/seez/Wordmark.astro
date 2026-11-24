@@ -1,0 +1,39 @@
+---
+/**
+ * Wordmark - "seez" set in Big Shoulders Display 900 with the six-figure strip underneath
+ * (KONZEPT B4/B6). Replaces the generic chain icon. No EP artwork exists in the repo,
+ * Notion or the local Videothek, so the mark is purely typographic.
+ */
+import FigureStrip from './FigureStrip.astro';
+
+interface Props {
+  size?: 'sm' | 'lg';
+}
+const { size = 'sm' } = Astro.props;
+---
+
+<span class:list={['sz-wordmark', `sz-wordmark--${size}`]}>
+  <span class="sz-wordmark__word">seez</span>
+  <FigureStrip height={size === 'lg' ? 6 : 3} />
+</span>
+
+<style>
+  .sz-wordmark {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 3px;
+    line-height: 1;
+  }
+  .sz-wordmark__word {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 30px;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    line-height: 0.8;
+    padding-top: 2px;
+  }
+  .sz-wordmark--lg .sz-wordmark__word {
+    font-size: 64px;
+  }
+</style>

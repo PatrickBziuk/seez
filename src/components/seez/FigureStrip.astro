@@ -1,0 +1,35 @@
+---
+/**
+ * FigureStrip - the "Splitterleiste": six equal segments in SZ order (KONZEPT B4).
+ * Ensemble sign for wordmark, EP, footer. `highlight` dims all other segments
+ * (crossover songs). Decorative: the figures are always named in text nearby.
+ */
+import { FIGURES } from '~/data/figures';
+
+interface Props {
+  highlight?: string[];
+  height?: number;
+  class?: string;
+}
+const { highlight, height = 4, class: className = '' } = Astro.props;
+const on = (id: string) => !highlight || highlight.length === 0 || highlight.includes(id);
+---
+
+<span class:list={['sz-strip', className]} style={`--strip-h:${height}px`} aria-hidden="true">
+  {FIGURES.map((f) => <span class:list={['sz-strip__seg', { 'is-off': !on(f.id) }]} style={`background:${f.accent.dark}`} />)}
+</span>
+
+<style>
+  .sz-strip {
+    display: flex;
+    width: 100%;
+    height: var(--strip-h);
+    gap: 0;
+  }
+  .sz-strip__seg {
+    flex: 1 1 0;
+  }
+  .sz-strip__seg.is-off {
+    opacity: 0.18;
+  }
+</style>

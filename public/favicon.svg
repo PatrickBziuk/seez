@@ -1,4 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M17 7a5 5 0 0 0-7.07 0l-4.24 4.24a5 5 0 0 0 7.07 7.07l1.06-1.06"/>
-  <path d="M7 17a5 5 0 0 0 7.07 0l4.24-4.24a5 5 0 0 0-7.07-7.07l-1.06 1.06"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#0B0B10"/>
+  <text x="16" y="22" text-anchor="middle" font-family="'Big Shoulders Display','Arial Narrow',Impact,sans-serif" font-weight="900" font-size="24" fill="#ECEAF3">s</text>
+  <rect x="0" y="27" width="5.34" height="5" fill="#FF6FB0"/>
+  <rect x="5.33" y="27" width="5.34" height="5" fill="#C7A6FF"/>
+  <rect x="10.66" y="27" width="5.34" height="5" fill="#6FE3A0"/>
+  <rect x="16" y="27" width="5.34" height="5" fill="#F5C83A"/>
+  <rect x="21.33" y="27" width="5.34" height="5" fill="#3FD8F0"/>
+  <rect x="26.66" y="27" width="5.34" height="5" fill="#F39A4C"/>
 </svg>

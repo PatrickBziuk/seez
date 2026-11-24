@@ -1,0 +1,177 @@
+---
+/**
+ * FigureCard - dossier card (KONZEPT B4): character sheet with rim light on --bg,
+ * SZ number, name, medium label, quote. One micro-movement per figure on hover/focus (B7),
+ * none with prefers-reduced-motion.
+ */
+import { getFigure, figureSlug, figureStyle } from '~/data/figures';
+import { sectionUrl, type Lang } from '~/utils/routes';
+import FigureGlyph from './FigureGlyph.astro';
+
+interface Props {
+  figure: string;
+  lang: Lang;
+  showQuote?: boolean;
+  headingLevel?: 'h2' | 'h3';
+  eager?: boolean;
+}
+const { figure: key, lang, showQuote = true, headingLevel = 'h3', eager = false } = Astro.props;
+const f = getFigure(key)!;
+const H = headingLevel;
+---
+
+<a class:list={['sz-fcard', `sz-fcard--${f.id}`]} href={sectionUrl(lang, 'fragments', figureSlug(f))} style={figureStyle(f)}>
+  <span class="sz-fcard__img">
+    <img
+      src={f.portrait.src}
+      width={f.portrait.width}
+      height={f.portrait.height}
+      alt={f.portrait.alt[lang]}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  </span>
+  <span class="sz-fcard__body">
+    <span class="sz-fcard__id">
+      <FigureGlyph id={f.id} size={18} />
+      <span class="sz-label">{f.sz}</span>
+    </span>
+    <H class="sz-fcard__name">{f.name}</H>
+    <span class="sz-fcard__alias">{f.alias[lang]}</span>
+    <span class="sz-label sz-fcard__medium">{f.medium[lang]}</span>
+    {showQuote && <span class="sz-fcard__quote">„{f.quote[lang]}“</span>}
+  </span>
+</a>
+
+<style>
+  .sz-fcard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--fig);
+    border-radius: var(--radius);
+    color: var(--text);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      box-shadow var(--t-hover) var(--ease),
+      border-color var(--t-hover) var(--ease);
+  }
+  .sz-fcard:hover,
+  .sz-fcard:focus-visible {
+    box-shadow: 0 0 0 1px var(--fig), 0 0 28px var(--fig-glow);
+  }
+  .sz-fcard__img {
+    display: block;
+    aspect-ratio: 4 / 5;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .sz-fcard__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 12%;
+  }
+  .sz-fcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: var(--sp-4);
+    flex: 1;
+  }
+  .sz-fcard__id {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sz-fcard__id :global(.sz-glyph) {
+    color: var(--fig);
+  }
+  .sz-fcard__name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--fs-xl);
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--fig);
+    margin-top: 4px;
+  }
+  .sz-fcard__alias {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .sz-fcard__medium {
+    margin-top: 4px;
+  }
+  .sz-fcard__quote {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  /* One micro-movement per figure (B7), hover/focus only */
+  @media (prefers-reduced-motion: no-preference) {
+    .sz-fcard :global(.sz-glyph) {
+      transition: transform var(--t-fade) var(--ease);
+    }
+    .sz-fcard--splinter :global(.g-draw) {
+      stroke-dasharray: 24;
+      stroke-dashoffset: 0;
+    }
+    .sz-fcard--splinter:is(:hover, :focus-visible) :global(.g-draw) {
+      animation: sz-draw 600ms var(--ease) both;
+    }
+    .sz-fcard--lume:is(:hover, :focus-visible) :global(.g-light) {
+      animation: sz-blink 900ms steps(2) 2;
+    }
+    .sz-fcard--drift:is(:hover, :focus-visible) :global(.sz-glyph) {
+      transform: translateY(2px);
+    }
+    .sz-fcard--shift:is(:hover, :focus-visible) :global(.g-stamp) {
+      animation: sz-stamp 320ms var(--ease) both;
+      transform-origin: 15.5px 17.4px;
+    }
+    .sz-fcard--gl1tch:is(:hover, :focus-visible) :global(.sz-glyph) {
+      animation: sz-shift 120ms steps(2) 1;
+    }
+    .sz-fcard--unknown:is(:hover, :focus-visible) :global(.sz-glyph) {
+      transform: rotate(-8deg);
+    }
+  }
+  @keyframes sz-draw {
+    from {
+      stroke-dashoffset: 24;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes sz-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  @keyframes sz-stamp {
+    from {
+      transform: scale(1.6);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes sz-shift {
+    0% {
+      transform: translateX(2px);
+    }
+    50% {
+      transform: translateX(-2px);
+    }
+    100% {
+      transform: none;
+    }
+  }
+</style>

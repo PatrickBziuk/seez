@@ -1,4 +1,5 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
+import colors from 'tailwindcss/colors';
 import plugin from 'tailwindcss/plugin';
 import typographyPlugin from '@tailwindcss/typography';
 
@@ -29,6 +30,18 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Seez frame tokens (src/assets/styles/seez.css)
+        bg: 'var(--bg)',
+        surface: 'var(--surface)',
+        'surface-2': 'var(--surface-2)',
+        line: 'var(--line)',
+        'line-strong': 'var(--line-strong)',
+        ink: 'var(--text)',
+        'ink-muted': 'var(--text-muted)',
+        'ink-faint': 'var(--text-faint)',
+        // Legacy grays used by AstroWind templates, lifted so small text stays >= 4.5:1 on --bg/--surface
+        gray: { ...colors.gray, 400: '#B4B1C0', 500: '#A9A6B6', 600: '#8A8797' },
+        slate: { ...colors.slate, 400: '#B4B1C0', 500: '#A9A6B6', 600: '#8A8797' },
         primary: 'var(--aw-color-primary)',
         secondary: 'var(--aw-color-secondary)',
         accent: 'var(--aw-color-accent)',
@@ -36,13 +49,16 @@ export default {
         muted: 'var(--aw-color-text-muted)',
       },
       fontFamily: {
+        display: ['var(--font-display)'],
+        mono: ['var(--font-mono)'],
         sans: ['var(--aw-font-sans, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
         serif: ['var(--aw-font-serif, ui-serif)', ...defaultTheme.fontFamily.serif],
         heading: ['var(--aw-font-heading, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
       },
 
       animation: {
-        fade: 'fadeInUp 1s both',
+        // Scroll-in animations are retired (KONZEPT B7): content is visible at once.
+        fade: 'fadeInUp 1ms both',
       },
 
       keyframes: {

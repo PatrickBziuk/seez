@@ -1,0 +1,53 @@
+---
+/**
+ * PageHead - breadcrumb, mono label, one H1 per page, optional lead (KONZEPT B3/B10).
+ */
+interface Crumb {
+  href?: string;
+  text: string;
+}
+interface Props {
+  title: string;
+  label?: string;
+  lead?: string;
+  crumbs?: Crumb[];
+  display?: boolean;
+}
+const { title, label, lead, crumbs = [], display = false } = Astro.props;
+---
+
+<header class="sz-pagehead sz-container">
+  {
+    crumbs.length > 0 && (
+      <nav class="sz-crumbs" aria-label="Breadcrumb">
+        {crumbs.map((c, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true"> / </span>}
+            {c.href ? <a href={c.href}>{c.text}</a> : <span aria-current="page">{c.text}</span>}
+          </>
+        ))}
+      </nav>
+    )
+  }
+  {label && <p class="sz-label sz-pagehead__label">{label}</p>}
+  <h1 class:list={[display ? 'sz-display' : 'sz-h1']}>{title}</h1>
+  {lead && <p class="sz-lead sz-pagehead__lead">{lead}</p>}
+  <slot />
+</header>
+
+<style>
+  .sz-pagehead {
+    padding-top: var(--sp-7);
+    padding-bottom: var(--sp-6);
+  }
+  .sz-pagehead .sz-crumbs {
+    margin-bottom: var(--sp-5);
+  }
+  .sz-pagehead__label {
+    margin-bottom: var(--sp-3);
+  }
+  .sz-pagehead__lead {
+    margin-top: var(--sp-4);
+    color: var(--text-muted);
+  }
+</style>

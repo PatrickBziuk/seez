@@ -1,0 +1,66 @@
+---
+/**
+ * FigureChip - smallest figure unit (KONZEPT B4): 4px accent edge, glyph, "SZ-004 · Shift".
+ * Colour is never the only cue: SZ number, name and glyph are always shown.
+ */
+import { getFigure, figureSlug } from '~/data/figures';
+import { sectionUrl, type Lang } from '~/utils/routes';
+import FigureGlyph from './FigureGlyph.astro';
+
+interface Props {
+  figure: string;
+  lang: Lang;
+  link?: boolean;
+  compact?: boolean;
+}
+const { figure: key, lang, link = true, compact = false } = Astro.props;
+const f = getFigure(key);
+const Tag = link && f ? 'a' : 'span';
+---
+
+{
+  f && (
+    <Tag
+      class:list={['sz-chip', { 'sz-chip--compact': compact }]}
+      style={`--fig:${f.accent.dark}`}
+      href={Tag === 'a' ? sectionUrl(lang, 'fragments', figureSlug(f)) : undefined}
+    >
+      <FigureGlyph id={f.id} size={16} />
+      {!compact && <span class="sz-chip__sz">{f.sz}</span>}
+      <span class="sz-chip__name">{f.name}</span>
+    </Tag>
+  )
+}
+
+<style>
+  .sz-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 28px;
+    padding: 2px 10px 2px 8px;
+    border-left: 4px solid var(--fig);
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .sz-chip :global(.sz-glyph) {
+    color: var(--fig);
+    flex: none;
+  }
+  .sz-chip__sz {
+    color: var(--text-muted);
+  }
+  a.sz-chip:hover {
+    background: var(--surface-2);
+  }
+  a.sz-chip:hover .sz-chip__name {
+    text-decoration: underline;
+  }
+</style>

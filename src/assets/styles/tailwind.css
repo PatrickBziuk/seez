@@ -21,20 +21,36 @@
 }
 
 @layer components {
+  /* Legacy AstroWind buttons, restyled to the Seez frame (square, inverted primary) */
   .btn {
-    @apply inline-flex items-center justify-center rounded-full border bg-transparent font-medium text-base text-page leading-snug transition py-3 px-6 md:px-8 ease-in duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-white;
+    @apply inline-flex items-center justify-center border bg-transparent font-semibold text-sm leading-snug py-3 px-6 transition;
+    min-height: 44px;
+    border-radius: 2px;
+    border-color: var(--line-strong);
+    color: var(--text);
+  }
+  .btn:hover {
+    border-color: var(--text);
+    background: var(--surface-2);
   }
 
   .btn-primary {
-    @apply btn font-semibold bg-primary text-white border-primary hover:bg-secondary hover:border-secondary dark:hover:bg-secondary;
+    @apply btn;
+    background: var(--invert-bg);
+    border-color: var(--invert-bg);
+    color: var(--invert-text);
+  }
+  .btn-primary:hover {
+    background: #fff;
+    color: var(--invert-text);
   }
 
   .btn-secondary {
-    @apply btn border border-gray-500 text-default hover:border-black hover:text-black dark:border-gray-500 dark:text-gray-200 dark:hover:border-gray-200 dark:hover:text-white;
+    @apply btn;
   }
 
   .btn-tertiary {
-    @apply btn border-none shadow-none text-default hover:text-black dark:text-gray-300 dark:hover:text-white;
+    @apply btn border-none shadow-none;
   }
 }
 
@@ -79,39 +95,6 @@
   margin-top: 0;
 }
 
-/* List styling improvements */
-ul,
-ol {
-  list-style-position: inside;
-  padding-left: 0;
-  margin: 1em 0;
-}
-
-ul li::marker {
-  font-size: 1.2em;
-  color: var(--aw-color-primary);
-}
-
-ol li::marker {
-  font-weight: bold;
-  color: var(--aw-color-primary);
-}
-
-/* Dark mode list markers */
-.dark ul li::marker,
-.dark ol li::marker {
-  color: var(--aw-color-primary);
-}
-
-/* List indentation for nested lists */
-ul ul,
-ol ol,
-ul ol,
-ol ul {
-  margin: 0.5em 0;
-  padding-left: 1.5em;
-}
-
 /* Accessibility improvements */
 :where(button[aria-label], a[aria-label]) {
   outline-offset: 2px;
@@ -119,7 +102,7 @@ ol ul {
 
 /* Enhanced focus styles for better accessibility */
 :focus-visible {
-  outline: 2px solid var(--aw-color-primary);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -130,7 +113,7 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--aw-color-primary);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -145,26 +128,6 @@ select:focus-visible {
     outline: 3px solid currentColor;
     outline-offset: 3px;
   }
-}
-
-/* Reduce motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Skip link for screen readers */
-.skip-link {
-  @apply absolute top-0 left-0 z-50 p-2 bg-primary text-white;
-  transform: translateY(-100%);
-  transition: transform 0.3s;
-}
-
-.skip-link:focus {
-  transform: translateY(0%);
 }
 
 /* Better table accessibility */
