@@ -27,6 +27,8 @@ const INDEX_ONLY = new Set(['tags', 'texte']);
 
 /** `/de/musik`, `/en/music/spiegelkrise`, … */
 export function sectionUrl(lang: Lang, section: Section, slug?: string): string {
+  // Lyrics are part of the music page since 24.11.2026 (/de/lyrics redirects there).
+  if (section === 'lyrics' && !slug) return `/${lang}/${SECTION_SEGMENT.music[lang]}#lyrics`;
   const base = `/${lang}/${SECTION_SEGMENT[section][lang]}`;
   return slug ? `${base}/${slug}` : base;
 }

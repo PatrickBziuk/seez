@@ -24,6 +24,9 @@ const r = {};
 
 // Music: one overview per language, songs below it (/de/musik/<slug>, /en/music/<slug>)
 r['/de/music'] = '/de/musik';
+// Lyrics merged into the music page (24.11.2026)
+r['/de/lyrics'] = '/de/musik#lyrics';
+r['/en/lyrics'] = '/en/music#lyrics';
 r['/en/musik'] = '/en/music';
 // Renamed songs (old slug -> new slug); old URLs point straight to the new page, no chains.
 const RENAMED = { 'als-sie-kamen': 'als-sie' };

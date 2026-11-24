@@ -19,7 +19,6 @@ const items: Array<{ section: Section; text: string }> = [
   { section: 'music', text: de ? 'Musik' : 'Music' },
   { section: 'fragments', text: de ? 'Fragmente' : 'Fragments' },
   ...(showVideothek() ? [{ section: 'videothek' as Section, text: 'Videothek' }] : []),
-  { section: 'lyrics', text: 'Lyrics' },
   { section: 'workshop', text: de ? 'Werkstatt' : 'Workshop' },
 ];
 const links = items.map((i) => {

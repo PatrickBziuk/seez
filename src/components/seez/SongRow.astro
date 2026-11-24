@@ -22,6 +22,10 @@ interface Props {
   /** Duration m:ss (Spotify) */
   length?: string;
   explicit?: boolean;
+  /** Play button that drives an AudioPlayer on the page (its id and the track's index there) */
+  play?: { player: string; index: number };
+  /** Link to the song's music video (song page #video) */
+  videoHref?: string;
 }
 const {
   lang,
@@ -37,6 +41,8 @@ const {
   no,
   length,
   explicit,
+  play,
+  videoHref,
 } = Astro.props;
 const de = lang === 'de';
 const H = headingLevel;
@@ -70,11 +76,34 @@ const H = headingLevel;
   <div class="sz-songrow__meta">
     {length && <span class="sz-mono sz-songrow__len">{length}</span>}
     {status && <span class="sz-label">{status}</span>}
-    {hasVideo && <span class="sz-label">▶ Video</span>}
+    {hasVideo && !videoHref && <span class="sz-label">▶ Video</span>}
   </div>
   <div class="sz-songrow__actions">
     {
-      listen && (
+      play && (
+        <button
+          type="button"
+          class="sz-songrow__play"
+          data-ep-player={play.player}
+          data-ep-play={play.index}
+          aria-pressed="false"
+        >
+          <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+          <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" /></svg>
+          <span>{de ? 'Abspielen' : 'Play'}</span>
+          <span class="sr-only"> – {title}</span>
+        </button>
+      )
+    }
+    {
+      videoHref && (
+        <a href={videoHref}>
+          Video<span class="sr-only"> – {title}</span>
+        </a>
+      )
+    }
+    {
+      listen && !play && (
         <a href={listen} rel="noopener">
           {de ? 'Hören' : 'Listen'}
           <span class="sr-only"> – {title}</span>
@@ -150,6 +179,49 @@ const H = headingLevel;
   .sz-songrow__actions a:hover {
     border-color: var(--text);
   }
+  .sz-songrow__play {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 var(--sp-3);
+    border: 1px solid var(--text);
+    border-radius: var(--radius);
+    background: var(--text);
+    color: var(--bg);
+    font: 600 var(--fs-sm) / 1 var(--font-sans);
+    cursor: pointer;
+    transition:
+      transform var(--t-hover) var(--ease),
+      background var(--t-hover) var(--ease);
+  }
+  .sz-songrow__play:hover {
+    transform: translateY(-1px);
+  }
+  .sz-songrow__play svg {
+    width: 14px;
+    height: 14px;
+  }
+  .sz-songrow__play .i-pause,
+  .sz-songrow__play.is-playing .i-play {
+    display: none;
+  }
+  .sz-songrow__play.is-playing .i-pause {
+    display: block;
+  }
+  .sz-songrow__play.is-playing {
+    background: transparent;
+    color: var(--text);
+  }
+  .sz-songrow__play:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sz-songrow__play {
+      transition: none;
+    }
+  }
   .sz-songrow--numbered {
     grid-template-columns: 2.2em minmax(0, 1fr);
   }
@@ -187,10 +259,10 @@ const H = headingLevel;
   }
   @media (min-width: 900px) {
     .sz-songrow {
-      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.5fr) 110px 170px;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.5fr) 110px 230px;
     }
     .sz-songrow--numbered {
-      grid-template-columns: 2.6em minmax(0, 2.2fr) minmax(0, 1.5fr) 110px 170px;
+      grid-template-columns: 2.6em minmax(0, 2.2fr) minmax(0, 1.5fr) 110px 230px;
     }
     .sz-songrow--numbered > :not(.sz-songrow__no):not(.sz-songrow__main) {
       grid-column: auto;

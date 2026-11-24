@@ -1,12 +1,17 @@
 ---
 /**
- * MusicIndex (KONZEPT B8/B10): the released EP with its tracklist, then the songs
- * that are still work in progress. One overview instead of /musik + /music.
+ * MusicIndex (KONZEPT B8/B10): the released EP with player and tracklist, its music
+ * videos, all lyrics (merged from the former /lyrics page) and the songs that are
+ * still work in progress. Audio and video come from seez.eu itself (no embeds, no cookies).
  */
 import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
 import SongRow from '~/components/seez/SongRow.astro';
 import FigureStrip from '~/components/seez/FigureStrip.astro';
+import AudioPlayer from '~/components/seez/media/AudioPlayer.astro';
+import FilmPlayer from '~/components/seez/media/FilmPlayer.astro';
+import LyricsIndex from '~/components/seez/LyricsIndex.astro';
+import { playableEp } from '~/utils/media';
 import { EP, EP_TRACKS, SONG_EXTRAS, SINGLES } from '~/data/songs';
 import { getFigure } from '~/data/figures';
 import { getSongRecords, pickEntry, isSong } from '~/utils/music';
@@ -36,6 +41,9 @@ const others = records
   })
   .sort((a, b) => a.title.localeCompare(b.title, 'de'));
 const texts = records.filter((r) => r[lang] && !isSong(r[lang]!));
+const playable = playableEp();
+const playIndex = new Map(playable.map((p, i) => [p.track.slug, i]));
+const withFilm = playable.filter((p) => p.film?.released);
 
 const released = new Date(EP.released).toLocaleDateString(de ? 'de-DE' : 'en-GB', {
   day: '2-digit',
@@ -44,10 +52,10 @@ const released = new Date(EP.released).toLocaleDateString(de ? 'de-DE' : 'en-GB'
 });
 
 const metadata = {
-  title: de ? 'Musik' : 'Music',
+  title: de ? 'Musik & Lyrics' : 'Music & lyrics',
   description: de
-    ? `${EP.title}, die EP von Seez, mit allen Songs, Figuren und Lyrics. Dazu die Songs, an denen gerade gearbeitet wird.`
-    : `${EP.title}, the Seez EP, with all songs, figures and lyrics, plus the songs still in progress.`,
+    ? `${EP.title}, die EP von Seez, direkt hier anhören: alle Songs, Musikvideos, Figuren und Lyrics. Dazu die Songs, an denen gerade gearbeitet wird.`
+    : `Listen to ${EP.title}, the Seez EP, right here: all songs, music videos, figures and lyrics, plus the songs still in progress.`,
 };
 ---
 
@@ -66,10 +74,24 @@ const metadata = {
       <FigureStrip height={6} class="ep__strip" />
       <p class="sz-lead ep__claim">{EP.claim[lang]}</p>
       <div class="sz-btn-row ep__actions">
-        <a class="sz-btn sz-btn--primary" href={EP.spotify} rel="noopener">{de ? 'Auf Spotify hören' : 'Listen on Spotify'}</a>
-        <a class="sz-btn" href={sectionUrl(lang, 'lyrics')}>{de ? 'Alle Lyrics' : 'All lyrics'}</a>
+        <a class="sz-btn" href={EP.spotify} rel="noopener">{de ? 'Auf Spotify' : 'On Spotify'}</a>
+        {withFilm.length > 0 && <a class="sz-btn" href="#videos">{de ? 'Musikvideos' : 'Music videos'}</a>}
+        <a class="sz-btn" href="#lyrics">Lyrics</a>
       </div>
     </div>
+
+    {
+      playable.length > 0 && (
+        <AudioPlayer
+          items={playable}
+          lang={lang}
+          id="ep"
+          showList={false}
+          label={de ? `EP ${EP.title} anhören` : `Listen to the EP ${EP.title}`}
+          class="ep__player"
+        />
+      )
+    }
 
     <h3 class="sz-label ep__listlabel">{de ? 'Tracklist' : 'Tracklist'}</h3>
     <ol class="sz-songlist">
@@ -85,6 +107,8 @@ const metadata = {
             length={t.length}
             explicit={t.explicit}
             listen={t.spotify}
+            play={playIndex.has(t.slug) ? { player: 'ep', index: playIndex.get(t.slug)! } : undefined}
+            videoHref={bySlug.has(t.slug) && filmsForSong(t.filmKey).some((f) => f.released) ? `${sectionUrl(lang, 'music', t.slug)}#video` : undefined}
             lyricsHref={t.lyricsId && bySlug.has(t.slug) ? `${sectionUrl(lang, 'music', t.slug)}#lyrics` : undefined}
             hasVideo={filmsForSong(t.filmKey).length > 0}
           />
@@ -110,6 +134,43 @@ const metadata = {
         ))
       }
     </p>
+  </section>
+
+  {
+    withFilm.length > 0 && (
+      <section class="sz-container sz-section" id="videos" aria-labelledby="videos-title">
+        <div class="sz-section-head">
+          <div>
+            <p class="sz-label">{de ? `${withFilm.length} Filme · Figuren-Reihe` : `${withFilm.length} films · figure series`}</p>
+            <h2 class="sz-h2" id="videos-title">
+              {de ? 'Musikvideos' : 'Music videos'}
+            </h2>
+          </div>
+        </div>
+        <div class="vids">
+          {withFilm.map((p) => (
+            <FilmPlayer filmKey={p.track.filmKey} lang={lang} title={p.track.title} withLink={false} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="sz-container sz-section" id="lyrics" aria-labelledby="lyrics-title">
+    <div class="sz-section-head">
+      <div>
+        <p class="sz-label">{de ? 'Alle Songtexte' : 'All lyrics'}</p>
+        <h2 class="sz-h2" id="lyrics-title">Lyrics</h2>
+      </div>
+    </div>
+    <p class="sz-muted sz-measure">
+      {
+        de
+          ? `Zuerst die EP in Spotify-Reihenfolge, danach die Entwürfe der Songs, an denen gearbeitet wird.`
+          : `First the EP in Spotify order, then the drafts of the songs still in progress.`
+      }
+    </p>
+    <LyricsIndex lang={lang} />
   </section>
 
   {
@@ -195,6 +256,20 @@ const metadata = {
   }
   .ep__actions {
     margin-top: var(--sp-5);
+  }
+  .ep :global(.ep__player) {
+    margin-top: var(--sp-6);
+    max-width: 880px;
+  }
+  .vids {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+    gap: var(--sp-6) var(--sp-5);
+    margin-top: var(--sp-5);
+  }
+  #lyrics,
+  #videos {
+    scroll-margin-top: 80px;
   }
   .ep__listlabel {
     margin-top: var(--sp-6);
