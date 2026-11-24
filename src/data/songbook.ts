@@ -99,7 +99,7 @@ export const SONGBOOK: SongbookEntry[] = [
   // Phase 2
   s('illegale-aliens', 'ILLEGALE ALIENS', ['unknown'], 2, { lyricsId: 'illegale-aliens' }),
   s('schichtliebe', 'SCHICHTLIEBE', ['shift'], 2),
-  s('nachtgedanken', 'NACHTGEDANKEN', ['splinter', 'lume'], 2),
+  s('nachtgedanken', 'NACHTGEDANKEN', ['splinter', 'lume'], 2, { lyricsId: 'nachtgedanken' }),
   s('dein-anker', 'DEIN ANKER', ['lume'], 2, { lyricsId: 'dein-anker' }),
   s('maskenspiel', 'MASKENSPIEL', ['splinter', 'lume'], 2, { lyricsId: 'maskenspiel' }),
   s('herz-klopft-kopf-platzt', 'HERZ KLOPFT, KOPF PLATZT', ['drift'], 2, {
