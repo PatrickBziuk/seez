@@ -8,6 +8,7 @@ import Layout from '../../../layouts/PageLayout.astro';
 import { getPermalink } from '../../../utils/permalinks';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
+import PageHead from '~/components/seez/PageHead.astro';
 
 export const getStaticPaths = (() => {
   return SUPPORTED_LANGUAGES.map((lang) => ({
@@ -31,29 +32,50 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <header class="text-center mb-8">
-      <h1 class="text-3xl md:text-4xl font-bold mb-2">{lang === 'de' ? 'Texte' : 'Texts'}</h1>
-      <p class="text-muted">{lang === 'de' ? 'Prosa, Gedichte und Notizen' : 'Prose, poems and notes'}</p>
-    </header>
-
+  <PageHead
+    title={lang === 'de' ? 'Texte' : 'Texts'}
+    lead={lang === 'de' ? 'Prosa, Gedichte und Notizen' : 'Prose, poems and notes'}
+  />
+  <section class="sz-section sz-container">
     {
       filtered.length > 0 ? (
-        <ul class="space-y-3">
+        <ul class="tx__list">
           {filtered.map((it) => (
-            <li>
-              <a
-                class="underline hover:no-underline"
-                href={getPermalink(`/${lang}/texte/${it.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`)}
-              >
+            <li class="tx__item">
+              <a href={getPermalink(`/${lang}/texte/${it.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`)}>
                 {it.data.title}
               </a>
+              {it.data.description && <p class="sz-muted">{it.data.description}</p>}
             </li>
           ))}
         </ul>
       ) : (
-        <p class="text-muted text-center">{lang === 'de' ? 'Noch keine Texte veröffentlicht.' : 'No texts yet.'}</p>
+        <p class="sz-muted">{lang === 'de' ? 'Noch keine Texte veröffentlicht.' : 'No texts yet.'}</p>
       )
     }
   </section>
 </Layout>
+
+<style>
+  .tx__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .tx__item {
+    padding: var(--sp-5) 0;
+    border-top: 1px solid var(--line);
+  }
+  .tx__item a {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-lg);
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .tx__item p {
+    margin-top: var(--sp-2);
+    max-width: 65ch;
+  }
+</style>

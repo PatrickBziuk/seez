@@ -64,7 +64,7 @@ const metadata = {
       <h2>{t('Wie du navigierst', 'How to navigate')}</h2>
       <ul>
         <li>
-          <a class="underline hover:no-underline" href={getPermalink(`/${lang}/musik`)}>{t('Musik', 'Music')}</a> – {
+          <a class="underline hover:no-underline" href={getPermalink(lang === 'de' ? '/de/musik' : '/en/music')}>{t('Musik', 'Music')}</a> – {
             t('Stimmen der Fragmente', 'Voices of the fragments')
           }
         </li>
@@ -74,7 +74,7 @@ const metadata = {
           }
         </li>
         <li>
-          <a class="underline hover:no-underline" href={getPermalink(`/${lang}/fragmente`)}
+          <a class="underline hover:no-underline" href={getPermalink(lang === 'de' ? '/de/fragmente' : '/en/fragments')}
             >{t('Fragmente', 'Fragments')}</a
           > –
           {t('FRAGMENTS: Identitäts-Teile', 'FRAGMENTS: identity parts')}
@@ -94,7 +94,7 @@ const metadata = {
       <p class="mt-6">
         <a
           class="inline-flex items-center px-4 py-2 rounded-md bg-primary-600 text-white hover:bg-primary-700"
-          href={getPermalink(`/${lang}/perform`)}>{t('Für Performer – Lizenz', 'For performers – license')}</a
+          href={getPermalink(lang === 'de' ? '/de/lizenz' : '/en/license')}>{t('Für Performer – Lizenz', 'For performers – license')}</a
         >
       </p>
     </div>

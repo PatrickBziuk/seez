@@ -43,15 +43,15 @@ const items = [
     actionLabel: lang === 'de' ? 'FRAGMENTE LESEN' : 'READ FRAGMENTS',
   },
   {
-    id: 'system-logs',
-    label: 'SYSTEM LOGS',
-    desc: lang === 'de' ? 'Timeline, Proofs und Releaseplan.' : 'Timeline, proofs, and release plan.',
+    id: 'werkstatt',
+    label: lang === 'de' ? 'WERKSTATT' : 'WORKSHOP',
+    desc: lang === 'de' ? 'Prozess und Werkzeuge.' : 'Process and tools.',
     price: 'OPEN',
     color: 'var(--item-uncommon)',
     colorDim: 'rgba(0, 255, 65, 0.25)',
     teaser: '[PROOF_CORE]',
-    actionHref: `/${lang}/system-logs`,
-    actionLabel: lang === 'de' ? 'LOGS ÖFFNEN' : 'OPEN LOGS',
+    actionHref: lang === 'de' ? '/de/werkstatt' : '/en/workshop',
+    actionLabel: lang === 'de' ? 'WERKSTATT ÖFFNEN' : 'OPEN WORKSHOP',
   },
   {
     id: 'newsletter',
@@ -70,8 +70,8 @@ const metadata = {
   title: lang === 'de' ? 'Inventory' : 'Inventory',
   description:
     lang === 'de'
-      ? 'Gamifiziertes Inventar für die öffentlichen Seez-Artefakte: EP, Lyrics, Fragmente und System Logs.'
-      : 'Gamified inventory for the public Seez artifacts: EP, lyrics, fragments, and system logs.',
+      ? 'Gamifiziertes Inventar für die öffentlichen Seez-Artefakte: EP, Lyrics, Fragmente und Werkstatt.'
+      : 'Gamified inventory for the public Seez artifacts: EP, lyrics, fragments, and the workshop.',
 };
 ---
 
@@ -115,9 +115,6 @@ const metadata = {
           ))
         }
 
-        <div class="inv-slot locked"><div>[LOCKED: PHASE 2]</div></div>
-        <div class="inv-slot locked"><div>[LOCKED: PHASE 3]</div></div>
-        <div class="inv-slot locked"><div>[LOCKED]</div></div>
       </div>
 
       <section class="terminal border border-gray-800 bg-black p-5 text-sm">

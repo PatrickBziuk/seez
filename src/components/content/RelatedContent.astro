@@ -10,6 +10,8 @@ import { getPublicCollection } from '~/utils/publication';
  */
 import type { CollectionEntry } from 'astro:content';
 import { getPermalink } from '~/utils/permalinks';
+import { musicSlug } from '~/data/songs';
+import { sectionUrl } from '~/utils/routes';
 
 type Lang = 'en' | 'de';
 
@@ -101,7 +103,7 @@ if (entry.collection === 'fragments') {
               <li>
                 <a
                   class="block p-3 rounded border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
-                  href={getPermalink(`/${lang}/music/${cleanSlug(m.id)}`)}
+                  href={sectionUrl(lang, 'music', musicSlug(m.id))}
                 >
                   <span class="font-medium">{m.data.title}</span>
                   {m.data.artist && <span class="text-xs text-muted ml-2">{m.data.artist}</span>}

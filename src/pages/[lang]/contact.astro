@@ -1,99 +1,130 @@
 ---
-import Layout from '../../layouts/PageLayout.astro';
-import { SUPPORTED_LANGUAGES } from '../../utils/i18n';
-import type { SupportedLanguage } from '../../utils/i18n';
+/**
+ * Contact (rebuilt in the new frame). Wording kept; English UI labels on the German page
+ * translated, "System Logs" renamed to Werkstatt.
+ */
+import Layout from '~/layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
+import { SUPPORTED_LANGUAGES } from '~/utils/i18n';
+import { EP } from '~/data/songs';
+import type { Lang } from '~/utils/routes';
 
 export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
-const { lang } = Astro.params as { lang: SupportedLanguage };
+const { lang } = Astro.params as { lang: Lang };
 const t = (de: string, en: string) => (lang === 'de' ? de : en);
 
-const topic = Astro.url.searchParams.get('topic') || 'seez';
-const subject = encodeURIComponent(`SEEZ // ${topic}`);
+// Static build: the subject is fixed (the former ?topic= parameter only worked in SSR).
+const subject = encodeURIComponent('SEEZ // seez');
 
 const metadata = {
   title: t('Kontakt', 'Contact'),
   description: t(
-    'Kontakt für Seez: Presse, Musik, visuelle Kollaboration, Releasefragen und System-Updates.',
-    'Contact for Seez: press, music, visual collaboration, release questions, and system updates.'
+    'Kontakt für Seez: Presse, Musik, visuelle Kollaboration, Releasefragen und Updates.',
+    'Contact for Seez: press, music, visual collaboration, release questions, and updates.'
   ),
 };
 
 const lanes = [
   {
     title: t('Presse & Kontext', 'Press & context'),
-    text: t('Releaseinfos, Projektbeschreibung, Bild-/Textanfragen.', 'Release info, project context, image and text requests.'),
+    text: t(
+      'Releaseinfos, Projektbeschreibung, Bild-/Textanfragen.',
+      'Release info, project context, image and text requests.'
+    ),
   },
   {
     title: t('Musik & Kollab', 'Music & collabs'),
-    text: t('Feature-Ideen, Visuals, Remixe, Kuratierung, Playlists.', 'Feature ideas, visuals, remixes, curation, playlists.'),
+    text: t(
+      'Feature-Ideen, Visuals, Remixe, Kuratierung, Playlists.',
+      'Feature ideas, visuals, remixes, curation, playlists.'
+    ),
   },
   {
-    title: t('System Updates', 'System updates'),
-    text: t('Feedback, Fehlerfunde, neue Log-Einträge und Community-Spuren.', 'Feedback, corrections, new log entries, and community traces.'),
+    title: t('Rückmeldungen', 'Feedback'),
+    text: t('Feedback, Fehlerfunde und Community-Spuren.', 'Feedback, corrections, and community traces.'),
   },
 ];
 ---
 
 <Layout metadata={metadata}>
-  <section class="min-h-screen bg-[#07080b] px-4 py-14 text-slate-100 sm:px-6 lg:py-20">
-    <div class="mx-auto max-w-5xl">
-      <header class="max-w-3xl">
-        <p class="text-xs uppercase tracking-[0.28em] text-cyan-300">&gt; CONTACT_CHANNEL / SEEZ</p>
-        <h1 class="mt-4 text-4xl font-black tracking-tight md:text-6xl">{t('Kontakt zum Kosmos', 'Contact the cosmos')}</h1>
-        <p class="mt-5 text-base leading-7 text-slate-300 md:text-lg">
-          {t(
-            'Für alles, was direkt mit Seez zu tun hat: EP, Figuren, Lyrics, visuelle Zusammenarbeit, Presse und System Logs.',
-            'For everything directly tied to Seez: EP, figures, lyrics, visual collaboration, press, and system logs.'
-          )}
-        </p>
-      </header>
+  <PageHead
+    title={t('Kontakt zum Kosmos', 'Contact the cosmos')}
+    label={t('Kontakt', 'Contact')}
+    lead={t(
+      'Für alles, was direkt mit Seez zu tun hat: EP, Figuren, Lyrics, visuelle Zusammenarbeit, Presse und Werkstatt.',
+      'For everything directly tied to Seez: EP, figures, lyrics, visual collaboration, press, and the workshop.'
+    )}
+  />
 
-      <div class="mt-10 grid gap-4 md:grid-cols-3">
-        {lanes.map((lane) => (
-          <article class="border border-slate-800 bg-slate-950/70 p-5">
-            <h2 class="text-xl font-bold">{lane.title}</h2>
-            <p class="mt-3 text-sm leading-6 text-slate-400">{lane.text}</p>
-          </article>
-        ))}
-      </div>
+  <section class="sz-section sz-container">
+    <ul class="ct__lanes">
+      {
+        lanes.map((l) => (
+          <li class="sz-panel">
+            <h2 class="sz-h3">{l.title}</h2>
+            <p class="sz-muted">{l.text}</p>
+          </li>
+        ))
+      }
+    </ul>
 
-      <div class="mt-10 border border-lime-300/30 bg-lime-950/20 p-6">
-        <p class="text-xs uppercase tracking-[0.22em] text-lime-300">PRIMARY CHANNEL</p>
-        <a class="mt-3 inline-block text-2xl font-black text-white hover:text-lime-200" href={`mailto:info@seez.eu?subject=${subject}`}>
-          info@seez.eu
-        </a>
-        <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
-          {t(
+    <div class="sz-panel ct__mail">
+      <p class="sz-label">{t('Direkt', 'Direct')}</p>
+      <a class="ct__address" href={`mailto:info@seez.eu?subject=${subject}`}>info@seez.eu</a>
+      <p class="sz-muted">
+        {
+          t(
             'Der Link öffnet dein Mailprogramm mit einem Seez-Betreff. Diese Seite nutzt kein eigenes Kontakttracking.',
             'The link opens your mail app with a Seez subject. This page does not use contact tracking.'
-          )}
-        </p>
-      </div>
+          )
+        }
+      </p>
+    </div>
 
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a class="link-chip" href="https://open.spotify.com/intl-de/album/47aAj0XEtEJnmJqFDswAp0?si=BrvL2mSxQNWD7ER5QBa7MA">Spotify EP</a>
-        <a class="link-chip" href="https://www.instagram.com/seezerino/">Instagram</a>
-        <a class="link-chip" href="https://www.tiktok.com/@seezerino">TikTok</a>
-        <a class="link-chip" href={`/${lang}/press`}>{t('Presse', 'Press')}</a>
-      </div>
+    <div class="sz-btn-row ct__links">
+      <a class="sz-btn" href={EP.spotify} rel="noopener">Spotify · EP</a>
+      <a class="sz-btn" href="https://www.instagram.com/seezerino/" rel="noopener">Instagram</a>
+      <a class="sz-btn" href="https://www.tiktok.com/@seezerino" rel="noopener">TikTok</a>
+      <a class="sz-btn" href={`/${lang}/press`}>{t('Presse', 'Press')}</a>
     </div>
   </section>
 </Layout>
 
 <style>
-  .link-chip {
-    border: 1px solid rgba(125, 211, 252, 0.35);
-    color: #bae6fd;
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    padding: 0.75rem 0.9rem;
-    text-transform: uppercase;
+  .ct__lanes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
   }
-
-  .link-chip:hover {
-    border-color: #7dd3fc;
-    color: #fff;
+  .ct__lanes p,
+  .ct__mail p:last-child {
+    margin-top: var(--sp-3);
+  }
+  .ct__mail {
+    margin-top: var(--sp-6);
+  }
+  .ct__mail .sz-label {
+    display: block;
+  }
+  .ct__address {
+    display: inline-block;
+    margin-top: var(--sp-3);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-xl);
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+  .ct__links {
+    margin-top: var(--sp-6);
+  }
+  @media (min-width: 768px) {
+    .ct__lanes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 </style>

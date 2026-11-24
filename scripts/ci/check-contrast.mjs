@@ -60,7 +60,9 @@ for (const c of checks) {
   const ok = c.r >= c.min;
   if (!ok) failed += 1;
   if (!ok || process.argv.includes('--verbose')) {
-    console.log(`${ok ? 'ok  ' : 'FAIL'} ${c.r.toFixed(2).padStart(5)}:1 (min ${c.min})  ${c.label}  ${c.fg} on ${c.back}`);
+    console.log(
+      `${ok ? 'ok  ' : 'FAIL'} ${c.r.toFixed(2).padStart(5)}:1 (min ${c.min})  ${c.label}  ${c.fg} on ${c.back}`
+    );
   }
 }
 console.log(`[contrast] ${checks.length - failed}/${checks.length} pairs pass`);

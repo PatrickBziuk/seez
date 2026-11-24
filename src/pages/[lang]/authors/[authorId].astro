@@ -10,8 +10,14 @@ export async function getStaticPaths() {
 
   const paths = [];
 
+  // One page per author id and language: prefer the entry written in that language
+  // (seez.mdx / seez-de.mdx share the id "seez"; before, the first match won and the
+  // German page showed the English text).
   for (const lang of languages) {
-    for (const author of authors) {
+    const ids = [...new Set(authors.map((a) => a.data.id))];
+    for (const id of ids) {
+      const author =
+        authors.find((a) => a.data.id === id && a.data.language === lang) || authors.find((a) => a.data.id === id)!;
       paths.push({
         params: {
           lang: lang,
@@ -33,7 +39,7 @@ const { Content } = await render(author);
 
 // Build frontmatter for MarkdownLayout with proper typing
 const frontmatter = {
-  title: `About ${author.data.displayName}`,
+  title: lang === 'de' ? `Über ${author.data.displayName}` : `About ${author.data.displayName}`,
   description: author.data.bio,
   language: lang as 'en' | 'de',
   tags: ['author', 'about'],
@@ -54,7 +60,8 @@ const entry = {
       class="flex items-center gap-6 mb-8 p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50"
     >
       {
-        author.data.avatar && (
+        // Avatar files (/images/authors/*.jpg) do not exist; render only when explicitly present.
+        author.data.avatar && !author.data.avatar.startsWith('/images/authors/') && (
           <img
             src={author.data.avatar}
             alt={author.data.displayName}
@@ -64,9 +71,9 @@ const entry = {
       }
 
       <div class="flex-1">
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+        <p class="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
           {author.data.displayName}
-        </h1>
+        </p>
 
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
           {author.data.bio}
@@ -102,7 +109,7 @@ const entry = {
         <div class="mb-8 p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
           <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
             <Icon name="tabler:link" class="w-5 h-5" />
-            Connect
+            {lang === 'de' ? 'Verbinden' : 'Connect'}
           </h2>
 
           <div class="flex flex-wrap gap-3">
@@ -154,7 +161,7 @@ const entry = {
         <div class="mb-8 p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
           <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
             <Icon name="tabler:settings" class="w-5 h-5" />
-            Capabilities
+            {lang === 'de' ? 'Fähigkeiten' : 'Capabilities'}
           </h2>
 
           <div class="flex flex-wrap gap-2">
