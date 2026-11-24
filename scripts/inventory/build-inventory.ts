@@ -23,6 +23,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { EP, EP_TRACKS, SONG_EXTRAS, SINGLES, LYRICS } from '../../src/data/songs';
+import { phaseForLyrics } from '../../src/data/songbook';
 import figuresJson from '../../src/data/figures.json';
 import catalog from '../../src/data/videothek/catalog.json';
 import releases from '../../src/data/videothek/releases.json';
@@ -38,9 +39,9 @@ function walk(dir: string, filter: (f: string) => boolean = () => true): string[
     .readdirSync(dir, { withFileTypes: true })
     .sort((a, b) => a.name.localeCompare(b.name))
     .flatMap((d) => {
-    const p = path.join(dir, d.name);
-    return d.isDirectory() ? walk(p, filter) : filter(p) ? [p] : [];
-  });
+      const p = path.join(dir, d.name);
+      return d.isDirectory() ? walk(p, filter) : filter(p) ? [p] : [];
+    });
 }
 const isPublished = (fm: Record<string, unknown>) => fm.publicationStatus === 'published' && fm.draft !== true;
 const slugOf = (file: string) => path.basename(file).replace(/\.mdx?$/, '');
@@ -64,9 +65,12 @@ const lyricsIds = new Set(LYRICS.map((l) => l.id));
 
 const ep = EP_TRACKS.map((t) => {
   const entries = music.filter((m) => m.slug === t.slug);
-  if (entries.length === 0) warnings.push(`W4 EP-Track ${t.no} ${t.title} hat noch keine Songseite (src/content/music/de/${t.slug}.md)`);
+  if (entries.length === 0)
+    warnings.push(`W4 EP-Track ${t.no} ${t.title} hat noch keine Songseite (src/content/music/de/${t.slug}.md)`);
   for (const m of entries) {
-    const ref = String(m.data.figureRef || '').replace(/^fragments\//, '').replace(/^sz-006-/, '');
+    const ref = String(m.data.figureRef || '')
+      .replace(/^fragments\//, '')
+      .replace(/^sz-006-/, '');
     if (ref && !t.figures.includes(ref as never))
       warnings.push(`W1 ${m.file}: figureRef ${m.data.figureRef}, songs.ts sagt ${t.figures.join(', ')}`);
   }
@@ -87,10 +91,16 @@ const wip = music
   .filter((m) => !epSlugs.has(m.slug) && Array.isArray(m.data.tags) && (m.data.tags as string[]).includes('song'))
   .map((m) => {
     const tags = (m.data.tags as string[]) || [];
-    if (tags.includes('ep1') || tags.includes('generierung-laeuft') || /\*\*EP:\*\*\s*GENERIERUNG LÄUFT/.test(m.content))
+    if (
+      tags.includes('ep1') ||
+      tags.includes('generierung-laeuft') ||
+      /\*\*EP:\*\*\s*GENERIERUNG LÄUFT/.test(m.content)
+    )
       errors.push(`E1 ${m.file} gibt sich als EP-Track aus, steht aber nicht in EP_TRACKS (Spotify)`);
     const extra = SONG_EXTRAS[m.slug];
-    const ref = String(m.data.figureRef || '').replace(/^fragments\//, '').replace(/^sz-006-/, '');
+    const ref = String(m.data.figureRef || '')
+      .replace(/^fragments\//, '')
+      .replace(/^sz-006-/, '');
     if (extra?.figures && ref && !extra.figures.includes(ref as never))
       warnings.push(`W1 ${m.file}: figureRef ${m.data.figureRef}, songs.ts sagt ${extra.figures.join(', ')}`);
     return {
@@ -105,12 +115,15 @@ const wip = music
     };
   });
 
-const songPagesAndWip = new Set([...EP_TRACKS.map((t) => t.lyricsId), ...Object.values(SONG_EXTRAS).map((x) => x.lyricsId)]);
+const songPagesAndWip = new Set([
+  ...EP_TRACKS.map((t) => t.lyricsId),
+  ...Object.values(SONG_EXTRAS).map((x) => x.lyricsId),
+]);
 const lyricsOnly = LYRICS.filter((l) => !songPagesAndWip.has(l.id)).map((l) => ({
   id: l.id,
   title: l.title,
   figure: l.figure,
-  phase: (l as { phase?: number }).phase ?? null,
+  phase: phaseForLyrics(l.id),
 }));
 
 // ---------- figures ----------
@@ -127,7 +140,11 @@ const figures = figuresJson.figures.map((f) => {
     name: f.name,
     accent: f.accent.dark,
     portrait: f.portrait.src,
-    dossiers: dossiers.map((d) => ({ file: rel(d.file), language: d.data.language || null, onSite: isPublished(d.data) })),
+    dossiers: dossiers.map((d) => ({
+      file: rel(d.file),
+      language: d.data.language || null,
+      onSite: isPublished(d.data),
+    })),
     songs: EP_TRACKS.filter((t) => t.figures.includes(f.id as never)).map((t) => `${t.no} ${t.title}`),
   };
 });
@@ -164,7 +181,8 @@ const sounds = walk(path.join(publicDir, 'sounds')).map((file) => {
   const url = '/' + rel(file).replace(/^public\//, '');
   const song = music.find((m) => m.data.audioUrl === url);
   const onEp = song ? epSlugs.has(song.slug) : false;
-  if (song && !onEp) warnings.push(`W2 ${url} ist öffentlich, gehört aber zu „${song.data.title}“ (nicht veröffentlicht)`);
+  if (song && !onEp)
+    warnings.push(`W2 ${url} ist öffentlich, gehört aber zu „${song.data.title}“ (nicht veröffentlicht)`);
   return { url, kb: kb(file), song: song ? String(song.data.title) : null, released: onEp };
 });
 for (const m of srcText.matchAll(/["'(](\/(?:images|sounds)\/[^"')\s]+)/g)) {
@@ -181,8 +199,11 @@ const redirects = Object.entries(REDIRECTS as Record<string, string>).map(([from
 });
 
 // ---------- pages ----------
-const pages = walk(path.join(ROOT, 'src/pages'), (f) => /\.(astro|ts|md|mdx|html)$/.test(f)).map((f) =>
-  rel(f).replace(/^src\/pages/, '').replace(/\/index\.(astro|ts)$/, '') || '/'
+const pages = walk(path.join(ROOT, 'src/pages'), (f) => /\.(astro|ts|md|mdx|html)$/.test(f)).map(
+  (f) =>
+    rel(f)
+      .replace(/^src\/pages/, '')
+      .replace(/\/index\.(astro|ts)$/, '') || '/'
 );
 
 // ---------- output ----------
@@ -224,11 +245,13 @@ const md = [
   '',
   '| Titel | Figur | auf der Website | Hörprobe | Datei |',
   '|---|---|---|---|---|',
-  ...wip.map((s) => `| ${s.title} | ${s.figures.join(', ') || '–'} | ${yes(s.onSite)} | ${s.audio || '–'} | ${s.file} |`),
+  ...wip.map(
+    (s) => `| ${s.title} | ${s.figures.join(', ') || '–'} | ${yes(s.onSite)} | ${s.audio || '–'} | ${s.file} |`
+  ),
   '',
   '## Songtexte ohne Songseite (lyrics.json, alle in Arbeit)',
   '',
-  lyricsOnly.map((l) => `${l.title} (${l.figure}, Phase ${l.phase ?? '?'})`).join(' · '),
+  lyricsOnly.map((l) => `${l.title} (${l.figure ?? '–'}, ${l.phase ? `Phase ${l.phase}` : 'Phase offen'})`).join(' · '),
   '',
   '## Figuren',
   '',
@@ -243,7 +266,9 @@ const md = [
   '',
   '| ID | Titel | Song | Länge | Arbeitsstand | freigegeben |',
   '|---|---|---|---|---|---|',
-  ...videos.map((v) => `| ${v.id} | ${v.title} | ${v.song || '–'} | ${v.length} | ${v.workStatus} | ${yes(v.released)} |`),
+  ...videos.map(
+    (v) => `| ${v.id} | ${v.title} | ${v.song || '–'} | ${v.length} | ${v.workStatus} | ${yes(v.released)} |`
+  ),
   '',
   '## Texte',
   '',
@@ -276,7 +301,9 @@ const jsonPath = path.join(ROOT, 'data/inventory.json');
 const mdPath = path.join(ROOT, 'INVENTORY.md');
 
 if (CHECK) {
-  const stale = [jsonPath, mdPath].filter((p) => !fs.existsSync(p) || fs.readFileSync(p, 'utf8') !== (p === jsonPath ? json : md));
+  const stale = [jsonPath, mdPath].filter(
+    (p) => !fs.existsSync(p) || fs.readFileSync(p, 'utf8') !== (p === jsonPath ? json : md)
+  );
   if (stale.length) errors.push(`Inventar veraltet: ${stale.map(rel).join(', ')} – pnpm inventory ausführen`);
 } else {
   fs.writeFileSync(jsonPath, json);

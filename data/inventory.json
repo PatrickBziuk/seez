@@ -200,7 +200,7 @@
       "id": "stempel-aus",
       "title": "STEMPEL AUS",
       "figure": "shift",
-      "phase": 2
+      "phase": 3
     },
     {
       "id": "illegale-aliens",
@@ -224,25 +224,25 @@
       "id": "latency-love",
       "title": "LATENCY LOVE",
       "figure": "gl1tch",
-      "phase": 1
+      "phase": 3
     },
     {
       "id": "zwischenraeume",
       "title": "ZWISCHENRÄUME",
       "figure": "unknown",
-      "phase": 2
+      "phase": 1
     },
     {
       "id": "first-class",
       "title": "FIRST CLASS",
       "figure": "shift",
-      "phase": 1
+      "phase": 2
     },
     {
       "id": "systemupdate",
       "title": "SYSTEMUPDATE",
-      "figure": "gl1tch",
-      "phase": 1
+      "figure": "lume",
+      "phase": null
     },
     {
       "id": "maskenspiel",
@@ -279,6 +279,102 @@
       "title": "MEHRARBEIT",
       "figure": "shift",
       "phase": 2
+    },
+    {
+      "id": "attention-baby",
+      "title": "ATTENTION BABY",
+      "figure": "gl1tch",
+      "phase": null
+    },
+    {
+      "id": "erste-sprache",
+      "title": "ERSTE SPRACHE",
+      "figure": "splinter",
+      "phase": null
+    },
+    {
+      "id": "nicht-gefragt",
+      "title": "NICHT GEFRAGT",
+      "figure": "shift",
+      "phase": null
+    },
+    {
+      "id": "drei-von-drei",
+      "title": "DREI VON DREI",
+      "figure": "lume",
+      "phase": null
+    },
+    {
+      "id": "sommerschlussverkauf",
+      "title": "SOMMERSCHLUSSVERKAUF",
+      "figure": "lume",
+      "phase": null
+    },
+    {
+      "id": "zu-gefaehrlich",
+      "title": "ZU GEFÄHRLICH",
+      "figure": "gl1tch",
+      "phase": null
+    },
+    {
+      "id": "zu-frueh-zu-spaet",
+      "title": "ZU FRÜH, ZU SPÄT",
+      "figure": "splinter",
+      "phase": null
+    },
+    {
+      "id": "vaterland",
+      "title": "VATERLAND",
+      "figure": "unknown",
+      "phase": null
+    },
+    {
+      "id": "kleines-leben",
+      "title": "KLEINES LEBEN",
+      "figure": null,
+      "phase": null
+    },
+    {
+      "id": "echt-genug",
+      "title": "ECHT GENUG",
+      "figure": "gl1tch",
+      "phase": null
+    },
+    {
+      "id": "beach-is-closed",
+      "title": "BEACH IS CLOSED",
+      "figure": "gl1tch",
+      "phase": null
+    },
+    {
+      "id": "nicht-komplett",
+      "title": "NICHT KOMPLETT",
+      "figure": "lume",
+      "phase": null
+    },
+    {
+      "id": "nenn-es",
+      "title": "NENN ES",
+      "figure": "gl1tch",
+      "phase": 2
+    },
+    {
+      "id": "solche-kinder",
+      "title": "SOLCHE KINDER",
+      "figure": "unknown",
+      "phase": 3
+    },
+    {
+      "id": "sperrmuell",
+      "title": "SPERRMÜLL",
+      "figure": "gl1tch",
+      "phase": 3
+    },
+    {
+      "id": "abblendlicht",
+      "title": "ABBLENDLICHT",
+      "figure": "lume",
+      "phase": 3
     }
   ],
   "figures": [

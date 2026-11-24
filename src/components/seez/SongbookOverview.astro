@@ -1,0 +1,250 @@
+---
+/**
+ * SongbookOverview: all songs x figures x album phases (src/data/songbook.ts) as one table.
+ * Rows are figures (main voice), columns are the three Seelensplitter phases plus
+ * "noch offen". A title links to its song page, else to its lyrics on this page.
+ * Only the EP is released; everything else is marked as in progress by the legend.
+ */
+import FigureChip from '~/components/seez/FigureChip.astro';
+import FigureGlyph from '~/components/seez/FigureGlyph.astro';
+import { FIGURES, getFigure, type FigureId } from '~/data/figures';
+import { PHASES, SONGBOOK, type Phase, type SongbookEntry } from '~/data/songbook';
+import { LYRICS } from '~/data/songs';
+import { getSongRecords } from '~/utils/music';
+import { sectionUrl, type Lang } from '~/utils/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === 'de';
+const records = await getSongRecords();
+const pages = new Set(records.map((r) => r.slug));
+const lyricIds = new Set(LYRICS.map((l) => l.id));
+
+const href = (e: SongbookEntry) =>
+  e.page && pages.has(e.page)
+    ? sectionUrl(lang, 'music', e.page)
+    : e.lyricsId && lyricIds.has(e.lyricsId)
+      ? `#lyrics-${e.lyricsId}`
+      : e.ep
+        ? '#ep-title'
+        : undefined;
+
+const columns: Array<Phase | null> = [1, 2, 3, null];
+type Row = { figure?: FigureId; cells: SongbookEntry[][] };
+const rowFor = (fig?: FigureId): Row => ({
+  figure: fig,
+  cells: columns.map((p) => SONGBOOK.filter((e) => e.figures[0] === fig && e.phase === p)),
+});
+const rows: Row[] = [...FIGURES.map((f) => rowFor(f.id)), rowFor(undefined)].filter((r) =>
+  r.cells.some((c) => c.length)
+);
+
+const total = SONGBOOK.length;
+const onEp = SONGBOOK.filter((e) => e.ep).length;
+const placed = SONGBOOK.filter((e) => e.phase).length;
+const colTitle = (p: Phase | null) => (p ? `Phase ${p}` : de ? 'noch offen' : 'not placed yet');
+---
+
+<div class="sb">
+  <ol class="sb__phases reveal-stagger">
+    {
+      PHASES.map((p) => (
+        <li class="sb__phase">
+          <p class="sz-label">Phase {p.n}</p>
+          <p class="sb__motto" lang="de">
+            „{p.motto.de}“
+          </p>
+          <p class="sz-muted">{p.theme[lang]}</p>
+        </li>
+      ))
+    }
+  </ol>
+
+  <p class="sz-muted sb__count">
+    {
+      de
+        ? `${total} Songs · ${onEp} davon auf der EP veröffentlicht · ${placed} einer Phase zugeordnet, ${total - placed} noch offen.`
+        : `${total} songs · ${onEp} released on the EP · ${placed} placed in a phase, ${total - placed} not yet.`
+    }
+  </p>
+
+  <div class="sb__scroll" role="region" aria-labelledby="songbook-title" tabindex="0">
+    <table class="sb__table">
+      <caption class="sr-only">
+        {de ? 'Songs nach Figur und Phase' : 'Songs by figure and phase'}
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">{de ? 'Figur' : 'Figure'}</th>
+          {columns.map((p) => <th scope="col">{colTitle(p)}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((r) => (
+            <tr style={r.figure ? `--fig:${getFigure(r.figure)?.accent.dark}` : undefined}>
+              <th scope="row">
+                {r.figure ? (
+                  <FigureChip figure={r.figure} lang={lang} />
+                ) : (
+                  <span class="sz-muted">{de ? 'noch ohne Figur' : 'no figure yet'}</span>
+                )}
+              </th>
+              {r.cells.map((songs, i) => (
+                <td data-col={colTitle(columns[i])}>
+                  {songs.length > 0 && (
+                    <ul class="sb__songs">
+                      {songs.map((e) => {
+                        const to = href(e);
+                        return (
+                          <li class:list={['sb__song', { 'sb__song--ep': e.ep }]}>
+                            {to ? (
+                              <a class="sb__title" href={to}>
+                                {e.title}
+                              </a>
+                            ) : (
+                              <span class="sb__title">{e.title}</span>
+                            )}
+                            {e.ep && <span class="sb__tag">EP</span>}
+                            {e.figures.slice(1).map((f) => (
+                              <span class="sb__with" title={getFigure(f)?.name}>
+                                + <FigureGlyph id={f} size={12} />
+                                {getFigure(f)?.name}
+                              </span>
+                            ))}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+  <p class="sz-muted sb__legend">
+    {
+      de
+        ? 'EP = veröffentlicht. Alles andere ist in Arbeit; Titel, Figuren und Phasen können sich noch ändern. Ein + nennt eine zweite Stimme.'
+        : 'EP = released. Everything else is work in progress; titles, figures and phases may still change. A + names a second voice.'
+    }
+  </p>
+</div>
+
+<style>
+  .sb {
+    display: grid;
+    gap: var(--sp-5);
+  }
+  .sb__phases {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  .sb__phase {
+    border-top: 1px solid var(--line-strong);
+    padding-top: var(--sp-3);
+    display: grid;
+    gap: var(--sp-2);
+    align-content: start;
+  }
+  .sb__phase p {
+    margin: 0;
+  }
+  .sb__motto {
+    font: 600 var(--fs-lg, 1.15rem) / 1.3 var(--font-display, var(--font-sans));
+    text-wrap: balance;
+  }
+  .sb__count,
+  .sb__legend {
+    margin: 0;
+  }
+  .sb__scroll {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .sb__scroll:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+  .sb__table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    font-size: var(--fs-sm);
+  }
+  .sb__table th,
+  .sb__table td {
+    text-align: left;
+    vertical-align: top;
+    padding: var(--sp-3);
+    border-bottom: 1px solid var(--line);
+  }
+  .sb__table thead th {
+    font: 600 var(--fs-xs, 0.75rem) / 1.2 var(--font-mono, var(--font-sans));
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .sb__table tbody th {
+    width: 150px;
+    border-left: 4px solid var(--fig, var(--line-strong));
+  }
+  .sb__table tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+  .sb__table td:last-child {
+    background: color-mix(in srgb, var(--text) 3%, transparent);
+  }
+  .sb__songs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-2);
+  }
+  .sb__song {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    line-height: 1.3;
+  }
+  .sb__title {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+  a.sb__title {
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--fig, var(--text)) 60%, transparent);
+    text-underline-offset: 3px;
+  }
+  a.sb__title:hover {
+    text-decoration-color: var(--fig, var(--text));
+  }
+  .sb__tag {
+    font: 600 10px / 1 var(--font-mono, var(--font-sans));
+    letter-spacing: 0.08em;
+    padding: 3px 5px;
+    border-radius: 3px;
+    background: var(--fig, var(--text));
+    color: var(--bg, #000);
+  }
+  .sb__with {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: var(--fs-xs, 0.75rem);
+    color: var(--text-muted);
+  }
+</style>
