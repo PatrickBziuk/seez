@@ -22,24 +22,29 @@ const { lang } = Astro.params as { lang: Lang };
 const de = lang === 'de';
 const records = await getSongRecords();
 const epLyrics = new Set(EP_TRACKS.map((t) => t.lyricsId).filter(Boolean));
+const trackNo = (id: string) => EP_TRACKS.find((t) => t.lyricsId === id)?.no;
 const order = new Map(FIGURES.map((f, i) => [f.id, i]));
 const items = LYRICS.map((l) => {
   const slug = songSlugForLyrics(l.id);
   return {
     ...l,
     onEp: epLyrics.has(l.id),
+    no: trackNo(l.id),
     href: slug && records.some((r) => r.slug === slug) ? `${sectionUrl(lang, 'music', slug)}#lyrics` : undefined,
   };
 }).sort(
   (a, b) =>
-    Number(b.onEp) - Number(a.onEp) || (order.get(a.figure) ?? 9) - (order.get(b.figure) ?? 9) || a.title.localeCompare(b.title, 'de')
+    Number(b.onEp) - Number(a.onEp) ||
+    (a.no ?? 99) - (b.no ?? 99) ||
+    (order.get(a.figure) ?? 9) - (order.get(b.figure) ?? 9) ||
+    a.title.localeCompare(b.title, 'de')
 );
 
 const metadata = {
   title: 'Lyrics',
   description: de
-    ? 'Alle Songtexte von Seez, nach Figur sortiert. Die EP GENERIERUNG LÄUFT und die Songs, an denen gearbeitet wird.'
-    : 'All Seez lyrics, sorted by figure: the EP GENERIERUNG LÄUFT and the songs still in progress.',
+    ? 'Alle Songtexte von Seez: die EP in Spotify-Reihenfolge, danach nach Figur sortiert. Die EP GENERIERUNG LÄUFT und die Songs, an denen gearbeitet wird.'
+    : 'All Seez lyrics: the EP in Spotify order, then sorted by figure: the EP GENERIERUNG LÄUFT and the songs still in progress.',
 };
 ---
 
@@ -75,7 +80,7 @@ const metadata = {
               <h2 class="ly__title">{l.title}</h2>
               <FigureChip figure={l.figure} lang={lang} />
               <span class="sz-label" lang={lang}>
-                {l.onEp ? `EP · ${EP.title}` : de ? 'in Arbeit' : 'in progress'}
+                {l.onEp ? `EP · Track ${l.no}` : de ? 'in Arbeit' : 'in progress'}
               </span>
             </div>
             {l.href ? (
