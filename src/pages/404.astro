@@ -1,9 +1,12 @@
 ---
 /**
  * 404 - bilingual, in the site frame (one 404.html serves every path on GitHub Pages).
+ * Decoration: the fish-dragon from the early drawing "Elysium" (Skizzenbuch 2011–2013).
  */
 import Layout from '~/layouts/PageLayout.astro';
 import FigureGlyph from '~/components/seez/FigureGlyph.astro';
+import SketchInk from '~/components/seez/sketch/SketchInk.astro';
+import { INK } from '~/data/sketches';
 import { sectionUrl } from '~/utils/routes';
 
 const metadata = { title: 'Seite nicht gefunden · Page not found', robots: { index: false, follow: true } };
@@ -11,6 +14,7 @@ const metadata = { title: 'Seite nicht gefunden · Page not found', robots: { in
 
 <Layout metadata={metadata}>
   <section class="sz-container nf">
+    <SketchInk ink={INK.fischdrache} class="nf__ink" colour="var(--text-faint)" />
     <p class="sz-label">Fehler 404 · Error 404</p>
     <h1 class="sz-display nf__title">Hier ist nichts.</h1>
     <p class="sz-lead">Diese Seite gibt es nicht oder nicht mehr. Vielleicht ist sie umgezogen.</p>
@@ -35,8 +39,25 @@ const metadata = { title: 'Seite nicht gefunden · Page not found', robots: { in
 
 <style>
   .nf {
+    position: relative;
+    isolation: isolate;
     padding-top: var(--sp-8);
     padding-bottom: var(--sp-8);
+  }
+  /* The fish-dragon sits behind the text: faint, never in the way of reading */
+  .nf :global(.nf__ink) {
+    position: absolute;
+    z-index: -1;
+    top: var(--sp-6);
+    right: var(--gutter);
+    width: min(62vw, 520px);
+    opacity: 0.14;
+    pointer-events: none;
+  }
+  @media (min-width: 900px) {
+    .nf :global(.nf__ink) {
+      opacity: 0.22;
+    }
   }
   .nf__title {
     margin: var(--sp-3) 0 var(--sp-5);

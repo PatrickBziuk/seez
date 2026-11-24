@@ -3,6 +3,8 @@
  * MusicIndex (KONZEPT B8/B10): the released EP with player and tracklist, its music
  * videos, all lyrics (merged from the former /lyrics page) and the songs that are
  * still work in progress. Audio and video come from seez.eu itself (no embeds, no cookies).
+ * Background of the EP block (tablet and up): the broken heart on hoses from the
+ * Skizzenbuch 2011–2013, traced, faint; decorative only, not loaded on phones.
  */
 import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
@@ -11,6 +13,8 @@ import FigureStrip from '~/components/seez/FigureStrip.astro';
 import AudioPlayer from '~/components/seez/media/AudioPlayer.astro';
 import FilmPlayer from '~/components/seez/media/FilmPlayer.astro';
 import LyricsIndex from '~/components/seez/LyricsIndex.astro';
+import SketchInk from '~/components/seez/sketch/SketchInk.astro';
+import { INK } from '~/data/sketches';
 import { playableEp } from '~/utils/media';
 import { EP, EP_TRACKS, SONG_EXTRAS, SINGLES } from '~/data/songs';
 import { getFigure } from '~/data/figures';
@@ -66,6 +70,7 @@ const metadata = {
   />
 
   <section class="sz-container sz-section ep" aria-labelledby="ep-title">
+    <SketchInk ink={INK.herzDolch} class="ep__ink" colour="var(--text-faint)" />
     <div class="ep__head">
       <p class="sz-label">
         EP · {released} · {EP_TRACKS.length} Tracks · {EP.length}
@@ -236,6 +241,23 @@ const metadata = {
 <style>
   .ep {
     padding-top: 0;
+    position: relative;
+    isolation: isolate;
+  }
+  .ep :global(.ep__ink) {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .ep :global(.ep__ink) {
+      display: block;
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      right: var(--gutter);
+      width: min(48vw, 640px);
+      opacity: 0.12;
+      pointer-events: none;
+    }
   }
   .ep__head {
     max-width: 880px;
