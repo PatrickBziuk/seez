@@ -1,0 +1,110 @@
+---
+/**
+ * MotionToggle – stops the cards' idle loops (float, sway, glow, glitch) for WCAG 2.2.2.
+ * Sets html[data-sz-motion='off'] and remembers the choice in localStorage (per viewer).
+ * Hidden with prefers-reduced-motion, where nothing loops in the first place.
+ */
+import type { Lang } from '~/utils/routes';
+
+interface Props {
+  lang: Lang;
+  class?: string;
+}
+const { lang, class: className = '' } = Astro.props;
+const de = lang === 'de';
+---
+
+<button
+  type="button"
+  class:list={['sz-motion', className]}
+  aria-pressed="false"
+  data-motion-toggle
+  data-on={de ? 'Bewegung anhalten' : 'Pause motion'}
+  data-off={de ? 'Bewegung fortsetzen' : 'Resume motion'}
+>
+  <span class="sz-motion__icon" aria-hidden="true"></span>
+  <span class="sz-motion__text">{de ? 'Bewegung anhalten' : 'Pause motion'}</span>
+</button>
+
+<script>
+  const KEY = 'sz-motion';
+  const root = document.documentElement;
+  const read = () => {
+    try {
+      return localStorage.getItem(KEY);
+    } catch {
+      return null;
+    }
+  };
+  const write = (v: string) => {
+    try {
+      localStorage.setItem(KEY, v);
+    } catch {
+      /* private mode: the choice lasts for this page only */
+    }
+  };
+  const sync = () => {
+    const off = root.dataset.szMotion === 'off';
+    document.querySelectorAll<HTMLButtonElement>('[data-motion-toggle]').forEach((b) => {
+      b.setAttribute('aria-pressed', String(off));
+      const t = b.querySelector('.sz-motion__text');
+      if (t) t.textContent = (off ? b.dataset.off : b.dataset.on) || '';
+    });
+  };
+  if (read() === 'off') root.dataset.szMotion = 'off';
+  sync();
+  document.querySelectorAll<HTMLButtonElement>('[data-motion-toggle]').forEach((b) => {
+    if (b.dataset.bound) return;
+    b.dataset.bound = '1';
+    b.addEventListener('click', () => {
+      const off = root.dataset.szMotion !== 'off';
+      if (off) root.dataset.szMotion = 'off';
+      else delete root.dataset.szMotion;
+      write(off ? 'off' : 'on');
+      sync();
+    });
+  });
+</script>
+
+<style>
+  .sz-motion {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 12px;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .sz-motion:hover {
+    color: var(--text);
+    border-color: var(--text);
+  }
+  /* pause icon (two bars) / play icon (triangle) */
+  .sz-motion__icon {
+    width: 10px;
+    height: 10px;
+    border-left: 3px solid currentColor;
+    border-right: 3px solid currentColor;
+  }
+  .sz-motion[aria-pressed='true'] .sz-motion__icon {
+    border: 0;
+    width: 0;
+    height: 0;
+    border-left: 9px solid currentColor;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sz-motion {
+      display: none;
+    }
+  }
+</style>
