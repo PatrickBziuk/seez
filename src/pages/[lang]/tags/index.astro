@@ -1,4 +1,5 @@
 ---
+import { getPublicCollection } from '~/utils/publication';
 /**
  * TagsIndex - Overview page showing all available tags
  * @props lang: SupportedLanguage - Current language from route params
@@ -7,7 +8,6 @@
  * @usedBy Direct navigation to /[lang]/tags
  */
 import Layout from '../../../layouts/PageLayout.astro';
-import { getCollection } from 'astro:content';
 import { SUPPORTED_LANGUAGES, getTranslations } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 import { getPermalink } from '../../../utils/permalinks';
@@ -23,10 +23,10 @@ const t = await getTranslations(lang);
 
 // Get content from relevant collections
 const [projects, music, texts, figures] = await Promise.all([
-  getCollection('projects'),
-  getCollection('music'),
-  getCollection('texts'),
-  getCollection('fragments'),
+  getPublicCollection('projects'),
+  getPublicCollection('music'),
+  getPublicCollection('texts'),
+  getPublicCollection('fragments'),
 ]);
 
 // Combine and filter by language

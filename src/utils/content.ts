@@ -1,7 +1,7 @@
+import { getPublicCollection } from '~/utils/publication';
 /**
  * Content utilities for language-aware content management and slug generation
  */
-import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from './i18n';
 
@@ -55,7 +55,7 @@ export async function getContentByLanguage<T extends ContentCollection>(
   collection: T,
   language: SupportedLanguage = 'en'
 ): Promise<CollectionEntry<T>[]> {
-  const entries = await getCollection(collection);
+  const entries = await getPublicCollection(collection);
   return entries.filter((entry) => entry.data.language === language && !entry.data.draft);
 }
 
@@ -67,7 +67,7 @@ export async function getContentWithFallback<T extends ContentCollection>(
   id: string,
   preferredLanguage: SupportedLanguage = 'en'
 ): Promise<{ entry: CollectionEntry<T> | null; isDefaultLanguage: boolean }> {
-  const entries = await getCollection(collection);
+  const entries = await getPublicCollection(collection);
 
   // Try preferred language first
   let entry = entries.find((e) => e.id === id && e.data.language === preferredLanguage && !e.data.draft);
@@ -96,7 +96,7 @@ export async function getAvailableLanguages<T extends ContentCollection>(
   collection: T,
   id: string
 ): Promise<SupportedLanguage[]> {
-  const entries = await getCollection(collection);
+  const entries = await getPublicCollection(collection);
   const availableLanguages = entries
     .filter((entry) => entry.id === id && !entry.data.draft)
     .map((entry) => entry.data.language as SupportedLanguage)
@@ -128,7 +128,7 @@ export async function hasContentInLanguage<T extends ContentCollection>(
   language: SupportedLanguage
 ): Promise<boolean> {
   try {
-    const entries = await getCollection(collection);
+    const entries = await getPublicCollection(collection);
     return entries.some((entry) => entry.id === id && entry.data.language === language && !entry.data.draft);
   } catch {
     return false;

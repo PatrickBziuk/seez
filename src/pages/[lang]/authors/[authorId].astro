@@ -1,10 +1,11 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getPublicCollection } from '~/utils/publication';
+import { render } from 'astro:content';
 import Layout from '~/layouts/MarkdownLayout.astro';
 import { Icon } from 'astro-icon/components';
 
 export async function getStaticPaths() {
-  const authors = await getCollection('authors');
+  const authors = await getPublicCollection('authors');
   const languages = ['en', 'de'];
 
   const paths = [];

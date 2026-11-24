@@ -1,18 +1,19 @@
 ---
+import { getPublicCollection } from '~/utils/publication';
 /**
  * Fragment Detail - Minimal dossier for an identity fragment
  * @props - lang, slug
  * @behavior - Neutral presentation: portrait, designation, minimal profile, related content; no color or voice/movement blocks
  */
 import type { GetStaticPaths } from 'astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import Layout from '../../../layouts/PageLayout.astro';
 import RelatedContent from '../../../components/content/RelatedContent.astro';
 import type { SupportedLanguage } from '../../../utils/i18n';
 import { getPermalink } from '../../../utils/permalinks';
 
 export const getStaticPaths = (async () => {
-  const figures = await getCollection('fragments');
+  const figures = await getPublicCollection('fragments');
   // Build unique base slugs stripping optional en/ prefix
   type FragEntry = (typeof figures)[number];
   const baseMap = new Map<string, { de?: FragEntry; en?: FragEntry }>();
@@ -39,7 +40,7 @@ const { lang } = Astro.params as { lang: SupportedLanguage };
 const { baseSlug } = Astro.props as { baseSlug: string };
 
 // Resolve localized figure entry by baseSlug and desired lang with fallback
-const allFigures = await getCollection('fragments');
+const allFigures = await getPublicCollection('fragments');
 const localized =
   allFigures.find((f) => f.id === `${lang}/${baseSlug}`) ||
   allFigures.find((f) => f.id === baseSlug) ||
@@ -50,7 +51,7 @@ const figure = localized!;
 const t = (de: string, en: string) => (lang === 'de' ? de : en);
 
 // Get related music content
-const allMusic = await getCollection('music');
+const allMusic = await getPublicCollection('music');
 const relatedSongs = allMusic.filter((song) => {
   const primaryLinked =
     Array.isArray(figure.data.primarySongs) && figure.data.primarySongs.some((ref) => ref.id === song.id);

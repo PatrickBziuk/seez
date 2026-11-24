@@ -1,4 +1,4 @@
-import { getCollection } from 'astro:content';
+import { getPublicCollection } from '~/utils/publication';
 import { SITE } from 'astrowind:config';
 
 const languages = ['en', 'de'];
@@ -24,7 +24,7 @@ export async function GET() {
     }
   }
 
-  const musicEntries = await getCollection('music');
+  const musicEntries = await getPublicCollection('music');
   for (const entry of musicEntries) {
     if (entry.data.draft || entry.data.publicationStatus === 'draft') continue;
     const lang = entry.data.language || 'en';

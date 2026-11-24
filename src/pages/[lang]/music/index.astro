@@ -1,8 +1,9 @@
 ---
+import { getPublicCollection } from '~/utils/publication';
 import Layout from '../../../layouts/PageLayout.astro';
 import ContentCard from '../../../components/content/cards/ContentCard.astro';
 import ComingSoon from '../../../components/ComingSoon.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { type CollectionEntry } from 'astro:content';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 
@@ -15,7 +16,7 @@ export const getStaticPaths = () => {
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
 // Get all music content and filter by language
-const allMusic = (await getCollection('music')) as CollectionEntry<'music'>[];
+const allMusic = (await getPublicCollection('music')) as CollectionEntry<'music'>[];
 const filteredMusic = allMusic.filter(
   (item) => !item.data.draft && (item.data.language === lang || (!item.data.language && lang === 'en'))
 );

@@ -1,4 +1,5 @@
 ---
+import { getPublicCollection } from '~/utils/publication';
 /**
  * RelatedContent - Shows cross-linked content between music, texts, and fragments
  * @props entry: CollectionEntry<'music' | 'texts' | 'fragments'>
@@ -7,7 +8,7 @@
  * @dependencies astro:content getCollection, utils/permalinks.getPermalink
  * @usedBy Music/Text/Figure detail pages
  */
-import { getCollection, type CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import { getPermalink } from '~/utils/permalinks';
 
 type Lang = 'en' | 'de';
@@ -25,9 +26,9 @@ const t = (de: string, en: string) => (lang === 'de' ? de : en);
 
 // Load collections once
 const [allMusic, allTexts, allFigures] = await Promise.all([
-  getCollection('music'),
-  getCollection('texts'),
-  getCollection('fragments'),
+  getPublicCollection('music'),
+  getPublicCollection('texts'),
+  getPublicCollection('fragments'),
 ]);
 
 // Compute relateds depending on entry.collection

@@ -1,4 +1,5 @@
 ---
+import { getPublicCollection } from '~/utils/publication';
 /**
  * Unified Blog – Aggregates entries from all content collections and sorts by date.
  * Route: /[lang]/blog
@@ -58,7 +59,7 @@ function toUrl(entry: Entry): string {
 }
 
 // Load, filter by language and publication state, then sort
-const items = (await Promise.all(collections.map((c) => getCollection(c))))
+const items = (await Promise.all(collections.map((c) => getPublicCollection(c))))
   .flat()
   .filter((e) => {
     const data = e.data as unknown as EntryData;

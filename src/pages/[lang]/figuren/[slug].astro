@@ -1,4 +1,5 @@
 ---
+import { getPublicCollection } from '~/utils/publication';
 /**
  * Figure Detail (FRAGMENT) - Identity fragment dossier
  * @props - lang, slug
@@ -7,7 +8,7 @@
  * @usedBy - /[lang]/figuren grid, deep links, search
  */
 import type { GetStaticPaths } from 'astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import Layout from '../../../layouts/PageLayout.astro';
 import RelatedContent from '../../../components/content/RelatedContent.astro';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
@@ -15,7 +16,7 @@ import type { SupportedLanguage } from '../../../utils/i18n';
 import { getPermalink } from '../../../utils/permalinks';
 
 export const getStaticPaths = (async () => {
-  const figures = await getCollection('fragments');
+  const figures = await getPublicCollection('fragments');
 
   return SUPPORTED_LANGUAGES.flatMap((lang) =>
     figures
@@ -37,7 +38,7 @@ const { figure } = Astro.props;
 const t = (de: string, en: string) => (lang === 'de' ? de : en);
 
 // Get related music content
-const allMusic = await getCollection('music');
+const allMusic = await getPublicCollection('music');
 const relatedSongs = allMusic.filter(
   (song) =>
     (Array.isArray(figure.data.primarySongs) && figure.data.primarySongs.some((ref) => ref.id === song.id)) ||

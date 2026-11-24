@@ -1,0 +1,4 @@
+{
+  "$comment": "Public allowlist for the Videothek. Only films listed here appear on seez.eu, and only with exactly these media files (sha256-pinned). Add entries with scripts/videothek/release.mjs after an explicit yes; never by hand-copying.",
+  "films": {}
+}

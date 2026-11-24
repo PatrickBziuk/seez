@@ -1,9 +1,10 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getPublicCollection } from '~/utils/publication';
+import { render } from 'astro:content';
 import Layout from '../../layouts/MarkdownLayout.astro';
 
 export async function getStaticPaths() {
-  const allContent = await Promise.all([getCollection('music')]);
+  const allContent = await Promise.all([getPublicCollection('music')]);
 
   const paths = [];
 

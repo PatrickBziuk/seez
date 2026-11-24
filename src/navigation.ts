@@ -1,5 +1,6 @@
 import { getLocalizedUrl } from './utils/i18n';
 import type { SupportedLanguage } from './utils/i18n';
+import { showVideothek } from './utils/videothek';
 
 export const getHeaderData = (locale: SupportedLanguage = 'en') => ({
   links: [
@@ -7,6 +8,7 @@ export const getHeaderData = (locale: SupportedLanguage = 'en') => ({
     { text: locale === 'de' ? 'System Logs' : 'System Logs', href: getLocalizedUrl('/system-logs', locale) },
     { text: locale === 'de' ? 'Creative Core' : 'Creative Core', href: getLocalizedUrl('/kreatives', locale) },
     { text: locale === 'de' ? 'Sonic Archive' : 'Sonic Archive', href: getLocalizedUrl('/musik', locale) },
+    ...(showVideothek() ? [{ text: 'Videothek', href: getLocalizedUrl('/videothek', locale) }] : []),
     { text: 'Lyrics Vault', href: getLocalizedUrl('/lyrics', locale) },
     { text: locale === 'de' ? 'Fragmente' : 'Fragments', href: getLocalizedUrl('/fragmente', locale) },
     { text: locale === 'de' ? 'Inventory' : 'Inventory', href: getLocalizedUrl('/inventory', locale) },
@@ -35,6 +37,7 @@ export const getFooterData = (locale: SupportedLanguage = 'en') => ({
       title: 'Release',
       links: [
         { text: 'Sonic Archive', href: getLocalizedUrl('/musik', locale) },
+        ...(showVideothek() ? [{ text: 'Videothek', href: getLocalizedUrl('/videothek', locale) }] : []),
         { text: 'Lyrics Vault', href: getLocalizedUrl('/lyrics', locale) },
         {
           text: 'GENERIERUNG LÄUFT',

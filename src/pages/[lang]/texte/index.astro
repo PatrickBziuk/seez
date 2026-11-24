@@ -1,9 +1,9 @@
 ---
+import { getPublicCollection } from '~/utils/publication';
 /**
  * Texts collection listing - Creative Cosmos texts interface
  */
 import type { GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/PageLayout.astro';
 import { getPermalink } from '../../../utils/permalinks';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
@@ -17,7 +17,7 @@ export const getStaticPaths = (() => {
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
-const items = await getCollection('texts');
+const items = await getPublicCollection('texts');
 type TextEntry = (typeof items)[number];
 const filtered = items.filter((it: TextEntry) => it.data.language === lang || (!it.data.language && lang === 'en'));
 

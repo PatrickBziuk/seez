@@ -1,4 +1,5 @@
 ---
+import { getPublicCollection } from '~/utils/publication';
 /**
  * Figures Listing (FRAGMENT) - Identity fragments overview grid
  * @props - lang: URL language param
@@ -7,7 +8,6 @@
  * @usedBy - /[lang]/figuren navigation and cross-links
  */
 import type { GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/PageLayout.astro';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
@@ -22,7 +22,7 @@ export const getStaticPaths = (() => {
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
 // Get all fragments and sort by designation
-const figures = await getCollection('fragments');
+const figures = await getPublicCollection('fragments');
 const sortedFigures = figures.sort((a, b) => {
   const da = a.data.designation || '';
   const db = b.data.designation || '';

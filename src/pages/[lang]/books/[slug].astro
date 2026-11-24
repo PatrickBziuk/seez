@@ -1,11 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
+import { getPublicCollection } from '~/utils/publication';
 import SeezRedirect from '../../../components/SeezRedirect.astro';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('books');
+  const entries = await getPublicCollection('books');
   return SUPPORTED_LANGUAGES.flatMap((lang) =>
     entries
       .filter((item) => !item.data.draft && (item.data.language === lang || (!item.data.language && lang === 'en')))

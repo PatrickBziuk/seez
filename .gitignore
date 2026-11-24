@@ -41,3 +41,6 @@ test-*.mjs
 # macOS-specific files
 .DS_Store
 .astro
+
+# Videothek: pinned media (downloaded or staged for release), never committed
+.videothek-cache/
