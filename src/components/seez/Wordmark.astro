@@ -4,19 +4,110 @@
  * (KONZEPT B4/B6). Replaces the generic chain icon. No EP artwork exists in the repo,
  * Notion or the local Videothek, so the mark is purely typographic.
  * Motion: when its link is hovered or focused, the strip runs a small wave in SZ order.
+ *
+ * `rotate` (header): three logos share one fixed box, one is picked at random on every
+ * full page load by a tiny inline script (no cookies, no storage):
+ *   a  the wordmark above (also the no-JS default)
+ *   b  the triangle stencil logo of the early spray stencils, rebuilt by hand as geometry,
+ *      two-tone in Splinter pink and Gl1tch cyan (the stencils were red/blue and red/black)
+ *   c  the rainbow script "Seez" (src/assets/logos/seez-regenbogen.svg, traced from the
+ *      original logo), its six stripes in the six figure accents
+ * The switch from a to b or c is animated once (< 700 ms): the wordmark glitches out, the
+ * new logo assembles from shards / stripes. Instant with prefers-reduced-motion.
+ * The accessible name comes from the surrounding link; every logo here is aria-hidden.
  */
 import FigureStrip from './FigureStrip.astro';
+import { figureAccent } from '~/data/figures';
+import rainbowSvg from '~/assets/logos/seez-regenbogen.svg?raw';
 
 interface Props {
   size?: 'sm' | 'lg';
+  rotate?: boolean;
 }
-const { size = 'sm' } = Astro.props;
+const { size = 'sm', rotate = false } = Astro.props;
+
+const rainbowPath = rainbowSvg.match(/\sd="([^"]+)"/)?.[1] ?? '';
+// Stripe order of the original logo, top to bottom: green, yellow, orange, red, violet, blue
+const stripeFigures = ['drift', 'shift', 'unknown', 'splinter', 'lume', 'gl1tch'];
+const stripeEdges = [0, 51, 95, 140, 184, 228, 280];
+const stripes = stripeFigures.map((id, i) => ({
+  y: stripeEdges[i],
+  h: stripeEdges[i + 1] - stripeEdges[i],
+  fill: figureAccent(id) ?? '#fff',
+}));
+// Runs while the header is parsed, so the chosen logo is there before the first paint.
+const pickLogo = `(function(){var el=document.currentScript&&document.currentScript.parentElement;if(!el)return;var v=['a','b','c'][Math.floor(Math.random()*3)];el.setAttribute('data-logo',v);if(v==='a'||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;el.classList.add('is-switching');setTimeout(function(){el.classList.remove('is-switching')},900)})();`;
+const pink = figureAccent('splinter');
+const cyan = figureAccent('gl1tch');
+// Logo b, viewBox 0 0 100 100: letters clipped by the stencil outline (apex arrow, sloped
+// left side with the S as a stair, square right shoulder), the Z runs out as a spike.
+// Each piece is a shard with its own start offset for the assemble animation.
+const shardsB = [
+  // apex arrow, split down the middle
+  { d: 'M50 2 36 20h7l7-9z', fill: pink, dx: -6, dy: -10, r: -20 },
+  { d: 'M50 2 64 20h-7l-7-9z', fill: cyan, dx: 6, dy: -10, r: 20 },
+  // S
+  {
+    d: 'M14 38h21v7H21v11h14v30H2v-7h26V63H14z',
+    fill: pink,
+    dx: -14,
+    dy: 6,
+    r: -12,
+  },
+  // E (left)
+  { d: 'M38 10h6v76h-6zM44 34h7v6h-7zM44 56h6v6h-6zM44 80h7v6h-7z', fill: pink, dx: -4, dy: -12, r: 8 },
+  // E (right)
+  { d: 'M54 10h6v76h-6zM60 34h7v6h-7zM60 56h6v6h-6zM60 80h7v6h-7z', fill: cyan, dx: 5, dy: 12, r: -8 },
+  // Z with the spike
+  { d: 'M68 38h24v7l-15 34h17l5 20-8-13H68v-7l15-34H68z', fill: cyan, dx: 14, dy: -4, r: 14 },
+];
 ---
 
-<span class:list={['sz-wordmark', `sz-wordmark--${size}`]}>
-  <span class="sz-wordmark__word">seez</span>
-  <FigureStrip height={size === 'lg' ? 6 : 3} />
-</span>
+{
+  rotate ? (
+    <span class="sz-logo" data-sz-logo aria-hidden="true">
+      <span class:list={['sz-wordmark', 'sz-wordmark--sm', 'sz-logo__v', 'sz-logo__v--a']}>
+        <span class="sz-wordmark__word">seez</span>
+        <FigureStrip height={3} />
+      </span>
+      <svg class="sz-logo__v sz-logo__v--b" viewBox="0 0 100 100" width="34" height="34" focusable="false">
+        <defs>
+          <clipPath id="sz-logo-b-clip">
+            <path d="M50 2 68 26v10h32v64H0V86l12-48 24-12z" />
+          </clipPath>
+        </defs>
+        <g clip-path="url(#sz-logo-b-clip)">
+          {shardsB.map((s, i) => (
+            <path
+              class="sz-logo__shard"
+              d={s.d}
+              fill={s.fill}
+              style={`--dx:${s.dx}px;--dy:${s.dy}px;--r:${s.r}deg;--i:${i}`}
+            />
+          ))}
+        </g>
+      </svg>
+      <svg class="sz-logo__v sz-logo__v--c" viewBox="0 0 680 280" width="74" height="30" focusable="false">
+        <defs>
+          <clipPath id="sz-logo-c-ink">
+            <path d={rainbowPath} fill-rule="evenodd" clip-rule="evenodd" />
+          </clipPath>
+        </defs>
+        <g clip-path="url(#sz-logo-c-ink)">
+          {stripes.map((s, i) => (
+            <rect class="sz-logo__stripe" x="0" y={s.y} width="680" height={s.h} fill={s.fill} style={`--i:${i}`} />
+          ))}
+        </g>
+      </svg>
+      <script is:inline set:html={pickLogo} />
+    </span>
+  ) : (
+    <span class:list={['sz-wordmark', `sz-wordmark--${size}`]}>
+      <span class="sz-wordmark__word">seez</span>
+      <FigureStrip height={size === 'lg' ? 6 : 3} />
+    </span>
+  )
+}
 
 <style>
   .sz-wordmark {
@@ -38,28 +129,109 @@ const { size = 'sm' } = Astro.props;
     font-size: 64px;
   }
   @media (prefers-reduced-motion: no-preference) {
-    :global(a:is(:hover, :focus-visible)) > .sz-wordmark :global(.sz-strip__seg) {
+    :global(a:is(:hover, :focus-visible)) .sz-wordmark :global(.sz-strip__seg) {
       animation: sz-wave 420ms var(--ease-out) both;
     }
-    :global(a:is(:hover, :focus-visible)) > .sz-wordmark :global(.sz-strip__seg:nth-child(2)) {
+    :global(a:is(:hover, :focus-visible)) .sz-wordmark :global(.sz-strip__seg:nth-child(2)) {
       animation-delay: 40ms;
     }
-    :global(a:is(:hover, :focus-visible)) > .sz-wordmark :global(.sz-strip__seg:nth-child(3)) {
+    :global(a:is(:hover, :focus-visible)) .sz-wordmark :global(.sz-strip__seg:nth-child(3)) {
       animation-delay: 80ms;
     }
-    :global(a:is(:hover, :focus-visible)) > .sz-wordmark :global(.sz-strip__seg:nth-child(4)) {
+    :global(a:is(:hover, :focus-visible)) .sz-wordmark :global(.sz-strip__seg:nth-child(4)) {
       animation-delay: 120ms;
     }
-    :global(a:is(:hover, :focus-visible)) > .sz-wordmark :global(.sz-strip__seg:nth-child(5)) {
+    :global(a:is(:hover, :focus-visible)) .sz-wordmark :global(.sz-strip__seg:nth-child(5)) {
       animation-delay: 160ms;
     }
-    :global(a:is(:hover, :focus-visible)) > .sz-wordmark :global(.sz-strip__seg:nth-child(6)) {
+    :global(a:is(:hover, :focus-visible)) .sz-wordmark :global(.sz-strip__seg:nth-child(6)) {
       animation-delay: 200ms;
     }
   }
   @keyframes sz-wave {
     40% {
       transform: translateY(-3px);
+    }
+  }
+
+  /* ---------- Three logos in one fixed box (header) ---------- */
+  .sz-logo {
+    position: relative;
+    display: block;
+    width: 76px;
+    height: 34px;
+  }
+  .sz-logo__v {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    overflow: visible;
+  }
+  .sz-logo__v--b,
+  .sz-logo__v--c,
+  .sz-logo[data-logo='b'] .sz-logo__v--a,
+  .sz-logo[data-logo='c'] .sz-logo__v--a {
+    visibility: hidden;
+  }
+  .sz-logo[data-logo='b'] .sz-logo__v--b,
+  .sz-logo[data-logo='c'] .sz-logo__v--c {
+    visibility: visible;
+  }
+  .sz-logo__shard,
+  .sz-logo__stripe {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* the wordmark breaks into slices and leaves */
+    .sz-logo.is-switching .sz-logo__v--a {
+      animation: sz-logo-out 260ms steps(4, end) both;
+    }
+    /* stencil: the pieces fly in and snap together */
+    .sz-logo.is-switching .sz-logo__shard {
+      animation: sz-logo-shard 460ms var(--ease-stamp) both;
+      animation-delay: calc(140ms + var(--i) * 35ms);
+    }
+    /* rainbow: the stripes slide in one after another */
+    .sz-logo.is-switching .sz-logo__stripe {
+      animation: sz-logo-stripe 380ms var(--ease-out) both;
+      animation-delay: calc(140ms + var(--i) * 40ms);
+    }
+  }
+  @keyframes sz-logo-out {
+    0% {
+      visibility: visible;
+      clip-path: inset(0 0 0 0);
+      transform: translateY(-50%);
+    }
+    35% {
+      visibility: visible;
+      clip-path: inset(10% 0 45% 0);
+      transform: translate(3px, -50%);
+    }
+    70% {
+      visibility: visible;
+      clip-path: inset(55% 0 5% 0);
+      transform: translate(-4px, -50%);
+    }
+    100% {
+      visibility: hidden;
+      clip-path: inset(50% 0 50% 0);
+      transform: translateY(-50%);
+    }
+  }
+  @keyframes sz-logo-shard {
+    from {
+      opacity: 0;
+      transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(0.85);
+    }
+  }
+  @keyframes sz-logo-stripe {
+    from {
+      opacity: 0;
+      transform: translateX(-30%);
     }
   }
 </style>
