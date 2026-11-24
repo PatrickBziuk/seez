@@ -79,7 +79,8 @@ const seoProps: AstroSeoProps = merge(
       type: 'website',
     },
     twitter: {
-      cardType: openGraph?.images?.length ? 'summary_large_image' : 'summary',
+      // A default share image always exists (seez.config.ts), so the large card fits every page
+      cardType: 'summary_large_image',
     },
   },
   {
