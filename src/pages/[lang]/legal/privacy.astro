@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import Layout from '../../../layouts/Layout.astro';
+import Layout from '../../../layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
 import { getTranslations, SUPPORTED_LANGUAGES, type SupportedLanguage } from '../../../utils/i18n';
 
 export const getStaticPaths = (() => {
@@ -38,14 +39,14 @@ const description =
     canonical: `/${locale}/legal/privacy`,
   }}
 >
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="prose prose-lg dark:prose-invert max-w-none">
-      <h1>{title}</h1>
+  <PageHead title={title} label={locale === 'de' ? 'Rechtliches' : 'Legal'} />
+  <div class="sz-container legal">
+    <div class="sz-prose">
 
       {
         locale === 'de' ? (
           <>
-            <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+            <p class="sz-muted">
               Diese Datenschutzerklärung erklärt, wie seez.eu Ihre Daten sammelt, verwendet und schützt.
             </p>
 
@@ -117,13 +118,13 @@ const description =
             <h2>8. Kontakt</h2>
             <p>Bei Fragen zum Datenschutz kontaktieren Sie uns unter: info@seez.eu</p>
 
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
+            <p class="sz-muted legal__note">
               Letzte Aktualisierung: {new Date().toLocaleDateString('de-DE')}
             </p>
           </>
         ) : (
           <>
-            <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+            <p class="sz-muted">
               This privacy notice explains how seez.eu collects, uses, and protects your data.
             </p>
 
@@ -194,7 +195,7 @@ const description =
             <h2>8. Contact</h2>
             <p>For privacy-related questions, contact us at: info@seez.eu</p>
 
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
+            <p class="sz-muted legal__note">
               Last updated: {new Date().toLocaleDateString('en-US')}
             </p>
           </>
@@ -203,3 +204,12 @@ const description =
     </div>
   </div>
 </Layout>
+
+<style>
+  .legal {
+    padding-bottom: var(--section-gap);
+  }
+  .legal__note {
+    font-size: var(--fs-sm);
+  }
+</style>

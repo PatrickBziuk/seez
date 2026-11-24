@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import Layout from '../../../layouts/Layout.astro';
+import Layout from '../../../layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
 import { getTranslations, SUPPORTED_LANGUAGES, type SupportedLanguage } from '../../../utils/i18n';
 
 export const getStaticPaths = (() => {
@@ -38,17 +39,17 @@ const description =
     canonical: `/${locale}/legal/impressum`,
   }}
 >
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="prose prose-lg dark:prose-invert max-w-none">
-      <h1>{title}</h1>
+  <PageHead title={title} label={locale === 'de' ? 'Rechtliches' : 'Legal'} />
+  <div class="sz-container legal">
+    <div class="sz-prose">
 
       {
         locale === 'de' ? (
           <>
-            <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">Angaben gemäß § 5 TMG und § 55 Abs. 2 RStV</p>
+            <p class="sz-muted">Angaben gemäß § 5 TMG und § 55 Abs. 2 RStV</p>
 
             <h2>Verantwortlich für den Inhalt</h2>
-            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+            <div class="sz-panel">
               <p>
                 <>
                   <strong>Patrick Bziuk</strong>
@@ -103,18 +104,18 @@ const description =
               Open-Source-Community für ihre wertvollen Beiträge zur Softwareentwicklung.
             </p>
 
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
+            <p class="sz-muted legal__note">
               Letzte Aktualisierung: {new Date().toLocaleDateString('de-DE')}
             </p>
           </>
         ) : (
           <>
-            <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+            <p class="sz-muted">
               Legal information and contact details for seez.eu
             </p>
 
             <h2>Responsible for Content</h2>
-            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+            <div class="sz-panel">
               <p>
                 <>
                   <strong>Patrick Bziuk</strong>
@@ -170,7 +171,7 @@ const description =
               their valuable contributions to software development.
             </p>
 
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-8">
+            <p class="sz-muted legal__note">
               Last updated: {new Date().toLocaleDateString('en-US')}
             </p>
           </>
@@ -179,3 +180,12 @@ const description =
     </div>
   </div>
 </Layout>
+
+<style>
+  .legal {
+    padding-bottom: var(--section-gap);
+  }
+  .legal__note {
+    font-size: var(--fs-sm);
+  }
+</style>
