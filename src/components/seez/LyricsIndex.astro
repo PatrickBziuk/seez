@@ -54,7 +54,7 @@ const items = LYRICS.map((l) => {
     <p class="sz-muted ly__count" aria-live="polite" data-ly-count></p>
 
     {!de && <p class="sz-muted">Lyrics are in German.</p>}
-    <ul class="ly__list" lang="de">
+    <ul class="ly__list reveal-stagger" lang="de">
       {
         items.map((l) => (
           <li class="ly__item" data-fig={l.figure} style={`--fig:${getFigure(l.figure)?.accent.dark}`}>

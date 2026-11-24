@@ -160,6 +160,15 @@ const listVisible = showList ?? list;
       transform var(--t-hover) var(--ease),
       box-shadow var(--t-hover) var(--ease);
   }
+  /* compact: sits under a visible title (figure card), so only controls and progress */
+  .sz-player--compact .sz-player__now {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
   .sz-player--compact .sz-player__play {
     width: 42px;
     height: 42px;

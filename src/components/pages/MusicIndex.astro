@@ -94,7 +94,7 @@ const metadata = {
     }
 
     <h3 class="sz-label ep__listlabel">{de ? 'Tracklist' : 'Tracklist'}</h3>
-    <ol class="sz-songlist">
+    <ol class="sz-songlist reveal-stagger">
       {
         EP_TRACKS.map((t) => (
           <SongRow
@@ -147,7 +147,7 @@ const metadata = {
             </h2>
           </div>
         </div>
-        <div class="vids">
+        <div class="vids reveal-stagger">
           {withFilm.map((p) => (
             <FilmPlayer filmKey={p.track.filmKey} lang={lang} title={p.track.title} withLink={false} />
           ))}
@@ -189,7 +189,7 @@ const metadata = {
             ? 'Diese Songs sind noch nicht veröffentlicht. Hier stehen Entwürfe, Notizen und frühe Hörproben.'
             : 'These songs are not released yet. Here you find drafts, notes and early listening samples.'}
         </p>
-        <ul class="sz-songlist">
+        <ul class="sz-songlist reveal-stagger">
           {others.map((o) => (
             <SongRow
               lang={lang}
