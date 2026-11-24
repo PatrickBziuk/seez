@@ -5,9 +5,6 @@ authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T21:00:00Z'
 image: '/images/figures/shift_work.png'
-additionalImages:
-  - '/images/figures/shift_afterwork.png'
-  - '/images/figures/shift_comic.png'
 notranslate: ['SZ-004', 'Shift']
 alias: 'The Worker'
 designation: 'SZ-004'

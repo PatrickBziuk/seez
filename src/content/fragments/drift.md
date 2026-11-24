@@ -5,11 +5,8 @@ authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T20:45:00Z'
 image: '/images/figures/drift.png'
-additionalImages:
-  - '/images/figures/drift_comic.png'
 alias: 'Der Ankerlose'
 designation: 'SZ-003'
-colorCode: '#111827'
 symbolism:
   - icon: '⚓'
     meaning: 'Anker-Tattoos - Suche nach Halt, findet nur Symbole davon'
