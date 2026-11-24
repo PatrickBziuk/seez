@@ -1,0 +1,325 @@
+---
+/**
+ * FigurePage (KONZEPT B10 "Figurenseite"): sheet with rim light, SZ number, name in the
+ * figure accent, quote, one medium detail, songs, videos, symbols, dossier, the others.
+ * Identity data from src/data/figures.json; the dossier text is gated content.
+ */
+import { render, type CollectionEntry } from 'astro:content';
+import Layout from '~/layouts/PageLayout.astro';
+import FigureGlyph from '~/components/seez/FigureGlyph.astro';
+import FigureChip from '~/components/seez/FigureChip.astro';
+import FigureStrip from '~/components/seez/FigureStrip.astro';
+import FigureWorld from '~/components/seez/FigureWorld.astro';
+import SongRow from '~/components/seez/SongRow.astro';
+import HelpNotice from '~/components/seez/HelpNotice.astro';
+import VhsCard from '~/components/seez/VhsCard.astro';
+import { FIGURES, figureStyle, type Figure } from '~/data/figures';
+import { EP, EP_TRACKS, SONG_EXTRAS } from '~/data/songs';
+import { getSongRecords, pickEntry, isSong } from '~/utils/music';
+import { filmsForFigure } from '~/utils/videothek';
+import { sectionUrl, type Lang } from '~/utils/routes';
+
+interface Props {
+  lang: Lang;
+  figure: Figure;
+  entry: CollectionEntry<'fragments'>;
+}
+const { lang, figure: f, entry } = Astro.props;
+const de = lang === 'de';
+const { Content } = await render(entry);
+const isFallbackLang = (entry.data.language || 'de') !== lang;
+
+const records = await getSongRecords();
+const has = (slug: string) => records.some((r) => r.slug === slug);
+const epSongs = EP_TRACKS.filter((t) => t.figures.includes(f.id));
+const otherSongs = records
+  .filter((r) => !EP_TRACKS.some((t) => t.slug === r.slug))
+  .map((r) => ({ r, e: pickEntry(r, lang) }))
+  .filter(
+    ({ r, e }) =>
+      isSong(e) &&
+      ((SONG_EXTRAS[r.slug]?.figures || []).includes(f.id) ||
+        e.data.figureRef?.id?.replace(/^en\//, '') === entry.id.replace(/^en\//, ''))
+  );
+const films = filmsForFigure(f.id);
+const firstSong = epSongs.find((t) => has(t.slug));
+const symbols = entry.data.symbolism || [];
+const voice = entry.data.voiceCharacteristics?.preset;
+
+const metadata = {
+  title: `${f.sz} · ${f.name} – ${de ? 'Fragmente' : 'Fragments'}`,
+  description: `${f.name}, ${f.alias[lang]}. ${f.quote[lang]}`,
+  canonical: new URL(sectionUrl(lang, 'fragments', f.id), 'https://seez.eu').toString(),
+};
+---
+
+<Layout metadata={metadata} mainStyle={figureStyle(f)} mainClass={`fig fig--${f.id}`}>
+  <div class="sz-container fig__top">
+    <nav class="sz-crumbs" aria-label="Breadcrumb">
+      <a href={sectionUrl(lang, 'fragments')}>{de ? 'Fragmente' : 'Fragments'}</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{f.sz}</span>
+    </nav>
+  </div>
+
+  <section class="sz-container fig__hero">
+    <div class="fig__sheet">
+      <img src={f.portrait.src} width={f.portrait.width} height={f.portrait.height} alt={f.portrait.alt[lang]} loading="eager" />
+    </div>
+    <div class="fig__intro">
+      <p class="fig__id">
+        <FigureGlyph id={f.id} size={22} />
+        <span class="sz-label">{f.sz} · {f.medium[lang]}</span>
+      </p>
+      <h1 class="sz-display fig__name">{f.name}</h1>
+      <p class="fig__alias">{f.alias[lang]}</p>
+      <blockquote class="fig__quote">„{f.quote[lang]}“</blockquote>
+      {
+        voice && (
+          <p class="fig__voice" lang={isFallbackLang ? entry.data.language : undefined}>
+            <span class="sz-label">{de ? 'Stimme' : 'Voice'}</span> {voice}
+          </p>
+        )
+      }
+      <div class="sz-btn-row fig__actions">
+        {
+          firstSong && (
+            <a class="sz-btn sz-btn--primary" href={sectionUrl(lang, 'music', firstSong.slug)}>
+              ▶ {firstSong.title}
+            </a>
+          )
+        }
+        {films.length > 0 && <a class="sz-btn" href="#videos">{de ? 'Videos ansehen' : 'Watch videos'}</a>}
+        <a class="sz-btn" href="#dossier">Dossier ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sz-container fig__world" aria-label={f.medium[lang]}>
+    <FigureWorld figure={f} lang={lang} />
+  </section>
+
+  {
+    (epSongs.length > 0 || otherSongs.length > 0) && (
+      <section class="sz-container sz-section" aria-labelledby="songs">
+        <h2 class="sz-h2" id="songs">
+          Songs
+        </h2>
+        <ul class="fig__songs">
+          {epSongs.map((t) => (
+            <SongRow
+              lang={lang}
+              title={t.title}
+              href={has(t.slug) ? sectionUrl(lang, 'music', t.slug) : undefined}
+              figures={t.figures}
+              note={t.note[lang]}
+              status={`EP · ${EP.title}`}
+              listen={EP.spotify}
+            />
+          ))}
+          {otherSongs.map(({ r, e }) => (
+            <SongRow
+              lang={lang}
+              title={e.data.title}
+              href={sectionUrl(lang, 'music', r.slug)}
+              figures={[f.id]}
+              status={de ? 'in Arbeit' : 'in progress'}
+            />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    films.length > 0 && (
+      <section class="sz-container sz-section" id="videos" aria-labelledby="videos-h">
+        <h2 class="sz-h2" id="videos-h">
+          Videos
+        </h2>
+        <ul class="fig__films">
+          {films.map((film) => (
+            <li>
+              <VhsCard film={film} lang={lang} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    symbols.length > 0 && (
+      <section class="sz-container sz-section" aria-labelledby="symbols">
+        <h2 class="sz-h2" id="symbols">
+          {de ? 'Symbole' : 'Symbols'}
+        </h2>
+        <ul class="fig__symbols" lang={isFallbackLang ? entry.data.language : undefined}>
+          {symbols.map((s) => {
+            const [name, ...rest] = s.meaning.split(/\s+[—–-]\s+/);
+            return (
+              <li>
+                <FigureGlyph id={f.id} size={20} />
+                <strong>{name}</strong>
+                {rest.length > 0 && <span>{rest.join(' – ')}</span>}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="sz-container sz-section" id="dossier" aria-labelledby="dossier-h">
+    <h2 class="sz-h2" id="dossier-h">Dossier</h2>
+    {isFallbackLang && <p class="sz-muted">{de ? 'Dieses Dossier liegt nur auf Englisch vor.' : 'This dossier is only available in German.'}</p>}
+    <div class="sz-prose fig__dossier" lang={isFallbackLang ? entry.data.language : undefined}>
+      <Content />
+    </div>
+    {
+      f.id === 'drift' && (
+        <div class="fig__help">
+          <HelpNotice lang={lang} />
+        </div>
+      )
+    }
+  </section>
+
+  <section class="sz-container sz-section" aria-labelledby="others">
+    <h2 class="sz-h2" id="others">{de ? 'Die anderen Splitter' : 'The other splinters'}</h2>
+    <FigureStrip highlight={[f.id]} height={6} class="fig__strip" />
+    <ul class="fig__others">
+      {
+        FIGURES.map((o) => (
+          <li>
+            {o.id === f.id ? (
+              <span aria-current="page">
+                <FigureChip figure={o.id} lang={lang} link={false} />
+              </span>
+            ) : (
+              <FigureChip figure={o.id} lang={lang} />
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .fig__top {
+    padding-top: var(--sp-6);
+  }
+  .fig__hero {
+    display: grid;
+    gap: var(--sp-6);
+    margin-top: var(--sp-5);
+  }
+  .fig__sheet {
+    position: relative;
+    background: radial-gradient(ellipse at 50% 60%, var(--fig-glow), transparent 65%), var(--fig-ground);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--fig);
+    max-width: 460px;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+  }
+  .fig__sheet img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .fig__id {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--fig);
+  }
+  .fig__name {
+    text-transform: none;
+    color: var(--fig);
+    margin-top: var(--sp-3);
+  }
+  .fig__alias {
+    font-size: var(--fs-md);
+    color: var(--text-muted);
+    margin-top: var(--sp-2);
+  }
+  .fig__quote {
+    margin-top: var(--sp-5);
+    font-size: var(--fs-lg);
+    line-height: 1.3;
+    max-width: 30ch;
+    border-left: 4px solid var(--fig);
+    padding-left: var(--sp-4);
+  }
+  .fig__voice {
+    margin-top: var(--sp-5);
+    color: var(--text);
+  }
+  .fig__voice .sz-label {
+    margin-right: 8px;
+  }
+  .fig__actions {
+    margin-top: var(--sp-6);
+  }
+  .fig__world {
+    margin-top: var(--sp-8);
+  }
+  .fig__songs,
+  .fig__films,
+  .fig__symbols,
+  .fig__others {
+    list-style: none;
+    margin: var(--sp-5) 0 0;
+    padding: 0;
+  }
+  .fig__films {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--sp-4);
+  }
+  .fig__symbols {
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .fig__symbols li {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: var(--sp-4);
+    display: grid;
+    gap: 6px;
+  }
+  .fig__symbols :global(.sz-glyph) {
+    color: var(--fig);
+  }
+  .fig__symbols span {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .fig__dossier {
+    margin-top: var(--sp-5);
+  }
+  .fig__help {
+    margin-top: var(--sp-6);
+  }
+  .fig :global(.fig__strip) {
+    margin-top: var(--sp-4);
+    max-width: 480px;
+  }
+  .fig__others {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .fig__others [aria-current] :global(.sz-chip) {
+    outline: 1px solid var(--fig);
+  }
+  @media (min-width: 900px) {
+    .fig__hero {
+      grid-template-columns: minmax(280px, 420px) 1fr;
+      align-items: center;
+    }
+  }
+</style>

@@ -14,6 +14,7 @@ import type { AstroIntegration } from 'astro';
 import astrowind from './vendor/integration';
 import pagefind from 'astro-pagefind';
 import videothek from './src/integrations/videothek';
+import { REDIRECTS } from './src/data/redirects.mjs';
 // import astroI18next from 'astro-i18next';
 
 import {
@@ -33,6 +34,9 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'never', // Enforce no trailing slashes for consistency
   site: 'https://seez.eu',
+
+  // Old URLs keep working as small redirect pages (see src/data/redirects.mjs)
+  redirects: REDIRECTS,
 
   integrations: [
     tailwind({

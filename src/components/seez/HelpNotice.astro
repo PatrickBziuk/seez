@@ -1,0 +1,29 @@
+---
+/** HelpNotice - TelefonSeelsorge hint on pages about Drift's substance songs (KONZEPT B4 Drift, as in the video). */
+import Notice from './Notice.astro';
+import type { Lang } from '~/utils/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<Notice title={lang === 'de' ? 'Hilfe' : 'Help'} tone="help">
+  {
+    lang === 'de' ? (
+      <p>
+        Wenn dich das Thema gerade trifft: Die TelefonSeelsorge ist rund um die Uhr erreichbar, anonym und kostenlos, unter{' '}
+        <a href="tel:08001110111">0800 111 0 111</a> oder <a href="tel:08001110222">0800 111 0 222</a> und auf{' '}
+        <a href="https://www.telefonseelsorge.de" rel="noopener">telefonseelsorge.de</a>.
+      </p>
+    ) : (
+      <p>
+        If this hits close to home: in Germany, TelefonSeelsorge is available around the clock, anonymous and free, at{' '}
+        <a href="tel:08001110111">0800 111 0 111</a> or <a href="tel:08001110222">0800 111 0 222</a> and at{' '}
+        <a href="https://www.telefonseelsorge.de" rel="noopener">telefonseelsorge.de</a>. Elsewhere, please contact your local
+        crisis line.
+      </p>
+    )
+  }
+</Notice>

@@ -1,0 +1,17 @@
+---
+import type { GetStaticPaths } from 'astro';
+import SongPage from '~/components/pages/SongPage.astro';
+import { getSongRecords, isSong, type SongRecord } from '~/utils/music';
+
+export const getStaticPaths = (async () => {
+  const all = await getSongRecords();
+  // Songs exist in both languages; overview texts only in their own language
+  return all
+    .filter((r) => Boolean(r.de) || isSong(r.en!))
+    .map((record) => ({ params: { slug: record.slug }, props: { record, all } }));
+}) satisfies GetStaticPaths;
+
+const { record, all } = Astro.props as { record: SongRecord; all: SongRecord[] };
+---
+
+<SongPage lang="de" record={record} all={all} />

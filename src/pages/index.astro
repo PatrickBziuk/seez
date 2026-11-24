@@ -1,40 +1,35 @@
 ---
-// Root page serves English content directly - no redirect page shown
-import Layout from '../layouts/PageLayout.astro';
-import Hero from '~/components/marketing/hero/Hero.astro';
+/**
+ * Root: language choice (German first). Plain links, no redirect, so both languages stay crawlable.
+ */
+import Layout from '~/layouts/Layout.astro';
+import Wordmark from '~/components/seez/Wordmark.astro';
 
-// Get English homepage data
 const metadata = {
-  title: 'seez - Creative Cosmos of Music, Texts & Figures',
-  description: '🎨 A creative universe where music, texts, and characters intertwine in endless possibilities.',
-  robots: {
-    index: true,
-    follow: true,
-  },
-  openGraph: {
-    type: 'website',
-  },
+  title: 'Seez',
+  description: 'Seez – Musik, Figuren, Archiv. Music, figures, archive.',
+  ignoreTitleTemplate: true,
 };
 ---
 
 <Layout metadata={metadata}>
-  <Hero
-    tagline="Welcome to the creative cosmos"
-    title="Music, Texts & Figures"
-    subtitle="🎨 A creative universe where music, texts, and characters intertwine in endless possibilities."
-    actions={[
-      {
-        variant: 'primary',
-        text: 'English',
-        href: '/en',
-        icon: 'tabler:world',
-      },
-      {
-        variant: 'secondary',
-        text: 'Deutsch',
-        href: '/de',
-        icon: 'tabler:world',
-      },
-    ]}
-  />
+  <main id="main" class="root">
+    <Wordmark size="lg" />
+    <p class="sz-lead">Ein Mensch, sechs Splitter, ein offenes Archiv.</p>
+    <p class="sz-lead sz-muted" lang="en">One person, six splinters, an open archive.</p>
+    <div class="sz-btn-row">
+      <a class="sz-btn sz-btn--primary" href="/de" hreflang="de" lang="de">Deutsch</a>
+      <a class="sz-btn" href="/en" hreflang="en" lang="en">English</a>
+    </div>
+  </main>
 </Layout>
+
+<style>
+  .root {
+    min-height: 100vh;
+    display: grid;
+    place-content: center;
+    gap: var(--sp-5);
+    padding: var(--sp-6) var(--gutter);
+  }
+</style>

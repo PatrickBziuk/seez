@@ -19,6 +19,9 @@ export const SECTION_SEGMENT: Record<Section, Record<Lang, string>> = {
   videothek: { de: 'videothek', en: 'videothek' },
 };
 
+/** Pages whose slug differs between languages. */
+const SLUG_PAIRS: Record<string, string> = { 'meine-musik': 'my-music', 'my-music': 'meine-musik' };
+
 /** `/de/musik`, `/en/music/spiegelkrise`, … */
 export function sectionUrl(lang: Lang, section: Section, slug?: string): string {
   const base = `/${lang}/${SECTION_SEGMENT[section][lang]}`;
@@ -46,5 +49,6 @@ export function counterpartPath(pathname: string, target: Lang): string {
     (s) => SECTION_SEGMENT[s][from as Lang] === segment
   );
   const nextSegment = section ? SECTION_SEGMENT[section][target] : segment;
-  return `/${target}/${nextSegment}${rest}`;
+  const nextRest = rest.replace(/^\/([^/]+)/, (all, slug: string) => (SLUG_PAIRS[slug] ? `/${SLUG_PAIRS[slug]}` : all));
+  return `/${target}/${nextSegment}${nextRest}`;
 }
