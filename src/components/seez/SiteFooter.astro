@@ -1,6 +1,9 @@
 ---
 /**
  * SiteFooter - plain link lists (no closed <details>), splinter strip, no version string (KONZEPT B6/B8).
+ * Motion: the strip fills in SZ order when the footer comes into view, the columns follow.
+ * Easter egg: type "seez" anywhere (outside a form field) or click the word "seez" here six
+ * times: every Splitterleiste on the page breaks apart and snaps back, and a label confirms it.
  */
 import FigureStrip from './FigureStrip.astro';
 import { sectionUrl, type Lang } from '~/utils/routes';
@@ -11,6 +14,7 @@ interface Props {
 }
 const { lang } = Astro.props;
 const de = lang === 'de';
+const egg = de ? '6/6 Splitter gefunden' : '6/6 splinters found';
 const spotify = 'https://open.spotify.com/intl-de/album/47aAj0XEtEJnmJqFDswAp0';
 
 const columns = [
@@ -55,15 +59,16 @@ const columns = [
 ---
 
 <footer class="sz-footer">
-  <FigureStrip height={4} />
+  <FigureStrip height={4} motion="fill" />
   <div class="sz-container sz-container--wide sz-footer__inner">
     <div class="sz-footer__brand">
-      <p class="sz-footer__word">seez</p>
+      <p class="sz-footer__word" data-sz-egg-word>seez</p>
+      <p class="sz-label sz-footer__egg" role="status" data-sz-egg data-text={egg}></p>
       <p class="sz-muted">
         {de ? 'Ein Mensch, sechs Splitter, ein offenes Archiv.' : 'One person, six splinters, an open archive.'}
       </p>
     </div>
-    <div class="sz-footer__cols">
+    <div class="sz-footer__cols reveal-stagger">
       {
         columns.map((col) => (
           <section aria-label={col.title}>
@@ -89,6 +94,46 @@ const columns = [
   </div>
 </footer>
 
+<script is:inline>
+  (() => {
+    const label = document.querySelector('[data-sz-egg]');
+    const root = document.documentElement;
+    let busy = false;
+    const splinter = () => {
+      if (busy) return;
+      busy = true;
+      root.classList.add('sz-splinter');
+      if (label) label.textContent = label.dataset.text || '';
+      setTimeout(() => root.classList.remove('sz-splinter'), 800);
+      setTimeout(() => {
+        if (label) label.textContent = '';
+        busy = false;
+      }, 4000);
+    };
+    let typed = '';
+    document.addEventListener('keydown', (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || e.key.length !== 1) return;
+      const t = e.target;
+      if (t instanceof Element && t.closest('input, textarea, select, [contenteditable]')) return;
+      typed = (typed + e.key.toLowerCase()).slice(-4);
+      if (typed === 'seez') {
+        typed = '';
+        splinter();
+      }
+    });
+    const word = document.querySelector('[data-sz-egg-word]');
+    let clicks = [];
+    word?.addEventListener('click', () => {
+      const now = Date.now();
+      clicks = clicks.filter((c) => now - c < 3000).concat(now);
+      if (clicks.length >= 6) {
+        clicks = [];
+        splinter();
+      }
+    });
+  })();
+</script>
+
 <style>
   .sz-footer {
     margin-top: var(--section-gap);
@@ -110,6 +155,21 @@ const columns = [
     margin-top: var(--sp-2);
     max-width: 32ch;
   }
+  .sz-footer__word {
+    user-select: none;
+  }
+  /* Easter-egg label: stays in the a11y tree (live region) but takes no room while empty */
+  .sz-footer__egg:empty {
+    margin: 0;
+  }
+  .sz-footer__egg {
+    color: var(--text);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sz-footer__egg:not(:empty) {
+      animation: sz-enter-rise var(--motion-slow) var(--ease-out) both;
+    }
+  }
   .sz-footer__cols {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -129,8 +189,17 @@ const columns = [
     font-size: var(--fs-sm);
     overflow-wrap: anywhere;
   }
+  .sz-footer li a {
+    text-underline-offset: 0.2em;
+    transition: transform var(--motion-fast) var(--ease-out);
+  }
   .sz-footer li a:hover {
     text-decoration: underline;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sz-footer li a:is(:hover, :focus-visible) {
+      transform: translateX(2px);
+    }
   }
   .sz-footer__legal {
     display: flex;

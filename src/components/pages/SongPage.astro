@@ -12,6 +12,9 @@ import LyricsBlock from '~/components/seez/LyricsBlock.astro';
 import Notice from '~/components/seez/Notice.astro';
 import SongRow from '~/components/seez/SongRow.astro';
 import HelpNotice from '~/components/seez/HelpNotice.astro';
+import TrackPlayer from '~/components/seez/media/TrackPlayer.astro';
+import FilmPlayer from '~/components/seez/media/FilmPlayer.astro';
+import { trackAudio } from '~/utils/media';
 import { EP, EP_TRACKS, SONG_EXTRAS, epTrack, getLyrics } from '~/data/songs';
 import { getFigure, figureStyle, type FigureId } from '~/data/figures';
 import { pickEntry, isSong, type SongRecord } from '~/utils/music';
@@ -35,17 +38,19 @@ const figures: FigureId[] =
   track?.figures || extra?.figures || (getFigure(figureFromRef) ? [getFigure(figureFromRef)!.id] : []);
 const main = getFigure(figures[0]);
 const lyrics = getLyrics(track?.lyricsId || extra?.lyricsId);
+const quote = track?.quote || extra?.quote;
 const films = filmsForSong(track?.filmKey);
 const song = isSong(entry);
 const audio = (entry.data as { audioUrl?: string }).audioUrl;
 const title = entry.data.title;
+const playable = Boolean(track && trackAudio(track.slug));
 
 const related = EP_TRACKS.filter((t) => t.slug !== record.slug && t.figures.some((f) => figures.includes(f)));
 const exists = (slug: string) => all.some((r) => r.slug === slug);
 
 const metadata = {
   title: `${title} – ${de ? 'Musik' : 'Music'}`,
-  description: entry.data.subtitle || entry.data.description || (track ? track.note[lang] : undefined),
+  description: entry.data.subtitle || entry.data.description || track?.note?.[lang],
   canonical: new URL(sectionUrl(lang, 'music', record.slug), 'https://seez.eu').toString(),
 };
 ---
@@ -58,7 +63,7 @@ const metadata = {
         <span aria-hidden="true"> / </span>
         {
           track ? (
-            <span>{EP.title}</span>
+            <a href={`${sectionUrl(lang, 'music')}#ep-title`}>{EP.title}</a>
           ) : (
             <span>{song ? (de ? 'In Arbeit' : 'Work in progress') : de ? 'Archiv' : 'Archive'}</span>
           )
@@ -67,27 +72,29 @@ const metadata = {
         <span aria-current="page">{title}</span>
       </nav>
 
-      <div class="song__hero">
-        <div class="song__visual">
-          {
-            films[0] ? (
-              <img src={films[0].media.poster} alt="" loading="eager" />
-            ) : main ? (
-              <img
-                src={main.portrait.src}
-                alt={main.portrait.alt[lang]}
-                width={main.portrait.width}
-                height={main.portrait.height}
-                loading="eager"
-              />
-            ) : null
-          }
-        </div>
+      <div class:list={['song__hero', { 'song__hero--text': !films[0] && !main }]}>
+        {
+          (films[0] || main) && (
+            <div class="song__visual">
+              {films[0] ? (
+                <img src={films[0].media.poster} alt="" loading="eager" />
+              ) : (
+                <img
+                  src={main!.portrait.src}
+                  alt={main!.portrait.alt[lang]}
+                  width={main!.portrait.width}
+                  height={main!.portrait.height}
+                  loading="eager"
+                />
+              )}
+            </div>
+          )
+        }
         <div class="song__intro" lang={lang}>
           <p class="sz-label">
             {
               track
-                ? `EP · ${EP.title}`
+                ? `EP · ${EP.title} · Track ${track.no} · ${track.length}`
                 : song
                   ? de
                     ? 'Song · in Arbeit, nicht auf der EP'
@@ -97,7 +104,16 @@ const metadata = {
                     : 'Text'
             }
           </p>
-          <h1 class="sz-display song__title">{title}</h1>
+          <h1 class="sz-display song__title">
+            {title}
+            {
+              track?.explicit && (
+                <abbr class="song__e" title={de ? 'Explizit' : 'Explicit'}>
+                  E
+                </abbr>
+              )
+            }
+          </h1>
           {
             entry.data.subtitle && (
               <p class="sz-lead song__sub" lang={isFallbackLang ? entry.data.language : undefined}>
@@ -118,13 +134,13 @@ const metadata = {
           <div class="sz-btn-row song__actions">
             {
               track && (
-                <a class="sz-btn sz-btn--primary" href={EP.spotify} rel="noopener">
-                  {de ? 'EP auf Spotify hören' : 'Listen to the EP on Spotify'}
+                <a class:list={['sz-btn', { 'sz-btn--primary': !playable }]} href={track.spotify} rel="noopener">
+                  {playable ? (de ? 'Auf Spotify' : 'On Spotify') : de ? 'Auf Spotify hören' : 'Listen on Spotify'}
                 </a>
               )
             }
             {
-              films.length > 0 && (
+              films.some((f) => f.released) && (
                 <a class="sz-btn" href="#video">
                   ▶ Video
                 </a>
@@ -138,6 +154,7 @@ const metadata = {
               )
             }
           </div>
+          {track && playable && <TrackPlayer track={track} lang={lang} class="song__player" />}
           {
             audio && (
               <div class="song__audio">
@@ -164,9 +181,9 @@ const metadata = {
         )
       }
       {
-        track?.quote && (
+        quote && (
           <blockquote class="song__quote" lang="de">
-            „{track.quote}“
+            „{quote}“
           </blockquote>
         )
       }
@@ -183,26 +200,18 @@ const metadata = {
     </section>
 
     {
-      films.length > 0 && (
+      films.some((f) => f.released) && (
         <section class="sz-section sz-container" id="video" aria-labelledby="video-h" lang={lang}>
           <h2 class="sz-h2" id="video-h">
             Video
           </h2>
           <div class="song__films">
-            {films.map((f) => (
-              <figure class="song__film">
-                <video controls preload="none" poster={f.media.poster} src={f.media.full} />
-                <figcaption>
-                  <strong>{f.title}</strong> · {f.subtitle} · {f.length}
-                  <br />
-                  <span class="sz-muted">
-                    {de
-                      ? 'Musik und Figurenbilder KI-gestützt · Apps und Marken im Bild sind erfunden'
-                      : 'Music and figure art AI-assisted · apps and brands shown are fictional'}
-                  </span>
-                </figcaption>
-              </figure>
-            ))}
+            <FilmPlayer filmKey={track?.filmKey} lang={lang} title={title} />
+            <p class="sz-muted song__filmnote">
+              {de
+                ? 'Musik und Figurenbilder KI-gestützt · Apps und Marken im Bild sind erfunden'
+                : 'Music and figure art AI-assisted · apps and brands shown are fictional'}
+            </p>
           </div>
         </section>
       )
@@ -241,7 +250,9 @@ const metadata = {
                     title={t.title}
                     href={exists(t.slug) ? sectionUrl(lang, 'music', t.slug) : undefined}
                     figures={t.figures}
-                    note={t.note[lang]}
+                    note={t.note?.[lang]}
+                    no={t.no}
+                    length={t.length}
                   />
                 ))}
               </ul>
@@ -291,6 +302,21 @@ const metadata = {
   .song__title {
     margin-top: var(--sp-3);
   }
+  .song__e {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 0.9em;
+    height: 0.9em;
+    margin-left: 0.15em;
+    border-radius: 2px;
+    background: var(--text-muted);
+    color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 0.32em;
+    vertical-align: middle;
+    text-decoration: none;
+  }
   .song__sub {
     margin-top: var(--sp-4);
     color: var(--text-muted);
@@ -310,6 +336,12 @@ const metadata = {
   }
   .song__audio {
     margin-top: var(--sp-5);
+  }
+  .song__intro :global(.song__player) {
+    margin-top: var(--sp-5);
+  }
+  .song__filmnote {
+    font-size: var(--fs-sm);
   }
   .song__audio audio {
     width: 100%;
@@ -334,8 +366,9 @@ const metadata = {
   }
   .song__films {
     display: grid;
-    gap: var(--sp-6);
+    gap: var(--sp-3);
     margin-top: var(--sp-5);
+    max-width: 960px;
   }
   .song__film video {
     width: 100%;
@@ -367,6 +400,9 @@ const metadata = {
     .song__hero {
       grid-template-columns: minmax(260px, 380px) 1fr;
       align-items: end;
+    }
+    .song__hero--text {
+      grid-template-columns: 1fr;
     }
   }
 </style>

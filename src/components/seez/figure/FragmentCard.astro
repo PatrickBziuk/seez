@@ -1,0 +1,887 @@
+---
+/**
+ * FragmentCard – the collectible card of a figure (seez's own card design, not a copy of
+ * any real trading card game). Every field is real data:
+ *
+ *   name bar      figures.json name, alias, glyph
+ *   card number   figures.json sz ("SZ-001", on the artwork) and order ("1/6", footer)
+ *   type line     figures.json medium
+ *   artwork       figures.json portrait (ink character sheet)
+ *   move          the figure's EP track (songs.ts EP_TRACKS): number, title, length, explicit mark,
+ *                 BPM where the Videothek catalog notes one, and the song line (track.quote, German)
+ *   flavor text   figures.json quote
+ *   rarity mark   "EP 2026": the track is on GENERIERUNG LÄUFT (EP.released); "in Arbeit" otherwise
+ *
+ * Variants: `hero` (figure page; plain block, the move links to the song and carries the
+ * TrackPlayer slot) and `deck` (overview; the whole card is one link, no nested controls).
+ * Motion: entrance flip, idle float, pointer tilt with an accent foil sheen and one small
+ * flourish per figure. Nothing moves with prefers-reduced-motion; idle loops stop with the
+ * MotionToggle (html[data-sz-motion='off']).
+ */
+import FigureGlyph from '~/components/seez/FigureGlyph.astro';
+import TrackPlayer from '~/components/seez/media/TrackPlayer.astro';
+import { FIGURES, figureStyle, type Figure } from '~/data/figures';
+import { epTrackFor, bpmFor, EP_YEAR } from '~/utils/fragments';
+import { getSongRecords } from '~/utils/music';
+import { sectionUrl, type Lang } from '~/utils/routes';
+
+interface Props {
+  figure: Figure;
+  lang: Lang;
+  variant?: 'hero' | 'deck';
+  /** deck: the whole card links here */
+  href?: string;
+  /** Element for the card name. The figure page has its own H1, so the hero card uses a <p>. */
+  nameTag?: 'p' | 'h2' | 'h3';
+  eager?: boolean;
+  /** Position in a row, for staggered entrance */
+  index?: number;
+}
+const { figure: f, lang, variant = 'hero', href, nameTag = 'p', eager = false, index = 0 } = Astro.props;
+const de = lang === 'de';
+const N = nameTag;
+const track = epTrackFor(f.id);
+const bpm = bpmFor(track?.filmKey);
+const records = variant === 'hero' && track ? await getSongRecords() : [];
+const trackHref = track
+  ? records.some((r) => r.slug === track.slug)
+    ? sectionUrl(lang, 'music', track.slug)
+    : track.spotify
+  : undefined;
+const trackExternal = Boolean(track && trackHref === track.spotify);
+const no = track ? String(track.no).padStart(2, '0') : undefined;
+const isLink = variant === 'deck' && Boolean(href);
+const Tag = isLink ? 'a' : 'article';
+const tilt = variant === 'hero' ? 9 : 7;
+const label = de ? `Sammelkarte ${f.name}, ${f.sz}` : `Collectible card ${f.name}, ${f.sz}`;
+---
+
+<div
+  class:list={['tcg-wrap', `tcg--${f.id}`, `tcg--${variant}`]}
+  style={`${figureStyle(f)};--i:${index}`}
+  data-tcg-wrap
+>
+  <Tag
+    class="tcg"
+    href={isLink ? href : undefined}
+    aria-label={isLink ? `${f.name}, ${f.alias[lang]} (${f.sz})` : label}
+    data-tcg
+    data-tcg-tilt={tilt}
+  >
+    <div class="tcg__flip">
+      <div class="tcg__face">
+        <div class="tcg__frame">
+          <div class="tcg__head">
+            <div class="tcg__title">
+              <N class="tcg__name">{f.name}</N>
+              <span class="tcg__alias">{f.alias[lang]}</span>
+            </div>
+            <span class="tcg__emblem" aria-hidden="true"><FigureGlyph id={f.id} size={24} /></span>
+          </div>
+
+          <div class="tcg__art">
+            <img
+              src={f.portrait.src}
+              width={f.portrait.width}
+              height={f.portrait.height}
+              alt={variant === 'hero' ? f.portrait.alt[lang] : ''}
+              loading={eager ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+            {
+              f.id === 'splinter' && (
+                <svg class="tcg__crack" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M58 0 52 18 61 27 47 44 55 58 44 76 50 100" pathLength="1" />
+                  <path d="M61 27 76 31M47 44 30 49M55 58 70 66" pathLength="1" />
+                </svg>
+              )
+            }
+            <span class="tcg__holo" aria-hidden="true"></span>
+            <span class="tcg__sz">{f.sz}</span>
+          </div>
+
+          <p class="tcg__type">
+            <span class="sr-only">{de ? 'Medium: ' : 'Medium: '}</span>
+            <span>{f.medium[lang]}</span>
+          </p>
+
+          {
+            track && (
+              <div class="tcg__move">
+                <div class="tcg__move-row">
+                  <span class="tcg__cost" title={`${de ? 'EP-Track' : 'EP track'} ${track.no}`}>
+                    <span class="sr-only">{de ? 'EP-Track ' : 'EP track '}</span>
+                    {no}
+                  </span>
+                  <span class="tcg__move-name">
+                    {variant === 'hero' && trackHref ? (
+                      <a href={trackHref} rel={trackExternal ? 'noopener' : undefined}>
+                        {track.title}
+                        {trackExternal && <span class="sr-only"> ({de ? 'auf Spotify' : 'on Spotify'})</span>}
+                      </a>
+                    ) : (
+                      track.title
+                    )}
+                    {track.explicit && (
+                      <abbr class="tcg__e" title={de ? 'Explizit' : 'Explicit'}>
+                        E
+                      </abbr>
+                    )}
+                  </span>
+                  <span class="tcg__move-val">
+                    <span class="tcg__len">{track.length}</span>
+                    {bpm && <span class="tcg__bpm">{bpm} BPM</span>}
+                  </span>
+                </div>
+                {track.quote && (
+                  <p class="tcg__move-text" lang={de ? undefined : 'de'}>
+                    {track.quote}
+                  </p>
+                )}
+                {variant === 'hero' && (
+                  /* ===== SLOT: TrackPlayer (compact) – plays the card's move, renders nothing without released audio ===== */
+                  <div class="tcg__play">
+                    <TrackPlayer track={track} lang={lang} variant="compact" />
+                  </div>
+                )}
+              </div>
+            )
+          }
+
+          <p class="tcg__flavor">{de ? `„${f.quote[lang]}“` : `“${f.quote[lang]}”`}</p>
+
+          <div class="tcg__foot">
+            <span class="tcg__no">
+              <span class="sr-only">Fragment </span>
+              {f.order}/{FIGURES.length} · seez
+            </span>
+            <span class="tcg__rarity">
+              <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"
+                ><path d="M6 0 9 5 6 12 3 5Z"></path></svg
+              >
+              {track ? `EP ${EP_YEAR}` : de ? 'in Arbeit' : 'in progress'}
+            </span>
+          </div>
+        </div>
+        <span class="tcg__glare" aria-hidden="true"></span>
+      </div>
+
+      <div class="tcg__back" aria-hidden="true">
+        <span class="tcg__back-strip">
+          {FIGURES.map((o) => <span style={`background:${o.accent.dark}`} />)}
+        </span>
+        <span class="tcg__back-word">seez</span>
+        <span class="tcg__back-label">{de ? 'Fragmente' : 'Fragments'}</span>
+      </div>
+    </div>
+  </Tag>
+</div>
+
+<script>
+  /**
+   * Pointer tilt + foil position. Mouse only, never with reduced motion. The rect is read from
+   * the untilted wrapper so the card does not chase its own transform. Pressing the button
+   * flattens and freezes the card, so text can be selected and links clicked normally.
+   */
+  const motionOk = window.matchMedia('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)');
+  document.querySelectorAll<HTMLElement>('[data-tcg-wrap]').forEach((wrap) => {
+    const card = wrap.querySelector<HTMLElement>('[data-tcg]');
+    if (!card || wrap.dataset.tcgBound) return;
+    wrap.dataset.tcgBound = '1';
+    const max = Number(card.dataset.tcgTilt) || 8;
+    let frame = 0;
+    let frozen = false;
+    const reset = () => {
+      cancelAnimationFrame(frame);
+      card.classList.remove('is-tilting');
+      card.style.removeProperty('--rx');
+      card.style.removeProperty('--ry');
+      card.style.removeProperty('--mx');
+      card.style.removeProperty('--my');
+    };
+    wrap.addEventListener('pointermove', (e) => {
+      if (!motionOk.matches || frozen || e.pointerType !== 'mouse') return;
+      const r = wrap.getBoundingClientRect();
+      const px = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+      const py = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        card.style.setProperty('--rx', `${((0.5 - py) * max * 2).toFixed(2)}deg`);
+        card.style.setProperty('--ry', `${((px - 0.5) * max * 2).toFixed(2)}deg`);
+        card.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`);
+        card.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
+        card.classList.add('is-tilting');
+      });
+    });
+    wrap.addEventListener('pointerleave', () => {
+      frozen = false;
+      reset();
+    });
+    wrap.addEventListener('pointerdown', () => {
+      frozen = true;
+      reset();
+    });
+  });
+
+  /**
+   * Deal on scroll: a list marked [data-deal] holds its cards back (.will-deal) and deals them
+   * when it scrolls into view (.is-dealt). Pages may add .will-deal inline before first paint.
+   */
+  const dealOk = window.matchMedia('(prefers-reduced-motion: no-preference)');
+  document.querySelectorAll<HTMLElement>('[data-deal]').forEach((list) => {
+    if (list.dataset.dealBound) return;
+    list.dataset.dealBound = '1';
+    if (!dealOk.matches || !('IntersectionObserver' in window)) {
+      list.classList.remove('will-deal');
+      return;
+    }
+    list.classList.add('will-deal');
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          list.classList.add('is-dealt');
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    io.observe(list);
+  });
+</script>
+
+<style>
+  /* ---------- Size: everything scales with the card width (container query units) ---------- */
+  .tcg-wrap {
+    container-type: inline-size;
+    position: relative;
+    width: 100%;
+    perspective: 1100px;
+  }
+  .tcg {
+    --rx: 0deg;
+    --ry: 0deg;
+    --mx: 50%;
+    --my: 30%;
+    --cut: 5.5cqi;
+    display: block;
+    position: relative;
+    color: var(--text);
+    text-decoration: none;
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+    transform-style: preserve-3d;
+    transition: transform 500ms var(--ease);
+    border-radius: 0;
+  }
+  .tcg.is-tilting {
+    transition: transform 90ms linear;
+  }
+  .tcg__flip {
+    position: relative;
+    display: grid;
+    transform-style: preserve-3d;
+  }
+  .tcg__face,
+  .tcg__back {
+    grid-area: 1 / 1;
+    clip-path: polygon(
+      var(--cut) 0,
+      100% 0,
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      0 100%,
+      0 var(--cut)
+    );
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* ---------- Front: accent foil frame around an ink-dark field ---------- */
+  .tcg__face {
+    position: relative;
+    aspect-ratio: 63 / 88;
+    padding: 1.6cqi;
+    background:
+      linear-gradient(
+          115deg,
+          transparent 30%,
+          rgba(255, 255, 255, 0.55) 45%,
+          transparent 52%,
+          color-mix(in srgb, var(--fig) 60%, #ffffff) 60%,
+          transparent 72%
+        )
+        var(--mx) var(--my) / 260% 260% no-repeat,
+      linear-gradient(
+        150deg,
+        var(--fig),
+        color-mix(in srgb, var(--fig) 30%, #0b0b10) 42%,
+        var(--fig) 70%,
+        color-mix(in srgb, var(--fig) 40%, #0b0b10)
+      );
+  }
+  .tcg__frame {
+    --cut-in: calc(var(--cut) - 1.2cqi);
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8cqi;
+    padding: 3cqi 3.2cqi 2.4cqi;
+    background:
+      radial-gradient(ellipse 90% 45% at 50% 30%, var(--fig-glow), transparent 70%),
+      linear-gradient(180deg, color-mix(in srgb, var(--fig-ground) 70%, #000), var(--fig-ground) 40%, #0b0b10);
+    clip-path: polygon(
+      var(--cut-in) 0,
+      100% 0,
+      100% calc(100% - var(--cut-in)),
+      calc(100% - var(--cut-in)) 100%,
+      0 100%,
+      0 var(--cut-in)
+    );
+  }
+
+  /* Name bar */
+  .tcg__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2cqi;
+  }
+  .tcg__title {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .tcg__name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 9.6cqi;
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    color: var(--fig);
+    margin: 0;
+  }
+  .tcg__alias {
+    font-family: var(--font-mono);
+    font-size: max(10.5px, 3cqi);
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 0.8cqi;
+  }
+  .tcg__emblem {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 11cqi;
+    height: 11cqi;
+    border: 1px solid var(--fig);
+    color: var(--fig);
+    background: color-mix(in srgb, var(--fig) 12%, transparent);
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  }
+  .tcg__emblem :global(svg) {
+    width: 6cqi;
+    height: 6cqi;
+  }
+
+  /* Artwork window */
+  .tcg__art {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 34cqi;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 70%, var(--fig-glow), transparent 70%), #07070b;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--fig) 70%, transparent),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.6);
+  }
+  .tcg__art img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 8%;
+  }
+  .tcg__holo {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        125deg,
+        transparent 0 7%,
+        color-mix(in srgb, var(--fig) 50%, transparent) 9%,
+        rgba(255, 255, 255, 0.35) 11%,
+        transparent 14% 22%
+      )
+      var(--mx) var(--my) / 220% 220%;
+    mix-blend-mode: color-dodge;
+    opacity: 0.1;
+    transition: opacity 300ms var(--ease);
+  }
+  .tcg.is-tilting .tcg__holo {
+    opacity: 0.45;
+  }
+  .tcg__sz {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 0.6cqi 2cqi 0.6cqi 1.6cqi;
+    background: rgba(11, 11, 16, 0.86);
+    border-top: 1px solid var(--fig);
+    border-right: 1px solid var(--fig);
+    font-family: var(--font-mono);
+    font-size: max(10.5px, 2.8cqi);
+    letter-spacing: 0.08em;
+    color: var(--fig);
+  }
+
+  /* Type line = medium */
+  .tcg__type {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2cqi;
+    margin: 0;
+    padding: 0.8cqi 2cqi;
+    border-left: 1.2cqi solid var(--fig);
+    background: color-mix(in srgb, var(--fig) 11%, #0b0b10);
+    font-family: var(--font-mono);
+    font-size: max(10.5px, 3cqi);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  /* Move = the EP track */
+  .tcg__move {
+    display: grid;
+    gap: 1cqi;
+  }
+  .tcg__move-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 2.4cqi;
+  }
+  .tcg__cost {
+    display: grid;
+    place-items: center;
+    width: 8.4cqi;
+    height: 8.4cqi;
+    background: var(--fig);
+    color: #0b0b10;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 4.6cqi;
+    line-height: 1;
+    clip-path: polygon(22% 0, 100% 0, 100% 78%, 78% 100%, 0 100%, 0 22%);
+  }
+  .tcg__move-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 5.6cqi;
+    line-height: 1.02;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+  .tcg__move-name a {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--fig);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
+  }
+  .tcg__move-name a:hover {
+    color: var(--fig);
+  }
+  .tcg__e {
+    display: inline-grid;
+    place-items: center;
+    margin-left: 1.2cqi;
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: 0.15em;
+    background: var(--text-muted);
+    color: #0b0b10;
+    font-family: var(--font-mono);
+    font-size: max(9px, 2.4cqi);
+    text-decoration: none;
+  }
+  .tcg__move-val {
+    display: grid;
+    justify-items: end;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+  }
+  .tcg__len {
+    font-size: max(12px, 3.8cqi);
+    color: var(--text);
+  }
+  .tcg__bpm {
+    font-size: max(10px, 2.6cqi);
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+  .tcg__move-text {
+    margin: 0;
+    font-size: max(12px, 3.4cqi);
+    line-height: 1.35;
+    color: var(--text);
+    padding-left: 10.8cqi;
+  }
+  .tcg__play:empty {
+    display: none;
+  }
+
+  /* Flavor text = the figure's quote */
+  .tcg__flavor {
+    margin: 0;
+    padding-top: 1.6cqi;
+    border-top: 1px solid color-mix(in srgb, var(--fig) 40%, transparent);
+    font-style: italic;
+    font-size: max(12px, 3.4cqi);
+    line-height: 1.35;
+    color: var(--text-muted);
+  }
+
+  /* Footer: card number and rarity */
+  .tcg__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: max(10px, 2.6cqi);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .tcg__rarity {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2cqi;
+    color: var(--fig);
+  }
+  .tcg__rarity svg {
+    fill: currentColor;
+  }
+
+  /* Pointer glare over the whole face, very light so text keeps its contrast */
+  .tcg__glare {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.14), transparent 42%);
+    mix-blend-mode: soft-light;
+    opacity: 0;
+    transition: opacity 300ms var(--ease);
+  }
+  .tcg.is-tilting .tcg__glare {
+    opacity: 1;
+  }
+
+  /* ---------- Back ---------- */
+  .tcg__back {
+    position: relative;
+    transform: rotateY(180deg);
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 2cqi;
+    background:
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.025) 0 2cqi, transparent 2cqi 4cqi),
+      radial-gradient(ellipse at 50% 50%, var(--fig-glow), transparent 70%), #0b0b10;
+    box-shadow: inset 0 0 0 1.6cqi color-mix(in srgb, var(--fig) 55%, #0b0b10);
+  }
+  .tcg__back-strip {
+    display: flex;
+    width: 36cqi;
+    height: 1.6cqi;
+  }
+  .tcg__back-strip span {
+    flex: 1;
+  }
+  .tcg__back-word {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 18cqi;
+    line-height: 0.8;
+    color: var(--text);
+  }
+  .tcg__back-label {
+    font-family: var(--font-mono);
+    font-size: max(10px, 2.8cqi);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ---------- Deck variant: whole card is a link ---------- */
+  a.tcg {
+    cursor: pointer;
+  }
+  a.tcg:hover .tcg__name,
+  a.tcg:focus-visible .tcg__name {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.12em;
+  }
+  .tcg--deck .tcg__face {
+    transition: filter 300ms var(--ease);
+  }
+  .tcg--deck a.tcg:is(:hover, :focus-visible) .tcg__face {
+    filter: drop-shadow(0 0 18px var(--fig-glow));
+  }
+
+  /* Small cards (two per row on phones): keep name, art, type and move; drop the long lines */
+  @container (max-width: 250px) {
+    .tcg__move-text,
+    .tcg__flavor,
+    .tcg__bpm,
+    .tcg__alias {
+      display: none;
+    }
+    .tcg__name {
+      font-size: 11cqi;
+    }
+    .tcg__type {
+      font-size: 10px;
+      letter-spacing: 0.02em;
+    }
+    .tcg__move-name {
+      font-size: max(12px, 6.6cqi);
+    }
+    .tcg__cost {
+      width: 10cqi;
+      height: 10cqi;
+      font-size: max(11px, 5.4cqi);
+    }
+    .tcg__foot {
+      font-size: 9.5px;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  /* Unknown: paste-up, two strips of tape */
+  .tcg--unknown .tcg__frame::before,
+  .tcg--unknown .tcg__frame::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: -0.6cqi;
+    width: 15cqi;
+    height: 4.4cqi;
+    background: rgba(233, 228, 214, 0.55);
+    pointer-events: none;
+  }
+  .tcg--unknown .tcg__frame::before {
+    left: 6cqi;
+    transform: rotate(-8deg);
+  }
+  .tcg--unknown .tcg__frame::after {
+    right: 6cqi;
+    transform: rotate(7deg);
+  }
+
+  /* Splinter: the mirror crack over the artwork */
+  .tcg__crack {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .tcg__crack path {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.55);
+    stroke-width: 0.6;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+
+  /* ---------- Motion (only without reduced motion) ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Entrance: dealt face down, flips face up */
+    .tcg__flip {
+      animation: tcg-deal 950ms var(--ease) both;
+      animation-delay: calc(120ms + var(--i, 0) * 110ms);
+    }
+    /* Idle float (paused on hover/focus and by the motion toggle) */
+    .tcg-wrap {
+      animation: tcg-float 7s ease-in-out infinite;
+      animation-delay: calc(var(--i, 0) * -1.3s);
+    }
+    .tcg-wrap:is(:hover, :focus-within) {
+      animation-play-state: paused;
+    }
+    .tcg__holo {
+      animation: tcg-sweep 1600ms var(--ease) both;
+      animation-delay: calc(900ms + var(--i, 0) * 110ms);
+    }
+
+    /* Splinter: the crack draws itself once */
+    .tcg__crack path {
+      animation: tcg-crack 900ms var(--ease) both;
+      animation-delay: calc(1000ms + var(--i, 0) * 110ms);
+    }
+    /* Lume: soft breathing glow around the artwork */
+    .tcg--lume .tcg__art {
+      animation: tcg-glow 5s ease-in-out infinite;
+    }
+    /* Drift: slow sway instead of a float */
+    .tcg--drift.tcg-wrap {
+      animation: tcg-sway 9s ease-in-out infinite;
+      transform-origin: 50% 0;
+    }
+    /* Shift: the rarity mark is stamped on */
+    .tcg--shift .tcg__rarity {
+      animation: tcg-stamp 380ms cubic-bezier(0.3, 1.6, 0.5, 1) both;
+      animation-delay: calc(1050ms + var(--i, 0) * 110ms);
+    }
+    /* Gl1tch: a short signal fault every few seconds */
+    .tcg--gl1tch .tcg__name,
+    .tcg--gl1tch .tcg__art img {
+      animation: tcg-glitch 6.5s steps(1, end) infinite;
+      animation-delay: calc(1.8s + var(--i, 0) * 0.4s);
+    }
+    /* Unknown: pasted on slightly crooked */
+    .tcg--unknown .tcg__flip {
+      animation-name: tcg-paste;
+    }
+
+    /* Held back until the list scrolls into view (see script) */
+    :global(.will-deal:not(.is-dealt)) .tcg__flip {
+      animation: none;
+      opacity: 0;
+    }
+    :global(.will-deal:not(.is-dealt)) .tcg__holo,
+    :global(.will-deal:not(.is-dealt)) .tcg__crack path,
+    :global(.will-deal:not(.is-dealt)) .tcg__rarity {
+      animation: none;
+    }
+
+    :global(html[data-sz-motion='off']) .tcg-wrap,
+    :global(html[data-sz-motion='off']) .tcg--lume .tcg__art,
+    :global(html[data-sz-motion='off']) .tcg--gl1tch .tcg__name,
+    :global(html[data-sz-motion='off']) .tcg--gl1tch .tcg__art img {
+      animation: none;
+    }
+  }
+  .tcg--unknown .tcg__flip {
+    rotate: -1deg;
+  }
+
+  @keyframes tcg-deal {
+    0% {
+      opacity: 0;
+      transform: translateY(18%) rotateY(180deg) rotateZ(-6deg) scale(0.92);
+    }
+    20% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes tcg-paste {
+    0% {
+      opacity: 0;
+      transform: translateY(-6%) rotateY(180deg) rotateZ(7deg) scale(1.04);
+    }
+    20% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes tcg-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-1.6cqi);
+    }
+  }
+  @keyframes tcg-sway {
+    0%,
+    100% {
+      transform: rotate(-0.7deg) translateY(0);
+    }
+    50% {
+      transform: rotate(0.7deg) translateY(-0.8cqi);
+    }
+  }
+  @keyframes tcg-sweep {
+    0% {
+      background-position: 100% 100%;
+      opacity: 0.6;
+    }
+    100% {
+      background-position: 0% 0%;
+      opacity: 0.1;
+    }
+  }
+  @keyframes tcg-crack {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes tcg-glow {
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--fig) 70%, transparent),
+        0 0 0 0 transparent;
+    }
+    50% {
+      box-shadow:
+        0 0 0 1px var(--fig),
+        0 0 5cqi 0.5cqi var(--fig-glow);
+    }
+  }
+  @keyframes tcg-stamp {
+    0% {
+      opacity: 0;
+      transform: scale(2.2) rotate(-8deg);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes tcg-glitch {
+    0%,
+    93.9%,
+    100% {
+      transform: none;
+      text-shadow: none;
+      filter: none;
+    }
+    94% {
+      transform: translateX(1.2cqi);
+      text-shadow:
+        -0.8cqi 0 rgba(255, 255, 255, 0.55),
+        0.8cqi 0 var(--fig);
+      filter: hue-rotate(25deg);
+    }
+    95% {
+      transform: translateX(-0.8cqi) skewX(-6deg);
+    }
+    96% {
+      transform: none;
+      text-shadow: none;
+      filter: none;
+    }
+  }
+</style>

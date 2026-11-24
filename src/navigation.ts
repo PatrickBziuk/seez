@@ -12,7 +12,6 @@ export const getHeaderData = (locale: SupportedLanguage = 'de') => ({
     { text: locale === 'de' ? 'Musik' : 'Music', href: sectionUrl(locale, 'music') },
     { text: locale === 'de' ? 'Fragmente' : 'Fragments', href: sectionUrl(locale, 'fragments') },
     ...(showVideothek() ? [{ text: 'Videothek', href: sectionUrl(locale, 'videothek') }] : []),
-    { text: 'Lyrics', href: sectionUrl(locale, 'lyrics') },
     { text: locale === 'de' ? 'Werkstatt' : 'Workshop', href: sectionUrl(locale, 'workshop') },
   ],
   actions: [],

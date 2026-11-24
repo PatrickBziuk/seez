@@ -12,7 +12,7 @@ import Layout from '../../../layouts/PageLayout.astro';
 import { SUPPORTED_LANGUAGES, getTranslations } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 import type { CollectionEntry } from 'astro:content';
-import ContentMetadata from '../../../components/content/metadata/ContentMetadata.astro';
+import PageHead from '~/components/seez/PageHead.astro';
 import { getPermalink } from '../../../utils/permalinks';
 
 type ContentEntry = CollectionEntry<'music' | 'texts' | 'fragments'>;
@@ -78,64 +78,73 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <header class="mb-12">
-      <nav class="text-sm breadcrumbs mb-4">
-        <a href={getPermalink(`/${lang}/tags`)} class="text-blue-600 dark:text-blue-400 hover:underline">
-          {lang === 'de' ? 'Alle Themen' : 'All Topics'}
-        </a>
-        <span class="mx-2">/</span>
-        <span class="text-gray-500">{tag}</span>
-      </nav>
-
-      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200">
-        {lang === 'de' ? 'Thema' : 'Topic'}: {tag}
-      </h1>
-      <p class="text-lg text-gray-600 dark:text-gray-400">
-        {
-          lang === 'de'
-            ? `${sortedContent.length} ${sortedContent.length === 1 ? 'Eintrag' : 'Einträge'} gefunden`
-            : `${sortedContent.length} ${sortedContent.length === 1 ? 'entry' : 'entries'} found`
-        }
-      </p>
-    </header>
-
-    <nav class="mb-6 text-sm text-gray-500 dark:text-gray-400">
-      <a href={getPermalink(`/${lang}/`)}>{lang === 'de' ? 'Startseite' : 'Home'}</a> &gt; <a
-        href={getPermalink(`/${lang}/tags`)}>{lang === 'de' ? 'Alle Themen' : 'All Topics'}</a
-      > &gt; <span>{tag}</span>
-    </nav>
-
-    <div class="space-y-8">
-      {
-        sortedContent.length > 0 ? (
-          sortedContent.map((item: ContentEntry) => (
-            <article class="border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0">
-              <h2 class="text-xl font-semibold mb-3">
-                <a
-                  href={contentUrl(item.collection, item.id, lang)}
-                  class="text-blue-600 dark:text-blue-400 hover:underline"
-                >
-                  {item.data.title}
-                </a>
+  <PageHead
+    title={tag}
+    label={lang === 'de'
+      ? `Thema · ${sortedContent.length} ${sortedContent.length === 1 ? 'Eintrag' : 'Einträge'}`
+      : `Topic · ${sortedContent.length} ${sortedContent.length === 1 ? 'entry' : 'entries'}`}
+    crumbs={[{ href: getPermalink(`/${lang}/tags`), text: lang === 'de' ? 'Themen' : 'Topics' }, { text: tag }]}
+  />
+  <section class="sz-container tag">
+    {
+      sortedContent.length > 0 ? (
+        <ol class="tag__list">
+          {sortedContent.map((item: ContentEntry) => (
+            <li class="tag__item">
+              <p class="sz-label">
+                {item.collection === 'music'
+                  ? 'Song'
+                  : item.collection === 'fragments'
+                    ? lang === 'de'
+                      ? 'Figur'
+                      : 'Figure'
+                    : 'Text'}
+              </p>
+              <h2 class="tag__title">
+                <a href={contentUrl(item.collection, item.id, lang)}>{item.data.title}</a>
               </h2>
-
-              {item.data.subtitle && <p class="text-gray-600 dark:text-gray-400 mb-3">{item.data.subtitle}</p>}
-
-              <ContentMetadata
-                language={item.data.language}
-                timestamp={item.data.timestamp || item.data.date}
-                status={item.data.status}
-                tags={item.data.tags}
-              />
-            </article>
-          ))
-        ) : (
-          <p class="text-center text-gray-500 dark:text-gray-400">
-            {lang === 'de' ? 'Keine Inhalte mit diesem Tag gefunden.' : 'No content found with this tag.'}
-          </p>
-        )
-      }
-    </div>
+              {item.data.subtitle && <p class="sz-muted tag__sub">{item.data.subtitle}</p>}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="sz-muted">{lang === 'de' ? 'Keine Inhalte mit diesem Thema.' : 'No content with this topic.'}</p>
+      )
+    }
   </section>
 </Layout>
+
+<style>
+  .tag {
+    padding-bottom: var(--section-gap);
+  }
+  .tag__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .tag__item {
+    padding: var(--sp-5) 0;
+    border-top: 1px solid var(--line);
+  }
+  .tag__title {
+    margin-top: var(--sp-2);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-lg);
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+  .tag__title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .tag__title a:hover {
+    text-decoration: underline;
+  }
+  .tag__sub {
+    margin-top: var(--sp-2);
+    max-width: 65ch;
+  }
+</style>

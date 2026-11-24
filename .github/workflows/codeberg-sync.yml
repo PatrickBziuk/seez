@@ -1,9 +1,11 @@
 name: Build and sync Codeberg
 
+# Paused: the Codeberg SSH key is not valid, so every push to main turned red.
+# Runs only by hand (Actions -> "Build and sync Codeberg" -> Run workflow) until
+# a working CODEBERG_SSH_PRIVATE_KEY is set. To resume, add back:
+#   push:
+#     branches: [main]
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:

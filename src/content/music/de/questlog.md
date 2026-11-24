@@ -1,5 +1,5 @@
 ---
-title: 'Questlog'
+title: 'QUESTLOG'
 subtitle: 'Lume sucht Restlicht in Games, Backlogs und Discord'
 language: de
 authors: ['seez']
@@ -10,9 +10,14 @@ genre: ['Deutschrap', 'Pop Rap', 'Seelensplitter']
 tags: ['song', 'ep1', 'generierung-laeuft', 'lume', 'gaming', 'fandom', 'hoffnung']
 figureRef: fragments/lume
 linerNotes: 'SP1-Lume-Song aus der Hoffnung-und-Fandom-Phase.'
-lastChangeDate: '2026-11-24T12:47:33.542Z'
+lastChangeDate: '2026-11-24T14:33:02.213Z'
 changeLog:
   - date: '2026-11-24T12:47:33.542Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
+  - date: '2026-11-24T14:33:02.213Z'
     description: Content updated
     author: seez
     type: content
@@ -27,5 +32,5 @@ Der Song zeigt Lume vor der Erschöpfung: neugierig, sprunghaft, überreizt und 
 
 - **Figur:** Lume
 - **Phase:** SEELENSPLITTER PHASE 1
-- **EP:** GENERIERUNG LÄUFT
+- **EP:** GENERIERUNG LÄUFT, Track 2
 - **Themen:** Gaming, Fandom, Eskapismus, Restlicht, Hoffnung

@@ -1,13 +1,19 @@
 ---
+/**
+ * Text page in the new frame (KONZEPT B10): breadcrumb, mono date line, one H1,
+ * reading column, then the songs and figures the text belongs to.
+ * Dropped from the former AstroWind layout: share bar, emoji meta line, tag cloud.
+ */
 import { getPublicCollection } from '~/utils/publication';
 import { type CollectionEntry, render } from 'astro:content';
-import MarkdownLayout from '../../../layouts/MarkdownLayout.astro';
-import { getPermalink } from '../../../utils/permalinks';
+import Layout from '~/layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
+import FigureChip from '~/components/seez/FigureChip.astro';
 import { musicSlug } from '~/data/songs';
+import { getFigure } from '~/data/figures';
 import { sectionUrl } from '~/utils/routes';
-import RelatedContent from '../../../components/content/RelatedContent.astro';
-import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
-import type { SupportedLanguage } from '../../../utils/i18n';
+import { SUPPORTED_LANGUAGES } from '~/utils/i18n';
+import type { SupportedLanguage } from '~/utils/i18n';
 
 export async function getStaticPaths() {
   const paths: Array<{
@@ -26,60 +32,101 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+const lang = Astro.params.lang as SupportedLanguage;
+const de = lang === 'de';
 const { Content } = await render(entry);
 
-const frontmatterWithDateObjects = {
-  ...entry.data,
-  publishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
-  firstPublishDate: entry.data.firstPublishedAt ? new Date(entry.data.firstPublishedAt) : undefined,
-  modifiedDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
-  lastChangeDate: entry.data.updatedAt ? new Date(entry.data.updatedAt) : undefined,
+const music = await getPublicCollection('music');
+const songs = (entry.data.songRefs || [])
+  .map((ref) => {
+    const slug = musicSlug(ref.id);
+    const m = music.find((x) => musicSlug(x.id) === slug);
+    return m ? { slug, title: m.data.title as string } : undefined;
+  })
+  .filter(Boolean) as Array<{ slug: string; title: string }>;
+const figures = (entry.data.figureRefs || [])
+  .map((ref) => getFigure(ref.id.replace(/^(de|en)\//, '').replace(/\.mdx?$/, '')))
+  .filter(Boolean);
+
+const date = entry.data.firstPublishedAt
+  ? new Date(entry.data.firstPublishedAt).toLocaleDateString(de ? 'de-DE' : 'en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })
+  : undefined;
+const kind = (entry.data as { type?: string }).type;
+
+const metadata = {
+  title: entry.data.title,
+  description: entry.data.excerpt || entry.data.description,
 };
 ---
 
-<MarkdownLayout frontmatter={frontmatterWithDateObjects}>
-  <Content />
+<Layout metadata={metadata}>
+  <article>
+    <PageHead
+      title={entry.data.title}
+      label={[de ? 'Text' : 'Text', kind && kind !== 'text' ? kind : undefined, date].filter(Boolean).join(' · ')}
+      crumbs={[{ href: `/${lang}/texte`, text: de ? 'Texte' : 'Texts' }, { text: entry.data.title }]}
+    />
+    <div class="sz-container text__body">
+      <div class="sz-prose">
+        <Content />
+      </div>
+    </div>
 
-  {
-    (entry.data.figureRefs?.length || entry.data.songRefs?.length) && (
-      <section class="mt-10 border-t pt-6 space-y-4">
-        {entry.data.figureRefs?.length && (
-          <div>
-            <h2 class="text-xl font-semibold mb-2">{Astro.params.lang === 'de' ? 'Fragmente' : 'Fragments'}</h2>
-            <ul class="list-disc ml-5">
-              {entry.data.figureRefs.map((ref) => (
-                <li>
-                  <a
-                    class="underline hover:no-underline"
-                    href={getPermalink(`/${Astro.params.lang}/fragmente/${ref.id}`)}
-                  >
-                    {ref.id}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {entry.data.songRefs?.length && (
-          <div>
-            <h2 class="text-xl font-semibold mb-2">{Astro.params.lang === 'de' ? 'Songs' : 'Songs'}</h2>
-            <ul class="list-disc ml-5">
-              {entry.data.songRefs.map((ref) => (
-                <li>
-                  <a
-                    class="underline hover:no-underline"
-                    href={sectionUrl(Astro.params.lang as SupportedLanguage, 'music', musicSlug(ref.id))}
-                  >
-                    {ref.id}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </section>
-    )
+    {
+      (songs.length > 0 || figures.length > 0) && (
+        <section class="sz-section sz-container" aria-labelledby="context">
+          <h2 class="sz-h2" id="context">
+            {de ? 'Gehört zu' : 'Belongs to'}
+          </h2>
+          <ul class="text__refs">
+            {songs.map((s) => (
+              <li>
+                <span class="sz-label">Song</span>
+                <a class="sz-link text__song" href={sectionUrl(lang, 'music', s.slug)}>
+                  {s.title}
+                </a>
+              </li>
+            ))}
+            {figures.map((f) => (
+              <li>
+                <span class="sz-label">{de ? 'Figur' : 'Figure'}</span>
+                <FigureChip figure={f!.id} lang={lang} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </article>
+</Layout>
+
+<style>
+  .text__body {
+    padding-bottom: var(--section-gap);
   }
-
-  <RelatedContent entry={entry} lang={Astro.params.lang as 'en' | 'de'} />
-</MarkdownLayout>
+  .text__refs {
+    list-style: none;
+    margin: var(--sp-5) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .text__refs li {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+  .text__refs .sz-label {
+    min-width: 4.5em;
+  }
+  .text__song {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-lg);
+    text-transform: uppercase;
+  }
+</style>

@@ -1,13 +1,18 @@
 ---
 /**
- * FragmentsIndex (KONZEPT B4/B8): the six splinters in SZ order as dossier cards.
+ * FragmentsIndex: the six splinters as a hand of collectible cards (fanned on wide screens,
+ * a grid on smaller ones), dealt when the deck scrolls into view, plus a wiki-style list.
+ * Card fields: see FragmentCard. List fields: figures.json + songs.ts EP_TRACKS.
  */
 import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
-import FigureCard from '~/components/seez/FigureCard.astro';
 import FigureStrip from '~/components/seez/FigureStrip.astro';
-import { getFigureDossiers } from '~/utils/fragments';
+import FigureGlyph from '~/components/seez/FigureGlyph.astro';
+import FragmentCard from '~/components/seez/figure/FragmentCard.astro';
+import MotionToggle from '~/components/seez/figure/MotionToggle.astro';
+import { getFigureDossiers, epTrackFor } from '~/utils/fragments';
 import { sectionUrl, type Lang } from '~/utils/routes';
+import { EP } from '~/data/songs';
 
 interface Props {
   lang: Lang;
@@ -15,6 +20,8 @@ interface Props {
 const { lang } = Astro.props;
 const de = lang === 'de';
 const dossiers = await getFigureDossiers(lang);
+const n = dossiers.length;
+const mid = (n - 1) / 2;
 
 const metadata = {
   title: de ? 'Fragmente' : 'Fragments',
@@ -36,16 +43,92 @@ const metadata = {
     <FigureStrip height={6} class="frag__strip" />
   </PageHead>
 
-  <section class="sz-container" aria-label={de ? 'Die sechs Fragmente' : 'The six fragments'}>
-    <ul class="frag__grid">
-      {
-        dossiers.map(({ figure }, i) => (
-          <li>
-            <FigureCard figure={figure.id} lang={lang} headingLevel="h2" eager={i < 3} />
-          </li>
-        ))
-      }
-    </ul>
+  <section class="frag" aria-labelledby="deck-h">
+    <div class="sz-container sz-container--wide">
+      <div class="frag__bar">
+        <h2 class="sz-label" id="deck-h">{de ? `${n} Karten · eine pro Fragment` : `${n} cards · one per fragment`}</h2>
+        <MotionToggle lang={lang} />
+      </div>
+      <ul class="deck" data-deal>
+        {
+          dossiers.map(({ figure }, i) => {
+            const off = i - mid;
+            return (
+              <li
+                style={`--i:${i};--rot:${(off * 2.4).toFixed(2)}deg;--drop:${(off * off * 5).toFixed(1)}px;--from:${(-off).toFixed(2)}`}
+              >
+                <FragmentCard
+                  figure={figure}
+                  lang={lang}
+                  variant="deck"
+                  href={sectionUrl(lang, 'fragments', figure.id)}
+                  nameTag="h3"
+                  eager
+                  index={i}
+                />
+              </li>
+            );
+          })
+        }
+      </ul>
+      <script is:inline>
+        (function () {
+          const l = document.currentScript && document.currentScript.previousElementSibling;
+          if (l && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) l.classList.add('will-deal');
+        })();
+      </script>
+    </div>
+  </section>
+
+  <section class="sz-container sz-section frag-list" aria-labelledby="list-h">
+    <h2 class="sz-h2" id="list-h">{de ? 'Liste der Fragmente' : 'List of fragments'}</h2>
+    <table class="frag-table">
+      <caption class="sr-only">
+        {
+          de
+            ? `Die sechs Fragmente mit ihrem Track auf der EP ${EP.title}`
+            : `The six fragments with their track on the EP ${EP.title}`
+        }
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">{de ? 'Nr.' : 'No.'}</th>
+          <th scope="col">{de ? 'Figur' : 'Figure'}</th>
+          <th scope="col" class="frag-table__medium">Medium</th>
+          <th scope="col">EP-Track</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          dossiers.map(({ figure: f }) => {
+            const t = epTrackFor(f.id);
+            return (
+              <tr style={`--fig:${f.accent.dark}`}>
+                <td class="sz-mono frag-table__sz">{f.sz}</td>
+                <th scope="row">
+                  <a href={sectionUrl(lang, 'fragments', f.id)}>
+                    <FigureGlyph id={f.id} size={16} />
+                    {f.name}
+                  </a>
+                  <span class="frag-table__alias">{f.alias[lang]}</span>
+                </th>
+                <td class="frag-table__medium">{f.medium[lang]}</td>
+                <td>
+                  {t ? (
+                    <>
+                      <span class="sz-mono">{String(t.no).padStart(2, '0')}</span> {t.title}
+                      <span class="frag-table__len sz-mono">{t.length}</span>
+                    </>
+                  ) : (
+                    '–'
+                  )}
+                </td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
   </section>
 </Layout>
 
@@ -54,18 +137,150 @@ const metadata = {
     margin-top: var(--sp-5);
     max-width: 480px;
   }
-  .frag__grid {
+  .frag {
+    overflow-x: clip;
+    padding-bottom: var(--sp-6);
+  }
+  .frag__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-5);
+  }
+  .frag__bar h2 {
+    margin: 0;
+  }
+
+  /* Grid on phones and tablets */
+  .deck {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--sp-4);
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-5) var(--sp-4);
   }
-  @media (min-width: 900px) {
-    .frag__grid {
+  @media (min-width: 640px) {
+    .deck {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--sp-5);
+      gap: var(--sp-6) var(--sp-5);
+    }
+  }
+
+  /* A fanned hand on wide screens: overlapping, rotated around a point below the row */
+  @media (min-width: 1100px) {
+    .deck {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      padding: var(--sp-6) 0 var(--sp-6);
+    }
+    /* 6 cards of 1/5.3 width, overlapping by 17 % each: the hand fills ~97 % of the row */
+    .deck > li {
+      --w: calc(100% / 5.3);
+      position: relative;
+      flex: 0 0 var(--w);
+      margin-left: calc(var(--w) * -0.172);
+      transform-origin: 50% 110%;
+      transform: translateY(var(--drop)) rotate(var(--rot));
+      transition:
+        transform 420ms var(--ease),
+        z-index 0s;
+      z-index: 1;
+    }
+    .deck > li:first-child {
+      margin-left: 0;
+    }
+    .deck > li:is(:hover, :focus-within) {
+      z-index: 10;
+      transform: translateY(-28px) rotate(0deg) scale(1.05);
+    }
+  }
+  @media (min-width: 1100px) and (prefers-reduced-motion: no-preference) {
+    /* Before dealing, the cards lie stacked in the middle */
+    .deck.will-deal:not(.is-dealt) > li {
+      transform: translateX(calc(var(--from) * 82.8%)) translateY(24px) rotate(0deg);
+    }
+    .deck.is-dealt > li {
+      transition-delay: calc(var(--i) * 70ms);
+    }
+    .deck.is-dealt > li:is(:hover, :focus-within) {
+      transition-delay: 0s;
+    }
+  }
+
+  /* Wiki-style list */
+  .frag-table {
+    width: 100%;
+    margin-top: var(--sp-5);
+    border-collapse: collapse;
+    font-size: var(--fs-sm);
+  }
+  .frag-table,
+  .frag-table th,
+  .frag-table td {
+    border: 0;
+  }
+  .frag-table th,
+  .frag-table td {
+    text-align: left;
+    vertical-align: top;
+    padding: var(--sp-3) var(--sp-4) var(--sp-3) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .frag-table thead th:first-child {
+    padding-left: calc(var(--sp-3) + 4px);
+  }
+  .frag-table thead th {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .frag-table tbody tr {
+    border-left: 4px solid var(--fig);
+  }
+  .frag-table__sz {
+    width: 1%;
+    padding-left: var(--sp-3) !important;
+    color: var(--fig);
+    white-space: nowrap;
+  }
+  .frag-table tbody th a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-md);
+    line-height: 1.1;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .frag-table tbody th a :global(.sz-glyph) {
+    color: var(--fig);
+  }
+  .frag-table tbody th a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--fig);
+  }
+  .frag-table__alias {
+    display: block;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .frag-table__len {
+    display: block;
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+  }
+  @media (max-width: 479px) {
+    .frag-table__medium {
+      display: none;
     }
   }
 </style>

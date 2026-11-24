@@ -2,6 +2,8 @@
 /**
  * Contact (rebuilt in the new frame). Wording kept; English UI labels on the German page
  * translated, "System Logs" renamed to Werkstatt.
+ * Motion (motion.css): lanes and the mail panel reveal in sequence; the address underline
+ * settles on hover.
  */
 import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
@@ -58,7 +60,7 @@ const lanes = [
   />
 
   <section class="sz-section sz-container">
-    <ul class="ct__lanes">
+    <ul class="ct__lanes reveal-stagger">
       {
         lanes.map((l) => (
           <li class="sz-panel">
@@ -69,7 +71,7 @@ const lanes = [
       }
     </ul>
 
-    <div class="sz-panel ct__mail">
+    <div class="sz-panel ct__mail reveal">
       <p class="sz-label">{t('Direkt', 'Direct')}</p>
       <a class="ct__address" href={`mailto:info@seez.eu?subject=${subject}`}>info@seez.eu</a>
       <p class="sz-muted">
@@ -82,7 +84,7 @@ const lanes = [
       </p>
     </div>
 
-    <div class="sz-btn-row ct__links">
+    <div class="sz-btn-row ct__links reveal">
       <a class="sz-btn" href={EP.spotify} rel="noopener">Spotify · EP</a>
       <a class="sz-btn" href="https://www.instagram.com/seezerino/" rel="noopener">Instagram</a>
       <a class="sz-btn" href="https://www.tiktok.com/@seezerino" rel="noopener">TikTok</a>
@@ -118,6 +120,10 @@ const lanes = [
     color: var(--text);
     text-decoration: underline;
     text-underline-offset: 0.15em;
+    transition: text-underline-offset var(--motion-fast) var(--ease-out);
+  }
+  .ct__address:is(:hover, :focus-visible) {
+    text-underline-offset: 0.3em;
   }
   .ct__links {
     margin-top: var(--sp-6);

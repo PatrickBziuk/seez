@@ -10,6 +10,7 @@ import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 import PageHead from '~/components/seez/PageHead.astro';
 import { sectionUrl } from '~/utils/routes';
+import { epTrack, musicSlug } from '~/data/songs';
 
 export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
@@ -76,6 +77,7 @@ const items = (await Promise.all(collections.map((c) => getPublicCollection(c)))
       url: toUrl(e),
       date: toDate(e),
       collection: e.collection,
+      track: e.collection === 'music' ? epTrack(musicSlug(e.id)) : undefined,
       tags: data.tags,
     };
   })
@@ -83,7 +85,7 @@ const items = (await Promise.all(collections.map((c) => getPublicCollection(c)))
   .sort((a, b) => b.date!.getTime() - a.date!.getTime());
 
 const de = lang === 'de';
-const label = (c: string) => (c === 'music' ? (de ? 'Song' : 'Song') : de ? 'Text' : 'Text');
+const label = (c: string) => (c === 'music' ? 'Song' : 'Text');
 const fmt = new Intl.DateTimeFormat(de ? 'de-DE' : 'en-GB', { dateStyle: 'medium' });
 
 const metadata = {
@@ -116,6 +118,8 @@ const metadata = {
               <p class="sz-label">
                 <time datetime={it.date!.toISOString().slice(0, 10)}>{fmt.format(it.date!)}</time> ·{' '}
                 {label(it.collection)}
+                {it.collection === 'music' &&
+                  (it.track ? ` · EP Track ${it.track.no}` : de ? ' · in Arbeit' : ' · in progress')}
               </p>
               <h2 class="ch__title">
                 <a href={it.url}>{it.title}</a>

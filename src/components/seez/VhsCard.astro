@@ -3,6 +3,8 @@
  * VhsCard (KONZEPT B6/B9): 2:3 tape sleeve with the cover, figure label, running time.
  * Links to the film's slip in the Videothek; the Videothek page upgrades it to a dialog.
  * Draft status only appears in the local preview.
+ * Motion: on hover/focus the tape is pulled a little off the shelf and a gloss runs once
+ * over the sleeve (opacity/transform only, none with reduced motion).
  */
 import { getFigure } from '~/data/figures';
 import { sectionUrl, type Lang } from '~/utils/routes';
@@ -64,9 +66,22 @@ const f = getFigure(film.characters[0]);
   .vhs:focus-visible .vhs__sleeve {
     box-shadow: 0 0 0 1px var(--fig, var(--text)), 0 0 24px rgba(255, 255, 255, 0.08);
   }
+  /* Gloss on the sleeve: a soft light band, parked outside until hover */
+  .vhs__spine {
+    position: absolute;
+    inset: -20% auto -20% 0;
+    width: 40%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+    transform: translateX(-120%) skewX(-12deg);
+    pointer-events: none;
+  }
   @media (prefers-reduced-motion: no-preference) {
-    .vhs:hover .vhs__sleeve {
-      transform: translateY(-3px);
+    .vhs:is(:hover, :focus-visible) .vhs__sleeve {
+      transform: translateY(-4px) rotate(-0.6deg);
+    }
+    .vhs:is(:hover, :focus-visible) .vhs__spine {
+      transform: translateX(320%) skewX(-12deg);
+      transition: transform 700ms var(--ease-out);
     }
   }
   .vhs__draft {

@@ -24,10 +24,20 @@ const r = {};
 
 // Music: one overview per language, songs below it (/de/musik/<slug>, /en/music/<slug>)
 r['/de/music'] = '/de/musik';
+// Lyrics merged into the music page (24.11.2026)
+r['/de/lyrics'] = '/de/musik#lyrics';
+r['/en/lyrics'] = '/en/music#lyrics';
 r['/en/musik'] = '/en/music';
+// Renamed songs (old slug -> new slug); old URLs point straight to the new page, no chains.
+const RENAMED = { 'als-sie-kamen': 'als-sie' };
+const current = (s) => RENAMED[s] || s;
 for (const s of MUSIC_DE) {
-  r[`/de/music/${s}`] = `/de/musik/${s}`;
-  if (s !== 'meine-musik' && s !== 'kiffen-kippen-alk') r[`/de/music/de/${s}`] = `/de/musik/${s}`;
+  r[`/de/music/${s}`] = `/de/musik/${current(s)}`;
+  if (s !== 'meine-musik' && s !== 'kiffen-kippen-alk') r[`/de/music/de/${s}`] = `/de/musik/${current(s)}`;
+}
+for (const [old, now] of Object.entries(RENAMED)) {
+  r[`/de/musik/${old}`] = `/de/musik/${now}`;
+  r[`/en/music/${old}`] = `/en/music/${now}`;
 }
 r['/de/music/de/meine-musik'] = '/de/musik/meine-musik';
 r['/de/music/meine-musik-slug-20250805-bf655b06'] = '/de/musik/meine-musik';
@@ -77,18 +87,23 @@ r['/about'] = '/de/about';
 r['/contact'] = '/de/contact';
 r['/privacy'] = '/de/legal/privacy';
 r['/terms'] = '/de/lizenz';
-r['/pricing'] = '/de/inventory';
+r['/pricing'] = '/de/contact';
 r['/services'] = '/de/werkstatt';
 r['/tech-stack'] = '/de/werkstatt#werkzeuge';
 for (const s of ['mobile-app', 'personal', 'saas', 'startup']) r[`/homes/${s}`] = '/de';
 r['/landing/click-through'] = '/de';
 r['/landing/lead-generation'] = '/de/contact';
 r['/landing/pre-launch'] = '/de/werkstatt';
-r['/landing/product'] = '/de/inventory';
-r['/landing/sales'] = '/de/inventory';
+r['/landing/product'] = '/de/contact';
+r['/landing/sales'] = '/de/contact';
 r['/landing/subscription'] = '/de/contact';
 
-// Second, unused CMS front end (AstroWind demo config); /admin is the configured one
-r['/decapcms'] = '/admin';
+// Pages folded into others (KONZEPT B8): Welcome -> About, Inventory (link list) -> Contact
+for (const l of ['de', 'en']) {
+  r[`/${l}/welcome`] = `/${l}/about`;
+  r[`/${l}/inventory`] = `/${l}/contact`;
+}
+
+// No CMS: content is edited in the repo (AGENTS.md). /admin and /decapcms are gone (404).
 
 export const REDIRECTS = r;

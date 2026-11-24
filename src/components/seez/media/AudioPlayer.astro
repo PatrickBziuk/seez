@@ -1,0 +1,509 @@
+---
+/**
+ * AudioPlayer – plays released EP audio from seez.eu itself (no embeds, no cookies).
+ * One <audio> per player, preload="none": nothing is downloaded before "play".
+ * With several items it is a playlist (prev/next, plays on). Starting one player
+ * pauses every other player and video on the page.
+ */
+import { FIGURES } from '~/data/figures';
+import type { PlayableTrack } from '~/utils/media';
+
+export interface Props {
+  items: PlayableTrack[];
+  lang: 'de' | 'en';
+  variant?: 'full' | 'compact';
+  /** Accessible name of the player */
+  label?: string;
+  /** Id so that buttons elsewhere (data-ep-player="<id>" data-ep-play="<index>") can start a track */
+  id?: string;
+  /** Show the playlist under the controls (default: when there is more than one item) */
+  showList?: boolean;
+  class?: string;
+}
+
+const { items, lang, variant = 'full', label, id, showList, class: className = '' } = Astro.props;
+const de = lang === 'de';
+const accentOf = (id: string) => FIGURES.find((f) => f.id === id)?.accent.dark || 'var(--text)';
+const figName = (id: string) => FIGURES.find((f) => f.id === id)?.name || id;
+const first = items[0];
+const list = items.length > 1;
+const listVisible = showList ?? list;
+---
+
+{
+  first && (
+    <div
+      class:list={['sz-player', `sz-player--${variant}`, { 'sz-player--list': list }, className]}
+      data-player
+      data-player-id={id}
+      role="group"
+      aria-label={label || (de ? `Player: ${first.track.title}` : `Player: ${first.track.title}`)}
+      style={`--pl-accent:${accentOf(first.track.figures[0])}`}
+    >
+      <audio preload="none" src={first.audio} data-audio />
+      <div class="sz-player__main">
+        <button type="button" class="sz-player__play" data-play aria-label={de ? 'Abspielen' : 'Play'}>
+          <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+          <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" /></svg>
+        </button>
+        <div class="sz-player__info">
+          <div class="sz-player__now">
+            <span class="sz-player__bars" aria-hidden="true"><i /><i /><i /><i /></span>
+            <span class="sz-player__title" data-title>{first.track.title}</span>
+            <span class="sz-player__e" title={de ? 'explizit' : 'explicit'} hidden={!first.track.explicit}>
+              E
+            </span>
+          </div>
+          <div class="sz-player__seek">
+            <span class="sz-player__time" data-cur>0:00</span>
+            <input
+              type="range"
+              min="0"
+              max="1000"
+              value="0"
+              step="1"
+              data-seek
+              aria-label={de ? 'Position im Song' : 'Position in song'}
+            />
+            <span class="sz-player__time" data-dur>{first.track.length}</span>
+          </div>
+        </div>
+        {list && (
+          <div class="sz-player__skip">
+            <button type="button" data-prev aria-label={de ? 'Vorheriger Track' : 'Previous track'}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2v14H6zM20 5v14L9 12z" fill="currentColor" /></svg>
+            </button>
+            <button type="button" data-next aria-label={de ? 'Nächster Track' : 'Next track'}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5h2v14h-2zM4 5v14l11-7z" fill="currentColor" /></svg>
+            </button>
+          </div>
+        )}
+      </div>
+      {list && (
+        <ol class="sz-player__list" hidden={!listVisible}>
+          {items.map((it, i) => (
+            <li>
+              <button
+                type="button"
+                class="sz-player__item"
+                data-item={i}
+                data-src={it.audio}
+                data-title={it.track.title}
+                data-length={it.track.length}
+                data-explicit={it.track.explicit ? '1' : undefined}
+                data-accent={accentOf(it.track.figures[0])}
+                aria-current={i === 0 ? 'true' : undefined}
+                style={`--it-accent:${accentOf(it.track.figures[0])}`}
+              >
+                <span class="no">{String(it.track.no).padStart(2, '0')}</span>
+                <span class="t">
+                  {it.track.title}
+                  {it.track.explicit && <span class="sz-player__e">E</span>}
+                </span>
+                <span class="f">{it.track.figures.map(figName).join(' · ')}</span>
+                <span class="l">{it.track.length}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  )
+}
+
+<style>
+  .sz-player {
+    --pl-accent: var(--text);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: var(--sp-4);
+    display: grid;
+    gap: var(--sp-4);
+    position: relative;
+    overflow: hidden;
+    transition: border-color var(--t-hover) var(--ease);
+  }
+  .sz-player::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background: var(--pl-accent);
+    transform-origin: left;
+    transform: scaleX(var(--pl-progress, 0));
+    transition: transform 0.25s linear;
+  }
+  .sz-player.is-playing {
+    border-color: color-mix(in srgb, var(--pl-accent) 55%, var(--line-strong));
+  }
+  .sz-player--compact {
+    padding: var(--sp-3);
+  }
+  .sz-player__main {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+  .sz-player__play {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 0;
+    background: var(--pl-accent);
+    color: var(--bg);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition:
+      transform var(--t-hover) var(--ease),
+      box-shadow var(--t-hover) var(--ease);
+  }
+  /* compact: sits under a visible title (figure card), so only controls and progress */
+  .sz-player--compact .sz-player__now {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .sz-player--compact .sz-player__play {
+    width: 42px;
+    height: 42px;
+  }
+  .sz-player__play:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--pl-accent) 22%, transparent);
+  }
+  .sz-player__play:focus-visible,
+  .sz-player button:focus-visible,
+  .sz-player input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+  .sz-player__play svg {
+    width: 24px;
+    height: 24px;
+  }
+  .sz-player .i-pause,
+  .sz-player.is-playing .i-play {
+    display: none;
+  }
+  .sz-player.is-playing .i-pause {
+    display: block;
+  }
+  .sz-player__info {
+    min-width: 0;
+    display: grid;
+    gap: var(--sp-2);
+  }
+  .sz-player__now {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    min-width: 0;
+  }
+  .sz-player__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-lg);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sz-player__e {
+    font: 600 10px/1 var(--font-mono);
+    background: var(--text);
+    color: var(--bg);
+    padding: 2px 4px;
+    border-radius: 2px;
+    margin-left: 6px;
+    vertical-align: 3px;
+  }
+  .sz-player__bars {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 14px;
+    width: 0;
+    overflow: hidden;
+    transition: width var(--t-hover) var(--ease);
+  }
+  .sz-player.is-playing .sz-player__bars {
+    width: 16px;
+  }
+  .sz-player__bars i {
+    width: 2px;
+    height: 100%;
+    background: var(--pl-accent);
+    transform-origin: bottom;
+    animation: sz-bars 0.9s ease-in-out infinite alternate;
+    animation-play-state: paused;
+  }
+  .sz-player.is-playing .sz-player__bars i {
+    animation-play-state: running;
+  }
+  .sz-player__bars i:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+  .sz-player__bars i:nth-child(3) {
+    animation-delay: -0.6s;
+  }
+  .sz-player__bars i:nth-child(4) {
+    animation-delay: -0.15s;
+  }
+  @keyframes sz-bars {
+    from {
+      transform: scaleY(0.25);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+  .sz-player__seek {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .sz-player__time {
+    font: 500 var(--fs-xs) var(--font-mono);
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    min-width: 3.2ch;
+  }
+  .sz-player__seek input {
+    width: 100%;
+    accent-color: var(--pl-accent);
+    height: 18px;
+    cursor: pointer;
+  }
+  .sz-player__skip {
+    display: flex;
+    gap: var(--sp-1);
+  }
+  .sz-player__skip button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+  .sz-player__skip button:hover {
+    border-color: var(--pl-accent);
+  }
+  .sz-player__skip svg {
+    width: 16px;
+    height: 16px;
+  }
+  .sz-player__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .sz-player__item {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 2.4em minmax(0, 1fr) auto 3.4em;
+    gap: var(--sp-3);
+    align-items: baseline;
+    padding: var(--sp-3) var(--sp-2);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    transition: background var(--t-hover) var(--ease);
+  }
+  .sz-player__item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--it-accent);
+    transform: scaleY(0);
+    transition: transform var(--t-hover) var(--ease);
+  }
+  .sz-player__item:hover {
+    background: var(--surface-2);
+  }
+  .sz-player__item:hover::before,
+  .sz-player__item[aria-current='true']::before {
+    transform: scaleY(1);
+  }
+  .sz-player__item .no,
+  .sz-player__item .l {
+    font: 500 var(--fs-sm) var(--font-mono);
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .sz-player__item .l {
+    text-align: right;
+  }
+  .sz-player__item .t {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-md);
+    text-transform: uppercase;
+    min-width: 0;
+  }
+  .sz-player__item .f {
+    font: 500 var(--fs-xs) var(--font-mono);
+    color: var(--it-accent);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .sz-player__item[aria-current='true'] .t {
+    color: var(--it-accent);
+  }
+  @media (max-width: 560px) {
+    .sz-player__item {
+      grid-template-columns: 2em minmax(0, 1fr) 3em;
+    }
+    .sz-player__item .f {
+      display: none;
+    }
+    .sz-player__main {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+    .sz-player__skip {
+      grid-column: 1 / -1;
+      justify-content: flex-end;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sz-player__bars i {
+      animation: none;
+      transform: scaleY(0.7);
+    }
+    .sz-player::before,
+    .sz-player__play,
+    .sz-player__item::before {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const fmt = (s: number) => {
+    if (!Number.isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    return `${m}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  };
+
+  function init(root: HTMLElement) {
+    if (root.dataset.ready) return;
+    root.dataset.ready = '1';
+    const audio = root.querySelector<HTMLAudioElement>('[data-audio]')!;
+    const play = root.querySelector<HTMLButtonElement>('[data-play]')!;
+    const seek = root.querySelector<HTMLInputElement>('[data-seek]')!;
+    const cur = root.querySelector<HTMLElement>('[data-cur]')!;
+    const dur = root.querySelector<HTMLElement>('[data-dur]')!;
+    const title = root.querySelector<HTMLElement>('[data-title]')!;
+    const items = [...root.querySelectorAll<HTMLButtonElement>('[data-item]')];
+    let index = 0;
+    let seeking = false;
+    const de = document.documentElement.lang.startsWith('de');
+
+    const pid = root.dataset.playerId;
+    const external = () =>
+      pid ? [...document.querySelectorAll<HTMLButtonElement>(`[data-ep-player="${pid}"][data-ep-play]`)] : [];
+    const sync = () =>
+      external().forEach((b) => {
+        const on = Number(b.dataset.epPlay) === index && !audio.paused;
+        b.setAttribute('aria-pressed', String(on));
+        b.classList.toggle('is-playing', on);
+      });
+    external().forEach((b) =>
+      b.addEventListener('click', () => {
+        const i = Number(b.dataset.epPlay);
+        if (i !== index) select(i, true);
+        else if (audio.paused) audio.play().catch(() => {});
+        else audio.pause();
+      })
+    );
+
+    const select = (i: number, autoplay: boolean) => {
+      const it = items[i];
+      if (!it) return;
+      index = i;
+      items.forEach((b, j) => (j === i ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current')));
+      audio.src = it.dataset.src!;
+      title.textContent = it.dataset.title!;
+      const e = root.querySelector('.sz-player__now .sz-player__e');
+      if (e) e.toggleAttribute('hidden', !it.dataset.explicit);
+      dur.textContent = it.dataset.length || '0:00';
+      root.style.setProperty('--pl-accent', it.dataset.accent || '');
+      root.style.setProperty('--pl-progress', '0');
+      seek.value = '0';
+      cur.textContent = '0:00';
+      if (autoplay) audio.play().catch(() => {});
+    };
+
+    play.addEventListener('click', () => (audio.paused ? audio.play().catch(() => {}) : audio.pause()));
+    items.forEach((b, i) =>
+      b.addEventListener('click', () => (i === index ? (audio.paused ? audio.play() : audio.pause()) : select(i, true)))
+    );
+    root.querySelector('[data-prev]')?.addEventListener('click', () =>
+      audio.currentTime > 3 ? (audio.currentTime = 0) : select((index - 1 + items.length) % items.length, !audio.paused)
+    );
+    root.querySelector('[data-next]')?.addEventListener('click', () => select((index + 1) % items.length, !audio.paused));
+
+    audio.addEventListener('play', () => {
+      document.querySelectorAll<HTMLMediaElement>('audio, video').forEach((m) => m !== audio && m.pause());
+      root.classList.add('is-playing');
+      play.setAttribute('aria-label', de ? 'Pause' : 'Pause');
+      sync();
+    });
+    audio.addEventListener('pause', () => {
+      root.classList.remove('is-playing');
+      play.setAttribute('aria-label', de ? 'Abspielen' : 'Play');
+      sync();
+    });
+    audio.addEventListener('loadedmetadata', () => (dur.textContent = fmt(audio.duration)));
+    audio.addEventListener('timeupdate', () => {
+      if (seeking || !audio.duration) return;
+      const p = audio.currentTime / audio.duration;
+      seek.value = String(Math.round(p * 1000));
+      cur.textContent = fmt(audio.currentTime);
+      root.style.setProperty('--pl-progress', String(p));
+    });
+    audio.addEventListener('ended', () => {
+      if (items.length > 1 && index < items.length - 1) select(index + 1, true);
+    });
+    seek.addEventListener('input', () => {
+      seeking = true;
+      if (audio.duration) cur.textContent = fmt((Number(seek.value) / 1000) * audio.duration);
+    });
+    seek.addEventListener('change', () => {
+      seeking = false;
+      if (audio.duration) audio.currentTime = (Number(seek.value) / 1000) * audio.duration;
+      else {
+        audio.addEventListener(
+          'loadedmetadata',
+          () => (audio.currentTime = (Number(seek.value) / 1000) * audio.duration),
+          { once: true }
+        );
+        audio.play().catch(() => {});
+      }
+    });
+  }
+
+  const boot = () => document.querySelectorAll<HTMLElement>('[data-player]').forEach(init);
+  boot();
+  document.addEventListener('astro:page-load', boot);
+</script>

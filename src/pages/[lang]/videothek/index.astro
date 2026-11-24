@@ -9,6 +9,9 @@
  * per figure with its accent label, 2:3 sleeves, a rental slip as dialog.
  * Easter eggs (decorative, static text, nothing unreleased): a small sticker per shelf
  * in the figure's medium, and the Konami code switches Gl1tch's terminal light on.
+ * Motion (motion.css): shelves and rows reveal on scroll, sleeves are pulled off the shelf
+ * on hover, the sticker of a shelf wiggles once when you point at it, the rental slip
+ * opens with a short rise. None of it with reduced motion.
  */
 import type { GetStaticPaths } from 'astro';
 import '@fontsource/caveat/latin-500';
@@ -107,7 +110,7 @@ const metadata = {
 
   {
     tip && (
-      <section class="sz-container sz-container--wide sz-section vt__tip" aria-labelledby="tip-h" style={`--fig:${getFigure(tip.characters[0])?.accent.dark}`}>
+      <section class="sz-container sz-container--wide sz-section vt__tip reveal" aria-labelledby="tip-h" style={`--fig:${getFigure(tip.characters[0])?.accent.dark}`}>
         <p class="sz-label">{de ? 'Tipp des Hauses' : 'Staff pick'}</p>
         <div class="vt__tipgrid">
           <button type="button" class="vt__tipposter" data-film={tip.id} aria-haspopup="dialog">
@@ -138,8 +141,8 @@ const metadata = {
   }
 
   <section class="sz-container sz-container--wide sz-section" aria-labelledby="new-h">
-    <h2 class="sz-h2" id="new-h">{de ? 'Neuheiten' : 'New arrivals'}</h2>
-    <ul class="vt__row sz-snap-row">
+    <h2 class="sz-h2 reveal" id="new-h">{de ? 'Neuheiten' : 'New arrivals'}</h2>
+    <ul class="vt__row sz-snap-row reveal-stagger">
       {
         fresh.map((f) => (
           <li>
@@ -162,7 +165,7 @@ const metadata = {
 
   {
     shelves.map(({ fig, films: list }) => (
-      <section class="sz-container sz-container--wide vt__shelf" aria-labelledby={`shelf-${fig.id}`} style={`--fig:${fig.accent.dark}`} id={`regal-${fig.id}`}>
+      <section class="sz-container sz-container--wide vt__shelf reveal" aria-labelledby={`shelf-${fig.id}`} style={`--fig:${fig.accent.dark}`} id={`regal-${fig.id}`}>
         <h2 class="vt__shelflabel" id={`shelf-${fig.id}`}>
           <FigureGlyph id={fig.id} size={18} />
           <span class="vt__sz">{fig.sz}</span>
@@ -193,7 +196,7 @@ const metadata = {
     ))
   }
 
-  <section class="sz-container sz-container--wide sz-section vt__back" aria-labelledby="back-h">
+  <section class="sz-container sz-container--wide sz-section vt__back reveal" aria-labelledby="back-h">
     <p class="sz-label">{de ? 'Hinterzimmer' : 'Back room'}</p>
     <h2 class="sz-h2" id="back-h">{de ? 'Wie die Filme gebaut werden' : 'How the films are made'}</h2>
     <p class="sz-muted">
@@ -487,6 +490,57 @@ const metadata = {
   .vt__card:hover .vt__sleeve,
   .vt__card:focus-visible .vt__sleeve {
     box-shadow: 0 0 0 1px var(--fig, var(--text)), 0 0 24px rgba(255, 255, 255, 0.08);
+  }
+  .vt__sleeve {
+    transition:
+      transform var(--motion-base) var(--ease-out),
+      box-shadow var(--motion-fast) var(--ease-out);
+  }
+  .vt__tipposter img,
+  .vt__play {
+    transition: transform var(--motion-slow) var(--ease-out);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    /* the tape is pulled a little off the shelf */
+    .vt__card:is(:hover, :focus-visible) .vt__sleeve {
+      transform: translateY(-4px) rotate(-0.6deg);
+    }
+    .vt__tipposter:is(:hover, :focus-visible) img {
+      transform: scale(1.03);
+    }
+    .vt__tipposter:is(:hover, :focus-visible) .vt__play {
+      transform: scale(1.08);
+    }
+    /* each shelf's sticker wiggles once when the shelf is pointed at */
+    .vt__shelf:hover .vt__sticker {
+      animation: vt-wiggle 480ms var(--ease-stamp) 1;
+    }
+    .vt__dialog[open] {
+      animation: vt-slip-in var(--motion-slow) var(--ease-out) both;
+    }
+    .vt__dialog[open]::backdrop {
+      animation: vt-fade-in var(--motion-base) var(--ease-out) both;
+    }
+  }
+  @keyframes vt-wiggle {
+    30% {
+      translate: 0 -2px;
+      rotate: 3deg;
+    }
+    65% {
+      rotate: -2deg;
+    }
+  }
+  @keyframes vt-slip-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.99);
+    }
+  }
+  @keyframes vt-fade-in {
+    from {
+      opacity: 0;
+    }
   }
   .vt__draft {
     position: absolute;

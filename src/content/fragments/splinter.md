@@ -22,9 +22,14 @@ voiceCharacteristics:
 movementGrammar: ['zersplittern', 'reflektieren', 'chronisieren']
 containmentNote: 'Splinter repräsentiert die fragmentierte digitale Identität der Generation Z. Sichere Distanz zu seinen tieferen emotionalen Zuständen wird empfohlen. Interaktion primär über kreative Kanäle.'
 tags: ['figure', 'character', 'music', 'rap', 'introspection', 'mirror-man']
-lastChangeDate: '2026-11-24T12:47:33.499Z'
+lastChangeDate: '2026-11-24T14:33:02.164Z'
 changeLog:
   - date: '2026-11-24T12:47:33.499Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
+  - date: '2026-11-24T14:33:02.164Z'
     description: Content updated
     author: seez
     type: content
@@ -55,7 +60,7 @@ Ich bin nicht allein in diesem zersplitterten Universum. Wir sind alle Fragmente
 
 **Gl1tch** ist mein Meta-Spiegel. Er reflektiert unsere gesamte Situation — wie wir alle Produkte der digitalen Welt sind, gefangen zwischen Authentizität und Performance. Wenn ich zu tief in der eigenen Dunkelheit versinke, ist er derjenige, der den Kontext liefert: "Das ist nicht nur dein Problem, das ist unser Zeitgeist."
 
-**Unknown** ist politisch da, wo ich persönlich bin. Er kämpft gegen die Systeme, die mich zerbrochen haben. Seine Präzision in *Als Sie* bewundere ich — ich wäre zu emotional dafür.
+**Unknown** ist politisch da, wo ich persönlich bin. Er kämpft gegen die Systeme, die mich zerbrochen haben. Seine Präzision in *ALS SIE* bewundere ich — ich wäre zu emotional dafür.
 
 ## Meine Bilder — Fragmente der Existenz
 

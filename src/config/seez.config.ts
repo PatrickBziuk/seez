@@ -181,7 +181,15 @@ export const SEEZ_CONFIG: SeezConfig = {
     openGraph: {
       type: 'website',
       siteName: 'seez',
-      images: [],
+      // Default share image (src/assets/images/default.png): wordmark, EP and the six figures
+      images: [
+        {
+          url: '~/assets/images/default.png',
+          width: 1200,
+          height: 628,
+          alt: 'seez – EP GENERIERUNG LÄUFT, die sechs Figuren Splinter, Lume, Drift, Shift, Gl1tch und Unknown',
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',

@@ -2,6 +2,11 @@
 /**
  * Start (KONZEPT B10): EP hero, the six, tracklist, Videothek (only when released),
  * workshop teaser, what is in progress (no dates).
+ *
+ * Motion (motion.css): the hero "generates" on load – a block cursor runs over the EP title
+ * letter by letter, the Splitterleiste fills like a progress bar, the six shards rise in SZ
+ * order. Sections below reveal on scroll. Easter egg: double-click the EP title and it is
+ * generated once more. All of it is CSS on load except the egg; nothing with reduced motion.
  */
 import type { GetStaticPaths } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
@@ -28,6 +33,16 @@ const dossiers = await getFigureDossiers(lang);
 const films = getVisibleFilms()
   .filter((f) => f.workStatus !== 'dropped')
   .slice(0, 6);
+// The title split into letters for the load animation (the real text stays for screen readers).
+// Built as one string so no whitespace slips in between the letters.
+const ENTITIES: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+const esc = (c: string) => ENTITIES[c] ?? c;
+let n = 0;
+const letter = (ch: string) => '<span class="hero__ch" style="--n:' + n++ + '" data-ch="' + esc(ch) + '">' + esc(ch) + '</span>';
+const titleLetters = EP.title
+  .split(' ')
+  .map((w) => '<span class="hero__word">' + [...w].map(letter).join('') + '</span>')
+  .join(' ');
 const released = new Date(EP.released).toLocaleDateString(de ? 'de-DE' : 'en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
 const upcoming = [
@@ -57,19 +72,22 @@ const metadata = {
 <Layout metadata={metadata}>
   <section class="hero sz-container sz-container--wide" aria-labelledby="hero-title">
     <div class="hero__text">
-      <p class="sz-label">EP · {released}</p>
-      <h1 class="sz-display hero__title" id="hero-title">{EP.title}</h1>
-      <FigureStrip height={6} class="hero__strip" />
-      <p class="sz-lead hero__claim">{EP.claim[lang]}</p>
-      <div class="sz-btn-row hero__actions">
+      <p class="sz-label sz-enter sz-enter--fade">EP · {released} · {EP_TRACKS.length} Tracks · {EP.length}</p>
+      <h1 class="sz-display hero__title" id="hero-title" data-hero-title>
+        <span class="sr-only">{EP.title}</span>
+        <span class="hero__gen" aria-hidden="true" data-pagefind-ignore set:html={titleLetters} />
+      </h1>
+      <FigureStrip height={6} class="hero__strip" motion="boot" />
+      <p class="sz-lead hero__claim sz-enter" style="--enter-delay:480ms">{EP.claim[lang]}</p>
+      <div class="sz-btn-row hero__actions sz-enter" style="--enter-delay:560ms">
         <a class="sz-btn sz-btn--primary" href={EP.spotify} rel="noopener">{de ? 'Jetzt hören' : 'Listen now'}</a>
         <a class="sz-btn" href={sectionUrl(lang, 'music')}>{de ? 'Alle Songs' : 'All songs'}</a>
       </div>
     </div>
     <div class="hero__shards" aria-hidden="true">
       {
-        FIGURES.map((f) => (
-          <span class="hero__shard" style={`--fig:${f.accent.dark}`}>
+        FIGURES.map((f, i) => (
+          <span class="hero__shard" style={`--fig:${f.accent.dark};--i:${i}`}>
             <img src={f.portrait.src} alt="" width={f.portrait.width} height={f.portrait.height} loading="eager" />
           </span>
         ))
@@ -79,14 +97,14 @@ const metadata = {
 
   <section class="sz-section" aria-labelledby="six">
     <div class="sz-container sz-container--wide">
-      <div class="sz-section-head">
+      <div class="sz-section-head reveal">
         <div>
           <p class="sz-label">SZ-001 – SZ-006</p>
           <h2 class="sz-h2" id="six">{de ? 'Die Sechs' : 'The six'}</h2>
         </div>
-        <a class="sz-link" href={sectionUrl(lang, 'fragments')}>{de ? 'Alle Fragmente' : 'All fragments'} →</a>
+        <a class="sz-link" href={sectionUrl(lang, 'fragments')}>{de ? 'Alle Fragmente' : 'All fragments'} <span class="sz-arrow" aria-hidden="true">→</span></a>
       </div>
-      <p class="sz-lead six__lead">
+      <p class="sz-lead six__lead reveal">
         {de ? 'Seez ist kein Projekt. Seez ist ein System.' : 'Seez is not a project. Seez is a system.'}
         <span class="sz-muted">
           {
@@ -96,11 +114,11 @@ const metadata = {
           }
         </span>
       </p>
-      <ul class="six sz-snap-row">
+      <ul class="six sz-snap-row reveal-stagger">
         {
           dossiers.map(({ figure }) => (
-            <li>
-              <FigureCard figure={figure.id} lang={lang} />
+            <li class="sz-lift">
+              <FigureCard figure={figure.id} lang={lang} song={EP_TRACKS.find((t) => t.figures.includes(figure.id))} />
             </li>
           ))
         }
@@ -109,23 +127,26 @@ const metadata = {
   </section>
 
   <section class="sz-section sz-container sz-container--wide" aria-labelledby="tracks">
-    <div class="sz-section-head">
+    <div class="sz-section-head reveal">
       <div>
         <p class="sz-label">Tracklist</p>
         <h2 class="sz-h2" id="tracks">{EP.title}</h2>
       </div>
-      <a class="sz-link" href={sectionUrl(lang, 'lyrics')}>{de ? 'Alle Lyrics' : 'All lyrics'} →</a>
+      <a class="sz-link" href={sectionUrl(lang, 'lyrics')}>{de ? 'Alle Lyrics' : 'All lyrics'} <span class="sz-arrow" aria-hidden="true">→</span></a>
     </div>
-    <ol class="tracks">
+    <ol class="tracks reveal-stagger">
       {
         EP_TRACKS.map((t) => (
           <SongRow
             lang={lang}
+            no={t.no}
             title={t.title}
             href={has(t.slug) ? sectionUrl(lang, 'music', t.slug) : undefined}
             figures={t.figures}
-            note={t.note[lang]}
-            listen={EP.spotify}
+            note={t.note?.[lang]}
+            length={t.length}
+            explicit={t.explicit}
+            listen={t.spotify}
             lyricsHref={t.lyricsId && has(t.slug) ? `${sectionUrl(lang, 'music', t.slug)}#lyrics` : undefined}
             hasVideo={filmsForSong(t.filmKey).length > 0}
           />
@@ -137,15 +158,15 @@ const metadata = {
   {
     films.length > 0 && (
       <section class="sz-section sz-container sz-container--wide" aria-labelledby="vt">
-        <div class="sz-section-head">
+        <div class="sz-section-head reveal">
           <h2 class="sz-h2" id="vt">
             {de ? 'Neu in der Videothek' : 'New in the Videothek'}
           </h2>
           <a class="sz-link" href={sectionUrl(lang, 'videothek')}>
-            Videothek →
+            Videothek <span class="sz-arrow" aria-hidden="true">→</span>
           </a>
         </div>
-        <ul class="films sz-snap-row">
+        <ul class="films sz-snap-row reveal-stagger">
           {films.map((f) => (
             <li>
               <VhsCard film={f} lang={lang} />
@@ -157,23 +178,32 @@ const metadata = {
   }
 
   <section class="sz-section sz-container sz-container--wide teaser" aria-labelledby="ws">
-    <div>
+    <div class="reveal">
       <p class="sz-label">{de ? 'Aus der Werkstatt' : 'From the workshop'}</p>
       <h2 class="sz-h2" id="ws">{MANIFESTO[lang]}</h2>
     </div>
-    <div class="teaser__links">
+    <div class="teaser__links reveal">
       <a class="sz-btn" href={sectionUrl(lang, 'workshop')}>{de ? 'Werkstatt öffnen' : 'Open the workshop'}</a>
     </div>
   </section>
 
   <section class="sz-section sz-container sz-container--wide" aria-labelledby="next">
-    <p class="sz-label">{de ? 'Was kommt' : 'What comes next'}</p>
-    <h2 class="sz-h2" id="next">{de ? 'In Arbeit' : 'In progress'}</h2>
-    <ul class="next">
+    <div class="reveal">
+      <p class="sz-label">{de ? 'Was kommt' : 'What comes next'}</p>
+      <h2 class="sz-h2" id="next">{de ? 'In Arbeit' : 'In progress'}</h2>
+    </div>
+    <ul class="next reveal-stagger">
       {
         upcoming.map((u) => (
           <li class="sz-panel">
-            <span class="sz-label">{de ? 'Stand: in Arbeit' : 'Status: in progress'}</span>
+            <span class="sz-label">
+              {de ? 'Stand: in Arbeit' : 'Status: in progress'}
+              <span class="sz-dots" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+            </span>
             <h3 class="sz-h3">{u.title}</h3>
             <p class="sz-muted">{u.body}</p>
           </li>
@@ -183,6 +213,41 @@ const metadata = {
   </section>
 </Layout>
 
+<script>
+  // Easter egg: double-click the EP title and it is generated once more. The real letters
+  // keep their place (only coloured transparent), so nothing reflows. Off with reduced motion.
+  const title = document.querySelector<HTMLElement>('[data-hero-title]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const GLYPHS = 'SZ0157X/';
+  let running = false;
+  title?.addEventListener('dblclick', () => {
+    if (running || reduce.matches) return;
+    window.getSelection()?.removeAllRanges();
+    running = true;
+    const chars = [...title.querySelectorAll<HTMLElement>('.hero__ch')];
+    chars.forEach((c) => c.classList.add('is-scrambling'));
+    const start = performance.now();
+    let last = 0;
+    const step = (now: number) => {
+      const t = now - start;
+      const tick = now - last > 50;
+      if (tick) last = now;
+      let pending = 0;
+      chars.forEach((c, i) => {
+        if (t >= 180 + i * 36) {
+          c.classList.remove('is-scrambling');
+        } else {
+          pending++;
+          if (tick) c.dataset.glyph = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        }
+      });
+      if (pending) requestAnimationFrame(step);
+      else running = false;
+    };
+    requestAnimationFrame(step);
+  });
+</script>
+
 <style>
   .hero {
     display: grid;
@@ -190,9 +255,67 @@ const metadata = {
     padding-top: var(--sp-7);
     padding-bottom: var(--sp-7);
     align-items: center;
+    /* the Splitterleiste starts filling while the last letters arrive */
+    --boot-delay: 420ms;
   }
   .hero__title {
     margin-top: var(--sp-3);
+  }
+
+  /* "Generierung läuft": a block cursor runs over the title, each letter resolves behind it */
+  .hero__title :global(.hero__ch) {
+    position: relative;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    /* colour, not opacity, so the cursor (a child) can show before its letter does */
+    .hero__title :global(.hero__ch) {
+      animation: hero-ch 160ms linear both;
+      animation-delay: calc(var(--n) * 28ms + 90ms);
+    }
+    .hero__title :global(.hero__ch)::after {
+      content: '';
+      position: absolute;
+      inset: 0.1em 0.03em 0.06em;
+      background: var(--text);
+      opacity: 0;
+      animation: hero-cursor 75ms linear both;
+      animation-delay: calc(var(--n) * 28ms + 20ms);
+      pointer-events: none;
+    }
+  }
+  @keyframes hero-ch {
+    from {
+      color: transparent;
+    }
+  }
+  @keyframes hero-cursor {
+    0% {
+      opacity: 0;
+    }
+    1%,
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  /* Easter egg state: the letter keeps its width, a sampled glyph sits on top */
+  .hero__title :global(.hero__ch.is-scrambling) {
+    color: transparent;
+  }
+  .hero__title :global(.hero__ch.is-scrambling)::before {
+    content: attr(data-glyph);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    overflow: hidden;
+    text-align: center;
+    color: var(--text);
+  }
+  .hero__title {
+    cursor: default;
   }
   .hero :global(.hero__strip) {
     margin-top: var(--sp-5);
@@ -224,6 +347,23 @@ const metadata = {
     object-fit: cover;
     object-position: 50% 18%;
     transform: scale(1.15);
+    transition: transform var(--motion-slow) var(--ease-out);
+  }
+  /* The six shards rise in SZ order once, then answer the pointer with a slow push-in */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__shard {
+      animation: hero-shard var(--motion-hero) var(--ease-out) both;
+      animation-delay: calc(var(--i) * 70ms + 120ms);
+    }
+    .hero__shard:hover img {
+      transform: scale(1.22);
+    }
+  }
+  @keyframes hero-shard {
+    from {
+      opacity: 0;
+      transform: translateY(32px);
+    }
   }
   .hero__shard:nth-child(even) {
     margin-top: 28px;

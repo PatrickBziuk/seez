@@ -1,8 +1,8 @@
 ---
 import { getPublicCollection } from '~/utils/publication';
 import { render } from 'astro:content';
-import Layout from '~/layouts/MarkdownLayout.astro';
-import { Icon } from 'astro-icon/components';
+import Layout from '~/layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
 
 export async function getStaticPaths() {
   const authors = await getPublicCollection('authors');
@@ -36,157 +36,31 @@ export async function getStaticPaths() {
 
 const { author, lang } = Astro.props;
 const { Content } = await render(author);
+const de = lang === 'de';
+const name: string = author.data.displayName || author.data.name || author.data.id || 'Seez';
 
-// Build frontmatter for MarkdownLayout with proper typing
-const frontmatter = {
-  title: lang === 'de' ? `Über ${author.data.displayName}` : `About ${author.data.displayName}`,
+const metadata = {
+  title: de ? `Über ${name}` : `About ${name}`,
   description: author.data.bio,
-  language: lang as 'en' | 'de',
-  tags: [] as string[], // no tag pages for 'author'/'about'
-  status: author.data.status,
-};
-
-const entry = {
-  collection: 'authors',
-  slug: author.data.id || author.id || 'unknown',
-  id: `${author.data.id || author.id || 'unknown'}.mdx`,
 };
 ---
 
-<Layout frontmatter={frontmatter} entry={entry}>
-  <div class="author-profile">
-    <!-- Author Header -->
-    <div
-      class="flex items-center gap-6 mb-8 p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50"
-    >
-      {
-        // Avatar files (/images/authors/*.jpg) do not exist; render only when explicitly present.
-        author.data.avatar && !author.data.avatar.startsWith('/images/authors/') && (
-          <img
-            src={author.data.avatar}
-            alt={author.data.displayName}
-            class="w-20 h-20 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
-          />
-        )
-      }
-
-      <div class="flex-1">
-        <p class="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-          {author.data.displayName}
-        </p>
-
-        <p class="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
-          {author.data.bio}
-        </p>
-
-        <!-- Author Type Badge -->
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-lg">
-            <span class="text-base">
-              {author.data.status?.authoring === 'Human' ? '👤' : author.data.status?.authoring === 'AI' ? '🤖' : '🤝'}
-            </span>
-            <span class="text-sm font-medium text-slate-700 dark:text-slate-200">
-              {author.data.status?.authoring || 'Human'}
-            </span>
-          </div>
-
-          <!-- AI Model Info -->
-          {
-            author.data.model && (
-              <div class="flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <Icon name="tabler:brain" class="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                <span class="text-sm text-blue-700 dark:text-blue-300">{author.data.model}</span>
-              </div>
-            )
-          }
-        </div>
-      </div>
-    </div>
-
-    <!-- Social Links -->
-    {
-      author.data.social && Object.keys(author.data.social).length > 0 && (
-        <div class="mb-8 p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
-          <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-            <Icon name="tabler:link" class="w-5 h-5" />
-            {lang === 'de' ? 'Verbinden' : 'Connect'}
-          </h2>
-
-          <div class="flex flex-wrap gap-3">
-            {author.data.social.twitter && (
-              <a
-                href={`https://twitter.com/${author.data.social.twitter}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                rel="noopener noreferrer"
-                class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
-              >
-                <Icon name="tabler:brand-twitter" class="w-4 h-4" />
-                <span class="text-sm">Twitter</span>
-              </a>
-            )}
-
-            {author.data.social.linkedin && (
-              <a
-                href={`https://linkedin.com/in/${author.data.social.linkedin}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                rel="noopener noreferrer"
-                class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
-              >
-                <Icon name="tabler:brand-linkedin" class="w-4 h-4" />
-                <span class="text-sm">LinkedIn</span>
-              </a>
-            )}
-
-            {author.data.website && (
-              <a
-                href={author.data.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
-              >
-                <Icon name="tabler:world" class="w-4 h-4" />
-                <span class="text-sm">Website</span>
-              </a>
-            )}
-          </div>
-        </div>
-      )
-    }
-
-    <!-- AI Capabilities -->
-    {
-      author.data.capabilities && author.data.capabilities.length > 0 && (
-        <div class="mb-8 p-6 bg-slate-50/70 dark:bg-slate-800/40 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
-          <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-            <Icon name="tabler:settings" class="w-5 h-5" />
-            {lang === 'de' ? 'Fähigkeiten' : 'Capabilities'}
-          </h2>
-
-          <div class="flex flex-wrap gap-2">
-            {author.data.capabilities.map((capability: string) => (
-              <span class="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 text-sm text-slate-700 dark:text-slate-200">
-                {capability}
-              </span>
-            ))}
-          </div>
-        </div>
-      )
-    }
-
-    <!-- Author Content -->
-    <div
-      class="prose prose-lg max-w-none dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg"
-    >
+<Layout metadata={metadata}>
+  <PageHead
+    title={name}
+    label={author.data.status?.authoring === 'AI' ? (de ? 'Autor · KI-Mitarbeit' : 'Author · AI collaboration') : de ? 'Autor' : 'Author'}
+    lead={author.data.bio}
+    crumbs={[{ href: `/${lang}/${de ? 'archiv' : 'archive'}`, text: de ? 'Archiv' : 'Archive' }, { text: name }]}
+  />
+  <div class="sz-container author">
+    <div class="sz-prose">
       <Content />
     </div>
   </div>
 </Layout>
 
 <style>
-  .author-profile {
-    max-width: 4xl;
-    margin: 0 auto;
+  .author {
+    padding-bottom: var(--section-gap);
   }
 </style>

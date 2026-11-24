@@ -3,6 +3,8 @@
  * WorkshopPage (KONZEPT B9 "Werkstatt"): replaces System Logs, Creative Core and Tech Stack.
  * Public: process, tools, origin. Reports (LogEntry) only for released films; ratings only
  * for released films. Work states and unreleased reports appear only in `pnpm dev:drafts`.
+ * Motion (motion.css): panels, rows and reports reveal on scroll in sequence; the section
+ * chips in the head nudge on hover; the "how it's built" panel fades its content in.
  */
 import { render } from 'astro:content';
 import Layout from '~/layouts/PageLayout.astro';
@@ -48,7 +50,7 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <PageHead title={de ? 'Werkstatt' : 'Workshop'} label="Building in Public" lead={PROCESS_LEAD[lang]}>
+  <PageHead title={de ? 'Werkstatt' : 'Workshop'} label={de ? 'Offener Prozess' : 'Building in public'} lead={PROCESS_LEAD[lang]}>
     <nav class="ws__toc" aria-label={de ? 'Abschnitte' : 'Sections'}>
       <a href={`#${ids.process}`}>{de ? 'Prozess' : 'Process'}</a>
       <a href={`#${ids.tools}`}>{de ? 'Werkzeuge' : 'Tools'}</a>
@@ -68,9 +70,9 @@ const metadata = {
     )
   }
 
-  <section class="sz-container sz-section" id={ids.process} aria-labelledby="h-process">
+  <section class="sz-container sz-section ws__first" id={ids.process} aria-labelledby="h-process">
     <h2 class="sz-h2" id="h-process">{de ? 'Prozess' : 'Process'}</h2>
-    <ol class="ws__steps">
+    <ol class="ws__steps reveal-stagger">
       {
         PROCESS_STEPS.map((s, i) => (
           <li class="sz-panel">
@@ -81,10 +83,10 @@ const metadata = {
         ))
       }
     </ol>
-    <blockquote class="ws__manifesto">{MANIFESTO[lang]}</blockquote>
+    <blockquote class="ws__manifesto reveal">{MANIFESTO[lang]}</blockquote>
 
-    <h3 class="sz-h3 ws__sub">{de ? 'Eine Figur, ein Medium' : 'One figure, one medium'}</h3>
-    <ul class="ws__matrix">
+    <h3 class="sz-h3 ws__sub reveal">{de ? 'Eine Figur, ein Medium' : 'One figure, one medium'}</h3>
+    <ul class="ws__matrix reveal-stagger">
       {
         STYLE_MATRIX.map((m) => (
           <li>
@@ -96,8 +98,8 @@ const metadata = {
       }
     </ul>
 
-    <h3 class="sz-h3 ws__sub">{de ? 'Woher das Material kommt' : 'Where the material comes from'}</h3>
-    <ol class="ws__origins">
+    <h3 class="sz-h3 ws__sub reveal">{de ? 'Woher das Material kommt' : 'Where the material comes from'}</h3>
+    <ol class="ws__origins reveal-stagger">
       {
         ORIGINS.map((o) => (
           <li>
@@ -113,9 +115,9 @@ const metadata = {
   </section>
 
   <section class="sz-container sz-section" id={ids.tools} aria-labelledby="h-tools">
-    <h2 class="sz-h2" id="h-tools">{de ? 'Werkzeuge' : 'Tools'}</h2>
-    <p class="sz-lead ws__lead">{TOOLS_LEAD[lang]}</p>
-    <ul class="ws__tools">
+    <h2 class="sz-h2 reveal" id="h-tools">{de ? 'Werkzeuge' : 'Tools'}</h2>
+    <p class="sz-lead ws__lead reveal">{TOOLS_LEAD[lang]}</p>
+    <ul class="ws__tools reveal-stagger">
       {
         TOOLS.map((t) => (
           <li class="sz-panel">
@@ -128,7 +130,7 @@ const metadata = {
     </ul>
     {
       Stack && (
-        <details class="ws__stack">
+        <details class="ws__stack reveal">
           <summary>{de ? 'Wie diese Website gebaut ist' : 'How this website is built'}</summary>
           <div class="sz-prose">
             <Stack />
@@ -145,7 +147,7 @@ const metadata = {
           {de ? 'Berichte' : 'Reports'}
         </h2>
         {!de && <p class="sz-muted">Reports are in German.</p>}
-        <ol class="ws__reports" lang="de">
+        <ol class="ws__reports reveal-stagger" lang="de">
           {reports.map((f) => (
               <li class="log" id={`log-${f.id}`}>
                 <p class="sz-label log__date">
@@ -245,6 +247,9 @@ const metadata = {
 </Layout>
 
 <style>
+  .ws__first {
+    padding-top: var(--sp-5);
+  }
   .ws__toc {
     display: flex;
     flex-wrap: wrap;
@@ -263,8 +268,18 @@ const metadata = {
     font-weight: 600;
     font-size: var(--fs-sm);
   }
+  .ws__toc a {
+    transition:
+      border-color var(--motion-fast) var(--ease-out),
+      transform var(--motion-fast) var(--ease-out);
+  }
   .ws__toc a:hover {
     border-color: var(--text);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ws__toc a:is(:hover, :focus-visible) {
+      transform: translateY(-2px);
+    }
   }
   .ws__steps,
   .ws__tools,
@@ -333,6 +348,11 @@ const metadata = {
   }
   .ws__stack .sz-prose {
     margin-top: var(--sp-4);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ws__stack[open] .sz-prose {
+      animation: sz-enter-rise var(--motion-slow) var(--ease-out) both;
+    }
   }
   .log {
     display: grid;

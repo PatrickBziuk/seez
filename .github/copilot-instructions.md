@@ -43,7 +43,7 @@ tags: string[]
 - Content Flow: Add/modify content → update config if schema changes → sync → restart dev server
 
 ## 5. Integration Points
-- DecapCMS at `/admin` with config in `public/admin/config.yml`
+- No CMS: content is edited in the repo by people and agents (see `AGENTS.md`)
 - Content loading uses Astro 5 `glob()` loader
 - SEO/Analytics via Astro integrations
 - Image optimization: Astro Assets and Unpic

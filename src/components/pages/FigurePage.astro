@@ -1,22 +1,31 @@
 ---
 /**
- * FigurePage (KONZEPT B10 "Figurenseite"): sheet with rim light, SZ number, name in the
- * figure accent, quote, one medium detail, songs, videos, symbols, dossier, the others.
- * Identity data from src/data/figures.json; the dossier text is gated content.
+ * FigurePage: a collectible card on top, a wiki entry below (infobox, contents, sections).
+ * Every fact comes from figures.json, the dossier (gated content), songs.ts / lyrics.json
+ * and the BPM noted in the Videothek catalog. Nothing is estimated or invented: sections
+ * without data are left out.
+ *
+ * Media slots (components from the media branch; placeholders here render nothing):
+ *   - TrackPlayer (compact): inside FragmentCard, under the card's move (the EP track)
+ *   - FilmPlayer: section "Auftritte" → "Musikvideo" (#musikvideo) below
  */
 import { render, type CollectionEntry } from 'astro:content';
 import Layout from '~/layouts/PageLayout.astro';
 import FigureGlyph from '~/components/seez/FigureGlyph.astro';
-import FigureChip from '~/components/seez/FigureChip.astro';
-import FigureStrip from '~/components/seez/FigureStrip.astro';
 import FigureWorld from '~/components/seez/FigureWorld.astro';
 import SongRow from '~/components/seez/SongRow.astro';
 import HelpNotice from '~/components/seez/HelpNotice.astro';
 import VhsCard from '~/components/seez/VhsCard.astro';
-import { FIGURES, figureStyle, type Figure } from '~/data/figures';
-import { EP, EP_TRACKS, SONG_EXTRAS } from '~/data/songs';
+import FragmentCard from '~/components/seez/figure/FragmentCard.astro';
+import FigureInfobox from '~/components/seez/figure/FigureInfobox.astro';
+import MotionToggle from '~/components/seez/figure/MotionToggle.astro';
+import FilmPlayer from '~/components/seez/media/FilmPlayer.astro';
+import { FIGURES, getFigure, figureStyle, type Figure } from '~/data/figures';
+import { EP, SONG_EXTRAS } from '~/data/songs';
 import { getSongRecords, pickEntry, isSong } from '~/utils/music';
-import { filmsForFigure } from '~/utils/videothek';
+import { filmsForFigure, filmsForSong } from '~/utils/videothek';
+import { songFilm } from '~/utils/media';
+import { epTrackFor, bpmFor, lyricsFor, singlesFor, dossierSignature } from '~/utils/fragments';
 import { sectionUrl, type Lang } from '~/utils/routes';
 
 interface Props {
@@ -26,14 +35,19 @@ interface Props {
 }
 const { lang, figure: f, entry } = Astro.props;
 const de = lang === 'de';
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 const isFallbackLang = (entry.data.language || 'de') !== lang;
+const entryLang = isFallbackLang ? entry.data.language : undefined;
 
+/* ---- Music ---- */
 const records = await getSongRecords();
 const has = (slug: string) => records.some((r) => r.slug === slug);
-const epSongs = EP_TRACKS.filter((t) => t.figures.includes(f.id));
+const track = epTrackFor(f.id);
+const bpm = bpmFor(track?.filmKey);
+const trackPage = track && has(track.slug) ? sectionUrl(lang, 'music', track.slug) : undefined;
+const trackHref = trackPage || track?.spotify;
 const otherSongs = records
-  .filter((r) => !EP_TRACKS.some((t) => t.slug === r.slug))
+  .filter((r) => r.slug !== track?.slug)
   .map((r) => ({ r, e: pickEntry(r, lang) }))
   .filter(
     ({ r, e }) =>
@@ -41,10 +55,104 @@ const otherSongs = records
       ((SONG_EXTRAS[r.slug]?.figures || []).includes(f.id) ||
         e.data.figureRef?.id?.replace(/^en\//, '') === entry.id.replace(/^en\//, ''))
   );
-const films = filmsForFigure(f.id);
-const firstSong = epSongs.find((t) => has(t.slug));
+const lyrics = lyricsFor(f.id);
+const lyricsDrafts = lyrics.filter((l) => !l.ep).length;
+const singles = singlesFor(track);
+const songFilms = filmsForSong(track?.filmKey);
+const mainFilm = songFilm(track?.filmKey);
+// Further films of this figure (the EP track's own video is shown by FilmPlayer above them)
+const films = filmsForFigure(f.id).filter((x) => x.id !== mainFilm?.id);
+const showVideo = songFilms.length > 0 || films.length > 0;
+
+/* Songs in progress shared with other figures (songs.ts SONG_EXTRAS) */
+const crossovers = otherSongs
+  .map(({ r, e }) => ({
+    title: e.data.title,
+    href: sectionUrl(lang, 'music', r.slug),
+    with: (SONG_EXTRAS[r.slug]?.figures || []).filter((id) => id !== f.id).map((id) => getFigure(id)!),
+  }))
+  .filter((c) => c.with.length > 0);
+
+/* ---- Dossier ---- */
+const signature = dossierSignature(entry);
 const symbols = entry.data.symbolism || [];
-const voice = entry.data.voiceCharacteristics?.preset;
+const dossierHeads = headings.filter((h) => h.depth === 2);
+const since = entry.data.firstPublishedAt
+  ? new Date(entry.data.firstPublishedAt).toLocaleDateString(de ? 'de-DE' : 'en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'Europe/Berlin',
+    })
+  : undefined;
+
+/* ---- Lead: composed only from data ---- */
+const ORD_DE = ['erste', 'zweite', 'dritte', 'vierte', 'fünfte', 'sechste'];
+const ORD_EN = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth'];
+const lead = de
+  ? `${f.name} (${f.sz}) ist das ${ORD_DE[f.order - 1]} von sechs Fragmenten, Beiname „${f.alias.de}“. Medium: ${f.medium.de}.` +
+    (track ? ` Auf der EP ${EP.title} gehört Track ${track.no}, ${track.title}, zu ${f.name}.` : '')
+  : `${f.name} (${f.sz}) is the ${ORD_EN[f.order - 1]} of six fragments, also called “${f.alias.en}”. Medium: ${f.medium.en.toLowerCase()}.` +
+    (track ? ` On the EP ${EP.title}, track ${track.no}, ${track.title}, belongs to ${f.name}.` : '');
+
+/* ---- Trivia: one line per real data point ---- */
+const terminal = 'media' in f ? (f.media as { terminal?: string }).terminal : undefined;
+const trivia: string[] = [];
+trivia.push(
+  de
+    ? `Die Farbe von ${f.name} heißt ${f.accent.label.de} (${f.accent.dark}). Auf seez.eu steht Farbe immer für eine Figur.`
+    : `${f.name}'s colour is called ${f.accent.label.en} (${f.accent.dark}). On seez.eu, colour always stands for a figure.`
+);
+if (terminal)
+  trivia.push(
+    de
+      ? `Terminal-Grün (${terminal}) erscheint nur in ${f.name}s eigenem Medium ${f.medium.de}, nie als Farbe der Website.`
+      : `Terminal green (${terminal}) only appears inside ${f.name}'s own medium, ${f.medium.en}, never as a site colour.`
+  );
+if (track && bpm) trivia.push(de ? `${track.title} läuft mit ${bpm} BPM.` : `${track.title} runs at ${bpm} BPM.`);
+if (track?.explicit)
+  trivia.push(
+    de ? `${track.title} ist auf Spotify als explizit markiert.` : `${track.title} is marked explicit on Spotify.`
+  );
+for (const s of singles) {
+  const d = new Date(s.released).toLocaleDateString(de ? 'de-DE' : 'en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+  trivia.push(
+    de
+      ? `${track!.title} erschien schon am ${d} als Single, in einer längeren Fassung (${s.length} statt ${track!.length}).`
+      : `${track!.title} came out earlier as a single on ${d}, in a longer version (${s.length} instead of ${track!.length}).`
+  );
+}
+for (const c of crossovers)
+  trivia.push(
+    de
+      ? `${c.title} (in Arbeit) teilt sich ${f.name} mit ${c.with.map((o) => o.name).join(' und ')}.`
+      : `${f.name} shares ${c.title} (in progress) with ${c.with.map((o) => o.name).join(' and ')}.`
+  );
+if (lyrics.length > 0)
+  trivia.push(
+    de
+      ? `Im Songtext-Archiv liegen ${lyrics.length} Texte zu ${f.name}${lyricsDrafts > 0 ? `, ${lyricsDrafts} davon sind Entwürfe für Songs in Arbeit` : ''}.`
+      : `The lyrics archive holds ${lyrics.length} texts for ${f.name}${lyricsDrafts > 0 ? `, ${lyricsDrafts} of them drafts for songs in progress` : ''}.`
+  );
+if (since)
+  trivia.push(de ? `Das Dossier ist seit dem ${since} online.` : `The dossier has been online since ${since}.`);
+
+const q = (s: string) => (de ? `„${s}“` : `“${s}”`);
+const others = FIGURES.filter((o) => o.id !== f.id);
+
+const toc: { id: string; text: string; sub?: { id: string; text: string }[] }[] = [
+  { id: 'erscheinung', text: de ? 'Erscheinung' : 'Appearance' },
+  { id: 'medium', text: 'Medium' },
+  { id: 'dossier', text: 'Dossier', sub: dossierHeads.map((h) => ({ id: h.slug, text: h.text })) },
+  { id: 'auftritte', text: de ? 'Auftritte' : 'Appearances' },
+  { id: 'zitate', text: de ? 'Zitate' : 'Quotes' },
+  { id: 'wissenswertes', text: de ? 'Wissenswertes' : 'Trivia' },
+  { id: 'andere', text: de ? 'Die anderen Splitter' : 'The other splinters' },
+];
 
 const metadata = {
   title: `${f.sz} · ${f.name} – ${de ? 'Fragmente' : 'Fragments'}`,
@@ -54,272 +162,686 @@ const metadata = {
 ---
 
 <Layout metadata={metadata} mainStyle={figureStyle(f)} mainClass={`fig fig--${f.id}`}>
-  <div class="sz-container fig__top">
-    <nav class="sz-crumbs" aria-label="Breadcrumb">
-      <a href={sectionUrl(lang, 'fragments')}>{de ? 'Fragmente' : 'Fragments'}</a>
-      <span aria-hidden="true">/</span>
-      <span aria-current="page">{f.sz}</span>
-    </nav>
-  </div>
+  <!-- ======================= Card ======================= -->
+  <section class="fhero" aria-labelledby="fig-name">
+    <div class="sz-container fhero__grid">
+      <nav class="sz-crumbs fhero__crumbs" aria-label="Breadcrumb">
+        <a href={sectionUrl(lang, 'fragments')}>{de ? 'Fragmente' : 'Fragments'}</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{f.sz} · {f.name}</span>
+      </nav>
 
-  <section class="sz-container fig__hero">
-    <div class="fig__sheet">
-      <img src={f.portrait.src} width={f.portrait.width} height={f.portrait.height} alt={f.portrait.alt[lang]} loading="eager" />
-    </div>
-    <div class="fig__intro">
-      <p class="fig__id">
-        <FigureGlyph id={f.id} size={22} />
-        <span class="sz-label">{f.sz} · {f.medium[lang]}</span>
-      </p>
-      <h1 class="sz-display fig__name">{f.name}</h1>
-      <p class="fig__alias">{f.alias[lang]}</p>
-      <blockquote class="fig__quote">„{f.quote[lang]}“</blockquote>
-      {
-        voice && (
-          <p class="fig__voice" lang={isFallbackLang ? entry.data.language : undefined}>
-            <span class="sz-label">{de ? 'Stimme' : 'Voice'}</span> {voice}
-          </p>
-        )
-      }
-      <div class="sz-btn-row fig__actions">
-        {
-          firstSong && (
-            <a class="sz-btn sz-btn--primary" href={sectionUrl(lang, 'music', firstSong.slug)}>
-              ▶ {firstSong.title}
-            </a>
-          )
-        }
-        {films.length > 0 && <a class="sz-btn" href="#videos">{de ? 'Videos ansehen' : 'Watch videos'}</a>}
-        <a class="sz-btn" href="#dossier">Dossier ↓</a>
+      <header class="fhero__head">
+        <p class="fhero__label">
+          <FigureGlyph id={f.id} size={20} />
+          <span class="sz-label">{f.sz} · Fragment {f.order}/{FIGURES.length} · {f.medium[lang]}</span>
+        </p>
+        <h1 class="sz-display fhero__name" id="fig-name">{f.name}</h1>
+        <p class="fhero__alias">{f.alias[lang]}</p>
+      </header>
+
+      <div class="fhero__card">
+        <FragmentCard figure={f} lang={lang} variant="hero" eager />
+      </div>
+
+      <div class="fhero__body">
+        <p class="sz-lead fhero__lead">{lead}</p>
+        <div class="sz-btn-row fhero__actions">
+          {
+            track && trackHref && (
+              <a class="sz-btn sz-btn--primary" href={trackHref} rel={trackPage ? undefined : 'noopener'}>
+                ▶ {track.title}
+                {!trackPage && <span class="fhero__ext">{de ? 'auf Spotify' : 'on Spotify'}</span>}
+              </a>
+            )
+          }
+          <a class="sz-btn" href="#dossier">Dossier ↓</a>
+          <a class="sz-btn" href="#auftritte">{de ? 'Auftritte' : 'Appearances'} ↓</a>
+        </div>
+        <MotionToggle lang={lang} class="fhero__motion" />
       </div>
     </div>
   </section>
 
-  <section class="sz-container fig__world" aria-label={f.medium[lang]}>
-    <FigureWorld figure={f} lang={lang} />
-  </section>
-
-  {
-    (epSongs.length > 0 || otherSongs.length > 0) && (
-      <section class="sz-container sz-section" aria-labelledby="songs">
-        <h2 class="sz-h2" id="songs">
-          Songs
-        </h2>
-        <ul class="fig__songs">
-          {epSongs.map((t) => (
-            <SongRow
-              lang={lang}
-              title={t.title}
-              href={has(t.slug) ? sectionUrl(lang, 'music', t.slug) : undefined}
-              figures={t.figures}
-              note={t.note[lang]}
-              status={`EP · ${EP.title}`}
-              listen={EP.spotify}
-            />
-          ))}
-          {otherSongs.map(({ r, e }) => (
-            <SongRow
-              lang={lang}
-              title={e.data.title}
-              href={sectionUrl(lang, 'music', r.slug)}
-              figures={[f.id]}
-              status={de ? 'in Arbeit' : 'in progress'}
-            />
-          ))}
-        </ul>
-      </section>
-    )
-  }
-
-  {
-    films.length > 0 && (
-      <section class="sz-container sz-section" id="videos" aria-labelledby="videos-h">
-        <h2 class="sz-h2" id="videos-h">
-          Videos
-        </h2>
-        <ul class="fig__films">
-          {films.map((film) => (
-            <li>
-              <VhsCard film={film} lang={lang} />
-            </li>
-          ))}
-        </ul>
-      </section>
-    )
-  }
-
-  {
-    symbols.length > 0 && (
-      <section class="sz-container sz-section" aria-labelledby="symbols">
-        <h2 class="sz-h2" id="symbols">
-          {de ? 'Symbole' : 'Symbols'}
-        </h2>
-        <ul class="fig__symbols" lang={isFallbackLang ? entry.data.language : undefined}>
-          {symbols.map((s) => {
-            const [name, ...rest] = s.meaning.split(/\s+[—–-]\s+/);
-            return (
-              <li>
-                <FigureGlyph id={f.id} size={20} />
-                <strong>{name}</strong>
-                {rest.length > 0 && <span>{rest.join(' – ')}</span>}
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-    )
-  }
-
-  <section class="sz-container sz-section" id="dossier" aria-labelledby="dossier-h">
-    <h2 class="sz-h2" id="dossier-h">Dossier</h2>
-    {isFallbackLang && <p class="sz-muted">{de ? 'Dieses Dossier liegt nur auf Englisch vor.' : 'This dossier is only available in German.'}</p>}
-    <div class="sz-prose fig__dossier" lang={isFallbackLang ? entry.data.language : undefined}>
-      <Content />
+  <!-- ======================= Wiki ======================= -->
+  <div class="sz-container wiki">
+    <div class="wiki__side" data-wiki-side>
+      <FigureInfobox
+        figure={f}
+        lang={lang}
+        entry={entry}
+        track={track}
+        trackHref={trackHref}
+        bpm={bpm}
+        singles={singles}
+        songsInProgress={otherSongs.length}
+        lyricsCount={lyrics.length}
+        lyricsDrafts={lyricsDrafts}
+      />
     </div>
-    {
-      f.id === 'drift' && (
-        <div class="fig__help">
-          <HelpNotice lang={lang} />
-        </div>
-      )
-    }
-  </section>
 
-  <section class="sz-container sz-section" aria-labelledby="others">
-    <h2 class="sz-h2" id="others">{de ? 'Die anderen Splitter' : 'The other splinters'}</h2>
-    <FigureStrip highlight={[f.id]} height={6} class="fig__strip" />
-    <ul class="fig__others">
+    <article class="wiki__main" aria-labelledby="fig-name">
+      <nav class="wiki-toc" aria-labelledby="toc-h">
+        <h2 class="wiki-toc__h" id="toc-h">{de ? 'Inhalt' : 'Contents'}</h2>
+        <ol>
+          {
+            toc.map((t, i) => (
+              <li>
+                <a href={`#${t.id}`}>
+                  <span class="wiki-toc__no">{i + 1}</span> {t.text}
+                </a>
+                {t.sub && t.sub.length > 0 && (
+                  <ol lang={entryLang}>
+                    {t.sub.map((s, j) => (
+                      <li>
+                        <a href={`#${s.id}`}>
+                          <span class="wiki-toc__no">
+                            {i + 1}.{j + 1}
+                          </span>{' '}
+                          {s.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+
+      <!-- Appearance -->
+      <section class="wiki-sec" aria-labelledby="erscheinung">
+        <h2 class="wiki-h2" id="erscheinung"><span class="wiki-h2__no">1</span>{de ? 'Erscheinung' : 'Appearance'}</h2>
+        <p class="wiki-p">
+          <span class="sz-label">{de ? 'Figurenblatt' : 'Character sheet'}</span><br />
+          {f.portrait.alt[lang]}.
+        </p>
+        {
+          symbols.length > 0 && (
+            <>
+              <h3 class="wiki-h3">{de ? 'Symbole' : 'Symbols'}</h3>
+              <ul class="wiki-symbols" lang={entryLang}>
+                {symbols.map((s) => {
+                  const [name, ...rest] = s.meaning.split(/\s+[—–-]\s+/);
+                  return (
+                    <li>
+                      <FigureGlyph id={f.id} size={18} />
+                      <strong>{name}</strong>
+                      {rest.length > 0 && <span>{rest.join(' – ')}</span>}
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )
+        }
+      </section>
+
+      <!-- Medium -->
+      <section class="wiki-sec" aria-labelledby="medium">
+        <h2 class="wiki-h2" id="medium"><span class="wiki-h2__no">2</span>Medium</h2>
+        <p class="wiki-p">
+          {
+            de
+              ? `Jede Figur hat ein eigenes Medium. Bei ${f.name}: ${f.medium.de}. So sieht das Zitat dort aus:`
+              : `Each figure has its own medium. For ${f.name}: ${f.medium.en.toLowerCase()}. This is the quote as it appears there:`
+          }
+        </p>
+        <div class="wiki-world">
+          <FigureWorld figure={f} lang={lang} />
+        </div>
+      </section>
+
+      <!-- Dossier -->
+      <section class="wiki-sec" aria-labelledby="dossier">
+        <h2 class="wiki-h2" id="dossier"><span class="wiki-h2__no">3</span>Dossier</h2>
+        <p class="wiki-note">
+          {de ? `In eigenen Worten: ${f.name} erzählt selbst.` : `In ${f.name}'s own words.`}
+          {
+            isFallbackLang &&
+              (de ? ' Dieses Dossier liegt nur auf Englisch vor.' : ' This dossier is only available in German.')
+          }
+        </p>
+        <div class="sz-prose wiki-dossier" lang={entryLang}>
+          <Content />
+        </div>
+        {
+          f.id === 'drift' && (
+            <div class="wiki-help">
+              <HelpNotice lang={lang} />
+            </div>
+          )
+        }
+      </section>
+
+      <!-- Appearances -->
+      <section class="wiki-sec" aria-labelledby="auftritte">
+        <h2 class="wiki-h2" id="auftritte"><span class="wiki-h2__no">4</span>{de ? 'Auftritte' : 'Appearances'}</h2>
+
+        {
+          track && (
+            <>
+              <h3 class="wiki-h3">{de ? `Auf der EP ${EP.title}` : `On the EP ${EP.title}`}</h3>
+              <ul class="wiki-songs">
+                <SongRow
+                  lang={lang}
+                  title={track.title}
+                  href={trackPage}
+                  figures={track.figures}
+                  note={track.note?.[lang]}
+                  status={`EP · Track ${track.no}`}
+                  length={track.length}
+                  explicit={track.explicit}
+                  listen={track.spotify}
+                  lyricsHref={trackPage && track.lyricsId ? `${trackPage}#lyrics` : undefined}
+                />
+              </ul>
+            </>
+          )
+        }
+
+        {
+          otherSongs.length > 0 && (
+            <>
+              <h3 class="wiki-h3">{de ? 'In Arbeit' : 'In progress'}</h3>
+              <ul class="wiki-songs">
+                {otherSongs.map(({ r, e }) => (
+                  <SongRow
+                    lang={lang}
+                    title={e.data.title}
+                    href={sectionUrl(lang, 'music', r.slug)}
+                    figures={SONG_EXTRAS[r.slug]?.figures || [f.id]}
+                    status={de ? 'in Arbeit' : 'in progress'}
+                  />
+                ))}
+              </ul>
+            </>
+          )
+        }
+
+        {
+          showVideo && track?.filmKey && (
+            <>
+              <h3 class="wiki-h3" id="musikvideo">
+                {de ? 'Musikvideo' : 'Music video'}
+              </h3>
+              {/* ===== SLOT: FilmPlayer – the released video of the figure's EP track, renders nothing until one is released ===== */}
+              <div class="wiki-film">
+                <FilmPlayer filmKey={track.filmKey} lang={lang} title={track.title} />
+              </div>
+              {films.length > 0 && (
+                <ul class="wiki-films">
+                  {films.map((film) => (
+                    <li>
+                      <VhsCard film={film} lang={lang} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )
+        }
+
+        {
+          lyrics.length > 0 && (
+            <>
+              <h3 class="wiki-h3">{de ? 'Songtexte' : 'Lyrics'}</h3>
+              <ul class="wiki-lyrics" lang="de">
+                {lyrics.map(({ lyrics: l, ep }) => (
+                  <li>
+                    <span class="wiki-lyrics__title">{l.title}</span>
+                    <span class="sz-label" lang={lang}>
+                      {ep ? `EP · Track ${ep.no}` : de ? 'Entwurf · in Arbeit' : 'Draft · in progress'}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p class="wiki-more">
+                <a class="sz-link" href={sectionUrl(lang, 'lyrics')}>
+                  {de ? 'Alle Songtexte' : 'All lyrics'} →
+                </a>
+                {!de && <span class="sz-muted"> (German)</span>}
+              </p>
+            </>
+          )
+        }
+      </section>
+
+      <!-- Quotes -->
+      <section class="wiki-sec" aria-labelledby="zitate">
+        <h2 class="wiki-h2" id="zitate"><span class="wiki-h2__no">5</span>{de ? 'Zitate' : 'Quotes'}</h2>
+        <div class="wiki-quotes">
+          <figure>
+            <blockquote>{q(f.quote[lang])}</blockquote>
+            <figcaption>– {f.name}</figcaption>
+          </figure>
+          {
+            signature && (
+              <figure lang={entryLang}>
+                <blockquote>{q(signature)}</blockquote>
+                <figcaption>– {f.name}, Dossier</figcaption>
+              </figure>
+            )
+          }
+          {
+            track?.quote && (
+              <figure>
+                <blockquote lang="de">{de ? `„${track.quote}“` : `“${track.quote}”`}</blockquote>
+                <figcaption>
+                  – {track.title}, {de ? 'EP-Track' : 'EP track'} {track.no}
+                  {!de && ' (German lyrics)'}
+                </figcaption>
+              </figure>
+            )
+          }
+        </div>
+      </section>
+
+      <!-- Trivia -->
+      <section class="wiki-sec" aria-labelledby="wissenswertes">
+        <h2 class="wiki-h2" id="wissenswertes"><span class="wiki-h2__no">6</span>{de ? 'Wissenswertes' : 'Trivia'}</h2>
+        <ul class="wiki-trivia">
+          {trivia.map((t) => <li>{t}</li>)}
+        </ul>
+      </section>
+    </article>
+  </div>
+
+  <script>
+    /*
+     * Infobox taller than the window: let it scroll with the page until its end is visible,
+     * then stick there (top = window height - box height). Shorter boxes stick below the header.
+     */
+    const side = document.querySelector<HTMLElement>('[data-wiki-side]');
+    if (side) {
+      const header = 64 + 24;
+      const fit = () => {
+        const h = side.offsetHeight;
+        const room = window.innerHeight - header - 24;
+        side.style.setProperty('--side-top', `${h > room ? window.innerHeight - h - 24 : header}px`);
+      };
+      fit();
+      window.addEventListener('resize', fit, { passive: true });
+      if ('ResizeObserver' in window) new ResizeObserver(fit).observe(side);
+    }
+  </script>
+
+  <!-- ======================= The other five ======================= -->
+  <section class="sz-container sz-section wiki-others" aria-labelledby="andere">
+    <h2 class="wiki-h2" id="andere">
+      <span class="wiki-h2__no">7</span>{de ? 'Die anderen Splitter' : 'The other splinters'}
+    </h2>
+    <ul class="wiki-others__deck" data-deal>
       {
-        FIGURES.map((o) => (
+        others.map((o, i) => (
           <li>
-            {o.id === f.id ? (
-              <span aria-current="page">
-                <FigureChip figure={o.id} lang={lang} link={false} />
-              </span>
-            ) : (
-              <FigureChip figure={o.id} lang={lang} />
-            )}
+            <FragmentCard
+              figure={o}
+              lang={lang}
+              variant="deck"
+              href={sectionUrl(lang, 'fragments', o.id)}
+              nameTag="h3"
+              index={i}
+            />
           </li>
         ))
       }
     </ul>
+    <script is:inline>
+      (function () {
+        const l = document.currentScript && document.currentScript.previousElementSibling;
+        if (l && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) l.classList.add('will-deal');
+      })();
+    </script>
   </section>
 </Layout>
 
 <style>
-  .fig__top {
-    padding-top: var(--sp-6);
-  }
-  .fig__hero {
-    display: grid;
-    gap: var(--sp-6);
-    margin-top: var(--sp-5);
-  }
-  .fig__sheet {
+  /* ---------- Hero: card + title ---------- */
+  .fhero {
     position: relative;
-    background: radial-gradient(ellipse at 50% 60%, var(--fig-glow), transparent 65%), var(--fig-ground);
-    border: 1px solid var(--line);
-    border-top: 4px solid var(--fig);
-    max-width: 460px;
-    aspect-ratio: 2 / 3;
-    overflow: hidden;
+    overflow-x: clip;
+    padding-block: var(--sp-6) var(--sp-8);
+    background:
+      radial-gradient(ellipse 60% 70% at 22% 45%, var(--fig-glow), transparent 70%),
+      linear-gradient(180deg, color-mix(in srgb, var(--fig-ground) 80%, var(--bg)), var(--bg));
+    border-bottom: 1px solid var(--line);
   }
-  .fig__sheet img {
+  .fhero__grid {
+    display: grid;
+    grid-template-areas: 'crumbs' 'head' 'card' 'body';
+    gap: var(--sp-5);
+  }
+  .fhero__crumbs {
+    grid-area: crumbs;
+  }
+  .fhero__head {
+    grid-area: head;
+  }
+  .fhero__card {
+    grid-area: card;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 340px;
+    justify-self: center;
   }
-  .fig__id {
+  .fhero__body {
+    grid-area: body;
+  }
+  .fhero__label {
     display: flex;
     align-items: center;
     gap: 10px;
     color: var(--fig);
   }
-  .fig__name {
+  .fhero__name {
     text-transform: none;
     color: var(--fig);
-    margin-top: var(--sp-3);
+    margin-top: var(--sp-2);
   }
-  .fig__alias {
+  .fhero__alias {
     font-size: var(--fs-md);
     color: var(--text-muted);
     margin-top: var(--sp-2);
   }
-  .fig__quote {
+  .fhero__lead {
+    max-width: 46ch;
+  }
+  .fhero__actions {
     margin-top: var(--sp-5);
-    font-size: var(--fs-lg);
-    line-height: 1.3;
-    max-width: 30ch;
+  }
+  .fhero__ext {
+    font-weight: 400;
+    font-size: var(--fs-xs);
+  }
+  .fhero :global(.fhero__motion) {
+    margin-top: var(--sp-4);
+  }
+  @media (min-width: 900px) {
+    .fhero {
+      padding-block: var(--sp-6) var(--sp-9);
+    }
+    .fhero__grid {
+      grid-template-columns: minmax(300px, 400px) 1fr;
+      grid-template-areas: 'crumbs crumbs' 'card head' 'card body';
+      grid-template-rows: auto auto 1fr;
+      column-gap: var(--sp-8);
+      row-gap: var(--sp-4);
+    }
+    .fhero__card {
+      max-width: none;
+      align-self: start;
+      margin-top: var(--sp-4);
+    }
+    .fhero__head {
+      align-self: end;
+      padding-top: var(--sp-8);
+    }
+  }
+
+  /* ---------- Wiki layout: article + sticky infobox ---------- */
+  .wiki {
+    display: grid;
+    grid-template-areas: 'side' 'main';
+    gap: var(--sp-7);
+    padding-block: var(--sp-7) var(--sp-6);
+  }
+  .wiki__side {
+    grid-area: side;
+    min-width: 0;
+  }
+  .wiki__main {
+    grid-area: main;
+    min-width: 0;
+  }
+  @media (min-width: 1024px) {
+    .wiki {
+      grid-template-columns: minmax(0, 1fr) 320px;
+      grid-template-areas: 'main side';
+      column-gap: var(--sp-8);
+    }
+    .wiki__side {
+      align-self: start;
+      position: sticky;
+      top: var(--side-top, calc(64px + var(--sp-5)));
+    }
+  }
+
+  /* Contents box */
+  .wiki-toc {
+    display: inline-block;
+    min-width: min(100%, 320px);
+    max-width: 100%;
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--surface);
+    border: 1px solid var(--line);
     border-left: 4px solid var(--fig);
-    padding-left: var(--sp-4);
   }
-  .fig__voice {
-    margin-top: var(--sp-5);
-    color: var(--text);
+  .wiki-toc__h {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 var(--sp-2);
   }
-  .fig__voice .sz-label {
-    margin-right: 8px;
-  }
-  .fig__actions {
-    margin-top: var(--sp-6);
-  }
-  .fig__world {
-    margin-top: var(--sp-8);
-  }
-  .fig__songs,
-  .fig__films,
-  .fig__symbols,
-  .fig__others {
+  .wiki-toc ol {
     list-style: none;
-    margin: var(--sp-5) 0 0;
+    margin: 0;
     padding: 0;
   }
-  .fig__films {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: var(--sp-4);
+  .wiki-toc ol ol {
+    padding-left: var(--sp-5);
   }
-  .fig__symbols {
-    display: grid;
-    gap: var(--sp-4);
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  .wiki-toc a {
+    display: inline-block;
+    padding: 3px 0;
+    color: var(--text);
+    text-decoration: none;
+    font-size: var(--fs-sm);
+    line-height: 1.4;
   }
-  .fig__symbols li {
+  .wiki-toc a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--fig);
+  }
+  .wiki-toc__no {
+    font-family: var(--font-mono);
+    color: var(--fig);
+    margin-right: 4px;
+  }
+
+  /* Sections */
+  .wiki-sec {
+    margin-top: var(--sp-8);
+  }
+  .wiki-h2 {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-3);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-xl);
+    line-height: 1.1;
+    text-transform: uppercase;
+    padding-bottom: var(--sp-2);
+    border-bottom: 1px solid var(--line);
+    scroll-margin-top: calc(64px + var(--sp-4));
+  }
+  .wiki-h2__no {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: var(--fs-sm);
+    color: var(--fig);
+  }
+  .wiki-h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-md);
+    text-transform: uppercase;
+    margin-top: var(--sp-6);
+    scroll-margin-top: calc(64px + var(--sp-4));
+  }
+  .wiki-p,
+  .wiki-note {
+    margin-top: var(--sp-4);
+    max-width: var(--measure);
+  }
+  .wiki-note {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .wiki-symbols {
+    list-style: none;
+    margin: var(--sp-4) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  .wiki-symbols li {
     background: var(--surface);
     border: 1px solid var(--line);
     padding: var(--sp-4);
     display: grid;
     gap: 6px;
   }
-  .fig__symbols :global(.sz-glyph) {
+  .wiki-symbols :global(.sz-glyph) {
     color: var(--fig);
   }
-  .fig__symbols span {
+  .wiki-symbols span {
     color: var(--text-muted);
     font-size: var(--fs-sm);
   }
-  .fig__dossier {
+  .wiki-world {
     margin-top: var(--sp-5);
   }
-  .fig__help {
+  .wiki-dossier {
+    margin-top: var(--sp-4);
+  }
+  /* The dossier's own headings sit one level below the section heading */
+  .wiki-dossier :global(h2) {
+    font-size: var(--fs-lg);
+    scroll-margin-top: calc(64px + var(--sp-4));
+  }
+  .wiki-dossier :global(h2)::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 3px;
+    margin-bottom: var(--sp-3);
+    background: var(--fig);
+  }
+  .wiki-help {
     margin-top: var(--sp-6);
   }
-  .fig :global(.fig__strip) {
+  .wiki-songs,
+  .wiki-lyrics,
+  .wiki-films,
+  .wiki-trivia {
+    list-style: none;
+    margin: var(--sp-4) 0 0;
+    padding: 0;
+  }
+  .wiki-film:empty {
+    display: none;
+  }
+  .wiki-film {
     margin-top: var(--sp-4);
-    max-width: 480px;
   }
-  .fig__others {
+  .wiki-films {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--sp-4);
+  }
+  .wiki-lyrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 0 var(--sp-5);
+  }
+  .wiki-lyrics li {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-2);
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--sp-3);
+    padding: var(--sp-2) 0;
+    border-bottom: 1px solid var(--line);
   }
-  .fig__others [aria-current] :global(.sz-chip) {
-    outline: 1px solid var(--fig);
+  .wiki-lyrics__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-md);
+    line-height: 1.1;
   }
-  @media (min-width: 900px) {
-    .fig__hero {
-      grid-template-columns: minmax(280px, 420px) 1fr;
-      align-items: center;
+  .wiki-more {
+    margin-top: var(--sp-3);
+  }
+  .wiki-quotes {
+    display: grid;
+    gap: var(--sp-5);
+    margin-top: var(--sp-5);
+  }
+  .wiki-quotes figure {
+    margin: 0;
+    padding-left: var(--sp-5);
+    border-left: 4px solid var(--fig);
+  }
+  .wiki-quotes blockquote {
+    margin: 0;
+    font-size: var(--fs-md);
+    line-height: 1.35;
+    max-width: 40ch;
+  }
+  .wiki-quotes figcaption {
+    margin-top: var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .wiki-trivia {
+    display: grid;
+    gap: var(--sp-3);
+    max-width: var(--measure);
+  }
+  .wiki-trivia li {
+    position: relative;
+    padding-left: var(--sp-5);
+  }
+  .wiki-trivia li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 8px;
+    height: 8px;
+    background: var(--fig);
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  }
+
+  /* The other five as a small deck */
+  .wiki-others {
+    overflow-x: clip;
+    padding-top: var(--sp-6);
+  }
+  .wiki-others__deck {
+    list-style: none;
+    margin: var(--sp-6) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-5) var(--sp-4);
+  }
+  @media (min-width: 640px) {
+    .wiki-others__deck {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) {
+    .wiki-others__deck {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
   }
 </style>

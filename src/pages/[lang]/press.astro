@@ -1,121 +1,208 @@
 ---
 /**
- * Press Page - Multilingual project explainer for media
- * @props - lang
- * @behavior - Summarizes the Creative Cosmos, FRAGMENT concept, structure, and contact
- * @dependencies - PageLayout, i18n utils
+ * Press (KONZEPT B8 footer page, rebuilt in the new frame).
+ * Wording of the former page kept; facts (EP, tracks, figures) come from the
+ * data sources so they cannot drift: src/data/songs.ts (Spotify) and figures.ts.
+ * Motion (motion.css): head strip fills on load, facts and cards reveal in sequence,
+ * card links nudge their arrow.
  */
-import type { GetStaticPaths } from 'astro';
-import Layout from '../../layouts/PageLayout.astro';
-import { SUPPORTED_LANGUAGES } from '../../utils/i18n';
-import type { SupportedLanguage } from '../../utils/i18n';
-import { getPermalink } from '../../utils/permalinks';
+import Layout from '~/layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
+import FigureStrip from '~/components/seez/FigureStrip.astro';
+import FigureChip from '~/components/seez/FigureChip.astro';
+import { EP, EP_TRACKS } from '~/data/songs';
+import { FIGURES } from '~/data/figures';
+import { SUPPORTED_LANGUAGES } from '~/utils/i18n';
+import { sectionUrl, type Lang } from '~/utils/routes';
 
-export const getStaticPaths = (() =>
-  SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
-const { lang } = Astro.params as { lang: SupportedLanguage };
-const t = (de: string, en: string) => (lang === 'de' ? de : en);
+const { lang } = Astro.params as { lang: Lang };
+const de = lang === 'de';
+const t = (d: string, e: string) => (de ? d : e);
+
+const released = new Date(EP.released).toLocaleDateString(de ? 'de-DE' : 'en-GB', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+});
 
 const metadata = {
-  title: t('Presse – Projektüberblick', 'Press – Project Overview'),
+  title: t('Presse', 'Press'),
   description: t(
-    'Seez Creative Cosmos: Musik, Texte und Figuren als FRAGMENTS einer Identität. Überblick, Struktur, Kontakt. ',
-    'Seez Creative Cosmos: music, texts, and figures as FRAGMENTS of an identity. Overview, structure, contact.'
+    `Seez: Musik, Texte und sechs Figuren als Fragmente einer Identität. Die EP ${EP.title} (${released}), Überblick und Kontakt.`,
+    `Seez: music, texts and six figures as fragments of one identity. The EP ${EP.title} (${released}), overview and contact.`
   ),
-  canonical: getPermalink(`/${lang}/press`),
 };
+
+const facts = [
+  { k: t('Veröffentlicht', 'Released'), v: `EP ${EP.title} · ${released}` },
+  { k: 'Tracks', v: `${EP_TRACKS.length} · ${EP.length}` },
+  { k: t('Figuren', 'Figures'), v: t('sechs, SZ-001 bis SZ-006', 'six, SZ-001 to SZ-006') },
+  { k: t('Sprachen', 'Languages'), v: t('Deutsch (Songs), Website Deutsch und Englisch', 'German (songs), website in German and English') },
+  { k: t('Stand', 'Status'), v: t('alles außer der EP ist in Arbeit', 'everything except the EP is work in progress') },
+];
+
+const how = [
+  {
+    label: t('Musik', 'Music'),
+    text: t('Songs und Skizzen, teils mit Figur-Referenzen.', 'Songs and sketches, some linked to figures.'),
+    href: sectionUrl(lang, 'music'),
+  },
+  {
+    label: t('Texte', 'Texts'),
+    text: t('Prosa, Lyrik, Essays – häufig mit Figuren verknüpft.', 'Prose, poetry, essays – often linked to figures.'),
+    href: `/${lang}/texte`,
+  },
+  {
+    label: t('Fragmente', 'Fragments'),
+    text: t('Identitätsfragmente mit Symbolik, Stimme, Bewegung.', 'Identity fragments with symbolism, voice, movement.'),
+    href: sectionUrl(lang, 'fragments'),
+  },
+  {
+    label: t('Werkstatt', 'Workshop'),
+    text: t('Wie die Songs und Videos entstehen.', 'How the songs and videos are made.'),
+    href: sectionUrl(lang, 'workshop'),
+  },
+];
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-3xl">
-    <header class="mb-8">
-      <h1 class="text-3xl md:text-4xl font-bold mb-3">{t('Presse', 'Press')}</h1>
-      <p class="text-muted">{t('Projektüberblick und Funktionsweise', 'Project overview and how it works')}</p>
-    </header>
+  <PageHead
+    title={t('Presse', 'Press')}
+    label={t('Projektüberblick und Kontakt', 'Project overview and contact')}
+    lead={t(
+      'Seez ist ein kreatives Universum aus Musik, Texten und Figuren. Die Figuren sind Fragmente – Teile einer Identität mit eigenen Stimmen, Symbolen und Bewegungsmustern. Inhalte sind miteinander verknüpft und bilden ein wachsendes, offenes Erzählgefüge.',
+      'Seez is a creative universe of music, texts, and figures. The figures are fragments – parts of an identity with their own voices, symbols, and movement patterns. Content is cross-linked, forming a growing, open narrative system.'
+    )}
+  >
+    <FigureStrip height={6} class="press__strip" motion="boot" />
+  </PageHead>
 
-    <div class="prose dark:prose-invert max-w-none">
-      <h2>{t('Kurzfassung', 'Summary')}</h2>
-      <p>
-        {
-          t(
-            'Seez.eu ist ein kreatives Universum aus Musik, Texten und Figuren. Die Figuren sind FRAGMENTS – Teile einer Identität mit eigenen Stimmen, Symbolen und Bewegungsmustern. Inhalte sind miteinander verknüpft und bilden ein wachsendes, offenes Erzählgefüge.',
-            'Seez.eu is a creative universe of music, texts, and figures. The figures are FRAGMENTS – parts of an identity with their own voices, symbols, and movement patterns. Content is cross-linked, forming a growing, open narrative system.'
-          )
-        }
-      </p>
-
-      <h2>{t('So funktioniert es', 'How it works')}</h2>
-      <ul>
-        <li>
-          {t('Musik', 'Music')}: {
-            t('Songs und Skizzen, teils mit Figur-Referenzen.', 'Songs and sketches, some linked to figures.')
-          }
-        </li>
-        <li>
-          {t('Texte', 'Texts')}: {
-            t(
-              'Prosa, Lyrik, Essays – häufig mit Figuren verknüpft.',
-              'Prose, poetry, essays – often linked to figures.'
-            )
-          }
-        </li>
-        <li>
-          {t('Fragmente (FRAGMENTS)', 'Fragments (FRAGMENTS)')}: {
-            t(
-              'Identitätsfragmente mit Symbolik, Stimme, Bewegung.',
-              'Identity fragments with symbolism, voice, movement.'
-            )
-          }
-        </li>
-        <li>
-          {t('Artefakte', 'Artifacts')}: {
-            t('Optionale Objekte/Prints/Merch (im Aufbau).', 'Optional objects/prints/merch (in progress).')
-          }
-        </li>
-      </ul>
-
-      <h2>{t('Technik & Veröffentlichung', 'Tech & Publishing')}</h2>
-      <ul>
-        <li>
+  <section class="sz-section sz-container press__top" aria-labelledby="facts">
+    <div class="press__grid">
+      <div>
+        <h2 class="sz-label" id="facts">{t('Auf einen Blick', 'At a glance')}</h2>
+        <dl class="press__facts reveal-stagger">
           {
-            t(
-              'Astro 5, statisch generiert, schnell und barrierearm.',
-              'Astro 5, statically generated, fast and accessible.'
-            )
+            facts.map((f) => (
+              <div>
+                <dt class="sz-label">{f.k}</dt>
+                <dd>{f.v}</dd>
+              </div>
+            ))
           }
-        </li>
-        <li>
-          {
-            t(
-              'Mehrsprachig (Deutsch/Englisch) mit konsistenter URL-Struktur.',
-              'Multilingual (German/English) with consistent URL structure.'
-            )
-          }
-        </li>
-        <li>{t('Suchfunktion und Querverweise zwischen Inhalten.', 'Search and cross-linking across content.')}</li>
-      </ul>
-
-      <h2>{t('Relevante Einstiegspunkte', 'Key entry points')}</h2>
-      <ul>
-        <li><a class="underline hover:no-underline" href={getPermalink(lang === 'de' ? '/de/musik' : '/en/music')}>{t('Musik', 'Music')}</a></li>
-        <li><a class="underline hover:no-underline" href={getPermalink(`/${lang}/texte`)}>{t('Texte', 'Texts')}</a></li>
-        <li>
-          <a class="underline hover:no-underline" href={getPermalink(lang === 'de' ? '/de/fragmente' : '/en/fragments')}
-            >{t('Fragmente (FRAGMENTS)', 'Fragments (FRAGMENTS)')}</a
-          >
-        </li>
-        <li>
-          <a class="underline hover:no-underline" href={getPermalink(`/${lang}/welcome`)}
-            >{t('Projekt-Erläuterung', 'Project explainer')}</a
-          >
-        </li>
-      </ul>
-
-      <h2>{t('Kontakt', 'Contact')}</h2>
-      <p>
-        {t('Presseanfragen', 'Press inquiries')}: <a href="mailto:info@seez.eu">info@seez.eu</a>
-      </p>
+        </dl>
+        <div class="press__figs reveal-stagger">
+          {FIGURES.map((f) => <FigureChip figure={f.id} lang={lang} />)}
+        </div>
+      </div>
+      <div class="sz-panel press__contact reveal">
+        <p class="sz-label">{t('Presseanfragen', 'Press inquiries')}</p>
+        <p class="press__mail"><a class="sz-link" href="mailto:info@seez.eu">info@seez.eu</a></p>
+        <div class="sz-btn-row">
+          <a class="sz-btn sz-btn--primary" href={EP.spotify} rel="noopener">{t('EP auf Spotify', 'EP on Spotify')}</a>
+          <a class="sz-btn" href={`/${lang}/contact`}>{t('Kontakt', 'Contact')}</a>
+        </div>
+      </div>
     </div>
   </section>
+
+  <section class="sz-section sz-container" aria-labelledby="how">
+    <h2 class="sz-h2 reveal" id="how">{t('So funktioniert es', 'How it works')}</h2>
+    <ul class="press__how reveal-stagger">
+      {
+        how.map((h) => (
+          <li class="sz-panel sz-lift">
+            <p class="sz-label">{h.label}</p>
+            <p class="press__how-text">{h.text}</p>
+            <a class="sz-link" href={h.href}>
+              {t('Ansehen', 'Open')} <span class="sz-arrow" aria-hidden="true">→</span><span class="sr-only"> {h.label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="sz-section sz-container" aria-labelledby="tech">
+    <h2 class="sz-h2 reveal" id="tech">{t('Technik und Veröffentlichung', 'Tech and publishing')}</h2>
+    <ul class="sz-prose press__tech reveal-stagger">
+      <li>{t('Astro 5, statisch generiert, schnell und barrierearm.', 'Astro 5, statically generated, fast and accessible.')}</li>
+      <li>{t('Mehrsprachig (Deutsch/Englisch) mit konsistenter URL-Struktur.', 'Multilingual (German/English) with consistent URL structure.')}</li>
+      <li>{t('Suchfunktion und Querverweise zwischen Inhalten.', 'Search and cross-linking across content.')}</li>
+      <li>
+        {
+          t(
+            'Online steht nur, was ausdrücklich freigegeben ist; der Quellcode ist öffentlich.',
+            'Only explicitly released content goes online; the source code is public.'
+          )
+        }
+      </li>
+    </ul>
+  </section>
 </Layout>
+
+<style>
+  :global(.press__strip) {
+    margin-top: var(--sp-5);
+    max-width: 420px;
+  }
+  .press__top {
+    padding-top: 0;
+  }
+  .press__grid {
+    display: grid;
+    gap: var(--sp-6);
+  }
+  .press__facts {
+    margin: var(--sp-4) 0 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .press__facts > div {
+    display: grid;
+    gap: 2px;
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px solid var(--line);
+  }
+  .press__facts dd {
+    margin: 0;
+    font-size: var(--fs-md);
+  }
+  .press__figs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-5);
+  }
+  .press__mail {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-xl);
+    margin: var(--sp-3) 0 var(--sp-5);
+  }
+  .press__how {
+    list-style: none;
+    margin: var(--sp-5) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .press__how-text {
+    margin: var(--sp-3) 0;
+    color: var(--text-muted);
+  }
+  .press__tech {
+    margin-top: var(--sp-4);
+  }
+  @media (min-width: 768px) {
+    .press__grid {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: start;
+    }
+    .press__how {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,59 +1,45 @@
 ---
 /**
- * Lyrics index (KONZEPT B8): every lyric from src/data/lyrics.json, filterable by figure.
- * EP songs link to their song page (lyrics live there); all others open in place and are
- * marked "in Arbeit" – only the EP is released.
+ * LyricsIndex (KONZEPT B8): every lyric from src/data/lyrics.json, filterable by figure.
+ * Part of the music page (#lyrics) since the separate /lyrics page was merged into it.
+ * EP lyrics come first in Spotify order and link to their song page; all others are
+ * drafts of songs in progress and open in place.
  */
-import type { GetStaticPaths } from 'astro';
-import Layout from '~/layouts/PageLayout.astro';
-import PageHead from '~/components/seez/PageHead.astro';
 import FigureChip from '~/components/seez/FigureChip.astro';
 import FigureGlyph from '~/components/seez/FigureGlyph.astro';
 import LyricsBlock from '~/components/seez/LyricsBlock.astro';
-import { SUPPORTED_LANGUAGES } from '~/utils/i18n';
 import { FIGURES, getFigure } from '~/data/figures';
-import { EP, EP_TRACKS, LYRICS, songSlugForLyrics } from '~/data/songs';
+import { EP_TRACKS, LYRICS, songSlugForLyrics } from '~/data/songs';
 import { getSongRecords } from '~/utils/music';
 import { sectionUrl, type Lang } from '~/utils/routes';
 
-export const getStaticPaths = (() => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
-
-const { lang } = Astro.params as { lang: Lang };
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
 const de = lang === 'de';
 const records = await getSongRecords();
 const epLyrics = new Set(EP_TRACKS.map((t) => t.lyricsId).filter(Boolean));
+const trackNo = (id: string) => EP_TRACKS.find((t) => t.lyricsId === id)?.no;
 const order = new Map(FIGURES.map((f, i) => [f.id, i]));
 const items = LYRICS.map((l) => {
   const slug = songSlugForLyrics(l.id);
   return {
     ...l,
     onEp: epLyrics.has(l.id),
-    href: slug && records.some((r) => r.slug === slug) ? `${sectionUrl(lang, 'music', slug)}#lyrics` : undefined,
+    no: trackNo(l.id),
+    href: slug && records.some((r) => r.slug === slug) ? sectionUrl(lang, 'music', slug) : undefined,
   };
 }).sort(
   (a, b) =>
-    Number(b.onEp) - Number(a.onEp) || (order.get(a.figure) ?? 9) - (order.get(b.figure) ?? 9) || a.title.localeCompare(b.title, 'de')
+    Number(b.onEp) - Number(a.onEp) ||
+    (a.no ?? 99) - (b.no ?? 99) ||
+    (order.get(a.figure) ?? 9) - (order.get(b.figure) ?? 9) ||
+    a.title.localeCompare(b.title, 'de')
 );
-
-const metadata = {
-  title: 'Lyrics',
-  description: de
-    ? 'Alle Songtexte von Seez, nach Figur sortiert. Die EP GENERIERUNG LÄUFT und die Songs, an denen gearbeitet wird.'
-    : 'All Seez lyrics, sorted by figure: the EP GENERIERUNG LÄUFT and the songs still in progress.',
-};
 ---
 
-<Layout metadata={metadata}>
-  <PageHead
-    title="Lyrics"
-    label={`${items.length} ${de ? 'Songtexte' : 'lyrics'}`}
-    lead={de
-      ? `Die Texte der EP ${EP.title} stehen auf den Songseiten. Alle anderen Songs sind in Arbeit; ihre Texte sind Entwürfe.`
-      : `The lyrics of the EP ${EP.title} live on the song pages. All other songs are in progress; their lyrics are drafts.`}
-  />
-  {!de && <p class="sz-container sz-muted">Lyrics are in German.</p>}
-
-  <div class="sz-container">
+  <div class="ly">
     <div class="ly__filter" role="group" aria-label={de ? 'Nach Figur filtern' : 'Filter by figure'} data-ly-filter hidden>
       <button type="button" aria-pressed="true" data-fig="">{de ? 'Alle' : 'All'}</button>
       {
@@ -67,33 +53,35 @@ const metadata = {
     </div>
     <p class="sz-muted ly__count" aria-live="polite" data-ly-count></p>
 
-    <ul class="ly__list" lang="de">
+    {!de && <p class="sz-muted">Lyrics are in German.</p>}
+    <ul class="ly__list reveal-stagger" lang="de">
       {
         items.map((l) => (
           <li class="ly__item" data-fig={l.figure} style={`--fig:${getFigure(l.figure)?.accent.dark}`}>
             <div class="ly__head">
-              <h2 class="ly__title">{l.title}</h2>
+              <h3 class="ly__title">{l.title}</h3>
               <FigureChip figure={l.figure} lang={lang} />
               <span class="sz-label" lang={lang}>
-                {l.onEp ? `EP · ${EP.title}` : de ? 'in Arbeit' : 'in progress'}
+                {l.onEp ? `EP · Track ${l.no}` : de ? 'in Arbeit' : 'in progress'}
               </span>
             </div>
-            {l.href ? (
-              <a class="sz-link ly__go" href={l.href} lang={lang}>
-                {de ? 'Text auf der Songseite' : 'Lyrics on the song page'} →
-              </a>
-            ) : (
+            <div class="ly__actions">
               <details class="ly__details">
                 <summary lang={lang}>{de ? 'Text anzeigen' : 'Show lyrics'}</summary>
-                <LyricsBlock text={l.text} idPrefix={l.id} />
+                <LyricsBlock text={l.text} idPrefix={`all-${l.id}`} />
               </details>
-            )}
+              {l.href && (
+                <a class="sz-link ly__go" href={l.href} lang={lang}>
+                  {de ? 'Zur Songseite' : 'Song page'} →
+                </a>
+              )}
+            </div>
           </li>
         ))
       }
     </ul>
   </div>
-</Layout>
+
 
 <script is:inline define:vars={{ de }}>
   (() => {
@@ -176,12 +164,21 @@ const metadata = {
     line-height: 1.1;
     margin-right: var(--sp-2);
   }
-  .ly__go {
-    display: inline-block;
+  .ly__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--sp-2) var(--sp-5);
     margin-top: var(--sp-3);
   }
+  .ly__go {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
   .ly__details {
-    margin-top: var(--sp-3);
+    flex: 1 1 100%;
+    order: 2;
   }
   .ly__details summary {
     cursor: pointer;

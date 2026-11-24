@@ -1,0 +1,316 @@
+---
+/**
+ * FigureInfobox – the wiki infobox of a figure page. Only real data:
+ *   image          figures.json scene (+ alt as caption)
+ *   Kennung        figures.json sz · Fragment n/6 (order)
+ *   Beinamen       dossier frontmatter `alias` (falls back to figures.json alias)
+ *   Medium         figures.json medium
+ *   Farbe          figures.json accent.label + accent.dark
+ *   Stimme/Stil/Bewegung  dossier voiceCharacteristics / movementGrammar (only where the dossier has them)
+ *   EP-Track       songs.ts EP_TRACKS (no, title, length, explicit) + BPM from the Videothek catalog
+ *   Single         songs.ts SINGLES
+ *   Songs in Arbeit / Songtexte  counts from songs.ts and lyrics.json
+ *   Dossier seit   dossier firstPublishedAt (listed in the music group's tail)
+ */
+import type { CollectionEntry } from 'astro:content';
+import type { Figure } from '~/data/figures';
+import { FIGURES } from '~/data/figures';
+import { EP, type EpTrack } from '~/data/songs';
+import { sectionUrl, type Lang } from '~/utils/routes';
+
+interface Props {
+  figure: Figure;
+  lang: Lang;
+  entry: CollectionEntry<'fragments'>;
+  track?: EpTrack;
+  trackHref?: string;
+  bpm?: number;
+  singles: { released: string; length: string; spotify: string }[];
+  songsInProgress: number;
+  lyricsCount: number;
+  lyricsDrafts: number;
+}
+const {
+  figure: f,
+  lang,
+  entry,
+  track,
+  trackHref,
+  bpm,
+  singles,
+  songsInProgress,
+  lyricsCount,
+  lyricsDrafts,
+} = Astro.props;
+const de = lang === 'de';
+const sameLang = (entry.data.language || 'de') === lang;
+const aliases = (sameLang && entry.data.alias) || f.alias[lang];
+const voice = sameLang ? entry.data.voiceCharacteristics : undefined;
+const movement = sameLang ? entry.data.movementGrammar : undefined;
+const date = (d?: Date | string) =>
+  d
+    ? new Date(d).toLocaleDateString(de ? 'de-DE' : 'en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        timeZone: 'Europe/Berlin',
+      })
+    : undefined;
+const since = date(entry.data.firstPublishedAt);
+---
+
+<aside class="ibox" aria-labelledby="ibox-h">
+  <h2 class="ibox__head" id="ibox-h">
+    <span class="ibox__name">{f.name}</span>
+    <span class="ibox__alias">{f.alias[lang]}</span>
+  </h2>
+  <figure class="ibox__img">
+    <img src={f.scene.src} alt="" loading="lazy" decoding="async" />
+    <figcaption>{f.scene.alt[lang]}</figcaption>
+  </figure>
+
+  <h3 class="ibox__group">{de ? 'Figur' : 'Figure'}</h3>
+  <dl class="ibox__rows">
+    <div class="ibox__row">
+      <dt>{de ? 'Kennung' : 'Designation'}</dt>
+      <dd class="sz-mono">{f.sz}</dd>
+    </div>
+    <div class="ibox__row">
+      <dt>Fragment</dt>
+      <dd>{de ? `${f.order} von ${FIGURES.length}` : `${f.order} of ${FIGURES.length}`}</dd>
+    </div>
+    <div class="ibox__row">
+      <dt>{aliases.includes(',') ? (de ? 'Beinamen' : 'Aliases') : de ? 'Beiname' : 'Alias'}</dt>
+      <dd>{aliases}</dd>
+    </div>
+    <div class="ibox__row">
+      <dt>Medium</dt>
+      <dd>{f.medium[lang]}</dd>
+    </div>
+    <div class="ibox__row">
+      <dt>{de ? 'Farbe' : 'Colour'}</dt>
+      <dd>
+        <span class="ibox__swatch" aria-hidden="true"></span>
+        {f.accent.label[lang]}
+        <span class="sz-mono ibox__hex">{f.accent.dark}</span>
+      </dd>
+    </div>
+    {
+      voice?.preset && (
+        <div class="ibox__row">
+          <dt>{de ? 'Stimme' : 'Voice'}</dt>
+          <dd>{voice.preset}</dd>
+        </div>
+      )
+    }
+    {
+      voice?.style && voice.style.length > 0 && (
+        <div class="ibox__row">
+          <dt>{de ? 'Stil' : 'Style'}</dt>
+          <dd>{voice.style.join(' · ')}</dd>
+        </div>
+      )
+    }
+    {
+      movement && movement.length > 0 && (
+        <div class="ibox__row">
+          <dt>{de ? 'Bewegung' : 'Movement'}</dt>
+          <dd>{movement.join(' · ')}</dd>
+        </div>
+      )
+    }
+    {
+      since && (
+        <div class="ibox__row">
+          <dt>{de ? 'Dossier seit' : 'Dossier since'}</dt>
+          <dd class="sz-mono">{since}</dd>
+        </div>
+      )
+    }
+  </dl>
+
+  <h3 class="ibox__group">{de ? 'Musik' : 'Music'}</h3>
+  <dl class="ibox__rows">
+    {
+      track && (
+        <div class="ibox__row">
+          <dt>{de ? 'EP-Track' : 'EP track'}</dt>
+          <dd>
+            <span class="sz-mono">{String(track.no).padStart(2, '0')}</span> ·{' '}
+            {trackHref ? <a href={trackHref}>{track.title}</a> : track.title}
+            <span class="ibox__sub">
+              {track.length}
+              {bpm && <> · {bpm} BPM</>}
+              {track.explicit && <> · {de ? 'explizit' : 'explicit'}</>}
+            </span>
+          </dd>
+        </div>
+      )
+    }
+    {
+      track && (
+        <div class="ibox__row">
+          <dt>EP</dt>
+          <dd>
+            <a href={EP.spotify} rel="noopener">
+              {EP.title}
+            </a>
+            <span class="ibox__sub">{date(EP.released)}</span>
+          </dd>
+        </div>
+      )
+    }
+    {
+      singles.map((s) => (
+        <div class="ibox__row">
+          <dt>Single</dt>
+          <dd>
+            <a href={s.spotify} rel="noopener">
+              {track?.title}
+            </a>
+            <span class="ibox__sub">
+              {date(s.released)} · {s.length}
+            </span>
+          </dd>
+        </div>
+      ))
+    }
+    <div class="ibox__row">
+      <dt>{de ? 'In Arbeit' : 'In progress'}</dt>
+      <dd>
+        {
+          songsInProgress > 0 ? (
+            <a href="#auftritte">
+              {de
+                ? `${songsInProgress} Song${songsInProgress === 1 ? '' : 's'}`
+                : `${songsInProgress} song${songsInProgress === 1 ? '' : 's'}`}
+            </a>
+          ) : (
+            '–'
+          )
+        }
+      </dd>
+    </div>
+    <div class="ibox__row">
+      <dt>{de ? 'Songtexte' : 'Lyrics'}</dt>
+      <dd>
+        <a href={sectionUrl(lang, 'lyrics')}>{lyricsCount}</a>
+        {
+          lyricsDrafts > 0 && (
+            <span class="ibox__sub">{de ? `davon ${lyricsDrafts} Entwürfe` : `${lyricsDrafts} of them drafts`}</span>
+          )
+        }
+      </dd>
+    </div>
+  </dl>
+</aside>
+
+<style>
+  .ibox {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--fig);
+    font-size: var(--fs-sm);
+    line-height: 1.45;
+  }
+  .ibox__head {
+    display: grid;
+    gap: 2px;
+    padding: var(--sp-3) var(--sp-4);
+    background: color-mix(in srgb, var(--fig) 12%, var(--surface));
+    text-align: center;
+  }
+  .ibox__name {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--fs-lg);
+    line-height: 1;
+    color: var(--fig);
+  }
+  .ibox__alias {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .ibox__img {
+    margin: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .ibox__img img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+  .ibox__img figcaption {
+    padding: var(--sp-2) var(--sp-4);
+    font-size: var(--fs-xs);
+    line-height: 1.45;
+    color: var(--text-muted);
+  }
+  .ibox__rows {
+    margin: 0;
+    padding: 0;
+  }
+  .ibox__group {
+    padding: 6px var(--sp-4);
+    margin: 0;
+    background: var(--surface-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .ibox__row {
+    display: grid;
+    grid-template-columns: 7.5em 1fr;
+    gap: var(--sp-3);
+    padding: 7px var(--sp-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .ibox__row:last-child {
+    border-bottom: 0;
+  }
+  .ibox__row dt {
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .ibox__row dd {
+    margin: 0;
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
+  .ibox__row a {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--fig);
+    text-underline-offset: 0.18em;
+  }
+  .ibox__row a:hover {
+    text-decoration-thickness: 2px;
+  }
+  .ibox__sub {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+  .ibox__swatch {
+    display: inline-block;
+    width: 0.9em;
+    height: 0.9em;
+    margin-right: 6px;
+    vertical-align: -0.1em;
+    background: var(--fig);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .ibox__hex {
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+  }
+</style>

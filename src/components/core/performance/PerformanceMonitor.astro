@@ -5,6 +5,9 @@
  * @behavior Monitors Core Web Vitals and sends alerts on regression
  * @dependencies Web Performance API, localStorage for persistence
  * @usedBy Layout.astro for site-wide performance monitoring
+ *
+ * Runs only in local development. seez.eu stores nothing in visitors' browsers
+ * (no cookies, no localStorage), see the privacy notice; do not enable it in production.
  */
 
 export interface Props {
@@ -19,7 +22,7 @@ export interface Props {
 }
 
 const {
-  enabled = true,
+  enabled = Boolean(import.meta.env.DEV),
   debug = false,
   thresholds = {
     fcp: 1800,

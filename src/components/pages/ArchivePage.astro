@@ -2,6 +2,7 @@
 /**
  * ArchivePage - everything that is kept but not part of the five main sections
  * (user decision 10: nothing deleted, only filed). Recommendations are in the relaunch report.
+ * Motion: the three groups reveal one after another; links nudge an arrow on hover.
  */
 import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
@@ -25,7 +26,6 @@ const groups = [
     title: de ? 'Über Seez' : 'About Seez',
     items: [
       { href: `/${lang}/about`, title: de ? 'Über Seez' : 'About Seez', text: de ? 'Wer hinter Seez steht.' : 'Who is behind Seez.' },
-      { href: `/${lang}/welcome`, title: de ? 'Willkommen' : 'Welcome', text: de ? 'Der frühere Einstiegstext ins Universum.' : 'The earlier introduction to the universe.' },
       { href: `/${lang}/authors/seez`, title: 'Seez', text: de ? 'Autorenseite.' : 'Author page.' },
       { href: `/${lang}/authors/echo`, title: 'Echo', text: de ? 'Autorenseite der KI-Mitarbeit.' : 'Author page for the AI collaboration.' },
     ],
@@ -33,7 +33,6 @@ const groups = [
   {
     title: de ? 'Kontakt und Presse' : 'Contact and press',
     items: [
-      { href: `/${lang}/inventory`, title: 'Inventory', text: de ? 'Wo du Seez findest: Links und Kanäle.' : 'Where to find Seez: links and channels.' },
       { href: `/${lang}/press`, title: de ? 'Presse' : 'Press', text: de ? 'Material und Kontakt für Presse.' : 'Material and contact for press.' },
       { href: `/${lang}/contact`, title: de ? 'Kontakt' : 'Contact', text: de ? 'Schreib Seez.' : 'Write to Seez.' },
       { href: sectionUrl(lang, 'license'), title: de ? 'Lizenz für Auftritte' : 'Performer license', text: 'Sinn fix, Form frei.' },
@@ -51,7 +50,7 @@ const metadata = {
     title={de ? 'Archiv' : 'Archive'}
     lead={de ? 'Alles, was neben Musik, Fragmenten, Lyrics und Werkstatt zu Seez gehört.' : 'Everything else that belongs to Seez besides music, fragments, lyrics and the workshop.'}
   />
-  <div class="sz-container arc">
+  <div class="sz-container arc reveal-stagger">
     {
       groups.map((g) => (
         <section aria-label={g.title}>
@@ -59,7 +58,9 @@ const metadata = {
           <ul>
             {g.items.map((i) => (
               <li>
-                <a href={i.href}>{i.title}</a>
+                <a href={i.href}>
+                  {i.title} <span class="sz-arrow" aria-hidden="true">→</span>
+                </a>
                 <span class="sz-muted">{i.text}</span>
               </li>
             ))}
@@ -96,6 +97,15 @@ const metadata = {
   }
   .arc a:hover {
     text-decoration: underline;
+  }
+  .arc .sz-arrow {
+    opacity: 0;
+    transition:
+      opacity var(--motion-fast) var(--ease-out),
+      transform var(--motion-fast) var(--ease-out);
+  }
+  .arc a:is(:hover, :focus-visible) .sz-arrow {
+    opacity: 1;
   }
   @media (min-width: 900px) {
     .arc {

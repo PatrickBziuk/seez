@@ -1,5 +1,5 @@
 ---
-title: 'FCK SUNO'
+title: 'FUCK SUNO'
 subtitle: 'Gl1tch streitet mit dem Werkzeug, das ihm eine Stimme gibt'
 language: de
 authors: ['seez']
@@ -12,16 +12,21 @@ tags: ['song', 'ep1', 'generierung-laeuft', 'gl1tch', 'ki-musik', 'plattformkrit
 audioUrl: '/sounds/fck-suno.mp3'
 figureRef: fragments/gl1tch
 linerNotes: 'SP2-Gl1tch-Track über KI-Musik, Zugang und Selbstentlarvung.'
-lastChangeDate: '2026-11-24T12:47:33.533Z'
+lastChangeDate: '2026-11-24T14:33:02.197Z'
 changeLog:
   - date: '2026-11-24T12:47:33.533Z'
     description: Content updated
     author: seez
     type: content
     automated: true
+  - date: '2026-11-24T14:33:02.197Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-FCK SUNO beginnt als Angriff auf glatte, seelenlose KI-Massenware und kippt dann in Gl1tchs Kernparadox: Er kritisiert genau das Werkzeug, das ihm Stimme verschafft.
+FUCK SUNO beginnt als Angriff auf glatte, seelenlose KI-Massenware und kippt dann in Gl1tchs Kernparadox: Er kritisiert genau das Werkzeug, das ihm Stimme verschafft.
 
 Der Song gehört in die Ethik-Phase, weil er nicht bei Ablehnung stehen bleibt. Er fragt, ob Zugang, Gefühl und Autorschaft neu verhandelt werden müssen.
 
@@ -29,5 +34,5 @@ Der Song gehört in die Ethik-Phase, weil er nicht bei Ablehnung stehen bleibt. 
 
 - **Figur:** Gl1tch
 - **Phase:** SEELENSPLITTER PHASE 2 / EP1
-- **EP:** GENERIERUNG LÄUFT
+- **EP:** GENERIERUNG LÄUFT, Track 6
 - **Themen:** KI-Musik, KI, Meta-Kunst, Plattformkritik, Stimme

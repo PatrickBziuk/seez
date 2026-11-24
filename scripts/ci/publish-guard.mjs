@@ -18,6 +18,7 @@ import {
   readCatalog,
   readReleases,
   releaseAssets,
+  trackAssets,
   sha256File,
   PUBLIC_PREFIX,
 } from '../../src/utils/videothek-media.mjs';
@@ -104,6 +105,11 @@ for (const [id, r] of Object.entries(releases)) {
   if (!catalog.films.some((f) => f.id === id)) fail(`releases.json pins unknown film "${id}"`);
   for (const a of releaseAssets(r)) pinned.set(a.asset, a);
 }
+const releasedTracks = readReleases(root).tracks || {};
+for (const [slug, t] of Object.entries(releasedTracks)) {
+  for (const a of trackAssets(t)) pinned.set(a.asset, a);
+  if (!t.audio?.asset?.startsWith(`track-${slug}--`)) fail(`releases.json track "${slug}" has a foreign asset`);
+}
 const mediaDir = path.join(dist, PUBLIC_PREFIX);
 const mediaFiles = walk(mediaDir);
 for (const f of mediaFiles) {
@@ -141,8 +147,42 @@ for (const [needle, what] of [
   if (hit.length) fail(`${what} ("${needle}") in: ${hit.slice(0, 3).join(', ')}`);
 }
 
+// ---------- 4. Privacy: no cookies, no browser storage, no third-party loads ----------
+// seez.eu promises in its privacy notice that it sets no cookies, stores nothing in the
+// visitor's browser and loads nothing from other hosts. Links to other sites are fine.
+for (const [needle, what] of [
+  ['document.cookie', 'cookie access'],
+  ['localStorage.setItem', 'localStorage write'],
+  ['localStorage[', 'localStorage write'],
+  ['sessionStorage', 'sessionStorage use'],
+  ['indexedDB.open', 'IndexedDB use'],
+]) {
+  const hit = findText(needle);
+  if (hit.length) fail(`${what} ("${needle}") in: ${hit.slice(0, 3).join(', ')}`);
+}
+const OWN_HOST = /^https?:\/\/(www\.)?seez\.eu(\/|$)/;
+const THIRD_PARTY = [
+  /<script\b[^>]*\bsrc="(https?:\/\/[^"]+)"/g,
+  /<iframe\b[^>]*\bsrc="(https?:\/\/[^"]+)"/g,
+  /<(?:img|audio|video|source|track|embed)\b[^>]*\bsrc="(https?:\/\/[^"]+)"/g,
+  /<link\b(?=[^>]*\brel="(?:stylesheet|preconnect|dns-prefetch|preload|prefetch|modulepreload|icon)")[^>]*\bhref="(https?:\/\/[^"]+)"/g,
+  /@import\s+url\((?:'|")?(https?:\/\/[^'")]+)/g,
+];
+const thirdParty = new Map();
+for (const [f, t] of texts) {
+  if (!f.endsWith('.html')) continue;
+  for (const re of THIRD_PARTY) {
+    for (const m of t.matchAll(re)) {
+      if (OWN_HOST.test(m[1])) continue;
+      const host = new URL(m[1]).host;
+      if (!thirdParty.has(host)) thirdParty.set(host, rel(f));
+    }
+  }
+}
+for (const [host, f] of thirdParty) fail(`third-party resource from ${host} (first in ${f})`);
+
 // ---------- Result ----------
-const summary = `${entries.length - drafts} published / ${drafts} unreleased entries, ${Object.keys(releases).length} released film(s), ${mediaFiles.length} media file(s)`;
+const summary = `${entries.length - drafts} published / ${drafts} unreleased entries, ${Object.keys(releases).length} released film(s), ${Object.keys(releasedTracks).length} released track(s), ${mediaFiles.length} media file(s)`;
 if (problems.length) {
   console.error(`\n[publish-guard] BLOCKED, ${problems.length} problem(s):`);
   for (const p of problems) console.error(`  ✗ ${p}`);
