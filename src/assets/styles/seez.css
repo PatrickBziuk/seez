@@ -12,7 +12,7 @@
   --surface: #15151c;
   --surface-2: #1e1e27;
   --line: #2c2b38; /* decorative only */
-  --line-strong: #63616f; /* input and button borders, >= 3:1 */
+  --line-strong: #6c6a79; /* input and button borders, >= 3:1 */
   --text: #eceaf3; /* 16.5:1 */
   --text-muted: #a9a6b6; /* 8.2:1 */
   --text-faint: #8a8797; /* 5.6:1, only >= 18px */
@@ -348,6 +348,9 @@ textarea:focus-visible,
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
+}
+.sz-crumbs [aria-hidden='true'] {
+  margin-inline: 0.5em;
 }
 .sz-crumbs a {
   color: var(--text-muted);

@@ -22,6 +22,7 @@
     "astro": "astro",
     "check": "pnpm run check:astro && pnpm run check:eslint && pnpm run check:prettier",
     "check:astro": "astro check",
+    "check:contrast": "node scripts/ci/check-contrast.mjs",
     "check:eslint": "eslint .",
     "check:prettier": "prettier --check .",
     "fix": "pnpm run fix:eslint && pnpm run fix:prettier",
