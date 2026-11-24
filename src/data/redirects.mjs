@@ -101,7 +101,6 @@ for (const l of ['de', 'en']) {
   r[`/${l}/inventory`] = `/${l}/contact`;
 }
 
-// Second, unused CMS front end (AstroWind demo config); /admin is the configured one
-r['/decapcms'] = '/admin';
+// No CMS: content is edited in the repo (AGENTS.md). /admin and /decapcms are gone (404).
 
 export const REDIRECTS = r;
