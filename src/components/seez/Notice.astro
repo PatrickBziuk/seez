@@ -2,6 +2,8 @@
 /**
  * Notice - quiet hint box (help line, AI transparency, "in Arbeit"). Neutral frame,
  * optional figure accent edge via --fig on a parent.
+ * Motion: reveals on scroll (motion.css .reveal) like the rest of the page. The help tone
+ * (e.g. TelefonSeelsorge) never moves: it has to be readable at once.
  */
 interface Props {
   title?: string;
@@ -10,7 +12,7 @@ interface Props {
 const { title, tone = 'neutral' } = Astro.props;
 ---
 
-<aside class:list={['sz-notice', `sz-notice--${tone}`]} role={tone === 'help' ? 'note' : undefined}>
+<aside class:list={['sz-notice', `sz-notice--${tone}`, tone !== 'help' && 'reveal reveal--fade']} role={tone === 'help' ? 'note' : undefined}>
   {title && <p class="sz-notice__title">{title}</p>}
   <div class="sz-notice__body"><slot /></div>
 </aside>

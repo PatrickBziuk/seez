@@ -1,6 +1,8 @@
 ---
 /**
  * PageHead - breadcrumb, mono label, one H1 per page, optional lead (KONZEPT B3/B10).
+ * Entrance on load (motion.css .sz-enter): crumbs, label, title, lead and the slot rise
+ * in quick succession; CSS only, instant with reduced motion.
  */
 interface Crumb {
   href?: string;
@@ -14,12 +16,13 @@ interface Props {
   display?: boolean;
 }
 const { title, label, lead, crumbs = [], display = false } = Astro.props;
+const hasExtra = Astro.slots.has('default');
 ---
 
 <header class="sz-pagehead sz-container">
   {
     crumbs.length > 0 && (
-      <nav class="sz-crumbs" aria-label="Breadcrumb">
+      <nav class="sz-crumbs sz-enter sz-enter--fade" aria-label="Breadcrumb">
         {crumbs.map((c, i) => (
           <>
             {i > 0 && <span aria-hidden="true"> / </span>}
@@ -29,10 +32,16 @@ const { title, label, lead, crumbs = [], display = false } = Astro.props;
       </nav>
     )
   }
-  {label && <p class="sz-label sz-pagehead__label">{label}</p>}
-  <h1 class:list={[display ? 'sz-display' : 'sz-h1']}>{title}</h1>
-  {lead && <p class="sz-lead sz-pagehead__lead">{lead}</p>}
-  <slot />
+  {label && <p class="sz-label sz-pagehead__label sz-enter sz-enter--fade" style="--enter-delay:40ms">{label}</p>}
+  <h1 class:list={[display ? 'sz-display' : 'sz-h1', 'sz-enter']} style="--enter-delay:60ms">{title}</h1>
+  {lead && <p class="sz-lead sz-pagehead__lead sz-enter" style="--enter-delay:140ms">{lead}</p>}
+  {
+    hasExtra && (
+      <div class="sz-enter" style="--enter-delay:200ms">
+        <slot />
+      </div>
+    )
+  }
 </header>
 
 <style>

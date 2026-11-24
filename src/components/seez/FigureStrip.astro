@@ -3,6 +3,8 @@
  * FigureStrip - the "Splitterleiste": six equal segments in SZ order (KONZEPT B4).
  * Ensemble sign for wordmark, EP, footer. `highlight` dims all other segments
  * (crossover songs). Decorative: the figures are always named in text nearby.
+ * `motion`: 'fill' fills the segments in SZ order when the strip scrolls into view,
+ * 'boot' does it once on page load (CSS only). Both off with reduced motion (motion.css).
  */
 import { FIGURES } from '~/data/figures';
 
@@ -10,12 +12,13 @@ interface Props {
   highlight?: string[];
   height?: number;
   class?: string;
+  motion?: 'fill' | 'boot';
 }
-const { highlight, height = 4, class: className = '' } = Astro.props;
+const { highlight, height = 4, class: className = '', motion } = Astro.props;
 const on = (id: string) => !highlight || highlight.length === 0 || highlight.includes(id);
 ---
 
-<span class:list={['sz-strip', className]} style={`--strip-h:${height}px`} aria-hidden="true">
+<span class:list={['sz-strip', motion && `sz-strip--${motion}`, className]} style={`--strip-h:${height}px`} aria-hidden="true">
   {FIGURES.map((f) => <span class:list={['sz-strip__seg', { 'is-off': !on(f.id) }]} style={`background:${f.accent.dark}`} />)}
 </span>
 
