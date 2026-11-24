@@ -4,7 +4,7 @@ language: 'en'
 authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T20:45:00Z'
-image: '/images/figures/drift.png'
+image: '/images/figures/drift-sheet.webp'
 alias: 'The Anchorless'
 designation: 'SZ-003'
 symbolism:

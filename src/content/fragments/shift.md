@@ -4,7 +4,7 @@ language: 'de'
 authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T21:00:00Z'
-image: '/images/figures/shift_work.png'
+image: '/images/figures/shift-sheet.webp'
 notranslate: ['SZ-004', 'Shift']
 alias: 'Der Arbeiter'
 designation: 'SZ-004'

@@ -1,59 +1,309 @@
 {
-  "$comment": "Single source for the six Seelensplitter figures (order SZ-001..SZ-006). Accent colours from docs/visual-konzept/KONZEPT.md B4, all >= 4.5:1 (AA) as text: 'dark' on #0B0B10, 'light' on #F6F4EF. Plain JSON so seez-kit and the Videothek can read the same values later.",
+  "$comment": "Single source for the six Seelensplitter figures (order SZ-001..SZ-006). Accent colours from docs/visual-konzept/KONZEPT.md B4, all >= 4.5:1 (AA) as text: 'dark' on #0B0B10, 'light' on #F6F4EF (checked by scripts/ci/check-contrast.mjs). 'media' colours may only be used inside that figure's own medium (e.g. Gl1tch's terminal), never as UI accent. Portraits: character sheets from the Notion pages Lore / Charaktere (signature pose = portrait, page cover = scene). Plain JSON so seez-kit and the Videothek can read the same values later.",
   "figures": [
     {
       "id": "splinter",
       "slug": "splinter",
       "sz": "SZ-001",
       "name": "Splinter",
-      "alias": { "de": "Der Spiegelmann", "en": "The Mirror Man" },
-      "medium": { "de": "Das Notizbuch", "en": "The notebook" },
-      "accent": { "dark": "#FF6FB0", "light": "#B0236A", "label": { "de": "Gel-Pink", "en": "Gel pink" } }
+      "alias": {
+        "de": "Der Spiegelmann",
+        "en": "The Mirror Man"
+      },
+      "medium": {
+        "de": "Das Notizbuch",
+        "en": "The notebook"
+      },
+      "accent": {
+        "dark": "#FF6FB0",
+        "light": "#B0236A",
+        "label": {
+          "de": "Gel-Pink",
+          "en": "Gel pink"
+        }
+      },
+      "quote": {
+        "de": "Ich katalogisiere, was mich zerstört.",
+        "en": "I catalog what destroys me."
+      },
+      "ground": "#12040C",
+      "fontDetail": "caveat",
+      "glyph": "splinter",
+      "portrait": {
+        "src": "/images/figures/splinter-sheet.webp",
+        "width": 720,
+        "height": 1080,
+        "alt": {
+          "de": "Splinter im schwarzen Hoodie mit gesplitterter Spiegelmaske, Notizbuch und Mikrofon, pinkes Randlicht",
+          "en": "Splinter in a black hoodie with a shattered mirror mask, notebook and microphone, pink rim light"
+        }
+      },
+      "scene": {
+        "src": "/images/figures/splinter-scene.webp",
+        "alt": {
+          "de": "Splinter vor einem zersprungenen Spiegel in einem dunklen Badezimmer",
+          "en": "Splinter in front of a cracked mirror in a dark bathroom"
+        }
+      },
+      "source": {
+        "notion": "https://app.notion.com/p/36b9afd7bfc480a7ba60f8261ec30c63",
+        "portraitFile": "05-notebook-microphone-signature-pose.png",
+        "sceneFile": "page cover"
+      }
     },
     {
       "id": "lume",
       "slug": "lume",
       "sz": "SZ-002",
-      "name": "LUME",
-      "alias": { "de": "Die Entdeckerin", "en": "The Explorer" },
-      "medium": { "de": "Das Rollenspiel", "en": "The role-playing game" },
-      "accent": { "dark": "#C7A6FF", "light": "#6A3FC4", "label": { "de": "Lavendel", "en": "Lavender" } }
+      "name": "Lume",
+      "alias": {
+        "de": "Die Entdeckerin",
+        "en": "The Explorer"
+      },
+      "medium": {
+        "de": "Das Rollenspiel",
+        "en": "The role-playing game"
+      },
+      "accent": {
+        "dark": "#C7A6FF",
+        "light": "#6A3FC4",
+        "label": {
+          "de": "Lavendel",
+          "en": "Lavender"
+        }
+      },
+      "quote": {
+        "de": "Ich glaube an Restlicht im dunkelsten Raum.",
+        "en": "I believe in leftover light in the darkest room."
+      },
+      "ground": "#0B0716",
+      "fontDetail": "silkscreen",
+      "glyph": "lume",
+      "portrait": {
+        "src": "/images/figures/lume-sheet.webp",
+        "width": 720,
+        "height": 1080,
+        "alt": {
+          "de": "Lume mit langen hellblauen Haaren, lila Mantel, Handheld-Konsole und offenem Notizbuch, lila Randlicht",
+          "en": "Lume with long pale-blue hair, lilac coat, handheld console and open notebook, lilac rim light"
+        }
+      },
+      "scene": {
+        "src": "/images/figures/lume-scene.webp",
+        "alt": {
+          "de": "Lume liest nachts am Schreibtisch zwischen Büchern, Konsole und Notizzetteln",
+          "en": "Lume reading at night at a desk among books, a console and sticky notes"
+        }
+      },
+      "source": {
+        "notion": "https://app.notion.com/p/36b9afd7bfc480f19db3e65fc1eb2306",
+        "portraitFile": "lume-03-handheld-notebook-pose.png",
+        "sceneFile": "page cover"
+      }
     },
     {
       "id": "drift",
       "slug": "drift",
       "sz": "SZ-003",
       "name": "Drift",
-      "alias": { "de": "Der Ankerlose", "en": "The Anchorless" },
-      "medium": { "de": "Der Nachtblog", "en": "The night blog" },
-      "accent": { "dark": "#6FE3A0", "light": "#17703F", "label": { "de": "Notausgang-Grün", "en": "Exit-sign green" } }
+      "alias": {
+        "de": "Der Ankerlose",
+        "en": "The Anchorless"
+      },
+      "medium": {
+        "de": "Der Nachtblog",
+        "en": "The night blog"
+      },
+      "accent": {
+        "dark": "#6FE3A0",
+        "light": "#17703F",
+        "label": {
+          "de": "Notausgang-Grün",
+          "en": "Exit-sign green"
+        }
+      },
+      "quote": {
+        "de": "Stille ist lauter als jeder Absturz.",
+        "en": "Silence is louder than any crash."
+      },
+      "ground": "#04101A",
+      "fontDetail": "plex-mono",
+      "glyph": "drift",
+      "portrait": {
+        "src": "/images/figures/drift-sheet.webp",
+        "width": 720,
+        "height": 1080,
+        "alt": {
+          "de": "Drift mit Cap, tätowierten Armen und zerrissener Jeans, hält das Kaninchen Snow im Arm",
+          "en": "Drift with a cap, tattooed arms and ripped jeans, holding the rabbit Snow"
+        }
+      },
+      "scene": {
+        "src": "/images/figures/drift-scene.webp",
+        "alt": {
+          "de": "Drift raucht nachts allein auf einem verregneten Bahnsteig",
+          "en": "Drift smoking alone at night on a rainy platform"
+        }
+      },
+      "source": {
+        "notion": "https://app.notion.com/p/36b9afd7bfc48018a4efec76489e48b4",
+        "portraitFile": "05-snow-signature-pose.png",
+        "sceneFile": "page cover"
+      }
     },
     {
       "id": "shift",
       "slug": "shift",
       "sz": "SZ-004",
       "name": "Shift",
-      "alias": { "de": "Der Arbeiter", "en": "The Worker" },
-      "medium": { "de": "Der Planer", "en": "The planner" },
-      "accent": { "dark": "#F5C83A", "light": "#7A5A00", "label": { "de": "Warnwesten-Gelb", "en": "Hi-vis yellow" } }
+      "alias": {
+        "de": "Der Arbeiter",
+        "en": "The Worker"
+      },
+      "medium": {
+        "de": "Der Planer",
+        "en": "The planner"
+      },
+      "accent": {
+        "dark": "#F5C83A",
+        "light": "#7A5A00",
+        "label": {
+          "de": "Warnwesten-Gelb",
+          "en": "Hi-vis yellow"
+        }
+      },
+      "quote": {
+        "de": "Wir arbeiten für ein Leben, das wir verpassen.",
+        "en": "We work for a life we keep missing."
+      },
+      "ground": "#0B0D14",
+      "fontDetail": "stencil",
+      "glyph": "shift",
+      "portrait": {
+        "src": "/images/figures/shift-sheet.webp",
+        "width": 720,
+        "height": 1080,
+        "alt": {
+          "de": "Shift im blauen Blaumann mit Reflexstreifen und Helm, Stempelkarte und Energy-Drink in den Händen",
+          "en": "Shift in blue overalls with reflective stripes and a helmet, holding a time card and an energy drink"
+        }
+      },
+      "scene": {
+        "src": "/images/figures/shift-scene.webp",
+        "alt": {
+          "de": "Shift lernt nachts am Schreibtisch, neben ihm Helm, Laptop und Energy-Drink",
+          "en": "Shift studying at a desk at night, next to his helmet, laptop and an energy drink"
+        }
+      },
+      "source": {
+        "notion": "https://app.notion.com/p/36b9afd7bfc48089aa6dc781d5387e94",
+        "portraitFile": "05-clockout-signature-pose.png",
+        "sceneFile": "page cover"
+      }
     },
     {
       "id": "gl1tch",
       "slug": "gl1tch",
       "sz": "SZ-005",
       "name": "Gl1tch",
-      "alias": { "de": "Der Meta", "en": "The Meta" },
-      "medium": { "de": "SZ OS", "en": "SZ OS" },
-      "accent": { "dark": "#3FD8F0", "light": "#0B6F80", "label": { "de": "Cyan", "en": "Cyan" } }
+      "alias": {
+        "de": "Der Meta",
+        "en": "The Meta"
+      },
+      "medium": {
+        "de": "SZ OS",
+        "en": "SZ OS"
+      },
+      "accent": {
+        "dark": "#3FD8F0",
+        "light": "#0B6F80",
+        "label": {
+          "de": "Cyan",
+          "en": "Cyan"
+        }
+      },
+      "quote": {
+        "de": "Fehler sind meine Handschrift.",
+        "en": "Errors are my handwriting."
+      },
+      "ground": "#020C10",
+      "fontDetail": "plex-mono",
+      "glyph": "gl1tch",
+      "portrait": {
+        "src": "/images/figures/gl1tch-sheet.webp",
+        "width": 720,
+        "height": 1080,
+        "alt": {
+          "de": "Gl1tch mit Kapuze, LED-Visor und bestickter Jacke, singt in ein Kabelmikrofon, cyan-violettes Randlicht",
+          "en": "Gl1tch in a hood with an LED visor and patched jacket, singing into a corded microphone, cyan-violet rim light"
+        }
+      },
+      "scene": {
+        "src": "/images/figures/gl1tch-scene.webp",
+        "alt": {
+          "de": "Gl1tch vor mehreren Monitoren mit Code und Kabeln",
+          "en": "Gl1tch in front of several monitors with code and cables"
+        }
+      },
+      "source": {
+        "notion": "https://app.notion.com/p/36b9afd7bfc480ee9571f2e70e005461",
+        "portraitFile": "gl1tch-04-microphone-performance-pose.png",
+        "sceneFile": "page cover"
+      },
+      "media": {
+        "terminal": "#36F57A",
+        "$comment": "Terminal green (seez-kit Seez.CHAR) only inside Gl1tch's medium: prompt, terminal, ASCII. 13.6:1 on ground #020C10. Not a UI accent: too close to Drift (dE 33)."
+      }
     },
     {
       "id": "unknown",
       "slug": "sz-006-unknown",
       "sz": "SZ-006",
       "name": "Unknown",
-      "alias": { "de": "Der Fremde", "en": "The Stranger" },
-      "medium": { "de": "Die Straße", "en": "The street" },
-      "accent": { "dark": "#F39A4C", "light": "#A4470E", "label": { "de": "Natrium-Orange", "en": "Sodium orange" } }
+      "alias": {
+        "de": "Der Fremde",
+        "en": "The Stranger"
+      },
+      "medium": {
+        "de": "Die Straße",
+        "en": "The street"
+      },
+      "accent": {
+        "dark": "#F39A4C",
+        "light": "#A4470E",
+        "label": {
+          "de": "Natrium-Orange",
+          "en": "Sodium orange"
+        }
+      },
+      "quote": {
+        "de": "Ich bin das Update, das niemand bestellt hat.",
+        "en": "I am the update nobody ordered."
+      },
+      "ground": "#07080C",
+      "fontDetail": "marker",
+      "glyph": "unknown",
+      "portrait": {
+        "src": "/images/figures/unknown-sheet.webp",
+        "width": 720,
+        "height": 1080,
+        "alt": {
+          "de": "Unknown mit Kapuze und verspiegelter Brille, Mikrofon und offenem Notizbuch in den Händen",
+          "en": "Unknown in a hood and mirrored glasses, holding a microphone and an open notebook"
+        }
+      },
+      "scene": {
+        "src": "/images/figures/unknown-scene.webp",
+        "alt": {
+          "de": "Unknown in einer nächtlichen Unterführung",
+          "en": "Unknown in an underpass at night"
+        }
+      },
+      "source": {
+        "notion": "https://app.notion.com/p/36b9afd7bfc480bda2b3fce74155ee9b",
+        "portraitFile": "05-notebook-microphone-signature-pose.png",
+        "sceneFile": "page cover"
+      }
     }
   ]
 }

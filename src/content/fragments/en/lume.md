@@ -4,7 +4,7 @@ language: 'en'
 authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T20:15:00Z'
-image: '/images/figures/lume.png'
+image: '/images/figures/lume-sheet.webp'
 additionalImages:
   - '/images/figures/lume_comic.png'
 alias: 'The Dreamer, The Explorer'

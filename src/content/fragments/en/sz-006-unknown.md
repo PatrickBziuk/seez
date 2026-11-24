@@ -4,7 +4,7 @@ language: 'en'
 authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-01-27T17:30:00Z'
-image: '/images/figures/unknown.png'
+image: '/images/figures/unknown-sheet.webp'
 additionalImages:
   - '/images/figures/unknown_behoerde.png'
   - '/images/figures/unknown_comic.png'

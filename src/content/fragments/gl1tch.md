@@ -4,7 +4,7 @@ language: 'de'
 authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T21:15:00Z'
-image: '/images/figures/gl1tch_at_home.png'
+image: '/images/figures/gl1tch-sheet.webp'
 notranslate: ['SZ-005', 'Gl1tch', 'Patch 1.0']
 alias: 'Der Meta, Liniengesicht, Patch 1.0'
 designation: 'SZ-005'

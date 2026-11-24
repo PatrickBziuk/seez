@@ -4,7 +4,7 @@ language: 'en'
 authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T20:00:00Z'
-image: '/images/figures/splinter.png'
+image: '/images/figures/splinter-sheet.webp'
 additionalImages:
   - '/images/figures/splinter_comic.png'
 alias: 'The Mirror Man'
