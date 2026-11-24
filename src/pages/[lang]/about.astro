@@ -2,6 +2,7 @@
 /**
  * About Seez (KONZEPT B10, rebuilt in the new frame). Wording kept from the former page;
  * "System Logs" now points to the Werkstatt, which replaced it.
+ * Motion (motion.css): head strip fills on load, the three pillars reveal in sequence.
  */
 import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
@@ -66,11 +67,11 @@ const links = [
       'Seez is the creative cosmos where music, figures, texts, AI tools, and legacy fragments become one connected world.'
     )}
   >
-    <FigureStrip height={6} class="about__strip" />
+    <FigureStrip height={6} class="about__strip" motion="boot" />
   </PageHead>
 
   <section class="sz-section sz-container">
-    <ul class="about__pillars">
+    <ul class="about__pillars reveal-stagger">
       {
         pillars.map((p) => (
           <li class="sz-panel">
@@ -81,7 +82,7 @@ const links = [
         ))
       }
     </ul>
-    <div class="sz-btn-row about__links">
+    <div class="sz-btn-row about__links reveal">
       {
         links.map((l) => (
           <a class="sz-btn" href={l.href}>

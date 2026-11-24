@@ -3,6 +3,8 @@
  * Press (KONZEPT B8 footer page, rebuilt in the new frame).
  * Wording of the former page kept; facts (EP, tracks, figures) come from the
  * data sources so they cannot drift: src/data/songs.ts (Spotify) and figures.ts.
+ * Motion (motion.css): head strip fills on load, facts and cards reveal in sequence,
+ * card links nudge their arrow.
  */
 import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
@@ -74,14 +76,14 @@ const how = [
       'Seez is a creative universe of music, texts, and figures. The figures are fragments – parts of an identity with their own voices, symbols, and movement patterns. Content is cross-linked, forming a growing, open narrative system.'
     )}
   >
-    <FigureStrip height={6} class="press__strip" />
+    <FigureStrip height={6} class="press__strip" motion="boot" />
   </PageHead>
 
   <section class="sz-section sz-container press__top" aria-labelledby="facts">
     <div class="press__grid">
       <div>
         <h2 class="sz-label" id="facts">{t('Auf einen Blick', 'At a glance')}</h2>
-        <dl class="press__facts">
+        <dl class="press__facts reveal-stagger">
           {
             facts.map((f) => (
               <div>
@@ -91,11 +93,11 @@ const how = [
             ))
           }
         </dl>
-        <div class="press__figs">
+        <div class="press__figs reveal-stagger">
           {FIGURES.map((f) => <FigureChip figure={f.id} lang={lang} />)}
         </div>
       </div>
-      <div class="sz-panel press__contact">
+      <div class="sz-panel press__contact reveal">
         <p class="sz-label">{t('Presseanfragen', 'Press inquiries')}</p>
         <p class="press__mail"><a class="sz-link" href="mailto:info@seez.eu">info@seez.eu</a></p>
         <div class="sz-btn-row">
@@ -107,15 +109,15 @@ const how = [
   </section>
 
   <section class="sz-section sz-container" aria-labelledby="how">
-    <h2 class="sz-h2" id="how">{t('So funktioniert es', 'How it works')}</h2>
-    <ul class="press__how">
+    <h2 class="sz-h2 reveal" id="how">{t('So funktioniert es', 'How it works')}</h2>
+    <ul class="press__how reveal-stagger">
       {
         how.map((h) => (
-          <li class="sz-panel">
+          <li class="sz-panel sz-lift">
             <p class="sz-label">{h.label}</p>
             <p class="press__how-text">{h.text}</p>
             <a class="sz-link" href={h.href}>
-              {t('Ansehen', 'Open')} →<span class="sr-only"> {h.label}</span>
+              {t('Ansehen', 'Open')} <span class="sz-arrow" aria-hidden="true">→</span><span class="sr-only"> {h.label}</span>
             </a>
           </li>
         ))
@@ -124,8 +126,8 @@ const how = [
   </section>
 
   <section class="sz-section sz-container" aria-labelledby="tech">
-    <h2 class="sz-h2" id="tech">{t('Technik und Veröffentlichung', 'Tech and publishing')}</h2>
-    <ul class="sz-prose press__tech">
+    <h2 class="sz-h2 reveal" id="tech">{t('Technik und Veröffentlichung', 'Tech and publishing')}</h2>
+    <ul class="sz-prose press__tech reveal-stagger">
       <li>{t('Astro 5, statisch generiert, schnell und barrierearm.', 'Astro 5, statically generated, fast and accessible.')}</li>
       <li>{t('Mehrsprachig (Deutsch/Englisch) mit konsistenter URL-Struktur.', 'Multilingual (German/English) with consistent URL structure.')}</li>
       <li>{t('Suchfunktion und Querverweise zwischen Inhalten.', 'Search and cross-linking across content.')}</li>

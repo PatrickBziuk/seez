@@ -2,6 +2,7 @@
 /**
  * LicensePage - the former /perform "Performer License" inside the site (KONZEPT A1.3/B8).
  * Wording unchanged (English only so far); emoji removed from headings, figure notes as chips.
+ * Motion: the figure notes reveal in sequence (motion.css).
  */
 import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
@@ -79,7 +80,7 @@ const metadata = {
       <h2>Figure-Specific Guidelines</h2>
       <p>Some figures have specific performance considerations:</p>
     </div>
-    <ul class="lic__figs">
+    <ul class="lic__figs reveal-stagger">
       <li class="sz-panel"><FigureChip figure="splinter" lang={lang} /><p>Introspective delivery required. Avoid theatrical exaggeration.</p></li>
       <li class="sz-panel"><FigureChip figure="lume" lang={lang} /><p>Gentle, dreamy vocals. Hook sections especially important.</p></li>
       <li class="sz-panel">
