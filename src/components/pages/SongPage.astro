@@ -32,9 +32,7 @@ const track = epTrack(record.slug);
 const extra = SONG_EXTRAS[record.slug];
 const figureFromRef = entry.data.figureRef?.id?.replace(/^en\//, '');
 const figures: FigureId[] =
-  track?.figures ||
-  extra?.figures ||
-  (getFigure(figureFromRef) ? [getFigure(figureFromRef)!.id] : []);
+  track?.figures || extra?.figures || (getFigure(figureFromRef) ? [getFigure(figureFromRef)!.id] : []);
 const main = getFigure(figures[0]);
 const lyrics = getLyrics(track?.lyricsId || extra?.lyricsId);
 const films = filmsForSong(track?.filmKey);
@@ -58,7 +56,13 @@ const metadata = {
       <nav class="sz-crumbs" aria-label="Breadcrumb" lang={lang}>
         <a href={sectionUrl(lang, 'music')}>{de ? 'Musik' : 'Music'}</a>
         <span aria-hidden="true"> / </span>
-        {track ? <span>{EP.title}</span> : <span>{song ? (de ? 'In Arbeit' : 'Work in progress') : de ? 'Archiv' : 'Archive'}</span>}
+        {
+          track ? (
+            <span>{EP.title}</span>
+          ) : (
+            <span>{song ? (de ? 'In Arbeit' : 'Work in progress') : de ? 'Archiv' : 'Archive'}</span>
+          )
+        }
         <span aria-hidden="true"> / </span>
         <span aria-current="page">{title}</span>
       </nav>
@@ -69,65 +73,121 @@ const metadata = {
             films[0] ? (
               <img src={films[0].media.poster} alt="" loading="eager" />
             ) : main ? (
-              <img src={main.portrait.src} alt={main.portrait.alt[lang]} width={main.portrait.width} height={main.portrait.height} loading="eager" />
+              <img
+                src={main.portrait.src}
+                alt={main.portrait.alt[lang]}
+                width={main.portrait.width}
+                height={main.portrait.height}
+                loading="eager"
+              />
             ) : null
           }
         </div>
         <div class="song__intro" lang={lang}>
           <p class="sz-label">
-            {track ? `EP · ${EP.title}` : song ? (de ? 'Song · in Arbeit, nicht auf der EP' : 'Song · work in progress, not on the EP') : de ? 'Text' : 'Text'}
+            {
+              track
+                ? `EP · ${EP.title}`
+                : song
+                  ? de
+                    ? 'Song · in Arbeit, nicht auf der EP'
+                    : 'Song · work in progress, not on the EP'
+                  : de
+                    ? 'Text'
+                    : 'Text'
+            }
           </p>
           <h1 class="sz-display song__title">{title}</h1>
-          {entry.data.subtitle && <p class="sz-lead song__sub" lang={isFallbackLang ? entry.data.language : undefined}>{entry.data.subtitle}</p>}
-          {figures.length > 0 && (
-            <div class="song__figs">
-              {figures.map((f) => <FigureChip figure={f} lang={lang} />)}
-            </div>
-          )}
+          {
+            entry.data.subtitle && (
+              <p class="sz-lead song__sub" lang={isFallbackLang ? entry.data.language : undefined}>
+                {entry.data.subtitle}
+              </p>
+            )
+          }
+          {
+            figures.length > 0 && (
+              <div class="song__figs">
+                {figures.map((f) => (
+                  <FigureChip figure={f} lang={lang} />
+                ))}
+              </div>
+            )
+          }
           {figures.length > 1 && <FigureStrip highlight={figures} height={4} class="song__strip" />}
           <div class="sz-btn-row song__actions">
-            {track && (
-              <a class="sz-btn sz-btn--primary" href={EP.spotify} rel="noopener">
-                {de ? 'EP auf Spotify hören' : 'Listen to the EP on Spotify'}
-              </a>
-            )}
-            {films.length > 0 && <a class="sz-btn" href="#video">▶ Video</a>}
-            {lyrics && <a class="sz-btn" href="#lyrics">Lyrics ↓</a>}
+            {
+              track && (
+                <a class="sz-btn sz-btn--primary" href={EP.spotify} rel="noopener">
+                  {de ? 'EP auf Spotify hören' : 'Listen to the EP on Spotify'}
+                </a>
+              )
+            }
+            {
+              films.length > 0 && (
+                <a class="sz-btn" href="#video">
+                  ▶ Video
+                </a>
+              )
+            }
+            {
+              lyrics && (
+                <a class="sz-btn" href="#lyrics">
+                  Lyrics ↓
+                </a>
+              )
+            }
           </div>
-          {audio && (
-            <div class="song__audio">
-              <p class="sz-label">{de ? 'Hörprobe' : 'Listen here'}</p>
-              <audio controls preload="none" src={audio}>
-                <a href={audio}>{de ? 'Audiodatei' : 'Audio file'}</a>
-              </audio>
-            </div>
-          )}
+          {
+            audio && (
+              <div class="song__audio">
+                <p class="sz-label">{de ? 'Hörprobe' : 'Listen here'}</p>
+                <audio controls preload="none" src={audio}>
+                  <a href={audio}>{de ? 'Audiodatei' : 'Audio file'}</a>
+                </audio>
+              </div>
+            )
+          }
         </div>
       </div>
     </div>
 
     <section class="sz-section sz-container" aria-labelledby="about">
-      <h2 class="sz-label" id="about" lang={lang}>{song ? (de ? 'Worum es geht' : 'What it is about') : de ? 'Text' : 'Text'}</h2>
-      {isFallbackLang && <p class="sz-muted song__langnote" lang={lang}>{de ? 'Dieser Text liegt nur auf Englisch vor.' : 'This text is only available in German.'}</p>}
-      {track?.quote && (
-        <blockquote class="song__quote" lang="de">
-          „{track.quote}“
-        </blockquote>
-      )}
+      <h2 class="sz-label" id="about" lang={lang}>
+        {song ? (de ? 'Worum es geht' : 'What it is about') : de ? 'Text' : 'Text'}
+      </h2>
+      {
+        isFallbackLang && (
+          <p class="sz-muted song__langnote" lang={lang}>
+            {de ? 'Dieser Text liegt nur auf Englisch vor.' : 'This text is only available in German.'}
+          </p>
+        )
+      }
+      {
+        track?.quote && (
+          <blockquote class="song__quote" lang="de">
+            „{track.quote}“
+          </blockquote>
+        )
+      }
       <div class="sz-prose song__body">
         <Content />
       </div>
-      {track?.help && (
-        <div class="song__help" lang={lang}>
-          <HelpNotice lang={lang} />
-        </div>
-      )}
+      {
+        track?.help && (
+          <div class="song__help" lang={lang}>
+            <HelpNotice lang={lang} />
+          </div>
+        )
+      }
     </section>
 
     {
       films.length > 0 && (
         <section class="sz-section sz-container" id="video" aria-labelledby="video-h" lang={lang}>
-          <h2 class="sz-h2" id="video-h">Video</h2>
+          <h2 class="sz-h2" id="video-h">
+            Video
+          </h2>
           <div class="song__films">
             {films.map((f) => (
               <figure class="song__film">
@@ -151,7 +211,9 @@ const metadata = {
     {
       lyrics && (
         <section class="sz-section sz-container" id="lyrics" aria-labelledby="lyrics-h">
-          <h2 class="sz-h2" id="lyrics-h" lang={lang}>Lyrics</h2>
+          <h2 class="sz-h2" id="lyrics-h" lang={lang}>
+            Lyrics
+          </h2>
           <div lang="de">
             <LyricsBlock text={lyrics.text} />
           </div>
@@ -162,10 +224,14 @@ const metadata = {
     {
       (related.length > 0 || main) && (
         <section class="sz-section sz-container" aria-labelledby="cosmos" lang={lang}>
-          <h2 class="sz-h2" id="cosmos">{de ? 'Figur und weitere Songs' : 'Figure and more songs'}</h2>
+          <h2 class="sz-h2" id="cosmos">
+            {de ? 'Figur und weitere Songs' : 'Figure and more songs'}
+          </h2>
           <div class="song__cosmos">
             <div class="song__cosmos-figs">
-              {figures.map((f) => <FigureCard figure={f} lang={lang} showQuote={false} />)}
+              {figures.map((f) => (
+                <FigureCard figure={f} lang={lang} showQuote={false} />
+              ))}
             </div>
             {related.length > 0 && (
               <ul class="song__related">
@@ -282,6 +348,7 @@ const metadata = {
   }
   .song__cosmos {
     display: grid;
+    grid-template-columns: minmax(0, 1fr); /* keep long song titles from widening the page at 390px */
     gap: var(--sp-6);
     margin-top: var(--sp-5);
   }

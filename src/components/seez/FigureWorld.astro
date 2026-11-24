@@ -113,9 +113,7 @@ const terminal = 'media' in f ? (f.media as { terminal?: string }).terminal : un
   }
   /* Splinter: lined notebook paper, gel-pink handwriting */
   .nb {
-    background:
-      repeating-linear-gradient(to bottom, transparent 0 31px, rgba(80, 120, 200, 0.35) 31px 32px),
-      #f1ede2;
+    background: repeating-linear-gradient(to bottom, transparent 0 31px, rgba(80, 120, 200, 0.35) 31px 32px), #f1ede2;
     color: #1c1a2a;
     padding: 28px 32px 20px 64px;
     border-left: 2px solid rgba(220, 60, 90, 0.5);
@@ -264,7 +262,7 @@ const terminal = 'media' in f ? (f.media as { terminal?: string }).terminal : un
   }
   @media (prefers-reduced-motion: no-preference) {
     .term__cursor {
-      animation: blink 1s steps(2) infinite;
+      animation: blink 1s steps(2) 4; /* stops after 4s (WCAG 2.2.2) */
     }
   }
   @keyframes blink {

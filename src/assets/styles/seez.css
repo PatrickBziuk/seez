@@ -169,6 +169,13 @@ textarea:focus-visible,
 }
 
 /* ---------- Typography ---------- */
+/* Long German compounds (Datenschutzerklärung) must not widen the page at 390px. */
+h1,
+h2,
+h3 {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
 .sz-display,
 .sz-h1,
 .sz-h2,
