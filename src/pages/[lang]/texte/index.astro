@@ -20,7 +20,11 @@ const { lang } = Astro.params as { lang: SupportedLanguage };
 
 const items = await getPublicCollection('texts');
 type TextEntry = (typeof items)[number];
-const filtered = items.filter((it: TextEntry) => it.data.language === lang || (!it.data.language && lang === 'en'));
+const own = items.filter((it: TextEntry) => it.data.language === lang || (!it.data.language && lang === 'en'));
+// Texts exist only in German so far: the English index lists them with a language note instead of "No texts yet".
+const filtered = own.length > 0 ? own : items.filter((it: TextEntry) => it.data.language === 'de');
+const slugOf = (it: TextEntry) => it.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
+const hrefOf = (it: TextEntry) => `/${it.data.language === 'de' && own.length === 0 ? 'de' : lang}/texte/${slugOf(it)}`;
 
 const metadata = {
   title: lang === 'de' ? 'Texte' : 'Texts',
@@ -36,16 +40,21 @@ const metadata = {
     title={lang === 'de' ? 'Texte' : 'Texts'}
     lead={lang === 'de' ? 'Prosa, Gedichte und Notizen' : 'Prose, poems and notes'}
   />
-  <section class="sz-section sz-container">
+  <section class="sz-section sz-container tx">
     {
       filtered.length > 0 ? (
         <ul class="tx__list">
           {filtered.map((it) => (
             <li class="tx__item">
-              <a href={getPermalink(`/${lang}/texte/${it.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`)}>
+              <a href={getPermalink(hrefOf(it))} hreflang={it.data.language}>
                 {it.data.title}
               </a>
-              {it.data.description && <p class="sz-muted">{it.data.description}</p>}
+              {it.data.language !== lang && <span class="sz-label tx__lang">{lang === 'en' ? 'German only' : 'nur Englisch'}</span>}
+              {(it.data.excerpt || it.data.description) && (
+                <p class="sz-muted" lang={it.data.language}>
+                  {it.data.excerpt || it.data.description}
+                </p>
+              )}
             </li>
           ))}
         </ul>
@@ -57,6 +66,12 @@ const metadata = {
 </Layout>
 
 <style>
+  .tx {
+    padding-top: 0;
+  }
+  .tx__lang {
+    margin-left: var(--sp-3);
+  }
   .tx__list {
     list-style: none;
     margin: 0;
