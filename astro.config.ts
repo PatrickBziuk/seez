@@ -6,7 +6,6 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
-import partytown from '@astrojs/partytown';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
 import type { AstroIntegration } from 'astro';
@@ -85,9 +84,7 @@ export default defineConfig({
       },
     }),
 
-    partytown({
-      config: { forward: ['dataLayer.push'] },
-    }),
+    // No partytown: seez.eu runs no analytics or third-party scripts (privacy notice, publish-guard).
 
     compress({
       CSS: true,
