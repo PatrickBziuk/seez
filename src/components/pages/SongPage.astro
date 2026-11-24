@@ -46,7 +46,7 @@ const exists = (slug: string) => all.some((r) => r.slug === slug);
 
 const metadata = {
   title: `${title} – ${de ? 'Musik' : 'Music'}`,
-  description: entry.data.subtitle || entry.data.description || (track ? track.note[lang] : undefined),
+  description: entry.data.subtitle || entry.data.description || track?.note?.[lang],
   canonical: new URL(sectionUrl(lang, 'music', record.slug), 'https://seez.eu').toString(),
 };
 ---

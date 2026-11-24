@@ -37,19 +37,20 @@ export async function getStaticPaths() {
 const { author, lang } = Astro.props;
 const { Content } = await render(author);
 const de = lang === 'de';
+const name: string = author.data.displayName || author.data.name || author.data.id || 'Seez';
 
 const metadata = {
-  title: de ? `Über ${author.data.displayName}` : `About ${author.data.displayName}`,
+  title: de ? `Über ${name}` : `About ${name}`,
   description: author.data.bio,
 };
 ---
 
 <Layout metadata={metadata}>
   <PageHead
-    title={author.data.displayName}
+    title={name}
     label={author.data.status?.authoring === 'AI' ? (de ? 'Autor · KI-Mitarbeit' : 'Author · AI collaboration') : de ? 'Autor' : 'Author'}
     lead={author.data.bio}
-    crumbs={[{ href: `/${lang}/${de ? 'archiv' : 'archive'}`, text: de ? 'Archiv' : 'Archive' }, { text: author.data.displayName }]}
+    crumbs={[{ href: `/${lang}/${de ? 'archiv' : 'archive'}`, text: de ? 'Archiv' : 'Archive' }, { text: name }]}
   />
   <div class="sz-container author">
     <div class="sz-prose">
