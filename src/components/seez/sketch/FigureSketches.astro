@@ -7,7 +7,8 @@
  */
 import { Image } from 'astro:assets';
 import SketchInk from './SketchInk.astro';
-import { FIGURE_SKETCHES, PROFILE, PROFILE_NOTE, SKETCH_YEARS, getSketch } from '~/data/sketches';
+import { FIGURE_SKETCHES, MARKS, PROFILE, PROFILE_NOTE, SKETCH_YEARS, getSketch } from '~/data/sketches';
+import type { Ink } from '~/data/sketches';
 import type { FigureId } from '~/data/figures';
 import type { Lang } from '~/utils/routes';
 
@@ -17,9 +18,20 @@ interface Props {
 }
 const { figure, lang } = Astro.props;
 const de = lang === 'de';
-const items = (FIGURE_SKETCHES[figure] || [])
-  .map((x) => ({ sketch: getSketch(x.sketch)!, note: x.note[lang] }))
-  .filter((x) => x.sketch);
+interface Item {
+  ink: Ink;
+  alt: string;
+  href?: string;
+  note: string;
+}
+const items = (FIGURE_SKETCHES[figure] || []).flatMap((x): Item[] => {
+  const sketch = x.sketch ? getSketch(x.sketch) : undefined;
+  if (sketch) return [{ ink: sketch.ink, alt: sketch.alt[lang], href: `#skizze-${sketch.id}`, note: x.note[lang] }];
+  const mark = x.mark ? MARKS[x.mark] : undefined;
+  if (mark) return [{ ink: mark.ink, alt: mark.alt[lang], href: undefined, note: x.note[lang] }];
+  return [];
+});
+const onlyMarks = items.every((i) => !i.href) && figure !== 'splinter';
 const withPhoto = figure === 'splinter';
 const about = `/${lang}/about`;
 ---
@@ -28,12 +40,16 @@ const about = `/${lang}/about`;
   (items.length > 0 || withPhoto) && (
     <>
       <h3 class="fsk__h" id="fruehe-skizzen">
-        {de ? 'Frühe Skizzen' : 'Early sketches'}
+        {de ? 'Frühe Spuren' : 'Early traces'}
       </h3>
       <p class="fsk__intro">
-        {de
-          ? `Aus dem Skizzenbuch ${SKETCH_YEARS}: Zeichnungen mit Motiven, die auch zu dieser Figur gehören.`
-          : `From the ${SKETCH_YEARS} sketchbook: drawings with motifs that also belong to this figure.`}
+        {onlyMarks
+          ? de
+            ? 'Aus den frühen digitalen Arbeiten: ein Motiv, das auch zu dieser Figur gehört.'
+            : 'From the early digital work: a motif that also belongs to this figure.'
+          : de
+            ? `Aus dem Skizzenbuch ${SKETCH_YEARS} und frühen Arbeiten: Motive, die auch zu dieser Figur gehören.`
+            : `From the ${SKETCH_YEARS} sketchbook and early work: motifs that also belong to this figure.`}
       </p>
       <ul class="fsk reveal-stagger">
         {withPhoto && (
@@ -53,16 +69,22 @@ const about = `/${lang}/about`;
             <p class="fsk__note">{PROFILE_NOTE[lang]}</p>
           </li>
         )}
-        {items.map(({ sketch, note }) => (
+        {items.map(({ ink, alt, href, note }) => (
           <li class="fsk__item">
-            <a class="fsk__frame" href={`${about}#skizze-${sketch.id}`}>
-              <SketchInk ink={sketch.ink} label={sketch.alt[lang]} colour="var(--fig)" />
-            </a>
+            {href ? (
+              <a class="fsk__frame" href={`${about}${href}`}>
+                <SketchInk ink={ink} label={alt} colour="var(--fig)" />
+              </a>
+            ) : (
+              <div class="fsk__frame fsk__frame--mark">
+                <SketchInk ink={ink} label={alt} colour="var(--fig)" />
+              </div>
+            )}
             <p class="fsk__note">{note}</p>
           </li>
         ))}
       </ul>
-      <p class="fsk__more">
+      <p class="fsk__more" hidden={onlyMarks}>
         <a class="sz-link" href={`${about}#skizzenbuch`}>
           {de ? `Skizzenbuch ${SKETCH_YEARS}` : `Sketchbook ${SKETCH_YEARS}`}{' '}
           <span class="sz-arrow" aria-hidden="true">
@@ -110,7 +132,10 @@ const about = `/${lang}/about`;
     background: var(--bg);
     transition: border-color var(--motion-fast) var(--ease-out);
   }
-  .fsk__frame:is(:hover, :focus-visible) {
+  .fsk__frame--mark {
+    padding: var(--sp-5);
+  }
+  a.fsk__frame:is(:hover, :focus-visible) {
     border-color: var(--fig);
   }
   .fsk__frame :global(.sz-ink) {

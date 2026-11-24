@@ -94,9 +94,9 @@ Bilder: 22 Dateien, 14655 KB, davon 6 ohne Verwendung.
 
 Tabelle: `src/data/redirects.mjs`. Jede alte URL führt in einem Sprung zum Ziel (`pnpm check:redirects` nach dem Build).
 
-## Seiten-Routen (36)
+## Seiten-Routen (38)
 
-`/[...blog]/[...page].astro` · `/[...blog]/[category]/[...page].astro` · `/[...blog]/[tag]/[...page].astro` · `/[...blog]` · `/[lang]/about.astro` · `/[lang]/authors/[authorId].astro` · `/[lang]/blog` · `/[lang]/contact.astro` · `/[lang]` · `/[lang]/legal/impressum.astro` · `/[lang]/legal/privacy.astro` · `/[lang]/press.astro` · `/[lang]/rss.xml.ts` · `/[lang]/tags/[tag].astro` · `/[lang]/tags` · `/[lang]/texte/[slug].astro` · `/[lang]/texte` · `/[lang]/videothek` · `/404.astro` · `/de/archiv` · `/de/fragmente/[slug].astro` · `/de/fragmente` · `/de/lizenz` · `/de/musik/[slug].astro` · `/de/musik` · `/de/werkstatt` · `/en/archive` · `/en/fragments/[slug].astro` · `/en/fragments` · `/en/license` · `/en/music/[slug].astro` · `/en/music` · `/en/workshop` · `/` · `/rss.xml.ts` · `/sitemap.xml.ts`
+`/[...blog]/[...page].astro` · `/[...blog]/[category]/[...page].astro` · `/[...blog]/[tag]/[...page].astro` · `/[...blog]` · `/[lang]/about.astro` · `/[lang]/authors/[authorId].astro` · `/[lang]/blog` · `/[lang]/contact.astro` · `/[lang]` · `/[lang]/legal/impressum.astro` · `/[lang]/legal/privacy.astro` · `/[lang]/press.astro` · `/[lang]/rss.xml.ts` · `/[lang]/tags/[tag].astro` · `/[lang]/tags` · `/[lang]/texte/[slug].astro` · `/[lang]/texte` · `/[lang]/videothek` · `/404.astro` · `/de/archiv` · `/de/fragmente/[slug].astro` · `/de/fragmente` · `/de/lizenz` · `/de/musik/[slug].astro` · `/de/musik` · `/de/werkstatt` · `/de/zeitstrahl` · `/en/archive` · `/en/fragments/[slug].astro` · `/en/fragments` · `/en/license` · `/en/music/[slug].astro` · `/en/music` · `/en/timeline` · `/en/workshop` · `/` · `/rss.xml.ts` · `/sitemap.xml.ts`
 
 ## Befunde
 

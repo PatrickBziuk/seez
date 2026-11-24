@@ -190,12 +190,42 @@ export const INK = {
   fischdrache: ink('fischdrache', 800, 872),
   schablone: ink('schablone-seez', 700, 553),
   herzDolch: ink('herz-dolch', 1400, 1041),
+  graffiti: ink('graffiti-seez', 1300, 696),
+  // early digital pieces (src/assets/art/), traced from the files, undated
+  anker: ink('anker', 500, 710),
+  cursorHand: ink('cursor-hand', 650, 800),
+  kindisch: ink('kindisch', 900, 300),
+  zeilenLiebe: ink('zeilen-liebe', 1000, 720),
+};
+
+/** Early digital marks that appear on figure pages (no scan pair, no year). */
+export const MARKS: Record<string, { ink: Ink; alt: L }> = {
+  anker: {
+    ink: INK.anker,
+    alt: { de: 'Schwarzer Anker, frühe digitale Grafik', en: 'Black anchor, early digital graphic' },
+  },
+  'cursor-hand': {
+    ink: INK.cursorHand,
+    alt: {
+      de: 'Pixel-Mauszeiger als Hand mit ausgestrecktem Mittelfinger, darunter WWW.SEEZ.EU',
+      en: 'Pixel mouse cursor as a hand showing the middle finger, WWW.SEEZ.EU below',
+    },
+  },
 };
 
 export const getSketch = (id: string): Sketch | undefined => SKETCHES.find((s) => s.id === id);
 
 /** Shared motifs between a figure sheet and the early drawings (observations, not intent). */
-export const FIGURE_SKETCHES: Partial<Record<FigureId, { sketch: string; note: L }[]>> = {
+export const FIGURE_SKETCHES: Partial<Record<FigureId, { sketch?: string; mark?: string; note: L }[]>> = {
+  drift: [
+    {
+      mark: 'anker',
+      note: {
+        de: 'Ein Anker als frühes Zeichen. Drift heißt „Der Ankerlose“; im Video zu KIFFEN KIPPEN ALK bloggt er als „keinanker“.',
+        en: 'An anchor as an early sign. Drift is called “The Anchorless”; in the KIFFEN KIPPEN ALK video he blogs as “keinanker”.',
+      },
+    },
+  ],
   gl1tch: [
     {
       sketch: 'herz-dolch',
@@ -216,6 +246,13 @@ export const FIGURE_SKETCHES: Partial<Record<FigureId, { sketch: string; note: L
       note: {
         de: 'Die Raute mit dem gebrochenen Herz und die Kabel kehren auf Gl1tchs Figurenblatt wieder.',
         en: 'The diamond with the broken heart and the cables recur on Gl1tch’s character sheet.',
+      },
+    },
+    {
+      mark: 'cursor-hand',
+      note: {
+        de: 'Ein Pixel-Mauszeiger mit Mittelfinger, frühe digitale Grafik. Gl1tchs Medium ist SZ OS.',
+        en: 'A pixel mouse cursor showing the middle finger, an early digital graphic. Gl1tch’s medium is SZ OS.',
       },
     },
   ],
