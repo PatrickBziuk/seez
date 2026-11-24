@@ -24,6 +24,7 @@ import { FIGURES, getFigure, figureStyle, type Figure } from '~/data/figures';
 import { EP, SONG_EXTRAS } from '~/data/songs';
 import { getSongRecords, pickEntry, isSong } from '~/utils/music';
 import { filmsForFigure, filmsForSong } from '~/utils/videothek';
+import { songFilm } from '~/utils/media';
 import { epTrackFor, bpmFor, lyricsFor, singlesFor, dossierSignature } from '~/utils/fragments';
 import { sectionUrl, type Lang } from '~/utils/routes';
 
@@ -58,7 +59,9 @@ const lyrics = lyricsFor(f.id);
 const lyricsDrafts = lyrics.filter((l) => !l.ep).length;
 const singles = singlesFor(track);
 const songFilms = filmsForSong(track?.filmKey);
-const films = filmsForFigure(f.id);
+const mainFilm = songFilm(track?.filmKey);
+// Further films of this figure (the EP track's own video is shown by FilmPlayer above them)
+const films = filmsForFigure(f.id).filter((x) => x.id !== mainFilm?.id);
 const showVideo = songFilms.length > 0 || films.length > 0;
 
 /* Songs in progress shared with other figures (songs.ts SONG_EXTRAS) */

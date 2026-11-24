@@ -1,7 +1,8 @@
 ---
 /**
  * MotionToggle – stops the cards' idle loops (float, sway, glow, glitch) for WCAG 2.2.2.
- * Sets html[data-sz-motion='off'] and remembers the choice in localStorage (per viewer).
+ * Sets html[data-sz-motion='off'] for the current page. Nothing is stored in the browser
+ * (seez.eu promises no cookies and no browser storage, see privacy notice and publish-guard).
  * Hidden with prefers-reduced-motion, where nothing loops in the first place.
  */
 import type { Lang } from '~/utils/routes';
@@ -27,22 +28,7 @@ const de = lang === 'de';
 </button>
 
 <script>
-  const KEY = 'sz-motion';
   const root = document.documentElement;
-  const read = () => {
-    try {
-      return localStorage.getItem(KEY);
-    } catch {
-      return null;
-    }
-  };
-  const write = (v: string) => {
-    try {
-      localStorage.setItem(KEY, v);
-    } catch {
-      /* private mode: the choice lasts for this page only */
-    }
-  };
   const sync = () => {
     const off = root.dataset.szMotion === 'off';
     document.querySelectorAll<HTMLButtonElement>('[data-motion-toggle]').forEach((b) => {
@@ -51,7 +37,6 @@ const de = lang === 'de';
       if (t) t.textContent = (off ? b.dataset.off : b.dataset.on) || '';
     });
   };
-  if (read() === 'off') root.dataset.szMotion = 'off';
   sync();
   document.querySelectorAll<HTMLButtonElement>('[data-motion-toggle]').forEach((b) => {
     if (b.dataset.bound) return;
@@ -60,7 +45,6 @@ const de = lang === 'de';
       const off = root.dataset.szMotion !== 'off';
       if (off) root.dataset.szMotion = 'off';
       else delete root.dataset.szMotion;
-      write(off ? 'off' : 'on');
       sync();
     });
   });
