@@ -20,6 +20,9 @@ import Metadata from '~/components/core/meta/Metadata.astro';
 import SiteVerification from '~/components/core/meta/SiteVerification.astro';
 import Analytics from '~/components/core/meta/Analytics.astro';
 import PerformanceMonitor from '~/components/core/performance/PerformanceMonitor.astro';
+// Motion tokens and classes (reveal, stagger, strip fill, hover). Imported after the
+// tokens so its rules win on equal specificity.
+import '~/assets/styles/motion.css';
 
 
 import type { MetaData as MetaDataType } from '~/types';
@@ -56,6 +59,39 @@ const alternateLanguages = shouldHaveAlternates(Astro.url.pathname) ? buildAlter
 
   <body class="antialiased">
     <slot />
+
+    {
+      /* Scroll reveals (src/assets/styles/motion.css): only elements that start below the
+         first screen are hidden, and only here, so nothing stays invisible without JS or
+         with reduced motion. .is-in is removed again after the reveal so the element's own
+         hover transitions apply. */
+    }
+    <script is:inline>
+      (() => {
+        if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const els = document.querySelectorAll('.reveal, .reveal-stagger, .sz-strip--fill');
+        if (!els.length) return;
+        const fold = window.innerHeight * 0.92;
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              const el = e.target;
+              io.unobserve(el);
+              el.classList.add('is-in');
+              el.classList.remove('is-pending');
+              setTimeout(() => el.classList.remove('is-in'), 1400);
+            }
+          },
+          { rootMargin: '0px 0px -6% 0px' }
+        );
+        els.forEach((el) => {
+          if (el.getBoundingClientRect().top < fold) return;
+          el.classList.add('is-pending');
+          io.observe(el);
+        });
+      })();
+    </script>
 
     <PerformanceMonitor debug={import.meta.env.DEV} />
   </body>
