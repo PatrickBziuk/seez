@@ -3,6 +3,8 @@ import { getPublicCollection } from '~/utils/publication';
 import { render } from 'astro:content';
 import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
+import { Image } from 'astro:assets';
+import { PROFILE } from '~/data/sketches';
 
 export async function getStaticPaths() {
   const authors = await getPublicCollection('authors');
@@ -38,6 +40,8 @@ const { author, lang } = Astro.props;
 const { Content } = await render(author);
 const de = lang === 'de';
 const name: string = author.data.displayName || author.data.name || author.data.id || 'Seez';
+// Avatar: Seez uses the torn profile photo (src/data/sketches.ts), shown as scanned.
+const avatar = author.data.id === 'seez' ? PROFILE : undefined;
 
 const metadata = {
   title: de ? `Über ${name}` : `About ${name}`,
@@ -48,10 +52,32 @@ const metadata = {
 <Layout metadata={metadata}>
   <PageHead
     title={name}
-    label={author.data.status?.authoring === 'AI' ? (de ? 'Autor · KI-Mitarbeit' : 'Author · AI collaboration') : de ? 'Autor' : 'Author'}
+    label={author.data.status?.authoring === 'AI'
+      ? de
+        ? 'Autor · KI-Mitarbeit'
+        : 'Author · AI collaboration'
+      : de
+        ? 'Autor'
+        : 'Author'}
     lead={author.data.bio}
     crumbs={[{ href: `/${lang}/${de ? 'archiv' : 'archive'}`, text: de ? 'Archiv' : 'Archive' }, { text: name }]}
-  />
+  >
+    {
+      avatar && (
+        <a class="author__avatar" href={`/${lang}/about#ursprung`}>
+          <Image
+            src={avatar.image}
+            alt={avatar.alt[de ? 'de' : 'en']}
+            widths={[160, 320]}
+            sizes="160px"
+            format="webp"
+            quality={80}
+            loading="eager"
+          />
+        </a>
+      )
+    }
+  </PageHead>
   <div class="sz-container author">
     <div class="sz-prose">
       <Content />
@@ -60,6 +86,17 @@ const metadata = {
 </Layout>
 
 <style>
+  .author__avatar {
+    display: block;
+    width: 160px;
+    margin-top: var(--sp-5);
+    border: 1px solid var(--line);
+  }
+  .author__avatar :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
   .author {
     padding-bottom: var(--section-gap);
   }

@@ -3,10 +3,15 @@
  * About Seez (KONZEPT B10, rebuilt in the new frame). Wording kept from the former page;
  * "System Logs" now points to the Werkstatt, which replaced it.
  * Motion (motion.css): head strip fills on load, the three pillars reveal in sequence.
+ * "Ursprung": the torn profile photo (src/data/sketches.ts, caption in the artist's words).
+ * "Skizzenbuch 2011–2013": early drawings, original next to the traced ink version.
  */
 import Layout from '~/layouts/PageLayout.astro';
 import PageHead from '~/components/seez/PageHead.astro';
 import FigureStrip from '~/components/seez/FigureStrip.astro';
+import SketchBook from '~/components/seez/sketch/SketchBook.astro';
+import { Image } from 'astro:assets';
+import { PROFILE } from '~/data/sketches';
 import { SUPPORTED_LANGUAGES } from '~/utils/i18n';
 import { sectionUrl, type Lang } from '~/utils/routes';
 
@@ -55,6 +60,7 @@ const links = [
   { text: 'Lyrics', href: sectionUrl(lang, 'lyrics') },
   { text: t('Fragmente', 'Fragments'), href: sectionUrl(lang, 'fragments') },
   { text: t('Werkstatt', 'Workshop'), href: sectionUrl(lang, 'workshop') },
+  { text: t('Zeitstrahl', 'Timeline'), href: sectionUrl(lang, 'timeline') },
 ];
 ---
 
@@ -92,6 +98,30 @@ const links = [
       }
     </div>
   </section>
+
+  <section class="sz-container sz-section origin" aria-labelledby="ursprung">
+    <figure class="origin__fig reveal">
+      <div class="origin__photo">
+        <Image
+          src={PROFILE.image}
+          alt={PROFILE.alt[lang]}
+          widths={[600, 1200]}
+          sizes="(min-width: 900px) 480px, calc(100vw - 32px)"
+          format="webp"
+          quality={80}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div class="origin__text">
+        <p class="sz-label">{t('Ursprung', 'Origin')}</p>
+        <h2 class="sz-h2" id="ursprung">{t('Das zerrissene Profilbild', 'The torn profile picture')}</h2>
+        <figcaption class="sz-lead origin__cap">{PROFILE.caption[lang]}</figcaption>
+      </div>
+    </figure>
+  </section>
+
+  <SketchBook lang={lang} />
 </Layout>
 
 <style>
@@ -105,6 +135,35 @@ const links = [
   .about__pillars .sz-h3,
   .about__pillars .sz-muted {
     margin-top: var(--sp-3);
+  }
+  .origin__fig {
+    margin: 0;
+    display: grid;
+    gap: var(--sp-5);
+    align-items: center;
+  }
+  .origin__photo {
+    max-width: 480px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .origin__photo :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .origin__text .sz-h2 {
+    margin-top: var(--sp-2);
+  }
+  .origin__cap {
+    margin-top: var(--sp-4);
+    max-width: 52ch;
+  }
+  @media (min-width: 900px) {
+    .origin__fig {
+      grid-template-columns: minmax(0, 480px) minmax(0, 1fr);
+      gap: var(--sp-7);
+    }
   }
   .about__links {
     margin-top: var(--sp-6);

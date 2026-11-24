@@ -4,8 +4,11 @@
  * Motion: the strip fills in SZ order when the footer comes into view, the columns follow.
  * Easter egg: type "seez" anywhere (outside a form field) or click the word "seez" here six
  * times: every Splitterleiste on the page breaks apart and snaps back, and a label confirms it.
+ * Mark: the early SEEZ spray stencil (Skizzenbuch 2011–2013), traced, small and muted.
  */
 import FigureStrip from './FigureStrip.astro';
+import SketchInk from './sketch/SketchInk.astro';
+import { INK } from '~/data/sketches';
 import { sectionUrl, type Lang } from '~/utils/routes';
 import { showVideothek } from '~/utils/videothek';
 
@@ -35,6 +38,7 @@ const columns = [
       { text: de ? 'Chronik' : 'Timeline', href: `/${lang}/blog` },
       { text: de ? 'Archiv' : 'Archive', href: sectionUrl(lang, 'archive') },
       { text: de ? 'Über Seez' : 'About Seez', href: `/${lang}/about` },
+      { text: de ? 'Zeitstrahl' : 'Timeline', href: sectionUrl(lang, 'timeline') },
       { text: de ? 'Presse' : 'Press', href: `/${lang}/press` },
     ],
   },
@@ -52,6 +56,7 @@ const columns = [
       { text: 'Spotify · GENERIERUNG LÄUFT', href: spotify, external: true },
       { text: 'Instagram · @seezerino', href: 'https://www.instagram.com/seezerino/', external: true },
       { text: 'TikTok · @seezerino', href: 'https://www.tiktok.com/@seezerino', external: true },
+      { text: 'YouTube · @seezerino', href: 'https://www.youtube.com/@seezerino', external: true },
       { text: 'RSS', href: `/${lang}/rss.xml` },
     ],
   },
@@ -62,7 +67,10 @@ const columns = [
   <FigureStrip height={4} motion="fill" />
   <div class="sz-container sz-container--wide sz-footer__inner">
     <div class="sz-footer__brand">
-      <p class="sz-footer__word" data-sz-egg-word>seez</p>
+      <div class="sz-footer__sig">
+        <SketchInk ink={INK.schablone} class="sz-footer__mark" colour="var(--text-muted)" />
+        <p class="sz-footer__word" data-sz-egg-word>seez</p>
+      </div>
       <p class="sz-label sz-footer__egg" role="status" data-sz-egg data-text={egg}></p>
       <p class="sz-muted">
         {de ? 'Ein Mensch, sechs Splitter, ein offenes Archiv.' : 'One person, six splinters, an open archive.'}
@@ -157,6 +165,18 @@ const columns = [
   }
   .sz-footer__word {
     user-select: none;
+  }
+  .sz-footer__sig + p {
+    margin-top: var(--sp-2);
+  }
+  .sz-footer__sig {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--sp-3);
+  }
+  .sz-footer__sig :global(.sz-footer__mark) {
+    width: 56px;
+    flex: 0 0 56px;
   }
   /* Easter-egg label: stays in the a11y tree (live region) but takes no room while empty */
   .sz-footer__egg:empty {

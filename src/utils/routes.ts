@@ -7,7 +7,7 @@
 import type { SupportedLanguage } from './i18n';
 
 export type Lang = SupportedLanguage;
-export type Section = 'music' | 'fragments' | 'workshop' | 'license' | 'archive' | 'lyrics' | 'videothek';
+export type Section = 'music' | 'fragments' | 'workshop' | 'license' | 'archive' | 'lyrics' | 'videothek' | 'timeline';
 
 export const SECTION_SEGMENT: Record<Section, Record<Lang, string>> = {
   music: { de: 'musik', en: 'music' },
@@ -17,6 +17,7 @@ export const SECTION_SEGMENT: Record<Section, Record<Lang, string>> = {
   archive: { de: 'archiv', en: 'archive' },
   lyrics: { de: 'lyrics', en: 'lyrics' },
   videothek: { de: 'videothek', en: 'videothek' },
+  timeline: { de: 'zeitstrahl', en: 'timeline' },
 };
 
 /** Pages whose slug differs between languages. */

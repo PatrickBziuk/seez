@@ -1,0 +1,97 @@
+---
+/**
+ * SketchInk: one traced drawing from the Skizzenbuch 2011–2013 (public/sketches/*.svg),
+ * painted in a colour through a CSS mask, so it reads like ink on the dark page.
+ *
+ * - colour: any CSS colour (default: currentColor), e.g. var(--fig) on figure pages
+ * - label: gives the drawing role="img" + aria-label; without it the drawing is decorative
+ *   (aria-hidden)
+ * - lazy: the SVG is only requested when the drawing comes near the viewport (script below);
+ *   without JS a plain <img> in <noscript> shows the same file
+ * - wipe: on first view the ink appears from left to right (clip-path, never with
+ *   prefers-reduced-motion)
+ */
+import type { Ink } from '~/data/sketches';
+
+interface Props {
+  ink: Ink;
+  label?: string;
+  colour?: string;
+  wipe?: boolean;
+  class?: string;
+}
+const { ink, label, colour, wipe = true, class: cls } = Astro.props;
+const style = [
+  `--ink-src:url(${ink.src})`,
+  `aspect-ratio:${ink.width} / ${ink.height}`,
+  colour ? `color:${colour}` : '',
+]
+  .filter(Boolean)
+  .join(';');
+---
+
+<span
+  class:list={['sz-ink', wipe && 'sz-ink--wipe', cls]}
+  style={style}
+  data-ink
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+>
+  <noscript><img src={ink.src} alt="" width={ink.width} height={ink.height} /></noscript>
+</span>
+
+<script>
+  /* Request the mask only near the viewport; then let the ink appear once. */
+  const inks = document.querySelectorAll<HTMLElement>('[data-ink]:not(.is-inked)');
+  const show = (el: HTMLElement) => el.classList.add('is-inked');
+  if (!('IntersectionObserver' in window)) inks.forEach(show);
+  else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          show(e.target as HTMLElement);
+          io.unobserve(e.target);
+        }
+      },
+      { rootMargin: '300px 0px' }
+    );
+    inks.forEach((el) => io.observe(el));
+  }
+</script>
+
+<style>
+  .sz-ink {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+  .sz-ink.is-inked {
+    background-color: currentColor;
+    -webkit-mask: var(--ink-src) center / contain no-repeat;
+    mask: var(--ink-src) center / contain no-repeat;
+  }
+  /* No JS: the plain file (black ink) turned light */
+  .sz-ink :global(noscript img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: invert(1);
+    opacity: 0.85;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sz-ink--wipe.is-inked {
+      animation: sz-ink-wipe 1400ms var(--ease-out) both;
+    }
+  }
+  @keyframes sz-ink-wipe {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+</style>
