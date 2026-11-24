@@ -1,0 +1,97 @@
+---
+/**
+ * VhsCard (KONZEPT B6/B9): 2:3 tape sleeve with the cover, figure label, running time.
+ * Links to the film's slip in the Videothek; the Videothek page upgrades it to a dialog.
+ * Draft status only appears in the local preview.
+ */
+import { getFigure } from '~/data/figures';
+import { sectionUrl, type Lang } from '~/utils/routes';
+import type { Film } from '~/utils/videothek';
+
+interface Props {
+  film: Film;
+  lang: Lang;
+}
+const { film, lang } = Astro.props;
+const de = lang === 'de';
+const f = getFigure(film.characters[0]);
+---
+
+<a
+  class="vhs"
+  href={`${sectionUrl(lang, 'videothek')}#${film.id}`}
+  data-film={film.id}
+  style={f ? `--fig:${f.accent.dark}` : undefined}
+>
+  <span class="vhs__sleeve">
+    <img src={film.media.cover} alt="" loading="lazy" width="400" height="600" />
+    <span class="vhs__spine" aria-hidden="true"></span>
+    {!film.released && <span class="vhs__draft">{de ? 'Entwurf' : 'Draft'}</span>}
+  </span>
+  <span class="vhs__title">{film.title}</span>
+  <span class="vhs__meta">
+    {film.characters.map((c) => getFigure(c)?.name || c).join(' · ')}
+    {film.length && <> · {film.length}</>}
+  </span>
+</a>
+
+<style>
+  .vhs {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .vhs__sleeve {
+    position: relative;
+    display: block;
+    aspect-ratio: 2 / 3;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-left: 6px solid var(--fig, var(--line-strong));
+    overflow: hidden;
+    transition:
+      transform var(--t-hover) var(--ease),
+      box-shadow var(--t-hover) var(--ease);
+  }
+  .vhs__sleeve img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .vhs:hover .vhs__sleeve,
+  .vhs:focus-visible .vhs__sleeve {
+    box-shadow: 0 0 0 1px var(--fig, var(--text)), 0 0 24px rgba(255, 255, 255, 0.08);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .vhs:hover .vhs__sleeve {
+      transform: translateY(-3px);
+    }
+  }
+  .vhs__draft {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--bg);
+    border: 1px dashed var(--text-muted);
+    color: var(--text);
+    font: 500 var(--fs-xs) / 1.4 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 6px;
+  }
+  .vhs__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-md);
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+  .vhs__meta {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+</style>

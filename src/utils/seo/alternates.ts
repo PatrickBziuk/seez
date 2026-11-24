@@ -4,6 +4,8 @@
  * Part of Plan 10036 Phase 1 - T36-002
  */
 
+import { counterpartPath, type Lang } from '../routes';
+
 export interface AlternateLink {
   hreflang: string;
   href: string;
@@ -19,16 +21,14 @@ export function buildAlternates(
   astroAPI: { url: URL; params: Record<string, string | undefined>; site?: URL },
   supportedLanguages: string[]
 ): AlternateLink[] {
-  // Extract pathname without language prefix
+  // Localised section segments differ per language (/de/musik <-> /en/music)
   const pathname = astroAPI.url.pathname;
-  const stripped = pathname.replace(/^\/(en|de)(\/|$)/, '/');
-  const normalizedStripped = stripped.replace(/^\/+/, '').replace(/\/+$/, '');
-  const suffix = normalizedStripped ? `/${normalizedStripped}` : '';
-
-  // Build alternates for all supported languages
   return supportedLanguages.map((lang) => ({
     hreflang: lang,
-    href: new URL(`/${lang}${suffix}`, astroAPI.site || 'https://seez.eu').toString(),
+    href: new URL(
+      /^\/(de|en)(\/|$)/.test(pathname) ? counterpartPath(pathname, lang as Lang) : `/${lang}`,
+      astroAPI.site || 'https://seez.eu'
+    ).toString(),
   }));
 }
 

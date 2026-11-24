@@ -44,8 +44,9 @@ const {
           )
         }
         {
+          // Only used inside song content (meine-musik.mdx), below the page's own H1: render H2.
           title && (
-            <h1
+            <h2
               class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:intersect:animate-fade"
               set:html={title}
             />
@@ -78,9 +79,7 @@ const {
         </div>
         {content && <Fragment set:html={content} />}
       </div>
-      <div
-        class="intersect-once intercept-no-queue intersect-quarter motion-safe:md:intersect:animate-fade"
-      >
+      <div class="intersect-once intercept-no-queue intersect-quarter motion-safe:md:intersect:animate-fade">
         {
           image && (
             <div class="relative m-auto max-w-5xl">

@@ -3,6 +3,8 @@ import { getPublicCollection } from '~/utils/publication';
 import { type CollectionEntry, render } from 'astro:content';
 import MarkdownLayout from '../../../layouts/MarkdownLayout.astro';
 import { getPermalink } from '../../../utils/permalinks';
+import { musicSlug } from '~/data/songs';
+import { sectionUrl } from '~/utils/routes';
 import RelatedContent from '../../../components/content/RelatedContent.astro';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
@@ -66,9 +68,7 @@ const frontmatterWithDateObjects = {
                 <li>
                   <a
                     class="underline hover:no-underline"
-                    href={getPermalink(
-                      `/${Astro.params.lang}/music/${ref.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`
-                    )}
+                    href={sectionUrl(Astro.params.lang as SupportedLanguage, 'music', musicSlug(ref.id))}
                   >
                     {ref.id}
                   </a>

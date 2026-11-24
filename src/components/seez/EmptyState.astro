@@ -1,0 +1,27 @@
+---
+/** EmptyState - an honest sentence instead of "LOCKED" tiles (KONZEPT B6). */
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<div class="sz-empty">
+  <p class="sz-empty__title">{title}</p>
+  <div class="sz-empty__body"><slot /></div>
+</div>
+
+<style>
+  .sz-empty {
+    border: 1px dashed var(--line-strong);
+    padding: var(--sp-6) var(--sp-5);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    max-width: var(--measure);
+  }
+  .sz-empty__title {
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: var(--sp-2);
+  }
+</style>

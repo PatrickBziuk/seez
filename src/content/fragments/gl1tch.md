@@ -4,7 +4,7 @@ language: 'de'
 authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T21:15:00Z'
-image: '/images/figures/gl1tch_at_home.png'
+image: '/images/figures/gl1tch-sheet.webp'
 notranslate: ['SZ-005', 'Gl1tch', 'Patch 1.0']
 alias: 'Der Meta, Liniengesicht, Patch 1.0'
 designation: 'SZ-005'
@@ -21,9 +21,16 @@ voiceCharacteristics:
 movementGrammar: ['glitchen', 'reflektieren', 'vermitteln']
 containmentNote: 'Gl1tch fungiert als kritische Instanz für KI und Technologie-Ethik. Seine Meta-Kommentare können existenzielle Fragen zu Authentizität und digitaler Identität auslösen. Hohe Kompetenz in der Vermittlung zwischen verschiedenen Subkulturen.'
 tags: ['figure', 'character', 'music', 'meta', 'technology', 'ai-ethics', 'glitch']
+lastChangeDate: '2026-11-24T12:47:33.472Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.472Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# Ich bin der Fehler im System — und das ist gut so
+## Ich bin der Fehler im System — und das ist gut so
 
 Hey, ich bin Gl1tch. Mit "1" statt "i", weil ich eine Variable bin, kein fester Wert. Ich stehe zwischen den Welten und übersetze, was andere nicht sehen.
 

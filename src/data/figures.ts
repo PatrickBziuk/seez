@@ -38,3 +38,12 @@ export function figureGlow(key: string, alpha = 0.25): string | undefined {
   const n = parseInt(hex.slice(1), 16);
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alpha})`;
 }
+
+/** URL slug of a figure page (`/de/fragmente/unknown`). The content entry keeps its old id. */
+export const figureSlug = (f: Figure): string => f.id;
+
+/** CSS custom properties for a figure context: --fig (accent), --fig-ground, --fig-glow. */
+export function figureStyle(f: Figure | undefined): string {
+  if (!f) return '';
+  return `--fig:${f.accent.dark};--fig-ground:${f.ground};--fig-glow:${figureGlow(f.id, 0.28)}`;
+}

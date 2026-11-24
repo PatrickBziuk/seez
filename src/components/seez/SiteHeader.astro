@@ -1,0 +1,397 @@
+---
+/**
+ * SiteHeader - wordmark + splinter strip, five sections, search, language (KONZEPT B6/B8).
+ * Skip link first. On phones the sections, search and language live in one menu panel;
+ * there is no floating toolbar any more.
+ */
+import Wordmark from './Wordmark.astro';
+import { sectionUrl, homeUrl, counterpartPath, type Lang, type Section } from '~/utils/routes';
+import { showVideothek } from '~/utils/videothek';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === 'de';
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+const items: Array<{ section: Section; text: string }> = [
+  { section: 'music', text: de ? 'Musik' : 'Music' },
+  { section: 'fragments', text: de ? 'Fragmente' : 'Fragments' },
+  ...(showVideothek() ? [{ section: 'videothek' as Section, text: 'Videothek' }] : []),
+  { section: 'lyrics', text: 'Lyrics' },
+  { section: 'workshop', text: de ? 'Werkstatt' : 'Workshop' },
+];
+const links = items.map((i) => {
+  const href = sectionUrl(lang, i.section);
+  return { ...i, href, current: path === href || path.startsWith(href + '/') };
+});
+const other: Lang = de ? 'en' : 'de';
+const otherHref = counterpartPath(path, other);
+const t = {
+  skip: de ? 'Zum Inhalt springen' : 'Skip to content',
+  home: de ? 'seez – zur Startseite' : 'seez – home',
+  nav: de ? 'Hauptnavigation' : 'Main navigation',
+  menu: de ? 'Menü' : 'Menu',
+  search: de ? 'Suche' : 'Search',
+  lang: de ? 'English version' : 'Deutsche Fassung',
+  close: de ? 'Schließen' : 'Close',
+  placeholder: de ? 'Songs, Fragmente, Texte …' : 'Songs, fragments, texts …',
+  devNote: de
+    ? 'Die Suche gibt es nur in der gebauten Seite (pnpm build && pnpm preview).'
+    : 'Search works in the built site only (pnpm build && pnpm preview).',
+  none: de ? 'Nichts gefunden.' : 'Nothing found.',
+  min: de ? 'Mindestens zwei Zeichen eingeben.' : 'Type at least two characters.',
+};
+---
+
+<a class="skip-link" href="#main">{t.skip}</a>
+<header class="sz-header" data-sz-header>
+  <div class="sz-header__bar sz-container sz-container--wide">
+    <a class="sz-header__home" href={homeUrl(lang)} aria-label={t.home}>
+      <Wordmark />
+    </a>
+
+    <nav class="sz-header__nav" aria-label={t.nav}>
+      <ul>
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} aria-current={l.current ? 'page' : undefined}>
+                {l.text}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="sz-header__tools">
+      <button type="button" class="sz-iconbtn" data-sz-search-open aria-haspopup="dialog">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"
+          ><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg
+        >
+        <span class="sz-iconbtn__text">{t.search}</span>
+      </button>
+      <a class="sz-langlink" href={otherHref} hreflang={other} lang={other} aria-label={t.lang}>{other.toUpperCase()}</a>
+      <button type="button" class="sz-iconbtn sz-menubtn" aria-expanded="false" aria-controls="sz-menu" data-sz-menu-toggle>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"
+          ><path class="l1" d="M3 7h18"></path><path class="l2" d="M3 12h18"></path><path class="l3" d="M3 17h18"></path></svg
+        >
+        <span class="sz-iconbtn__text">{t.menu}</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="sz-menu" class="sz-menu" hidden data-sz-menu>
+    <nav aria-label={t.nav}>
+      <ul>
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} aria-current={l.current ? 'page' : undefined}>
+                {l.text}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="sz-menu__tools">
+      <button type="button" class="sz-btn" data-sz-search-open>{t.search}</button>
+      <a class="sz-btn" href={otherHref} hreflang={other} lang={other}>{de ? 'English' : 'Deutsch'}</a>
+    </div>
+  </div>
+</header>
+
+<dialog class="sz-search" data-sz-search aria-label={t.search}>
+  <form method="dialog" class="sz-search__head">
+    <label for="sz-search-input" class="sz-label">{t.search}</label>
+    <button class="sz-iconbtn" value="close" aria-label={t.close}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"
+        ><path d="M5 5l14 14M19 5 5 19"></path></svg
+      >
+    </button>
+  </form>
+  <input
+    id="sz-search-input"
+    class="sz-search__input"
+    type="search"
+    autocomplete="off"
+    placeholder={t.placeholder}
+    data-sz-search-input
+  />
+  <p class="sz-search__status sz-muted" role="status" aria-live="polite" data-sz-search-status></p>
+  <ol class="sz-search__results" data-sz-search-results></ol>
+</dialog>
+
+<script is:inline define:vars={{ t }}>
+  (() => {
+    const menuBtn = document.querySelector('[data-sz-menu-toggle]');
+    const menu = document.querySelector('[data-sz-menu]');
+    if (menuBtn && menu) {
+      const setOpen = (open) => {
+        menuBtn.setAttribute('aria-expanded', String(open));
+        menu.hidden = !open;
+      };
+      menuBtn.addEventListener('click', () => setOpen(menuBtn.getAttribute('aria-expanded') !== 'true'));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !menu.hidden) {
+          setOpen(false);
+          menuBtn.focus();
+        }
+      });
+      window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => e.matches && setOpen(false));
+    }
+
+    const dialog = document.querySelector('[data-sz-search]');
+    const input = document.querySelector('[data-sz-search-input]');
+    const status = document.querySelector('[data-sz-search-status]');
+    const results = document.querySelector('[data-sz-search-results]');
+    if (!dialog || !input || !status || !results) return;
+    let pagefind = null;
+    let failed = false;
+    const load = async () => {
+      if (pagefind || failed) return pagefind;
+      try {
+        pagefind = await import(/* @vite-ignore */ '/pagefind/pagefind.js');
+        await pagefind.init?.();
+      } catch {
+        failed = true;
+        status.textContent = t.devNote;
+      }
+      return pagefind;
+    };
+    document.querySelectorAll('[data-sz-search-open]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        dialog.showModal();
+        input.focus();
+        load();
+      })
+    );
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    let timer;
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        const q = input.value.trim();
+        results.innerHTML = '';
+        if (q.length < 2) {
+          status.textContent = failed ? t.devNote : t.min;
+          return;
+        }
+        const pf = await load();
+        if (!pf) return;
+        const search = await pf.search(q);
+        const items = await Promise.all(search.results.slice(0, 8).map((r) => r.data()));
+        status.textContent = items.length ? `${search.results.length}` : t.none;
+        for (const item of items) {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = item.url;
+          a.textContent = item.meta?.title || item.url;
+          const p = document.createElement('p');
+          p.innerHTML = item.excerpt || '';
+          li.append(a, p);
+          results.append(li);
+        }
+      }, 160);
+    });
+  })();
+</script>
+
+<style>
+  .sz-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(11, 11, 16, 0.94);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(6px);
+  }
+  .sz-header__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-5);
+    min-height: 64px;
+  }
+  .sz-header__home {
+    display: inline-flex;
+    padding: 6px 0;
+    text-decoration: none;
+    flex: none;
+  }
+  .sz-header__nav {
+    display: none;
+    flex: 1;
+  }
+  .sz-header__nav ul,
+  .sz-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .sz-header__nav ul {
+    display: flex;
+    gap: var(--sp-1);
+  }
+  .sz-header__nav a,
+  .sz-menu a:not(.sz-btn) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--sp-3);
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--fs-sm);
+    letter-spacing: 0.02em;
+    border-bottom: 2px solid transparent;
+  }
+  .sz-header__nav a:hover,
+  .sz-menu a:not(.sz-btn):hover {
+    color: var(--text);
+  }
+  .sz-header__nav a[aria-current='page'],
+  .sz-menu a[aria-current='page'] {
+    color: var(--text);
+    border-bottom-color: var(--text);
+  }
+  .sz-header__tools {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
+  }
+  .sz-iconbtn,
+  .sz-langlink {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 10px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    color: var(--text);
+    font: 500 var(--fs-sm) / 1 var(--font-sans);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .sz-iconbtn:hover,
+  .sz-langlink:hover {
+    border-color: var(--line-strong);
+  }
+  .sz-langlink {
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+  }
+  .sz-iconbtn__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .sz-menubtn[aria-expanded='true'] .l1 {
+    transform: translate(0, 5px);
+  }
+  .sz-menubtn[aria-expanded='true'] .l3 {
+    transform: translate(0, -5px);
+  }
+  .sz-menu {
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+    padding: var(--sp-3) var(--gutter) var(--sp-5);
+  }
+  .sz-menu a:not(.sz-btn) {
+    font-size: var(--fs-md);
+    width: 100%;
+    color: var(--text);
+    padding: 0;
+  }
+  .sz-menu__tools {
+    display: flex;
+    gap: var(--sp-3);
+    margin-top: var(--sp-4);
+  }
+  @media (max-width: 1023px) {
+    .sz-header__tools .sz-iconbtn[data-sz-search-open],
+    .sz-header__tools .sz-langlink {
+      display: none;
+    }
+  }
+  @media (min-width: 1024px) {
+    .sz-header__nav {
+      display: block;
+    }
+    .sz-menubtn {
+      display: none;
+    }
+    .sz-menu {
+      display: none !important;
+    }
+  }
+
+  .sz-search {
+    width: min(680px, calc(100vw - 32px));
+    max-height: min(640px, calc(100vh - 64px));
+    margin: 64px auto auto;
+    padding: var(--sp-5);
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+  }
+  .sz-search::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .sz-search__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sz-search__input {
+    width: 100%;
+    min-height: 48px;
+    margin-top: var(--sp-2);
+    padding: 0 var(--sp-4);
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--line-strong) !important;
+    border-radius: var(--radius) !important;
+    font-size: var(--fs-md);
+  }
+  .sz-search__status {
+    margin-top: var(--sp-3);
+    font-size: var(--fs-sm);
+  }
+  .sz-search__results {
+    list-style: none;
+    margin: var(--sp-3) 0 0;
+    padding: 0;
+  }
+  .sz-search__results :global(li) {
+    padding: var(--sp-3) 0;
+    border-top: 1px solid var(--line);
+  }
+  .sz-search__results :global(a) {
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+  .sz-search__results :global(p) {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    margin-top: 4px;
+  }
+  .sz-search__results :global(mark) {
+    background: var(--invert-bg);
+    color: var(--invert-text);
+  }
+</style>

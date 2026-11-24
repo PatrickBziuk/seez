@@ -1,41 +1,12 @@
-import { getPublicCollection } from '~/utils/publication';
-import { SITE } from 'astrowind:config';
-
-const languages = ['en', 'de'];
-const staticRoutes = [
-  '',
-  'musik',
-  'lyrics',
-  'fragmente',
-  'kreatives',
-  'system-logs',
-  'inventory',
-  'press',
-  'about',
-  'contact',
-];
-
-export async function GET() {
-  const urls: string[] = [];
-
-  for (const lang of languages) {
-    for (const route of staticRoutes) {
-      urls.push(`${SITE.url}/${lang}/${route}`.replace(/\/$/, '/'));
-    }
-  }
-
-  const musicEntries = await getPublicCollection('music');
-  for (const entry of musicEntries) {
-    if (entry.data.draft || entry.data.publicationStatus === 'draft') continue;
-    const lang = entry.data.language || 'en';
-    const slug = entry.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');
-    urls.push(`${SITE.url}/${lang}/music/${slug}`);
-  }
-
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url) => `<url><loc>${url}</loc></url>`).join('\n')}\n</urlset>`;
-  return new Response(xml, {
-    headers: {
-      'Content-Type': 'application/xml',
-    },
-  });
+/**
+ * /sitemap.xml kept for old links and crawlers. It used to list hand-picked routes with a
+ * broken base URL ("undefined/en/musik"); now it simply points to the generated sitemap.
+ */
+export function GET() {
+  const body = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap><loc>https://seez.eu/sitemap-0.xml</loc></sitemap>
+</sitemapindex>
+`;
+  return new Response(body, { headers: { 'Content-Type': 'application/xml; charset=utf-8' } });
 }

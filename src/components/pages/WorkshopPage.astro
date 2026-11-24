@@ -1,0 +1,438 @@
+---
+/**
+ * WorkshopPage (KONZEPT B9 "Werkstatt"): replaces System Logs, Creative Core and Tech Stack.
+ * Public: process, tools, origin. Reports (LogEntry) only for released films; ratings only
+ * for released films. Work states and unreleased reports appear only in `pnpm dev:drafts`.
+ */
+import { render } from 'astro:content';
+import Layout from '~/layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
+import FigureChip from '~/components/seez/FigureChip.astro';
+import Notice from '~/components/seez/Notice.astro';
+import { PROCESS_STEPS, PROCESS_LEAD, MANIFESTO, ORIGINS, STYLE_MATRIX, TOOLS, TOOLS_LEAD, WORK_STATES } from '~/data/werkstatt';
+import { getPublicCollection, isPreview, isVisible } from '~/utils/publication';
+import { getVisibleFilms, filmsForSong } from '~/utils/videothek';
+import { EP_TRACKS } from '~/data/songs';
+import { sectionUrl, type Lang } from '~/utils/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === 'de';
+const preview = isPreview();
+const ids = de ? { process: 'prozess', tools: 'werkzeuge', reports: 'berichte' } : { process: 'process', tools: 'tools', reports: 'reports' };
+
+const pages = await getPublicCollection('pages');
+const stack = pages.find((p) => p.id === `tech-stack/${lang}`) || pages.find((p) => p.id === 'tech-stack/de');
+const Stack = stack ? (await render(stack)).Content : null;
+
+const reports = getVisibleFilms().filter((f) => f.workStatus !== 'dropped');
+const showStates = isVisible(WORK_STATES);
+const songFor = (key?: string) => EP_TRACKS.find((t) => t.filmKey === key && filmsForSong(key).length > 0);
+const rate = (f: { rating?: unknown }, k: string) => (f.rating as Record<string, number> | undefined)?.[k];
+const ASPECTS = [
+  ['g', de ? 'Gesamt' : 'Overall'],
+  ['w', de ? 'Welt' : 'World'],
+  ['c', de ? 'Figur' : 'Character'],
+  ['l', 'Lyrics'],
+  ['s', 'Sync'],
+] as const;
+
+const metadata = {
+  title: de ? 'Werkstatt' : 'Workshop',
+  description: de
+    ? 'Wie Seez entsteht: Prozess, Werkzeuge und – sobald freigegeben – Berichte zu jedem Film.'
+    : 'How Seez is made: process, tools and – once released – a report for every film.',
+};
+---
+
+<Layout metadata={metadata}>
+  <PageHead title={de ? 'Werkstatt' : 'Workshop'} label="Building in Public" lead={PROCESS_LEAD[lang]}>
+    <nav class="ws__toc" aria-label={de ? 'Abschnitte' : 'Sections'}>
+      <a href={`#${ids.process}`}>{de ? 'Prozess' : 'Process'}</a>
+      <a href={`#${ids.tools}`}>{de ? 'Werkzeuge' : 'Tools'}</a>
+      {reports.length > 0 && <a href={`#${ids.reports}`}>{de ? 'Berichte' : 'Reports'}</a>}
+    </nav>
+  </PageHead>
+
+  {
+    preview && (
+      <div class="sz-container">
+        <Notice title={de ? 'Entwurfsvorschau' : 'Draft preview'}>
+          {de
+            ? 'Nur lokal: Berichte zu nicht freigegebenen Filmen und Arbeitsstände sind sichtbar und als Entwurf markiert.'
+            : 'Local only: reports on unreleased films and work states are visible and marked as drafts.'}
+        </Notice>
+      </div>
+    )
+  }
+
+  <section class="sz-container sz-section" id={ids.process} aria-labelledby="h-process">
+    <h2 class="sz-h2" id="h-process">{de ? 'Prozess' : 'Process'}</h2>
+    <ol class="ws__steps">
+      {
+        PROCESS_STEPS.map((s, i) => (
+          <li class="sz-panel">
+            <span class="sz-label">0{i + 1}</span>
+            <h3 class="sz-h3">{s.title[lang]}</h3>
+            <p>{s.text[lang]}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <blockquote class="ws__manifesto">{MANIFESTO[lang]}</blockquote>
+
+    <h3 class="sz-h3 ws__sub">{de ? 'Eine Figur, ein Medium' : 'One figure, one medium'}</h3>
+    <ul class="ws__matrix">
+      {
+        STYLE_MATRIX.map((m) => (
+          <li>
+            <FigureChip figure={m.figure} lang={lang} />
+            <strong>{m.device[lang]}</strong>
+            <span>{m.text[lang]}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h3 class="sz-h3 ws__sub">{de ? 'Woher das Material kommt' : 'Where the material comes from'}</h3>
+    <ol class="ws__origins">
+      {
+        ORIGINS.map((o) => (
+          <li>
+            <span class="sz-label ws__stamp">{o.stamp}</span>
+            <div>
+              <strong>{o.title[lang]}</strong>
+              <p>{o.text[lang]}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="sz-container sz-section" id={ids.tools} aria-labelledby="h-tools">
+    <h2 class="sz-h2" id="h-tools">{de ? 'Werkzeuge' : 'Tools'}</h2>
+    <p class="sz-lead ws__lead">{TOOLS_LEAD[lang]}</p>
+    <ul class="ws__tools">
+      {
+        TOOLS.map((t) => (
+          <li class="sz-panel">
+            <span class="sz-label">{t.label}</span>
+            <h3 class="sz-h3">{t.title}</h3>
+            <p>{t.text[lang]}</p>
+          </li>
+        ))
+      }
+    </ul>
+    {
+      Stack && (
+        <details class="ws__stack">
+          <summary>{de ? 'Wie diese Website gebaut ist' : 'How this website is built'}</summary>
+          <div class="sz-prose">
+            <Stack />
+          </div>
+        </details>
+      )
+    }
+  </section>
+
+  {
+    reports.length > 0 && (
+      <section class="sz-container sz-section" id={ids.reports} aria-labelledby="h-reports">
+        <h2 class="sz-h2" id="h-reports">
+          {de ? 'Berichte' : 'Reports'}
+        </h2>
+        {!de && <p class="sz-muted">Reports are in German.</p>}
+        <ol class="ws__reports" lang="de">
+          {reports.map((f) => (
+              <li class="log" id={`log-${f.id}`}>
+                <p class="sz-label log__date">
+                  {f.date}
+                  {!f.released && <span class="log__draft">Entwurf</span>}
+                </p>
+                <div class="log__body">
+                  <h3 class="sz-h3">
+                    {f.title}
+                    {f.subtitle && <span class="sz-muted"> · {f.subtitle}</span>}
+                  </h3>
+                  <div class="log__chips">
+                    {f.characters.map((c) => (
+                      <FigureChip figure={c} lang={lang} />
+                    ))}
+                    {songFor(f.song?.key) && (
+                      <a class="sz-link" href={sectionUrl(lang, 'music', songFor(f.song?.key)!.slug)}>
+                        Song: {songFor(f.song?.key)!.title}
+                      </a>
+                    )}
+                  </div>
+                  {f.how && <p class="log__how">{f.how}</p>}
+                  <div class="log__thumbs">
+                    {f.media.thumbs.slice(0, 3).map((t) => (
+                      <img src={t} alt="" loading="lazy" />
+                    ))}
+                  </div>
+                  {(f.used?.length || f.made?.length) && (
+                    <dl class="log__dl">
+                      {f.used?.length > 0 && (
+                        <>
+                          <dt>Verwendet</dt>
+                          <dd>{f.used.join(' · ')}</dd>
+                        </>
+                      )}
+                      {f.made?.length > 0 && (
+                        <>
+                          <dt>Gebaut</dt>
+                          <dd>{f.made.join(' · ')}</dd>
+                        </>
+                      )}
+                    </dl>
+                  )}
+                  {f.rating && (
+                    <div class="log__rating">
+                      <p class="sz-label">Bewertung</p>
+                      <ul>
+                        {ASPECTS.map(([k, label]) => (
+                          <li>
+                            {label} <strong>{rate(f, k)}</strong>/10
+                          </li>
+                        ))}
+                      </ul>
+                      {f.rating.why && <p class="sz-muted">{f.rating.why}</p>}
+                    </div>
+                  )}
+                  <a class="sz-link" href={`${sectionUrl(lang, 'videothek')}#${f.id}`}>
+                    {de ? 'In der Videothek ansehen' : 'Watch in the Videothek'}
+                  </a>
+                </div>
+              </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+
+  {
+    showStates && (
+      <section class="sz-container sz-section" aria-labelledby="h-states" lang="de">
+        <h2 class="sz-h2" id="h-states">
+          Arbeitsstände <span class="log__draft">Entwurf</span>
+        </h2>
+        <div class="ws__states">
+          <div>
+            <h3 class="sz-h3">Phase 1</h3>
+            <p class="sz-muted">{WORK_STATES.phaseOneLead}</p>
+            <ul>
+              {WORK_STATES.phaseOne.map((s) => (
+                <li>{s}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 class="sz-h3">Phase 2</h3>
+            <p class="sz-muted">{WORK_STATES.phaseTwoLead}</p>
+            <ul>
+              {WORK_STATES.phaseTwo.map((s) => (
+                <li>{s}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Layout>
+
+<style>
+  .ws__toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-5);
+  }
+  .ws__toc a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--sp-4);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--fs-sm);
+  }
+  .ws__toc a:hover {
+    border-color: var(--text);
+  }
+  .ws__steps,
+  .ws__tools,
+  .ws__matrix,
+  .ws__origins,
+  .ws__reports {
+    list-style: none;
+    margin: var(--sp-5) 0 0;
+    padding: 0;
+  }
+  .ws__steps,
+  .ws__tools {
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .ws__steps li p,
+  .ws__tools li p {
+    margin-top: var(--sp-2);
+    color: var(--text-muted);
+  }
+  .ws__manifesto {
+    margin-top: var(--sp-7);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-xl);
+    line-height: 1.15;
+    text-transform: uppercase;
+    max-width: 30ch;
+  }
+  .ws__sub {
+    margin-top: var(--sp-8);
+  }
+  .ws__matrix li {
+    display: grid;
+    gap: var(--sp-2);
+    padding: var(--sp-4) 0;
+    border-top: 1px solid var(--line);
+  }
+  .ws__matrix span {
+    color: var(--text-muted);
+  }
+  .ws__origins li {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: var(--sp-4);
+    padding: var(--sp-4) 0;
+    border-top: 1px solid var(--line);
+  }
+  .ws__origins p {
+    color: var(--text-muted);
+  }
+  .ws__lead {
+    margin-top: var(--sp-4);
+  }
+  .ws__stack {
+    margin-top: var(--sp-6);
+    border: 1px solid var(--line);
+    padding: var(--sp-4) var(--sp-5);
+  }
+  .ws__stack summary {
+    cursor: pointer;
+    font-weight: 600;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .ws__stack .sz-prose {
+    margin-top: var(--sp-4);
+  }
+  .log {
+    display: grid;
+    gap: var(--sp-3);
+    padding: var(--sp-6) 0;
+    border-top: 1px solid var(--line);
+  }
+  .log__draft {
+    display: inline-block;
+    margin-left: 8px;
+    border: 1px dashed var(--text-muted);
+    padding: 0 6px;
+    font: 500 var(--fs-xs) / 1.6 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    vertical-align: middle;
+  }
+  .log__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    align-items: center;
+    margin-top: var(--sp-3);
+  }
+  .log__how {
+    margin-top: var(--sp-3);
+    max-width: var(--measure);
+  }
+  .log__thumbs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sp-2);
+    margin-top: var(--sp-4);
+    max-width: 720px;
+  }
+  .log__thumbs img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: var(--surface);
+  }
+  .log__dl {
+    margin-top: var(--sp-4);
+    display: grid;
+    gap: 4px var(--sp-4);
+    grid-template-columns: max-content 1fr;
+    font-size: var(--fs-sm);
+    max-width: var(--measure);
+  }
+  .log__dl dt {
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: var(--fs-xs);
+    letter-spacing: 0.08em;
+    padding-top: 3px;
+  }
+  .log__rating {
+    margin-top: var(--sp-4);
+    max-width: var(--measure);
+  }
+  .log__rating ul {
+    list-style: none;
+    margin: var(--sp-2) 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+  }
+  .log__body > .sz-link {
+    display: inline-block;
+    margin-top: var(--sp-4);
+  }
+  .ws__states {
+    display: grid;
+    gap: var(--sp-6);
+    margin-top: var(--sp-5);
+  }
+  .ws__states ul {
+    margin-top: var(--sp-3);
+    padding-left: 1.2em;
+    list-style: square;
+  }
+  @media (min-width: 900px) {
+    .ws__steps,
+    .ws__tools {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .ws__matrix li {
+      grid-template-columns: 220px 200px 1fr;
+      align-items: center;
+    }
+    .log {
+      grid-template-columns: 180px 1fr;
+    }
+    .ws__states {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

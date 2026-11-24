@@ -11,11 +11,16 @@ genre: ['Dark Trap', 'Conscious Rap', 'Seelensplitter']
 linerNotes: 'SP1-Drift-Kernsong aus der Rausch-und-Flucht-Phase.'
 tags: ['song', 'ep1', 'generierung-laeuft', 'drift', 'rausch', 'jugend', 'selbstzerstoerung']
 figureRef: fragments/drift
+lastChangeDate: '2026-11-24T12:47:33.567Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.567Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# KIFFEN KIPPEN ALK
-
-`KIFFEN KIPPEN ALK` zeigt Substanzen nicht als Partyästhetik, sondern als schlechte Werkzeuge gegen Kälte, Leere und frühe Haltlosigkeit.
+KIFFEN KIPPEN ALK zeigt Substanzen nicht als Partyästhetik, sondern als schlechte Werkzeuge gegen Kälte, Leere und frühe Haltlosigkeit.
 
 Drift will nicht glänzen, sondern unterbrochen werden: Der Refrain ist weniger Rebellion als Bitte, den Schmerz kurz aussetzen zu dürfen.
 

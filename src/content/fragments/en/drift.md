@@ -4,7 +4,7 @@ language: 'en'
 authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T20:45:00Z'
-image: '/images/figures/drift.png'
+image: '/images/figures/drift-sheet.webp'
 alias: 'The Anchorless'
 designation: 'SZ-003'
 symbolism:
@@ -16,9 +16,16 @@ symbolism:
     meaning: 'Beer can - cheap comfort, status symbol of being unmoored'
 containmentNote: 'Embodies youth self-destruction without glamorization; handle carefully.'
 tags: ['fragment', 'character', 'music', 'substance', 'youth-crisis', 'anchor-lost']
+lastChangeDate: '2026-11-24T12:47:33.419Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.419Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# I drift without anchor
+## I drift without anchor
 
 Yo, I'm Drift. No plan where to go, nothing to hold onto. Just drifting until something stops me — even if it's the ground.
 

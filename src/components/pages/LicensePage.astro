@@ -1,0 +1,117 @@
+---
+/**
+ * LicensePage - the former /perform "Performer License" inside the site (KONZEPT A1.3/B8).
+ * Wording unchanged (English only so far); emoji removed from headings, figure notes as chips.
+ */
+import Layout from '~/layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
+import FigureChip from '~/components/seez/FigureChip.astro';
+import Notice from '~/components/seez/Notice.astro';
+import { sectionUrl, type Lang } from '~/utils/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === 'de';
+const metadata = {
+  title: de ? 'Lizenz für Auftritte' : 'Performer License',
+  description: 'License terms for performing seez music - Sinn fix, Form frei (Fixed meaning, free form)',
+};
+---
+
+<Layout metadata={metadata}>
+  <PageHead
+    title={de ? 'Lizenz für Auftritte' : 'Performer License'}
+    label="Sinn fix, Form frei"
+    crumbs={[{ href: sectionUrl(lang, 'music'), text: de ? 'Musik' : 'Music' }, { text: de ? 'Lizenz' : 'License' }]}
+  />
+  {
+    de && (
+      <div class="sz-container">
+        <Notice>Die Lizenz liegt bisher nur auf Englisch vor.</Notice>
+      </div>
+    )
+  }
+  <div class="sz-container sz-section" lang="en">
+    <div class="sz-prose">
+      <p class="sz-lead">
+        <strong>Fixed meaning, free form</strong> - Perform our music with your interpretation while preserving the core message.
+      </p>
+
+      <h2>License Terms</h2>
+      <p>All music in the seez creative cosmos is available for performance under the following terms:</p>
+
+      <h3>You are free to:</h3>
+      <ul>
+        <li><strong>Perform</strong> - Play and perform the songs publicly</li>
+        <li><strong>Adapt</strong> - Change arrangement, tempo, and musical style</li>
+        <li><strong>Interpret</strong> - Add your own vocal interpretation and energy</li>
+        <li><strong>Record</strong> - Create your own recordings of performances</li>
+        <li><strong>Stream</strong> - Share performances on social media and streaming platforms</li>
+      </ul>
+
+      <h3>Requirements:</h3>
+      <ul>
+        <li><strong>Attribution</strong> - Credit "Original by seez" in description/credits</li>
+        <li><strong>Core Message</strong> - Preserve the essential meaning and emotional intent</li>
+        <li><strong>Non-Commercial</strong> - Free performances only (see commercial licensing below)</li>
+      </ul>
+
+      <h3>Not allowed:</h3>
+      <ul>
+        <li>Changing lyrics to contradict the original message</li>
+        <li>Commercial use without explicit permission</li>
+        <li>Claiming original authorship</li>
+        <li>Use for harmful, discriminatory, or hateful purposes</li>
+      </ul>
+
+      <h2>Commercial Licensing</h2>
+      <p>
+        For commercial performances, recordings, or streaming with monetization,
+        <a href="mailto:info@seez.eu?subject=Commercial%20License%20Request">contact us for a commercial license</a>.
+      </p>
+
+      <h2>Stems &amp; Production Files</h2>
+      <p>Need stems, MIDI files, or production materials for your performance? We're happy to share when possible.</p>
+      <p><a class="sz-btn" href="mailto:info@seez.eu?subject=Stems%20Request">Request Stems</a></p>
+
+      <h2>Figure-Specific Guidelines</h2>
+      <p>Some figures have specific performance considerations:</p>
+    </div>
+    <ul class="lic__figs">
+      <li class="sz-panel"><FigureChip figure="splinter" lang={lang} /><p>Introspective delivery required. Avoid theatrical exaggeration.</p></li>
+      <li class="sz-panel"><FigureChip figure="lume" lang={lang} /><p>Gentle, dreamy vocals. Hook sections especially important.</p></li>
+      <li class="sz-panel">
+        <FigureChip figure="drift" lang={lang} /><p><strong>Content Warning:</strong> Handle substance themes responsibly.</p>
+      </li>
+    </ul>
+    <div class="sz-prose">
+      <h2>Community &amp; Collaboration</h2>
+      <p>
+        We love seeing creative interpretations! Tag us on social media or send recordings to
+        <a href="mailto:info@seez.eu">info@seez.eu</a> to be featured in our community showcase.
+      </p>
+      <p class="sz-muted">
+        <strong>Last updated:</strong> August 27, 2025<br />
+        <strong>License version:</strong> 1.0<br />
+        <strong>Questions?</strong> Contact us at <a href="mailto:info@seez.eu">info@seez.eu</a>
+      </p>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .lic__figs {
+    list-style: none;
+    margin: var(--sp-5) 0 var(--sp-6);
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .lic__figs p {
+    margin-top: var(--sp-3);
+    color: var(--text-muted);
+  }
+</style>

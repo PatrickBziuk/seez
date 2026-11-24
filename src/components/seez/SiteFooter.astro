@@ -1,0 +1,161 @@
+---
+/**
+ * SiteFooter - plain link lists (no closed <details>), splinter strip, no version string (KONZEPT B6/B8).
+ */
+import FigureStrip from './FigureStrip.astro';
+import { sectionUrl, type Lang } from '~/utils/routes';
+import { showVideothek } from '~/utils/videothek';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === 'de';
+const spotify = 'https://open.spotify.com/intl-de/album/47aAj0XEtEJnmJqFDswAp0';
+
+const columns = [
+  {
+    title: de ? 'Kosmos' : 'Cosmos',
+    links: [
+      { text: de ? 'Musik' : 'Music', href: sectionUrl(lang, 'music') },
+      { text: de ? 'Fragmente' : 'Fragments', href: sectionUrl(lang, 'fragments') },
+      ...(showVideothek() ? [{ text: 'Videothek', href: sectionUrl(lang, 'videothek') }] : []),
+      { text: 'Lyrics', href: sectionUrl(lang, 'lyrics') },
+      { text: de ? 'Werkstatt' : 'Workshop', href: sectionUrl(lang, 'workshop') },
+    ],
+  },
+  {
+    title: de ? 'Mehr' : 'More',
+    links: [
+      { text: de ? 'Texte' : 'Texts', href: `/${lang}/texte` },
+      { text: de ? 'Chronik' : 'Timeline', href: `/${lang}/blog` },
+      { text: de ? 'Archiv' : 'Archive', href: sectionUrl(lang, 'archive') },
+      { text: de ? 'Über Seez' : 'About Seez', href: `/${lang}/about` },
+      { text: de ? 'Presse' : 'Press', href: `/${lang}/press` },
+    ],
+  },
+  {
+    title: de ? 'Kontakt' : 'Contact',
+    links: [
+      { text: 'info@seez.eu', href: 'mailto:info@seez.eu' },
+      { text: de ? 'Kontaktformular' : 'Contact form', href: `/${lang}/contact` },
+      { text: de ? 'Lizenz für Auftritte' : 'Performer license', href: sectionUrl(lang, 'license') },
+    ],
+  },
+  {
+    title: de ? 'Hören und folgen' : 'Listen and follow',
+    links: [
+      { text: 'Spotify · GENERIERUNG LÄUFT', href: spotify, external: true },
+      { text: 'Instagram · @seezerino', href: 'https://www.instagram.com/seezerino/', external: true },
+      { text: 'TikTok · @seezerino', href: 'https://www.tiktok.com/@seezerino', external: true },
+      { text: 'RSS', href: `/${lang}/rss.xml` },
+    ],
+  },
+];
+---
+
+<footer class="sz-footer">
+  <FigureStrip height={4} />
+  <div class="sz-container sz-container--wide sz-footer__inner">
+    <div class="sz-footer__brand">
+      <p class="sz-footer__word">seez</p>
+      <p class="sz-muted">
+        {de ? 'Ein Mensch, sechs Splitter, ein offenes Archiv.' : 'One person, six splinters, an open archive.'}
+      </p>
+    </div>
+    <div class="sz-footer__cols">
+      {
+        columns.map((col) => (
+          <section aria-label={col.title}>
+            <h2 class="sz-label">{col.title}</h2>
+            <ul>
+              {col.links.map((l) => (
+                <li>
+                  <a href={l.href} rel={'external' in l && l.external ? 'noopener' : undefined}>
+                    {l.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+  <div class="sz-container sz-container--wide sz-footer__legal">
+    <span>© Seez</span>
+    <a href={`/${lang}/legal/impressum`}>Impressum</a>
+    <a href={`/${lang}/legal/privacy`}>{de ? 'Datenschutz' : 'Privacy'}</a>
+  </div>
+</footer>
+
+<style>
+  .sz-footer {
+    margin-top: var(--section-gap);
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+  .sz-footer__inner {
+    display: grid;
+    gap: var(--sp-6);
+    padding-block: var(--sp-7) var(--sp-6);
+  }
+  .sz-footer__word {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--fs-2xl);
+    line-height: 1;
+  }
+  .sz-footer__brand p + p {
+    margin-top: var(--sp-2);
+    max-width: 32ch;
+  }
+  .sz-footer__cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-6) var(--sp-5);
+  }
+  .sz-footer ul {
+    list-style: none;
+    margin: var(--sp-3) 0 0;
+    padding: 0;
+  }
+  .sz-footer li a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: var(--fs-sm);
+    overflow-wrap: anywhere;
+  }
+  .sz-footer li a:hover {
+    text-decoration: underline;
+  }
+  .sz-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-5);
+    padding-block: var(--sp-4) var(--sp-6);
+    border-top: 1px solid var(--line);
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .sz-footer__legal a {
+    color: var(--text-muted);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .sz-footer__legal a:hover {
+    color: var(--text);
+  }
+  @media (min-width: 1024px) {
+    .sz-footer__inner {
+      grid-template-columns: 1fr 3fr;
+    }
+    .sz-footer__cols {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

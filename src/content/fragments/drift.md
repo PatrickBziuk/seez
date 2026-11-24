@@ -4,7 +4,7 @@ language: 'de'
 authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T20:45:00Z'
-image: '/images/figures/drift.png'
+image: '/images/figures/drift-sheet.webp'
 alias: 'Der Ankerlose'
 designation: 'SZ-003'
 symbolism:
@@ -20,9 +20,16 @@ voiceCharacteristics:
 movementGrammar: ['treiben', 'fallen', 'festhalten']
 containmentNote: 'Embodies youth self-destruction without glamorization; handle carefully.'
 tags: ['figure', 'character', 'music', 'substance', 'youth-crisis', 'anchor-lost']
+lastChangeDate: '2026-11-24T12:47:33.407Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.407Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# Ich treibe ohne Anker
+## Ich treibe ohne Anker
 
 Yo, ich bin Drift. Kein Plan wohin, kein Halt woran. Einfach treiben, bis irgendwas stoppt — und wenn es der Boden ist.
 

@@ -1,0 +1,14 @@
+---
+import type { GetStaticPaths } from 'astro';
+import FigurePage from '~/components/pages/FigurePage.astro';
+import { getFigureDossiers, type FigureDossier } from '~/utils/fragments';
+
+export const getStaticPaths = (async () => {
+  const dossiers = await getFigureDossiers('de');
+  return dossiers.map((d) => ({ params: { slug: d.figure.id }, props: { ...d } }));
+}) satisfies GetStaticPaths;
+
+const { figure, entry } = Astro.props as FigureDossier;
+---
+
+<FigurePage lang="de" figure={figure} entry={entry} />

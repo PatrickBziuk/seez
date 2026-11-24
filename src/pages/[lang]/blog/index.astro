@@ -8,12 +8,16 @@ import Layout from '../../../layouts/PageLayout.astro';
 import { getCollection } from 'astro:content';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
+import PageHead from '~/components/seez/PageHead.astro';
+import { sectionUrl } from '~/utils/routes';
 
 export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
-const collections = ['projects', 'life', 'music', 'texts'] as const;
+// Projects and life entries no longer have their own pages (redirected to the workshop / start),
+// so the timeline lists only what can be opened: songs and texts.
+const collections = ['music', 'texts'] as const;
 
 type Coll = (typeof collections)[number];
 type Entry = Awaited<ReturnType<typeof getCollection<Coll>>>[number];
@@ -52,10 +56,9 @@ function toDate(entry: Entry): Date | null {
 
 function toUrl(entry: Entry): string {
   const data = entry.data as unknown as EntryData;
-  const itemLang = data.language || 'en';
-  const idNoExt = entry.id.replace(/\.(md|mdx)$/i, '');
-  const cleanSlug = idNoExt.replace(/^[a-z]{2}\//, '');
-  return `/${itemLang}/${entry.collection}/${cleanSlug}`;
+  const itemLang = (data.language || 'en') as SupportedLanguage;
+  const slug = entry.id.replace(/\.(md|mdx)$/i, '').replace(/^[a-z]{2}\//, '');
+  return entry.collection === 'music' ? sectionUrl(itemLang, 'music', slug) : `/${itemLang}/texte/${slug}`;
 }
 
 // Load, filter by language and publication state, then sort
@@ -63,12 +66,7 @@ const items = (await Promise.all(collections.map((c) => getPublicCollection(c)))
   .flat()
   .filter((e) => {
     const data = e.data as unknown as EntryData;
-    return (
-      data.language === lang &&
-      !data.draft &&
-      data.publicationStatus === 'published' &&
-      !isLowQualityEntry(data)
-    );
+    return data.language === lang && !data.draft && data.publicationStatus === 'published' && !isLowQualityEntry(data);
   })
   .map((e) => {
     const data = e.data as unknown as EntryData;
@@ -84,53 +82,83 @@ const items = (await Promise.all(collections.map((c) => getPublicCollection(c)))
   .filter((it) => !!it.date)
   .sort((a, b) => b.date!.getTime() - a.date!.getTime());
 
+const de = lang === 'de';
+const label = (c: string) => (c === 'music' ? (de ? 'Song' : 'Song') : de ? 'Text' : 'Text');
+const fmt = new Intl.DateTimeFormat(de ? 'de-DE' : 'en-GB', { dateStyle: 'medium' });
+
 const metadata = {
-  title: lang === 'de' ? 'Blog' : 'Blog',
-  description:
-    lang === 'de'
-      ? 'Alle Artikel aus allen Kategorien – nach Datum sortiert.'
-      : 'All articles from all categories – sorted by date.',
-  openGraph: { type: 'blog' },
+  title: de ? 'Chronik' : 'Timeline',
+  description: de
+    ? 'Alle veröffentlichten Songs und Texte von Seez, nach Datum sortiert.'
+    : 'All published Seez songs and texts, sorted by date.',
 };
 ---
 
 <Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <header class="mb-8 sm:mb-10">
-      <h1 class="text-3xl md:text-4xl font-bold leading-tighter tracking-tighter font-heading dark:text-gray-200">
-        {lang === 'de' ? 'Blog' : 'Blog'}
-      </h1>
-      <p class="mt-3 text-base text-gray-600 dark:text-gray-400">
-        {
-          lang === 'de'
-            ? 'Alle Artikel aus allen Kategorien – nach Datum sortiert.'
-            : 'All articles from all categories – sorted by date.'
-        }
-      </p>
-    </header>
+  <PageHead
+    title={de ? 'Chronik' : 'Timeline'}
+    label={de ? 'Neu' : 'New'}
+    lead={de
+      ? 'Alle veröffentlichten Songs und Texte, nach Datum sortiert.'
+      : 'All published songs and texts, sorted by date.'}
+  >
+    <p class="ch__rss"><a class="sz-link" href={`/${lang}/rss.xml`}>RSS</a></p>
+  </PageHead>
 
+  <section class="sz-section sz-container">
     {
       items.length === 0 ? (
-        <div class="rounded-xl border border-dashed border-gray-300/60 p-6 text-gray-600 dark:border-gray-700 dark:text-gray-300">
-          {lang === 'de' ? 'Noch keine veröffentlichten Beiträge.' : 'No published entries yet.'}
-        </div>
+        <p class="sz-muted">{de ? 'Noch keine veröffentlichten Beiträge.' : 'No published entries yet.'}</p>
       ) : (
-        <ul class="space-y-6">
+        <ol class="ch__list">
           {items.map((it) => (
-            <li class="group">
-              <a href={it.url} class="block">
-                <div class="text-sm text-gray-500 dark:text-gray-400">
-                  {new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(it.date!)} · {it.collection}
-                </div>
-                <h2 class="mt-1 text-xl font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                  {it.title}
-                </h2>
-                {it.description && <p class="mt-1 text-gray-600 dark:text-gray-400 line-clamp-2">{it.description}</p>}
-              </a>
+            <li class="ch__item">
+              <p class="sz-label">
+                <time datetime={it.date!.toISOString().slice(0, 10)}>{fmt.format(it.date!)}</time> ·{' '}
+                {label(it.collection)}
+              </p>
+              <h2 class="ch__title">
+                <a href={it.url}>{it.title}</a>
+              </h2>
+              {it.description && <p class="sz-muted ch__desc">{it.description}</p>}
             </li>
           ))}
-        </ul>
+        </ol>
       )
     }
   </section>
 </Layout>
+
+<style>
+  .ch__rss {
+    margin-top: var(--sp-4);
+  }
+  .ch__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .ch__item {
+    padding: var(--sp-5) 0;
+    border-top: 1px solid var(--line);
+  }
+  .ch__title {
+    margin-top: var(--sp-2);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-lg);
+    line-height: 1.1;
+  }
+  .ch__title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .ch__title a:hover {
+    text-decoration: underline;
+  }
+  .ch__desc {
+    margin-top: var(--sp-2);
+    max-width: 65ch;
+  }
+</style>

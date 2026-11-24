@@ -10,9 +10,16 @@ genre: ['Deutschrap', 'Dark Pop', 'Seelensplitter']
 tags: ['song', 'ep1', 'generierung-laeuft', 'splinter', 'spiegel', 'tumblr']
 figureRef: fragments/splinter
 linerNotes: 'SP1-Splinter-Song über Online-Resonanz als instabiles Pflaster.'
+lastChangeDate: '2026-11-24T12:47:33.559Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.559Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-`Spiegelkrise` zeigt den Bruch zwischen Online-Resonanz und Selbsthass: Viele feiern den Schmerz, aber niemand erreicht den Menschen hinter der Spiegelmaske.
+Spiegelkrise zeigt den Bruch zwischen Online-Resonanz und Selbsthass: Viele feiern den Schmerz, aber niemand erreicht den Menschen hinter der Spiegelmaske.
 
 Der Track ist zentral für Splinters Tumblr-Logik, weil Sichtbarkeit hier nicht Heilung bedeutet. Sie erzeugt einen neuen Druck: verstanden werden wollen, ohne zur konsumierbaren Wunde zu werden.
 

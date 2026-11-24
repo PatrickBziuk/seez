@@ -12,9 +12,16 @@ tags: ['song', 'ep1', 'generierung-laeuft', 'unknown', 'politik', 'protest']
 audioUrl: '/sounds/als-sie-kamen.mp3'
 figureRef: fragments/sz-006-unknown
 linerNotes: 'Unknown-Song an der Schwelle von Nichtgesehenwerden und politischer Benennung.'
+lastChangeDate: '2026-11-24T12:47:33.516Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.516Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-`Als sie kamen` verdichtet Angst, Nachtgedanken und gesellschaftliche Gewalt zu einem frühen Unknown-Moment: Die Figur findet noch keine stabile Kategorie für sich, aber sie beginnt, das Schweigen als Teil des Systems zu erkennen.
+Als sie kamen verdichtet Angst, Nachtgedanken und gesellschaftliche Gewalt zu einem frühen Unknown-Moment: Die Figur findet noch keine stabile Kategorie für sich, aber sie beginnt, das Schweigen als Teil des Systems zu erkennen.
 
 Durch die Lume-Verbindung bleibt im Dunkel ein Restlicht erhalten: Schreiben wird zur letzten Antwort, wenn Zugehörigkeit, Schutz und Sprache ausfallen.
 

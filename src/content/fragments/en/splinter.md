@@ -4,7 +4,7 @@ language: 'en'
 authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T20:00:00Z'
-image: '/images/figures/splinter.png'
+image: '/images/figures/splinter-sheet.webp'
 additionalImages:
   - '/images/figures/splinter_comic.png'
 alias: 'The Mirror Man'
@@ -18,9 +18,16 @@ symbolism:
     meaning: 'Microphone as sole channel - paradoxically anonymous to be seen'
 containmentNote: 'Represents fragmented digital identity; handle with emotional care.'
 tags: ['fragment', 'character', 'music', 'rap', 'introspection', 'mirror-man']
+lastChangeDate: '2026-11-24T12:47:33.455Z'
+changeLog:
+  - date: '2026-11-24T12:47:33.455Z'
+    description: Content updated
+    author: seez
+    type: content
+    automated: true
 ---
 
-# I am the mirror that broke
+## I am the mirror that broke
 
 My name is Splinter. Not because I wanted to break, but because what remained shows more truth than any whole face ever could.
 

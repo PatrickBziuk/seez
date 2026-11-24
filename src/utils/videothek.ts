@@ -84,3 +84,14 @@ export function hasPublicFilms(): boolean {
 export function showVideothek(): boolean {
   return hasPublicFilms() || isPreview();
 }
+
+/** Films shown in this run that belong to a song (catalog song.key). Discarded versions never appear. */
+export function filmsForSong(key: string | undefined): Film[] {
+  if (!key) return [];
+  return getVisibleFilms().filter((f) => f.song?.key === key && f.workStatus !== 'dropped');
+}
+
+/** Films shown in this run with a given figure. Discarded versions never appear. */
+export function filmsForFigure(id: string): Film[] {
+  return getVisibleFilms().filter((f) => f.characters.includes(id) && f.workStatus !== 'dropped');
+}

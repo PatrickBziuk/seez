@@ -1,24 +1,30 @@
 ---
-import Layout from '../../layouts/PageLayout.astro';
-import { SUPPORTED_LANGUAGES } from '../../utils/i18n';
-import type { SupportedLanguage } from '../../utils/i18n';
+/**
+ * About Seez (KONZEPT B10, rebuilt in the new frame). Wording kept from the former page;
+ * "System Logs" now points to the Werkstatt, which replaced it.
+ */
+import Layout from '~/layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
+import FigureStrip from '~/components/seez/FigureStrip.astro';
+import { SUPPORTED_LANGUAGES } from '~/utils/i18n';
+import { sectionUrl, type Lang } from '~/utils/routes';
 
 export const getStaticPaths = () => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }));
 
-const { lang } = Astro.params as { lang: SupportedLanguage };
+const { lang } = Astro.params as { lang: Lang };
 const t = (de: string, en: string) => (lang === 'de' ? de : en);
 
 const metadata = {
   title: t('Über Seez', 'About Seez'),
   description: t(
-    'Seez ist ein kreativer Kosmos aus Musik, Figuren, Texten, System Logs und visuellen Fragmenten.',
-    'Seez is a creative cosmos of music, figures, texts, system logs, and visual fragments.'
+    'Seez ist ein kreativer Kosmos aus Musik, Figuren, Texten, Werkstatt und visuellen Fragmenten.',
+    'Seez is a creative cosmos of music, figures, texts, workshop notes, and visual fragments.'
   ),
 };
 
 const pillars = [
   {
-    label: 'MUSIC',
+    label: t('Musik', 'Music'),
     title: t('Songs als Beweisstücke', 'Songs as evidence pieces'),
     text: t(
       'GENERIERUNG LÄUFT ist der öffentliche Einstieg: sieben Tracks, sechs Stimmen, ein Systembruch.',
@@ -26,7 +32,7 @@ const pillars = [
     ),
   },
   {
-    label: 'FIGURES',
+    label: t('Figuren', 'Figures'),
     title: t('Figuren statt Persona', 'Figures instead of persona'),
     text: t(
       'Drift, Splinter, Shift, Lume, Unknown und Gl1tch sind Perspektiven, keine Maskottchen.',
@@ -34,67 +40,81 @@ const pillars = [
     ),
   },
   {
-    label: 'LOGS',
+    label: t('Werkstatt', 'Workshop'),
     title: t('Prozess bleibt sichtbar', 'The process stays visible'),
     text: t(
-      'System Logs, Fragmente und Lyrics zeigen nicht nur Ergebnisse, sondern auch Brüche, Methoden und Entscheidungen.',
-      'System logs, fragments, and lyrics show not only results, but fractures, methods, and decisions.'
+      'Werkstatt, Fragmente und Lyrics zeigen nicht nur Ergebnisse, sondern auch Brüche, Methoden und Entscheidungen.',
+      'Workshop, fragments, and lyrics show not only results, but fractures, methods, and decisions.'
     ),
   },
+];
+
+const links = [
+  { text: t('Musik', 'Music'), href: sectionUrl(lang, 'music') },
+  { text: 'Lyrics', href: sectionUrl(lang, 'lyrics') },
+  { text: t('Fragmente', 'Fragments'), href: sectionUrl(lang, 'fragments') },
+  { text: t('Werkstatt', 'Workshop'), href: sectionUrl(lang, 'workshop') },
 ];
 ---
 
 <Layout metadata={metadata}>
-  <section class="min-h-screen bg-[#06070a] text-slate-100">
-    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
-      <header class="max-w-3xl">
-        <p class="text-xs uppercase tracking-[0.28em] text-lime-300">&gt; SEEZ_ARCHIVE / ABOUT</p>
-        <h1 class="mt-4 text-4xl font-black tracking-tight md:text-6xl">{t('Seez ist kein Nebenprojekt.', 'Seez is not a side project.')}</h1>
-        <p class="mt-5 border-l border-lime-400 pl-4 text-base leading-7 text-slate-300 md:text-lg">
-          {t(
-            'Seez ist der kreative Kosmos, in dem Musik, Figuren, Texte, KI-Werkzeuge und alte Fragmente zu einer zusammenhängenden Welt werden.',
-            'Seez is the creative cosmos where music, figures, texts, AI tools, and legacy fragments become one connected world.'
-          )}
-        </p>
-      </header>
+  <PageHead
+    title={t('Seez ist kein Nebenprojekt.', 'Seez is not a side project.')}
+    label={t('Über Seez', 'About Seez')}
+    lead={t(
+      'Seez ist der kreative Kosmos, in dem Musik, Figuren, Texte, KI-Werkzeuge und alte Fragmente zu einer zusammenhängenden Welt werden.',
+      'Seez is the creative cosmos where music, figures, texts, AI tools, and legacy fragments become one connected world.'
+    )}
+  >
+    <FigureStrip height={6} class="about__strip" />
+  </PageHead>
 
-      <div class="mt-10 grid gap-4 md:grid-cols-3">
-        {pillars.map((pillar) => (
-          <article class="border border-slate-800 bg-slate-950/70 p-5">
-            <p class="text-xs font-bold tracking-[0.22em] text-cyan-300">{pillar.label}</p>
-            <h2 class="mt-4 text-xl font-bold">{pillar.title}</h2>
-            <p class="mt-3 text-sm leading-6 text-slate-400">{pillar.text}</p>
-          </article>
-        ))}
-      </div>
-
-      <div class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <a class="portal" href={`/${lang}/musik`}>Sonic Archive</a>
-        <a class="portal" href={`/${lang}/lyrics`}>Lyrics Vault</a>
-        <a class="portal" href={`/${lang}/fragmente`}>{t('Fragmente', 'Fragments')}</a>
-        <a class="portal" href={`/${lang}/system-logs`}>System Logs</a>
-      </div>
+  <section class="sz-section sz-container">
+    <ul class="about__pillars">
+      {
+        pillars.map((p) => (
+          <li class="sz-panel">
+            <p class="sz-label">{p.label}</p>
+            <h2 class="sz-h3">{p.title}</h2>
+            <p class="sz-muted">{p.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="sz-btn-row about__links">
+      {
+        links.map((l) => (
+          <a class="sz-btn" href={l.href}>
+            {l.text}
+          </a>
+        ))
+      }
     </div>
   </section>
 </Layout>
 
 <style>
-  .portal {
-    border: 1px solid rgba(190, 242, 100, 0.32);
-    background: rgba(15, 23, 42, 0.72);
-    color: #ecfccb;
-    display: block;
-    font-size: 0.82rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    padding: 0.95rem 1rem;
-    text-align: center;
-    text-transform: uppercase;
-    transition: border-color 0.2s ease, transform 0.2s ease;
+  .about__pillars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
   }
-
-  .portal:hover {
-    border-color: #bef264;
-    transform: translateY(-1px);
+  .about__pillars .sz-h3,
+  .about__pillars .sz-muted {
+    margin-top: var(--sp-3);
+  }
+  .about__links {
+    margin-top: var(--sp-6);
+  }
+  :global(.about__strip) {
+    margin-top: var(--sp-5);
+    max-width: 420px;
+  }
+  @media (min-width: 768px) {
+    .about__pillars {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 </style>

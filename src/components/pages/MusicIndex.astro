@@ -1,0 +1,180 @@
+---
+/**
+ * MusicIndex (KONZEPT B8/B10): the released EP with its tracklist, then the songs
+ * that are still work in progress. One overview instead of /musik + /music.
+ */
+import Layout from '~/layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
+import SongRow from '~/components/seez/SongRow.astro';
+import FigureStrip from '~/components/seez/FigureStrip.astro';
+import { EP, EP_TRACKS, SONG_EXTRAS } from '~/data/songs';
+import { getFigure } from '~/data/figures';
+import { getSongRecords, pickEntry, isSong } from '~/utils/music';
+import { filmsForSong } from '~/utils/videothek';
+import { sectionUrl, type Lang } from '~/utils/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === 'de';
+const records = await getSongRecords();
+const bySlug = new Map(records.map((r) => [r.slug, r]));
+const epSlugs = new Set(EP_TRACKS.map((t) => t.slug));
+const others = records
+  .filter((r) => !epSlugs.has(r.slug) && isSong(pickEntry(r, lang)))
+  .map((r) => {
+    const e = pickEntry(r, lang);
+    const ref = getFigure(e.data.figureRef?.id?.replace(/^en\//, ''));
+    return {
+      slug: r.slug,
+      title: e.data.title,
+      figures: SONG_EXTRAS[r.slug]?.figures || (ref ? [ref.id] : []),
+      lyrics: SONG_EXTRAS[r.slug]?.lyricsId,
+    };
+  })
+  .sort((a, b) => a.title.localeCompare(b.title, 'de'));
+const texts = records.filter((r) => r[lang] && !isSong(r[lang]!));
+
+const released = new Date(EP.released).toLocaleDateString(de ? 'de-DE' : 'en-GB', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+});
+
+const metadata = {
+  title: de ? 'Musik' : 'Music',
+  description: de
+    ? `${EP.title}, die EP von Seez, mit allen Songs, Figuren und Lyrics. Dazu die Songs, an denen gerade gearbeitet wird.`
+    : `${EP.title}, the Seez EP, with all songs, figures and lyrics, plus the songs still in progress.`,
+};
+---
+
+<Layout metadata={metadata}>
+  <PageHead
+    title={de ? 'Musik' : 'Music'}
+    label={de ? 'Veröffentlicht: eine EP · alles andere in Arbeit' : 'Released: one EP · everything else in progress'}
+  />
+
+  <section class="sz-container sz-section ep" aria-labelledby="ep-title">
+    <div class="ep__head">
+      <p class="sz-label">EP · {released}</p>
+      <h2 class="sz-display" id="ep-title">{EP.title}</h2>
+      <FigureStrip height={6} class="ep__strip" />
+      <p class="sz-lead ep__claim">{EP.claim[lang]}</p>
+      <div class="sz-btn-row ep__actions">
+        <a class="sz-btn sz-btn--primary" href={EP.spotify} rel="noopener">{de ? 'Auf Spotify hören' : 'Listen on Spotify'}</a>
+        <a class="sz-btn" href={sectionUrl(lang, 'lyrics')}>{de ? 'Alle Lyrics' : 'All lyrics'}</a>
+      </div>
+    </div>
+
+    <h3 class="sz-label ep__listlabel">{de ? 'Tracklist' : 'Tracklist'}</h3>
+    <ol class="sz-songlist">
+      {
+        EP_TRACKS.map((t) => (
+          <SongRow
+            lang={lang}
+            title={t.title}
+            href={bySlug.has(t.slug) ? sectionUrl(lang, 'music', t.slug) : undefined}
+            figures={t.figures}
+            note={t.note[lang]}
+            listen={EP.spotify}
+            lyricsHref={t.lyricsId && bySlug.has(t.slug) ? `${sectionUrl(lang, 'music', t.slug)}#lyrics` : undefined}
+            hasVideo={filmsForSong(t.filmKey).length > 0}
+          />
+        ))
+      }
+    </ol>
+  </section>
+
+  {
+    others.length > 0 && (
+      <section class="sz-container sz-section" aria-labelledby="wip">
+        <div class="sz-section-head">
+          <div>
+            <p class="sz-label">{de ? 'Nicht auf der EP' : 'Not on the EP'}</p>
+            <h2 class="sz-h2" id="wip">
+              {de ? 'In Arbeit' : 'Work in progress'}
+            </h2>
+          </div>
+        </div>
+        <p class="sz-muted sz-measure">
+          {de
+            ? 'Diese Songs sind noch nicht veröffentlicht. Hier stehen Entwürfe, Notizen und frühe Hörproben.'
+            : 'These songs are not released yet. Here you find drafts, notes and early listening samples.'}
+        </p>
+        <ul class="sz-songlist">
+          {others.map((o) => (
+            <SongRow
+              lang={lang}
+              title={o.title}
+              href={sectionUrl(lang, 'music', o.slug)}
+              figures={o.figures}
+              status={de ? 'in Arbeit' : 'in progress'}
+              lyricsHref={o.lyrics ? `${sectionUrl(lang, 'music', o.slug)}#lyrics` : undefined}
+            />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="sz-container sz-section" aria-labelledby="more">
+    <h2 class="sz-h2" id="more">{de ? 'Mehr zur Musik' : 'More about the music'}</h2>
+    <ul class="more">
+      {
+        texts.map((r) => (
+          <li>
+            <a class="sz-link" href={sectionUrl(lang, 'music', r.slug)}>
+              {pickEntry(r, lang).data.title}
+            </a>{' '}
+            <span class="sz-muted">– {pickEntry(r, lang).data.subtitle}</span>
+          </li>
+        ))
+      }
+      <li>
+        <a class="sz-link" href={sectionUrl(lang, 'license')}>{de ? 'Lizenz für Auftritte' : 'Performer license'}</a>
+        <span class="sz-muted">
+          – {de ? 'Songs von Seez live performen: Sinn fix, Form frei.' : 'Performing Seez songs live: meaning fixed, form free.'}
+        </span>
+      </li>
+      <li>
+        <a class="sz-link" href={sectionUrl(lang, 'workshop')}>{de ? 'Werkstatt' : 'Workshop'}</a>
+        <span class="sz-muted">– {de ? 'Wie die Songs und Videos entstehen.' : 'How the songs and videos are made.'}</span>
+      </li>
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .ep__head {
+    max-width: 880px;
+  }
+  .ep :global(.ep__strip) {
+    margin-top: var(--sp-4);
+    max-width: 420px;
+  }
+  .ep__claim {
+    margin-top: var(--sp-5);
+  }
+  .ep__actions {
+    margin-top: var(--sp-5);
+  }
+  .ep__listlabel {
+    margin-top: var(--sp-7);
+    margin-bottom: var(--sp-2);
+  }
+  .sz-songlist {
+    list-style: none;
+    margin: var(--sp-4) 0 0;
+    padding: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .more {
+    list-style: none;
+    margin: var(--sp-4) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+</style>

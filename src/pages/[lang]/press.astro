@@ -98,10 +98,10 @@ const metadata = {
 
       <h2>{t('Relevante Einstiegspunkte', 'Key entry points')}</h2>
       <ul>
-        <li><a class="underline hover:no-underline" href={getPermalink(`/${lang}/musik`)}>{t('Musik', 'Music')}</a></li>
+        <li><a class="underline hover:no-underline" href={getPermalink(lang === 'de' ? '/de/musik' : '/en/music')}>{t('Musik', 'Music')}</a></li>
         <li><a class="underline hover:no-underline" href={getPermalink(`/${lang}/texte`)}>{t('Texte', 'Texts')}</a></li>
         <li>
-          <a class="underline hover:no-underline" href={getPermalink(`/${lang}/fragmente`)}
+          <a class="underline hover:no-underline" href={getPermalink(lang === 'de' ? '/de/fragmente' : '/en/fragments')}
             >{t('Fragmente (FRAGMENTS)', 'Fragments (FRAGMENTS)')}</a
           >
         </li>

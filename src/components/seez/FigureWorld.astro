@@ -1,0 +1,305 @@
+---
+/**
+ * FigureWorld - one medium detail per figure page (KONZEPT B4 "ein Medien-Detail pro
+ * Bildschirmhöhe"). Static, decorative HTML/CSS quoting the figure's medium; the quote
+ * itself is real text. Figure fonts are declared here, so only figure pages carry their
+ * @font-face rules, and the browser downloads just the one font a page uses.
+ *
+ * Fonts (all OFL except Permanent Marker, Apache 2.0; latin subset incl. ä ö ü ß):
+ *  Splinter  Caveat 500 – handwriting for margin notes (alt: Patrick Hand)
+ *  Lume      Silkscreen 400 – pixel labels >= 16px (alt: Pixelify Sans)
+ *  Drift     IBM Plex Mono – lower-case timestamps, already loaded (alt: Space Mono)
+ *  Shift     Big Shoulders Stencil Display 800 – stamps, same family as display
+ *  Gl1tch    IBM Plex Mono – terminal, already loaded (alt: VT323)
+ *  Unknown   Permanent Marker – paste-up / spray (alt: Rubik Dirt)
+ */
+import '@fontsource/caveat/latin-500';
+import '@fontsource/silkscreen/latin-400';
+import '@fontsource/big-shoulders-stencil-display/latin-800';
+import '@fontsource/permanent-marker/latin-400';
+import type { Figure } from '~/data/figures';
+import type { Lang } from '~/utils/routes';
+
+interface Props {
+  figure: Figure;
+  lang: Lang;
+}
+const { figure: f, lang } = Astro.props;
+const de = lang === 'de';
+const quote = f.quote[lang];
+const days = de ? ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const terminal = 'media' in f ? (f.media as { terminal?: string }).terminal : undefined;
+---
+
+<figure class:list={['world', `world--${f.id}`]} style={terminal ? `--term:${terminal}` : undefined}>
+  {
+    f.id === 'splinter' && (
+      <div class="nb">
+        <p class="nb__hand">{quote}</p>
+        <p class="nb__note">{de ? '– Seite 1 von vielen' : '– page 1 of many'}</p>
+      </div>
+    )
+  }
+  {
+    f.id === 'lume' && (
+      <div class="rpg">
+        <img class="rpg__face" src={f.portrait.src} alt="" width="72" height="108" loading="lazy" />
+        <div>
+          <p class="rpg__name">LUME</p>
+          <p class="rpg__text">{quote}</p>
+          <p class="rpg__choice">
+            <span aria-hidden="true">▶</span> {de ? 'Weiter' : 'Continue'}
+          </p>
+        </div>
+      </div>
+    )
+  }
+  {
+    f.id === 'drift' && (
+      <div class="blog">
+        <p class="blog__meta">nachtblog · 23:50</p>
+        <p class="blog__text">{quote.toLowerCase()}</p>
+        <p class="blog__count">{de ? '0 Anmerkungen' : '0 notes'}</p>
+      </div>
+    )
+  }
+  {
+    f.id === 'shift' && (
+      <div class="cal">
+        <p class="cal__head">{de ? 'Woche' : 'Week'}</p>
+        <ol class="cal__days">
+          {days.map((d) => (
+            <li>
+              <span>{d}</span>
+              <strong>04:30</strong>
+            </li>
+          ))}
+        </ol>
+        <p class="cal__stamp">{quote}</p>
+      </div>
+    )
+  }
+  {
+    f.id === 'gl1tch' && (
+      <div class="term">
+        <p class="term__bar">
+          <span aria-hidden="true">● ● ●</span> sz-os · gl1tch
+        </p>
+        <p class="term__line">
+          <span class="term__prompt">&gt;</span> echo "{quote}"
+        </p>
+        <p class="term__line">{quote}</p>
+        <p class="term__line">
+          <span class="term__prompt">&gt;</span> <span class="term__cursor" aria-hidden="true" />
+        </p>
+      </div>
+    )
+  }
+  {
+    f.id === 'unknown' && (
+      <div class="wall">
+        <p class="wall__poster">{quote}</p>
+        <p class="wall__stamp">{de ? 'UNBEKANNT' : 'UNKNOWN'}</p>
+      </div>
+    )
+  }
+  <figcaption class="sr-only">{f.medium[lang]}</figcaption>
+</figure>
+
+<style>
+  .world {
+    margin: 0;
+    max-width: 760px;
+  }
+  /* Splinter: lined notebook paper, gel-pink handwriting */
+  .nb {
+    background: repeating-linear-gradient(to bottom, transparent 0 31px, rgba(80, 120, 200, 0.35) 31px 32px), #f1ede2;
+    color: #1c1a2a;
+    padding: 28px 32px 20px 64px;
+    border-left: 2px solid rgba(220, 60, 90, 0.5);
+    box-shadow: 0 0 0 1px var(--line);
+    transform: rotate(-0.6deg);
+  }
+  .nb__hand {
+    font-family: 'Caveat', cursive;
+    font-weight: 500;
+    font-size: 34px;
+    line-height: 32px;
+    color: #b0236a;
+  }
+  .nb__note {
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    line-height: 32px;
+    color: #3a3650;
+  }
+  /* Lume: 16-bit RPG text box with portrait and pointer */
+  .rpg {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 16px;
+    background: #0b0716;
+    border: 4px double var(--fig);
+    padding: 16px;
+    image-rendering: pixelated;
+  }
+  .rpg__face {
+    width: 72px;
+    height: 108px;
+    object-fit: cover;
+    object-position: 50% 0;
+    border: 2px solid var(--fig);
+  }
+  .rpg__name {
+    font-family: 'Silkscreen', var(--font-mono);
+    font-size: 16px;
+    color: #e8c36a;
+  }
+  .rpg__text {
+    margin-top: 6px;
+    font-size: var(--fs-md);
+    line-height: 1.4;
+  }
+  .rpg__choice {
+    margin-top: 10px;
+    font-family: 'Silkscreen', var(--font-mono);
+    font-size: 16px;
+    color: var(--fig);
+  }
+  /* Drift: night blog post */
+  .blog {
+    background: #04101a;
+    border: 1px solid var(--line-strong);
+    padding: 20px 24px;
+    max-width: 560px;
+  }
+  .blog__meta,
+  .blog__count {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    text-transform: lowercase;
+  }
+  .blog__text {
+    margin: 10px 0;
+    font-size: var(--fs-md);
+  }
+  .blog__count {
+    color: var(--fig);
+  }
+  /* Shift: planner week, every day 04:30, stamp */
+  .cal {
+    background: #f4f3ef;
+    color: #17161c;
+    padding: 16px 20px 20px;
+    position: relative;
+  }
+  .cal__head {
+    font: 600 var(--fs-xs) / 1.4 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2f62c8;
+  }
+  .cal__days {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .cal__days li {
+    border-top: 3px solid #2f62c8;
+    padding-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .cal__days strong {
+    display: block;
+    font-size: 13px;
+  }
+  .cal__stamp {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 4px 10px;
+    border: 3px solid #7a5a00;
+    color: #7a5a00;
+    font-family: 'Big Shoulders Stencil Display', var(--font-display);
+    font-weight: 800;
+    font-size: 24px;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+  }
+  /* Gl1tch: SZ OS terminal; terminal green only inside this medium */
+  .term {
+    background: #020c10;
+    border: 1px solid var(--fig);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    padding: 0 0 16px;
+    color: var(--term, var(--fig));
+  }
+  .term__bar {
+    background: #0a1c22;
+    color: var(--text-muted);
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    font-size: var(--fs-xs);
+  }
+  .term__line {
+    padding: 2px 16px;
+  }
+  .term__prompt {
+    color: var(--fig);
+  }
+  .term__cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.1em;
+    vertical-align: -0.15em;
+    background: var(--term, var(--fig));
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .term__cursor {
+      animation: blink 1s steps(2) 4; /* stops after 4s (WCAG 2.2.2) */
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  /* Unknown: paste-up poster with stamp */
+  .wall {
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%) 0 0 / 12px 12px,
+      #07080c;
+    padding: 24px;
+    position: relative;
+    border: 1px solid var(--line);
+  }
+  .wall__poster {
+    display: inline-block;
+    background: #e9e4d6;
+    color: #111;
+    padding: 18px 22px;
+    font-family: 'Permanent Marker', var(--font-display);
+    font-size: clamp(22px, 4vw, 32px);
+    line-height: 1.2;
+    transform: rotate(-2deg);
+    max-width: 520px;
+  }
+  .wall__stamp {
+    position: absolute;
+    right: 24px;
+    bottom: 14px;
+    border: 3px solid var(--fig);
+    color: var(--fig);
+    padding: 2px 10px;
+    font-family: var(--font-display);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    transform: rotate(6deg);
+  }
+</style>

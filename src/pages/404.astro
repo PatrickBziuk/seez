@@ -1,28 +1,56 @@
 ---
-import Layout from '~/layouts/Layout.astro';
-import { detectLanguage } from '~/utils/i18n';
+/**
+ * 404 - bilingual, in the site frame (one 404.html serves every path on GitHub Pages).
+ */
+import Layout from '~/layouts/PageLayout.astro';
+import FigureGlyph from '~/components/seez/FigureGlyph.astro';
+import { sectionUrl } from '~/utils/routes';
 
-const title = `Error 404`;
-
-// Detect language from URL for proper homepage link
-const currentLanguage = detectLanguage(Astro.url.pathname);
-const homepageUrl = `/${currentLanguage}`;
+const metadata = { title: 'Seite nicht gefunden · Page not found', robots: { index: false, follow: true } };
 ---
 
-<Layout metadata={{ title }}>
-  <section class="flex items-center h-full p-16">
-    <div class="container flex flex-col items-center justify-center px-5 mx-auto my-8">
-      <div class="max-w-md text-center">
-        <h2 class="mb-8 font-bold text-9xl">
-          <span class="sr-only">Error</span>
-          <span class="text-primary">404</span>
-        </h2>
-        <p class="text-3xl font-semibold md:text-3xl">Sorry, here's nothing except a cool background.</p>
-        <p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
-          Oh it seems, it's not here. Maybe later on something cool will be here.
-        </p>
-        <a rel="noopener noreferrer" href={homepageUrl} class="btn ml-4">Back to homepage</a>
+<Layout metadata={metadata}>
+  <section class="sz-container nf">
+    <p class="sz-label">Fehler 404 · Error 404</p>
+    <h1 class="sz-display nf__title">Hier ist nichts.</h1>
+    <p class="sz-lead">Diese Seite gibt es nicht oder nicht mehr. Vielleicht ist sie umgezogen.</p>
+    <div class="sz-btn-row nf__actions">
+      <a class="sz-btn sz-btn--primary" href="/de">Zur Startseite</a>
+      <a class="sz-btn" href={sectionUrl('de', 'music')}>Musik</a>
+      <a class="sz-btn" href={sectionUrl('de', 'fragments')}>Fragmente</a>
+    </div>
+
+    <div class="nf__en" lang="en">
+      <p class="sz-h2">Nothing here.</p>
+      <p class="sz-lead">This page does not exist, or not any more. Maybe it moved.</p>
+      <div class="sz-btn-row nf__actions">
+        <a class="sz-btn" href="/en">Home</a>
+        <a class="sz-btn" href={sectionUrl('en', 'music')}>Music</a>
+        <a class="sz-btn" href={sectionUrl('en', 'fragments')}>Fragments</a>
       </div>
     </div>
+    <p class="nf__glitch" aria-hidden="true"><FigureGlyph id="gl1tch" size={28} /></p>
   </section>
 </Layout>
+
+<style>
+  .nf {
+    padding-top: var(--sp-8);
+    padding-bottom: var(--sp-8);
+  }
+  .nf__title {
+    margin: var(--sp-3) 0 var(--sp-5);
+  }
+  .nf__actions {
+    margin-top: var(--sp-5);
+  }
+  .nf__en {
+    margin-top: var(--sp-8);
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--line);
+  }
+  .nf__glitch {
+    margin-top: var(--sp-7);
+    color: #3fd8f0;
+  }
+</style>

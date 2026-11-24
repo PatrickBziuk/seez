@@ -1,0 +1,40 @@
+---
+/**
+ * Notice - quiet hint box (help line, AI transparency, "in Arbeit"). Neutral frame,
+ * optional figure accent edge via --fig on a parent.
+ */
+interface Props {
+  title?: string;
+  tone?: 'neutral' | 'help';
+}
+const { title, tone = 'neutral' } = Astro.props;
+---
+
+<aside class:list={['sz-notice', `sz-notice--${tone}`]} role={tone === 'help' ? 'note' : undefined}>
+  {title && <p class="sz-notice__title">{title}</p>}
+  <div class="sz-notice__body"><slot /></div>
+</aside>
+
+<style>
+  .sz-notice {
+    border: 1px solid var(--line-strong);
+    border-left: 4px solid var(--fig, var(--text-muted));
+    background: var(--surface);
+    padding: var(--sp-4) var(--sp-5);
+    border-radius: var(--radius);
+    max-width: var(--measure);
+  }
+  .sz-notice__title {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--sp-2);
+  }
+  .sz-notice__body :global(a) {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>

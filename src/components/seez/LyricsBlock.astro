@@ -1,0 +1,54 @@
+---
+/**
+ * LyricsBlock (KONZEPT B6): sections (verse, hook, bridge) with anchors, hook marked.
+ */
+import { lyricsSections } from '~/data/songs';
+
+interface Props {
+  text: string;
+  idPrefix?: string;
+}
+const { text, idPrefix = 'z' } = Astro.props;
+const sections = lyricsSections(text);
+let n = 0;
+---
+
+<div class="sz-lyrics">
+  {
+    sections.map((s, i) => (
+      <section class:list={['sz-lyrics__part', { 'is-hook': s.hook }]} id={`${idPrefix}-s${i + 1}`}>
+        {s.label && <p class="sz-label">{s.label}</p>}
+        <p class="sz-lyrics__lines">
+          {s.lines.map((l) => {
+            n += 1;
+            return (
+              <span class="sz-lyrics__line" id={`${idPrefix}${n}`}>
+                {l}
+              </span>
+            );
+          })}
+        </p>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .sz-lyrics {
+    display: grid;
+    gap: var(--sp-5);
+    max-width: var(--measure);
+  }
+  .sz-lyrics__part.is-hook {
+    border-left: 4px solid var(--fig, var(--line-strong));
+    padding-left: var(--sp-4);
+  }
+  .sz-lyrics__lines {
+    margin-top: var(--sp-2);
+    font-size: var(--fs-md);
+    line-height: 1.5;
+  }
+  .sz-lyrics__line {
+    display: block;
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+/**
+ * SongRow (KONZEPT B6): title · figure chips · status · listen · lyrics · video mark.
+ * Rendered inside an <ol>/<ul> by the caller.
+ */
+import FigureChip from './FigureChip.astro';
+import type { Lang } from '~/utils/routes';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  href?: string;
+  figures: string[];
+  note?: string;
+  status?: string;
+  listen?: string;
+  lyricsHref?: string;
+  hasVideo?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+const { lang, title, href, figures, note, status, listen, lyricsHref, hasVideo, headingLevel = 'h3' } = Astro.props;
+const de = lang === 'de';
+const H = headingLevel;
+---
+
+<li class="sz-songrow">
+  <div class="sz-songrow__main">
+    <H class="sz-songrow__title">
+      {href ? <a href={href}>{title}</a> : title}
+    </H>
+    {note && <p class="sz-songrow__note">{note}</p>}
+  </div>
+  <div class="sz-songrow__figs">
+    {figures.map((f) => <FigureChip figure={f} lang={lang} compact />)}
+  </div>
+  <div class="sz-songrow__meta">
+    {status && <span class="sz-label">{status}</span>}
+    {hasVideo && <span class="sz-label">▶ Video</span>}
+  </div>
+  <div class="sz-songrow__actions">
+    {
+      listen && (
+        <a href={listen} rel="noopener">
+          {de ? 'Hören' : 'Listen'}
+          <span class="sr-only"> – {title}</span>
+        </a>
+      )
+    }
+    {
+      lyricsHref && (
+        <a href={lyricsHref}>
+          Lyrics<span class="sr-only"> – {title}</span>
+        </a>
+      )
+    }
+  </div>
+</li>
+
+<style>
+  .sz-songrow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-2) var(--sp-5);
+    padding: var(--sp-4) 0;
+    border-top: 1px solid var(--line);
+    align-items: center;
+  }
+  .sz-songrow__title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-lg);
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+  .sz-songrow__title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .sz-songrow__title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  .sz-songrow__note {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    margin-top: 4px;
+    max-width: 60ch;
+  }
+  .sz-songrow__figs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .sz-songrow__meta {
+    display: flex;
+    gap: var(--sp-3);
+  }
+  .sz-songrow__actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--sp-2);
+  }
+  .sz-songrow__actions a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--sp-3);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--text);
+    text-decoration: none;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  .sz-songrow__actions a:hover {
+    border-color: var(--text);
+  }
+  @media (min-width: 900px) {
+    .sz-songrow {
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.5fr) 110px 170px;
+    }
+  }
+</style>

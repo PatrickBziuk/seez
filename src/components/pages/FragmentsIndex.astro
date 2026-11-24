@@ -1,0 +1,71 @@
+---
+/**
+ * FragmentsIndex (KONZEPT B4/B8): the six splinters in SZ order as dossier cards.
+ */
+import Layout from '~/layouts/PageLayout.astro';
+import PageHead from '~/components/seez/PageHead.astro';
+import FigureCard from '~/components/seez/FigureCard.astro';
+import FigureStrip from '~/components/seez/FigureStrip.astro';
+import { getFigureDossiers } from '~/utils/fragments';
+import { sectionUrl, type Lang } from '~/utils/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === 'de';
+const dossiers = await getFigureDossiers(lang);
+
+const metadata = {
+  title: de ? 'Fragmente' : 'Fragments',
+  description: de
+    ? 'Die sechs Seelensplitter von Seez: Splinter, Lume, Drift, Shift, Gl1tch und Unknown. Jede Figur mit Dossier, Songs und eigenem Medium.'
+    : 'The six soul splinters of Seez: Splinter, Lume, Drift, Shift, Gl1tch and Unknown. Each figure with a dossier, songs and its own medium.',
+  canonical: new URL(sectionUrl(lang, 'fragments'), 'https://seez.eu').toString(),
+};
+---
+
+<Layout metadata={metadata}>
+  <PageHead
+    title={de ? 'Fragmente' : 'Fragments'}
+    label="SZ-001 – SZ-006"
+    lead={de
+      ? 'Ein Mensch, sechs Splitter. Jede Figur trägt eine eigene Stimme, eine eigene Farbe und ein eigenes Medium.'
+      : 'One person, six splinters. Each figure has its own voice, its own colour and its own medium.'}
+  >
+    <FigureStrip height={6} class="frag__strip" />
+  </PageHead>
+
+  <section class="sz-container" aria-label={de ? 'Die sechs Fragmente' : 'The six fragments'}>
+    <ul class="frag__grid">
+      {
+        dossiers.map(({ figure }, i) => (
+          <li>
+            <FigureCard figure={figure.id} lang={lang} headingLevel="h2" eager={i < 3} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  :global(.frag__strip) {
+    margin-top: var(--sp-5);
+    max-width: 480px;
+  }
+  .frag__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 900px) {
+    .frag__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--sp-5);
+    }
+  }
+</style>

@@ -1,0 +1,396 @@
+/*
+ * Seez design tokens and base components (docs/visual-konzept/KONZEPT.md B2, B3, B5, B7).
+ * Dark only ("Laden bei Nacht"). Frame is neutral; colour always means a figure.
+ * Contrast of every text token is checked by scripts/ci/check-contrast.mjs.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Frame (B2, dark "Nacht") */
+  --bg: #0b0b10;
+  --surface: #15151c;
+  --surface-2: #1e1e27;
+  --line: #2c2b38; /* decorative only */
+  --line-strong: #6c6a79; /* input and button borders, >= 3:1 */
+  --text: #eceaf3; /* 16.5:1 */
+  --text-muted: #a9a6b6; /* 8.2:1 */
+  --text-faint: #8a8797; /* 5.6:1, only >= 18px */
+  --focus: #ffffff;
+  --invert-bg: #eceaf3;
+  --invert-text: #0b0b10;
+
+  /* Status (always with a word, never alone) */
+  --status-line: #8a8797;
+
+  /* Fonts (B3), self-hosted via @fontsource, with metric-close fallbacks */
+  --font-display: 'Big Shoulders Display', 'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', sans-serif;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* Type scale 1.25 (B3) */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-md: 1.3125rem;
+  --fs-lg: 1.625rem;
+  --fs-xl: 2.0625rem;
+  --fs-2xl: 2.5625rem;
+  --fs-3xl: clamp(2.75rem, 6vw, 4rem);
+  --fs-display: clamp(3.25rem, 10vw, 8rem);
+
+  /* Spacing (B5, 4px base) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --sp-9: 96px;
+  --sp-10: 128px;
+
+  --radius: 2px;
+  --content: 1200px;
+  --wide: 1360px;
+  --measure: 68ch;
+  --gutter: 16px;
+  --section-gap: var(--sp-8);
+
+  /* Motion (B7) */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-hover: 120ms;
+  --t-fade: 200ms;
+  --t-dialog: 320ms;
+
+  /* AstroWind variables mapped onto the tokens, so legacy templates follow the frame */
+  --aw-font-sans: var(--font-sans);
+  --aw-font-serif: var(--font-sans);
+  --aw-font-heading: var(--font-display);
+  --aw-color-primary: var(--text);
+  --aw-color-secondary: var(--text-muted);
+  --aw-color-accent: var(--text);
+  --aw-color-text-heading: var(--text);
+  --aw-color-text-default: var(--text);
+  --aw-color-text-muted: var(--text-muted);
+  --aw-color-bg-page: var(--bg);
+  --aw-color-bg-page-dark: var(--bg);
+  --aw-color-border: var(--line);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --fs-base: 1.0625rem;
+    --gutter: 24px;
+    --section-gap: var(--sp-9);
+  }
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  letter-spacing: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body > main {
+  flex: 1 0 auto;
+}
+
+::selection {
+  background: var(--invert-bg);
+  color: var(--invert-text);
+}
+
+/* Focus: 2px white + 2px offset on every interactive element */
+:focus-visible,
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--focus) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px var(--bg);
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--sp-4);
+  top: var(--sp-2);
+  z-index: 100;
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--invert-bg);
+  color: var(--invert-text);
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: none;
+}
+
+/* ---------- Layout helpers ---------- */
+.sz-container {
+  width: 100%;
+  max-width: calc(var(--content) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.sz-container--wide {
+  max-width: calc(var(--wide) + 2 * var(--gutter));
+}
+.sz-measure {
+  max-width: var(--measure);
+}
+.sz-section {
+  padding-block: var(--section-gap);
+}
+.sz-section + .sz-section {
+  border-top: 1px solid var(--line);
+}
+.sz-stack > * + * {
+  margin-top: var(--sp-4);
+}
+
+/* ---------- Typography ---------- */
+/* Long German compounds (Datenschutzerklärung) must not widen the page at 390px. */
+h1,
+h2,
+h3 {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.sz-display,
+.sz-h1,
+.sz-h2,
+.sz-h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+.sz-display {
+  font-size: var(--fs-display);
+  line-height: 0.92;
+  font-weight: 900;
+}
+.sz-h1 {
+  font-size: var(--fs-3xl);
+  line-height: 1;
+}
+.sz-h2 {
+  font-size: var(--fs-xl);
+  line-height: 1.1;
+}
+.sz-h3 {
+  font-size: var(--fs-lg);
+  line-height: 1.2;
+}
+.sz-lead {
+  font-size: var(--fs-md);
+  line-height: 1.45;
+  color: var(--text);
+  max-width: var(--measure);
+}
+.sz-muted {
+  color: var(--text-muted);
+}
+.sz-mono,
+.sz-label {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+/* Mono label: 12px caps (B6 Label) */
+.sz-label {
+  display: inline-block;
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.sz-prose {
+  max-width: var(--measure);
+  color: var(--text);
+}
+.sz-prose > * + * {
+  margin-top: 1em;
+}
+.sz-prose h2,
+.sz-prose h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-top: 1.6em;
+}
+.sz-prose h2 {
+  font-size: var(--fs-xl);
+}
+.sz-prose h3 {
+  font-size: var(--fs-lg);
+}
+.sz-prose a,
+.sz-link {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+.sz-prose a:hover,
+.sz-link:hover {
+  text-decoration-thickness: 2px;
+}
+.sz-prose ul {
+  list-style: square;
+  padding-left: 1.2em;
+  list-style-position: outside;
+}
+.sz-prose ul li::marker {
+  color: var(--text-muted);
+  font-size: 1em;
+}
+.sz-prose blockquote {
+  border-left: 4px solid var(--fig, var(--line-strong));
+  padding-left: var(--sp-4);
+  color: var(--text);
+  font-size: var(--fs-md);
+}
+.sz-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+.sz-prose hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- Buttons (B6): primary inverted, secondary line, text link ---------- */
+.sz-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: 44px;
+  padding: 0 var(--sp-5);
+  border-radius: var(--radius);
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition:
+    background-color var(--t-hover) var(--ease),
+    border-color var(--t-hover) var(--ease),
+    color var(--t-hover) var(--ease);
+}
+.sz-btn:hover {
+  border-color: var(--text);
+  background: var(--surface-2);
+}
+.sz-btn--primary {
+  background: var(--invert-bg);
+  border-color: var(--invert-bg);
+  color: var(--invert-text);
+}
+.sz-btn--primary:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--invert-text);
+}
+.sz-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+/* ---------- Panels and cards ---------- */
+.sz-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--sp-5);
+}
+.sz-accent-edge {
+  border-left: 4px solid var(--fig, var(--line-strong));
+}
+
+/* Section header: label above a display heading, optional link on the right */
+.sz-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-6);
+}
+
+/* Breadcrumb */
+.sz-crumbs {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.sz-crumbs [aria-hidden='true'] {
+  margin-inline: 0.5em;
+}
+.sz-crumbs a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.sz-crumbs a:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* Horizontal snap rows on phones (figures, shelves) */
+.sz-snap-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(42%, 1fr);
+  gap: var(--sp-3);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--sp-3);
+  overscroll-behavior-x: contain;
+}
+.sz-snap-row > * {
+  scroll-snap-align: start;
+}
+
+/* Reduced motion: keep the global safety net, no transforms */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

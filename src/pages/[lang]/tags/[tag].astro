@@ -1,5 +1,6 @@
 ---
 import { getPublicCollection } from '~/utils/publication';
+import { contentUrl } from '~/utils/contentUrl';
 /**
  * TagPage - Individual tag page showing all content with specific tag
  * @props lang: SupportedLanguage, tag: string - Language and tag from route params
@@ -31,9 +32,7 @@ export async function getStaticPaths() {
     ]);
 
     // Combine and filter by language
-    const allContent: ContentEntry[] = [...music, ...texts, ...figures].filter(
-      (item) => item.data.language === lang
-    );
+    const allContent: ContentEntry[] = [...music, ...texts, ...figures].filter((item) => item.data.language === lang);
 
     // Extract unique tags for this language
     const tags = new Set<string>();
@@ -114,9 +113,7 @@ const metadata = {
             <article class="border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0">
               <h2 class="text-xl font-semibold mb-3">
                 <a
-                  href={getPermalink(
-                    `/${lang}/${item.collection}/${item.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '')}`
-                  )}
+                  href={contentUrl(item.collection, item.id, lang)}
                   class="text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   {item.data.title}
