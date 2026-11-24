@@ -9,6 +9,7 @@
 
 import fs from 'fs';
 import matter from 'gray-matter';
+import yaml from 'js-yaml';
 import { execSync } from 'child_process';
 import { detectMetadataChanges, type MetadataChange } from './detect-metadata-changes.js';
 
@@ -45,20 +46,25 @@ function getCurrentTimestamp(): string {
 function updateFrontmatter(content: string, changes: MetadataChange): string {
   const parsed = matter(content);
   const frontmatter = parsed.data;
+  const before = JSON.stringify(parsed.data, null, 0);
+  const original: Record<string, unknown> = JSON.parse(before);
   const currentTime = getCurrentTimestamp();
   const gitUser = getGitUser();
 
   let updated = false;
 
   // Add publishDate for first publication
+  // The schema's own publication date wins over "now".
+  const knownPublished = typeof frontmatter.firstPublishedAt === 'string' ? frontmatter.firstPublishedAt : undefined;
+
   if (changes.needsPublishDate && !frontmatter.publishDate) {
-    frontmatter.publishDate = currentTime;
+    frontmatter.publishDate = knownPublished || currentTime;
     updated = true;
   }
 
   // Add firstPublishDate for first publication (never changes)
   if (changes.needsFirstPublishDate && !frontmatter.firstPublishDate) {
-    frontmatter.firstPublishDate = frontmatter.publishDate || currentTime;
+    frontmatter.firstPublishDate = knownPublished || frontmatter.publishDate || currentTime;
     updated = true;
   }
 
@@ -100,8 +106,38 @@ function updateFrontmatter(content: string, changes: MetadataChange): string {
     return content; // No changes needed
   }
 
-  // Reconstruct the file with updated frontmatter
-  return matter.stringify(parsed.content, frontmatter);
+  // Patch only the touched keys into the original text, so the rest of the
+  // frontmatter keeps its formatting (no full YAML re-serialisation).
+  const touched = Object.keys(frontmatter).filter(
+    (k) => JSON.stringify(frontmatter[k]) !== JSON.stringify(original[k])
+  );
+  return patchFrontmatter(content, Object.fromEntries(touched.map((k) => [k, frontmatter[k]])));
+}
+
+/**
+ * Replace or append top-level keys in the frontmatter text. A key that already
+ * exists is replaced together with its indented continuation lines; new keys
+ * are appended before the closing `---`.
+ */
+function patchFrontmatter(content: string, updates: Record<string, unknown>): string {
+  const m = /^---\r?\n([\s\S]*?)\r?\n---/.exec(content);
+  if (!m) return matter.stringify(matter(content).content, updates);
+  const lines = m[1].split(/\r?\n/);
+  for (const [key, value] of Object.entries(updates)) {
+    const block = yaml
+      .dump({ [key]: value }, { lineWidth: -1, quotingType: "'" })
+      .replace(/\n$/, '')
+      .split('\n');
+    const start = lines.findIndex((l) => new RegExp(`^${key}:`).test(l));
+    if (start === -1) {
+      lines.push(...block);
+      continue;
+    }
+    let end = start + 1;
+    while (end < lines.length && (/^\s+\S/.test(lines[end]) || /^\s*-\s/.test(lines[end]) || lines[end] === '')) end++;
+    lines.splice(start, end - start, ...block);
+  }
+  return content.slice(0, m.index) + '---\n' + lines.join('\n') + '\n---' + content.slice(m.index + m[0].length);
 }
 
 /**
