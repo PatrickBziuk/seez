@@ -48,7 +48,7 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <PageHead title={de ? 'Werkstatt' : 'Workshop'} label="Building in Public" lead={PROCESS_LEAD[lang]}>
+  <PageHead title={de ? 'Werkstatt' : 'Workshop'} label={de ? 'Offener Prozess' : 'Building in public'} lead={PROCESS_LEAD[lang]}>
     <nav class="ws__toc" aria-label={de ? 'Abschnitte' : 'Sections'}>
       <a href={`#${ids.process}`}>{de ? 'Prozess' : 'Process'}</a>
       <a href={`#${ids.tools}`}>{de ? 'Werkzeuge' : 'Tools'}</a>
@@ -68,7 +68,7 @@ const metadata = {
     )
   }
 
-  <section class="sz-container sz-section" id={ids.process} aria-labelledby="h-process">
+  <section class="sz-container sz-section ws__first" id={ids.process} aria-labelledby="h-process">
     <h2 class="sz-h2" id="h-process">{de ? 'Prozess' : 'Process'}</h2>
     <ol class="ws__steps">
       {
@@ -245,6 +245,9 @@ const metadata = {
 </Layout>
 
 <style>
+  .ws__first {
+    padding-top: var(--sp-5);
+  }
   .ws__toc {
     display: flex;
     flex-wrap: wrap;
