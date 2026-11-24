@@ -84,16 +84,22 @@ r['/about'] = '/de/about';
 r['/contact'] = '/de/contact';
 r['/privacy'] = '/de/legal/privacy';
 r['/terms'] = '/de/lizenz';
-r['/pricing'] = '/de/inventory';
+r['/pricing'] = '/de/contact';
 r['/services'] = '/de/werkstatt';
 r['/tech-stack'] = '/de/werkstatt#werkzeuge';
 for (const s of ['mobile-app', 'personal', 'saas', 'startup']) r[`/homes/${s}`] = '/de';
 r['/landing/click-through'] = '/de';
 r['/landing/lead-generation'] = '/de/contact';
 r['/landing/pre-launch'] = '/de/werkstatt';
-r['/landing/product'] = '/de/inventory';
-r['/landing/sales'] = '/de/inventory';
+r['/landing/product'] = '/de/contact';
+r['/landing/sales'] = '/de/contact';
 r['/landing/subscription'] = '/de/contact';
+
+// Pages folded into others (KONZEPT B8): Welcome -> About, Inventory (link list) -> Contact
+for (const l of ['de', 'en']) {
+  r[`/${l}/welcome`] = `/${l}/about`;
+  r[`/${l}/inventory`] = `/${l}/contact`;
+}
 
 // Second, unused CMS front end (AstroWind demo config); /admin is the configured one
 r['/decapcms'] = '/admin';
