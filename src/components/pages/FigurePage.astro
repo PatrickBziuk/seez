@@ -43,6 +43,8 @@ const otherSongs = records
   );
 const films = filmsForFigure(f.id);
 const firstSong = epSongs.find((t) => has(t.slug));
+// EP track without its own page yet (WELTMEISTER): listen on Spotify instead
+const firstListen = firstSong ? undefined : epSongs[0];
 const symbols = entry.data.symbolism || [];
 const voice = entry.data.voiceCharacteristics?.preset;
 
@@ -86,6 +88,13 @@ const metadata = {
           firstSong && (
             <a class="sz-btn sz-btn--primary" href={sectionUrl(lang, 'music', firstSong.slug)}>
               ▶ {firstSong.title}
+            </a>
+          )
+        }
+        {
+          firstListen && (
+            <a class="sz-btn sz-btn--primary" href={firstListen.spotify} rel="noopener">
+              ▶ {firstListen.title} {de ? 'hören' : ''}
             </a>
           )
         }
