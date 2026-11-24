@@ -3,10 +3,15 @@
  * FigureCard - dossier card (KONZEPT B4): character sheet with rim light on --bg,
  * SZ number, name, medium label, quote. One micro-movement per figure on hover/focus (B7),
  * none with prefers-reduced-motion.
+ * Clip: if the figure's EP song has a released music video, its short clip (muted, ~100 KB) plays over
+ * the portrait while the card is hovered or focused. Loaded only then (preload="none"); never with
+ * prefers-reduced-motion or on touch screens.
  */
 import { getFigure, figureSlug, figureStyle } from '~/data/figures';
 import { sectionUrl, type Lang } from '~/utils/routes';
 import FigureGlyph from './FigureGlyph.astro';
+import { EP_TRACKS } from '~/data/songs';
+import { songFilm } from '~/utils/media';
 
 interface Props {
   figure: string;
@@ -20,9 +25,15 @@ interface Props {
 const { figure: key, lang, showQuote = true, headingLevel = 'h3', eager = false, song } = Astro.props;
 const f = getFigure(key)!;
 const H = headingLevel;
+const film = songFilm(EP_TRACKS.find((t) => t.figures[0] === f.id)?.filmKey);
+const clip = film?.released ? film.media.clip : undefined;
 ---
 
-<a class:list={['sz-fcard', `sz-fcard--${f.id}`]} href={sectionUrl(lang, 'fragments', figureSlug(f))} style={figureStyle(f)}>
+<a
+  class:list={['sz-fcard', `sz-fcard--${f.id}`]}
+  href={sectionUrl(lang, 'fragments', figureSlug(f))}
+  style={figureStyle(f)}
+>
   <span class="sz-fcard__img">
     <img
       src={f.portrait.src}
@@ -32,6 +43,21 @@ const H = headingLevel;
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"
     />
+    {
+      clip && (
+        <video
+          class="sz-fcard__clip"
+          src={clip}
+          muted
+          loop
+          playsinline
+          preload="none"
+          aria-hidden="true"
+          tabindex="-1"
+          data-fcard-clip
+        />
+      )
+    }
   </span>
   <span class="sz-fcard__body">
     <span class="sz-fcard__id">
@@ -51,6 +77,30 @@ const H = headingLevel;
     }
   </span>
 </a>
+
+<script>
+  // Hover/focus plays the released clip over the portrait (desktop, motion allowed only)
+  const ok = () =>
+    matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for (const card of document.querySelectorAll<HTMLElement>('.sz-fcard')) {
+    const v = card.querySelector<HTMLVideoElement>('[data-fcard-clip]');
+    if (!v) continue;
+    const on = () => {
+      if (!ok()) return;
+      v.play()
+        .then(() => card.classList.add('is-clip'))
+        .catch(() => {});
+    };
+    const off = () => {
+      card.classList.remove('is-clip');
+      v.pause();
+    };
+    card.addEventListener('pointerenter', on);
+    card.addEventListener('pointerleave', off);
+    card.addEventListener('focus', on);
+    card.addEventListener('blur', off);
+  }
+</script>
 
 <style>
   .sz-fcard__song {
@@ -75,13 +125,31 @@ const H = headingLevel;
   }
   .sz-fcard:hover,
   .sz-fcard:focus-visible {
-    box-shadow: 0 0 0 1px var(--fig), 0 0 28px var(--fig-glow);
+    box-shadow:
+      0 0 0 1px var(--fig),
+      0 0 28px var(--fig-glow);
   }
   .sz-fcard__img {
     display: block;
     aspect-ratio: 4 / 5;
     background: var(--bg);
     overflow: hidden;
+  }
+  .sz-fcard__img {
+    position: relative;
+  }
+  .sz-fcard__clip {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--t-fade) var(--ease);
+    pointer-events: none;
+  }
+  .sz-fcard.is-clip .sz-fcard__clip {
+    opacity: 1;
   }
   .sz-fcard__img img {
     width: 100%;
