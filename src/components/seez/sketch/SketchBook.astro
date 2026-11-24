@@ -1,0 +1,146 @@
+---
+/**
+ * SketchBook: "Skizzenbuch 2011–2013" on the About page. Each drawing twice, side by side:
+ * the scan/photo of the original (WebP, lazy) and the traced ink version (SketchInk, lazy).
+ * Neutral captions: title and medium only. No single drawing gets its own year.
+ */
+import { Image } from 'astro:assets';
+import SketchInk from './SketchInk.astro';
+import { SKETCHES, SKETCH_YEARS } from '~/data/sketches';
+import type { Lang } from '~/utils/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === 'de';
+---
+
+<section class="sz-container sz-section sketchbook" aria-labelledby="skizzenbuch">
+  <div class="sketchbook__head reveal">
+    <p class="sz-label">{de ? 'Frühe Zeichnungen' : 'Early drawings'}</p>
+    <h2 class="sz-h2" id="skizzenbuch">{de ? `Skizzenbuch ${SKETCH_YEARS}` : `Sketchbook ${SKETCH_YEARS}`}</h2>
+    <p class="sz-muted sz-measure">
+      {
+        de
+          ? `Zeichnungen aus den Jahren ${SKETCH_YEARS}, mit Bleistift, Kugelschreiber, Marker und Sprühdose. Links das Original als Scan oder Foto, rechts die digitale Nachzeichnung als Tuschelinie. Die Wörter in den Bildern stehen so, wie sie gezeichnet wurden.`
+          : `Drawings from ${SKETCH_YEARS}, in pencil, ballpoint, marker and spray paint. On the left the original as a scan or photo, on the right the digital tracing as an ink line. Words inside the drawings are kept as they were drawn.`
+      }
+    </p>
+  </div>
+
+  <ol class="sketchbook__list">
+    {
+      SKETCHES.map((s, i) => (
+        <li class="sketch reveal" id={`skizze-${s.id}`}>
+          <figure class="sketch__pair">
+            <div class="sketch__scan">
+              <Image
+                src={s.scan}
+                alt={(s.scanAlt ?? s.alt)[lang]}
+                widths={[480, 960]}
+                sizes="(min-width: 900px) 520px, calc(100vw - 32px)"
+                format="webp"
+                quality={78}
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="sketch__tag sz-label" aria-hidden="true">
+                {de ? 'Original' : 'Original'}
+              </span>
+            </div>
+            <div class="sketch__ink">
+              <SketchInk ink={s.ink} label={s.alt[lang]} colour="var(--text)" />
+              <span class="sketch__tag sz-label" aria-hidden="true">
+                {de ? 'Digital' : 'Digital'}
+              </span>
+            </div>
+            <figcaption class="sketch__cap">
+              <span class="sketch__no sz-mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="sketch__title">{s.title[lang]}</span>
+              <span class="sz-muted">{s.medium[lang]}</span>
+            </figcaption>
+          </figure>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .sketchbook__head {
+    margin-bottom: var(--sp-6);
+  }
+  .sketchbook__head .sz-h2 {
+    margin-top: var(--sp-2);
+  }
+  .sketchbook__head .sz-muted {
+    margin-top: var(--sp-3);
+  }
+  .sketchbook__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-7);
+  }
+  .sketch__pair {
+    margin: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .sketch__scan,
+  .sketch__ink {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: var(--sp-4);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .sketch__scan :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 560px;
+    object-fit: contain;
+  }
+  /* The mask is "contain": capping the height keeps the drawing in proportion */
+  .sketch__ink :global(.sz-ink) {
+    max-height: 560px;
+  }
+  .sketch__ink {
+    background: var(--bg);
+  }
+  .sketch__tag {
+    position: absolute;
+    top: var(--sp-2);
+    left: var(--sp-2);
+    padding: 2px 6px;
+    background: var(--bg);
+    color: var(--text-muted);
+  }
+  .sketch__cap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--sp-1) var(--sp-3);
+  }
+  .sketch__no {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .sketch__title {
+    font-weight: 600;
+  }
+  @media (min-width: 900px) {
+    .sketch__pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .sketch__cap {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
