@@ -2,6 +2,8 @@
 /**
  * Skizzenbuch 2011–2013: traces the scanned/photographed drawings in
  * src/assets/sketches/originals/ into light ink SVGs in public/sketches/.
+ * Also the early digital marks in src/assets/art/ (anchor, cursor hand, type pieces) and the
+ * silhouette of the rainbow logo (src/assets/logos/, coloured in Wordmark.astro).
  *
  * Steps per drawing: crop (and cover stray objects) → grey channel → flatten the
  * paper (divide by a heavy blur, removes shading and uneven light) → threshold →
@@ -40,10 +42,71 @@ const OUT = path.join(ROOT, 'public/sketches');
  * cover: rectangles (source pixels, before crop) painted white first (pencils, table, notes)
  * erase: rectangles (source pixels) cleared after thresholding (paper edges, neighbours)
  * width: working width for tracing (smaller = lighter SVG)
- * channel: 'lum' (pencil, ink outlines) or 'min' (coloured marks count as ink)
+ * channel: 'lum' (pencil, ink outlines), 'min' (coloured marks count as ink),
+ *          'alpha' (opaque pixels of a cut-out graphic are ink)
+ * invert: light marks on a dark ground are the ink
+ * flatten: false skips the paper estimate (clean digital files)
  * blur: sigma of the paper estimate; threshold: ink below this (0–255)
+ * dir / out: source folder (default originals) and output folder (default public/sketches)
+ * alphaMax: potrace corner setting (0 = only sharp corners, for pixel art)
  */
+const ART = 'src/assets/art';
 const SKETCHES = [
+  {
+    id: 'anker',
+    dir: ART,
+    file: 'anker.png',
+    crop: { left: 300, top: 100, width: 1000, height: 1420 },
+    width: 500,
+    channel: 'alpha',
+    flatten: false,
+    threshold: 128,
+    turdSize: 10,
+  },
+  {
+    id: 'cursor-hand',
+    dir: ART,
+    file: 'cursor-hand.webp',
+    width: 650,
+    channel: 'alpha',
+    flatten: false,
+    threshold: 128,
+    turdSize: 4,
+    alphaMax: 0,
+  },
+  {
+    id: 'zeilen-liebe',
+    dir: ART,
+    file: 'zeilen-liebe.png',
+    crop: { left: 0, top: 230, width: 2000, height: 1440 },
+    width: 1000,
+    channel: 'alpha',
+    flatten: false,
+    threshold: 128,
+    turdSize: 4,
+  },
+  {
+    id: 'kindisch',
+    dir: ART,
+    file: 'kindisch.png',
+    width: 900,
+    invert: true,
+    flatten: false,
+    threshold: 110,
+    turdSize: 4,
+  },
+  {
+    id: 'seez-regenbogen',
+    dir: ART,
+    file: 'logo-regenbogen.webp',
+    out: 'src/assets/logos',
+    crop: { left: 180, top: 500, width: 1700, height: 700 },
+    width: 680,
+    channel: 'alpha',
+    flatten: false,
+    threshold: 128,
+    turdSize: 4,
+  },
   {
     id: 'herz-dolch',
     file: 'herz-dolch.jpg',
@@ -153,8 +216,10 @@ const SKETCHES = [
   },
 ];
 
+const srcOf = (cfg) => path.join(cfg.dir ? path.join(ROOT, cfg.dir) : SRC, cfg.file);
+
 async function grey(cfg) {
-  let img = sharp(path.join(SRC, cfg.file));
+  let img = sharp(srcOf(cfg));
   if (cfg.cover?.length) {
     const meta = await img.metadata();
     const composites = cfg.cover.map((r) => ({
@@ -165,7 +230,8 @@ async function grey(cfg) {
     img = sharp(await img.composite(composites).toBuffer(), { limitInputPixels: meta.width * meta.height * 4 });
   }
   if (cfg.crop) img = img.extract(cfg.crop);
-  img = img.resize({ width: cfg.width, kernel: 'lanczos3' }).removeAlpha();
+  img = img.resize({ width: cfg.width, kernel: 'lanczos3' });
+  img = cfg.channel === 'alpha' ? img.ensureAlpha() : img.removeAlpha();
   const { data, info } = await img.raw().toBuffer({ resolveWithObject: true });
   const n = info.width * info.height;
   const g = Buffer.alloc(n);
@@ -173,22 +239,27 @@ async function grey(cfg) {
     const r = data[p];
     const gg = data[p + 1];
     const b = data[p + 2];
-    g[i] = cfg.channel === 'min' ? Math.min(r, gg, b) : Math.round(0.299 * r + 0.587 * gg + 0.114 * b);
+    if (cfg.channel === 'alpha') g[i] = 255 - data[p + 3];
+    else g[i] = cfg.channel === 'min' ? Math.min(r, gg, b) : Math.round(0.299 * r + 0.587 * gg + 0.114 * b);
+    if (cfg.invert) g[i] = 255 - g[i];
   }
   return { g, w: info.width, h: info.height };
 }
 
 async function binarise(cfg) {
   const { g, w, h } = await grey(cfg);
-  const scale = w / (cfg.crop?.width ?? (await sharp(path.join(SRC, cfg.file)).metadata()).width);
-  const paper = await sharp(g, { raw: { width: w, height: h, channels: 1 } })
-    .blur(cfg.blur ?? 60)
-    .extractChannel(0)
-    .raw()
-    .toBuffer();
+  const scale = w / (cfg.crop?.width ?? (await sharp(srcOf(cfg)).metadata()).width);
+  const paper =
+    cfg.flatten === false
+      ? null
+      : await sharp(g, { raw: { width: w, height: h, channels: 1 } })
+          .blur(cfg.blur ?? 60)
+          .extractChannel(0)
+          .raw()
+          .toBuffer();
   const bin = Buffer.alloc(w * h);
   for (let i = 0; i < g.length; i++) {
-    const flat = Math.min(255, (g[i] / Math.max(1, paper[i])) * 255);
+    const flat = paper ? Math.min(255, (g[i] / Math.max(1, paper[i])) * 255) : g[i];
     bin[i] = flat < cfg.threshold ? 0 : 255;
   }
   for (const r of cfg.erase ?? []) {
@@ -212,7 +283,7 @@ function trace(png, cfg) {
         threshold: 128,
         turdSize: cfg.turdSize ?? 20,
         optTolerance: cfg.optTolerance ?? 0.6,
-        alphaMax: 1,
+        alphaMax: cfg.alphaMax ?? 1,
         turnPolicy: potrace.Potrace.TURNPOLICY_MINORITY,
         color: '#000',
         background: 'transparent',
@@ -244,6 +315,8 @@ for (const cfg of SKETCHES) {
   const { png, w, h } = await binarise(cfg);
   if (process.env.SKETCH_DEBUG) fs.writeFileSync(path.join(process.env.SKETCH_DEBUG, `${cfg.id}.png`), png);
   const svg = finish(await trace(png, cfg), w, h);
-  fs.writeFileSync(path.join(OUT, `${cfg.id}.svg`), svg);
+  const out = cfg.out ? path.join(ROOT, cfg.out) : OUT;
+  fs.mkdirSync(out, { recursive: true });
+  fs.writeFileSync(path.join(out, `${cfg.id}.svg`), svg);
   console.log(`${cfg.id}.svg  ${w}×${h}  ${(svg.length / 1024).toFixed(0)} KB`);
 }
