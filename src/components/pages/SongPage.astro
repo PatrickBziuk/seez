@@ -218,6 +218,24 @@ const metadata = {
     }
 
     {
+      record.slug === 'questlog' && (
+        <section class="sz-section sz-container song__play" aria-labelledby="play-h" lang={lang}>
+          <h2 class="sz-h2" id="play-h">
+            {de ? 'Spielen' : 'Play'}
+          </h2>
+          <p class="sz-muted">
+            {de
+              ? 'Lumes Medium ist ein 16-Bit-Rollenspiel. Lauf mit ihr durch die Nacht und sammle zwölf Restlichter, jedes ist eine Zeile aus dem Song.'
+              : "Lume's medium is a 16-bit role-playing game. Walk with her through the night and collect twelve residual lights, each one a line from the song."}
+          </p>
+          <button type="button" class="sz-btn sz-btn--primary" data-sz-questlog>
+            {de ? '▶ QUESTLOG spielen' : '▶ Play QUESTLOG'}
+          </button>
+        </section>
+      )
+    }
+
+    {
       lyrics && (
         <section class="sz-section sz-container" id="lyrics" aria-labelledby="lyrics-h">
           <h2 class="sz-h2" id="lyrics-h" lang={lang}>
@@ -277,6 +295,9 @@ const metadata = {
 </Layout>
 
 <style>
+  .song__play .sz-btn {
+    margin-top: var(--sp-4);
+  }
   .song__head {
     padding-top: var(--sp-6);
   }

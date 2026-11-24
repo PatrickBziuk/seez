@@ -4,9 +4,12 @@
  * Motion: the strip fills in SZ order when the footer comes into view, the columns follow.
  * Easter egg: type "seez" anywhere (outside a form field) or click the word "seez" here six
  * times: every Splitterleiste on the page breaks apart and snaps back, and a label confirms it.
+ * Second egg: type "questlog" anywhere, or find the small residual light (✦) next to the legal links:
+ * a small playable QUESTLOG opens (game/QuestlogGame.astro).
  * Mark: the early SEEZ spray stencil (Skizzenbuch 2011–2013), traced, small and muted.
  */
 import FigureStrip from './FigureStrip.astro';
+import QuestlogGame from './game/QuestlogGame.astro';
 import SketchInk from './sketch/SketchInk.astro';
 import { INK } from '~/data/sketches';
 import { sectionUrl, type Lang } from '~/utils/routes';
@@ -97,9 +100,18 @@ const columns = [
   </div>
   <div class="sz-container sz-container--wide sz-footer__legal">
     <span>© Seez</span>
+    <button
+      type="button"
+      class="sz-footer__restlicht"
+      data-sz-questlog
+      aria-label={de ? 'Restlicht: kleines Spiel öffnen' : 'Residual light: open a small game'}
+    >
+      ✦
+    </button>
     <a href={`/${lang}/legal/impressum`}>Impressum</a>
     <a href={`/${lang}/legal/privacy`}>{de ? 'Datenschutz' : 'Privacy'}</a>
   </div>
+  <QuestlogGame lang={lang} />
 </footer>
 
 <script is:inline>
@@ -181,6 +193,20 @@ const columns = [
   /* Easter-egg label: stays in the a11y tree (live region) but takes no room while empty */
   .sz-footer__egg:empty {
     margin: 0;
+  }
+  .sz-footer__restlicht {
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    color: var(--text-faint, var(--text-muted));
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.55;
+  }
+  .sz-footer__restlicht:is(:hover, :focus-visible) {
+    color: #c7a6ff;
+    opacity: 1;
   }
   .sz-footer__egg {
     color: var(--text);

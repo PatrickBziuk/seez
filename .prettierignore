@@ -40,3 +40,5 @@ src/content/lab/pagefind-search-implementation.md
 src/content/music/de/meine-musik.mdx
 src/content/music/en/my-music.mdx
 TESTING_RESULTS.md
+# seez-kit (vendored video engine copy)
+src/scripts/seez-kit/

@@ -33,6 +33,12 @@ const metadata = { title: 'Seite nicht gefunden · Page not found', robots: { in
         <a class="sz-btn" href={sectionUrl('en', 'fragments')}>Fragments</a>
       </div>
     </div>
+    <p class="nf__lost">
+      <span>„Ich verliere mich – doch nie die Lust am Suchen.“</span>
+      <button type="button" class="sz-btn" data-sz-questlog>
+        Verlaufen? Eine Runde QUESTLOG · Lost? Play a round
+      </button>
+    </p>
     <p class="nf__glitch" aria-hidden="true"><FigureGlyph id="gl1tch" size={28} /></p>
   </section>
 </Layout>
@@ -69,6 +75,18 @@ const metadata = { title: 'Seite nicht gefunden · Page not found', robots: { in
     margin-top: var(--sp-8);
     padding-top: var(--sp-6);
     border-top: 1px solid var(--line);
+  }
+  .nf__lost {
+    margin-top: var(--sp-7);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-3) var(--sp-4);
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .nf__lost .sz-btn {
+    font-style: normal;
   }
   .nf__glitch {
     margin-top: var(--sp-7);
