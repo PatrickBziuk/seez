@@ -24,7 +24,7 @@ interface Props {
   size?: 'sm' | 'lg';
   rotate?: boolean;
 }
-const { size = 'sm', rotate = false } = Astro.props;
+const { size = 'sm', rotate = false } = Astro.props as Props;
 
 const rainbowPath = rainbowSvg.match(/\sd="([^"]+)"/)?.[1] ?? '';
 // Stripe order of the original logo, top to bottom: green, yellow, orange, red, violet, blue
