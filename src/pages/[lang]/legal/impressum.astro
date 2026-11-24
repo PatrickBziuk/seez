@@ -46,24 +46,28 @@ const description =
       {
         locale === 'de' ? (
           <>
-            <p class="sz-muted">Angaben gemäß § 5 TMG und § 55 Abs. 2 RStV</p>
+            <p class="sz-muted">Angaben gemäß § 5 DDG</p>
 
-            <h2>Verantwortlich für den Inhalt</h2>
+            <h2>Anbieter</h2>
             <div class="sz-panel">
               <p>
-                <>
-                  <strong>Patrick Bziuk</strong>
-                  <br />
-                </>
-                Kreativer & Entwickler
+                <strong>Patrick Rojahn</strong>
                 <br />
-                Adresse: Riedbergallee 10, 60438 Frankfurt am Main, Deutschland
+                Mosselde 8
                 <br />
+                44357 Dortmund
+                <br />
+                Deutschland
+              </p>
+              <p>
                 E-Mail: info@seez.eu
                 <br />
                 Website: <a href="https://seez.eu">seez.eu</a>
               </p>
             </div>
+
+            <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+            <p>Patrick Rojahn, Mosselde 8, 44357 Dortmund</p>
 
             <h2>Haftungsausschluss</h2>
 
@@ -71,7 +75,7 @@ const description =
             <p>
               Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und
               Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir gemäß § 7
-              Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.
+              Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.
             </p>
 
             <h3>Haftung für Links</h3>
@@ -104,32 +108,34 @@ const description =
               Open-Source-Community für ihre wertvollen Beiträge zur Softwareentwicklung.
             </p>
 
-            <p class="sz-muted legal__note">
-              Letzte Aktualisierung: {new Date().toLocaleDateString('de-DE')}
-            </p>
+            <p class="sz-muted legal__note">Stand: 24.11.2026</p>
           </>
         ) : (
           <>
             <p class="sz-muted">
-              Legal information and contact details for seez.eu
+              Information pursuant to Section 5 of the German Digital Services Act (DDG)
             </p>
 
-            <h2>Responsible for Content</h2>
+            <h2>Provider</h2>
             <div class="sz-panel">
               <p>
-                <>
-                  <strong>Patrick Bziuk</strong>
-                  <br />
-                </>
-                Creative & Developer
+                <strong>Patrick Rojahn</strong>
                 <br />
-                Address: Riedbergallee 10, 60438 Frankfurt am Main, Germany
+                Mosselde 8
                 <br />
+                44357 Dortmund
+                <br />
+                Germany
+              </p>
+              <p>
                 Email: info@seez.eu
                 <br />
                 Website: <a href="https://seez.eu">seez.eu</a>
               </p>
             </div>
+
+            <h2>Responsible for content (Section 18 (2) MStV)</h2>
+            <p>Patrick Rojahn, Mosselde 8, 44357 Dortmund, Germany</p>
 
             <h2>Disclaimer</h2>
 
@@ -137,8 +143,8 @@ const description =
             <p>
               The contents of our pages have been created with the greatest care. However, we cannot guarantee the
               accuracy, completeness, and timeliness of the content. As a service provider, we are responsible for our
-              own content on these pages according to general laws pursuant to Section 7, Paragraph 1 of the German
-              Telemedia Act (TMG).
+              own content on these pages according to general laws pursuant to Section 7 (1) of the German
+              Digital Services Act (DDG).
             </p>
 
             <h3>Liability for Links</h3>
@@ -171,9 +177,7 @@ const description =
               their valuable contributions to software development.
             </p>
 
-            <p class="sz-muted legal__note">
-              Last updated: {new Date().toLocaleDateString('en-US')}
-            </p>
+            <p class="sz-muted legal__note">Last updated: 24 November 2026</p>
           </>
         )
       }
