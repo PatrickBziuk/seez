@@ -1,0 +1,59 @@
+{
+  "$comment": "Single source for the six Seelensplitter figures (order SZ-001..SZ-006). Accent colours from docs/visual-konzept/KONZEPT.md B4, all >= 4.5:1 (AA) as text: 'dark' on #0B0B10, 'light' on #F6F4EF. Plain JSON so seez-kit and the Videothek can read the same values later.",
+  "figures": [
+    {
+      "id": "splinter",
+      "slug": "splinter",
+      "sz": "SZ-001",
+      "name": "Splinter",
+      "alias": { "de": "Der Spiegelmann", "en": "The Mirror Man" },
+      "medium": { "de": "Das Notizbuch", "en": "The notebook" },
+      "accent": { "dark": "#FF6FB0", "light": "#B0236A", "label": { "de": "Gel-Pink", "en": "Gel pink" } }
+    },
+    {
+      "id": "lume",
+      "slug": "lume",
+      "sz": "SZ-002",
+      "name": "LUME",
+      "alias": { "de": "Die Entdeckerin", "en": "The Explorer" },
+      "medium": { "de": "Das Rollenspiel", "en": "The role-playing game" },
+      "accent": { "dark": "#C7A6FF", "light": "#6A3FC4", "label": { "de": "Lavendel", "en": "Lavender" } }
+    },
+    {
+      "id": "drift",
+      "slug": "drift",
+      "sz": "SZ-003",
+      "name": "Drift",
+      "alias": { "de": "Der Ankerlose", "en": "The Anchorless" },
+      "medium": { "de": "Der Nachtblog", "en": "The night blog" },
+      "accent": { "dark": "#6FE3A0", "light": "#17703F", "label": { "de": "Notausgang-Grün", "en": "Exit-sign green" } }
+    },
+    {
+      "id": "shift",
+      "slug": "shift",
+      "sz": "SZ-004",
+      "name": "Shift",
+      "alias": { "de": "Der Arbeiter", "en": "The Worker" },
+      "medium": { "de": "Der Planer", "en": "The planner" },
+      "accent": { "dark": "#F5C83A", "light": "#7A5A00", "label": { "de": "Warnwesten-Gelb", "en": "Hi-vis yellow" } }
+    },
+    {
+      "id": "gl1tch",
+      "slug": "gl1tch",
+      "sz": "SZ-005",
+      "name": "Gl1tch",
+      "alias": { "de": "Der Meta", "en": "The Meta" },
+      "medium": { "de": "SZ OS", "en": "SZ OS" },
+      "accent": { "dark": "#3FD8F0", "light": "#0B6F80", "label": { "de": "Cyan", "en": "Cyan" } }
+    },
+    {
+      "id": "unknown",
+      "slug": "sz-006-unknown",
+      "sz": "SZ-006",
+      "name": "Unknown",
+      "alias": { "de": "Der Fremde", "en": "The Stranger" },
+      "medium": { "de": "Die Straße", "en": "The street" },
+      "accent": { "dark": "#F39A4C", "light": "#A4470E", "label": { "de": "Natrium-Orange", "en": "Sodium orange" } }
+    }
+  ]
+}

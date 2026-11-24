@@ -125,11 +125,10 @@
     color-scheme: dark;
   }
 
-  @media (prefers-color-scheme: dark) {
-    .dark {
-      --aw-color-bg-page: rgb(10 10 10);
-      --aw-color-text-default: rgb(220 220 220);
-      --aw-color-text-heading: rgb(245 245 245);
-    }
+  /* Follows the site's .dark class (theme is fixed in config), not the OS setting */
+  .dark {
+    --aw-color-bg-page: rgb(10 10 10);
+    --aw-color-text-default: rgb(220 220 220);
+    --aw-color-text-heading: rgb(245 245 245);
   }
 </style>
