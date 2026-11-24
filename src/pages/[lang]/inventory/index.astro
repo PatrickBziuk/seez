@@ -4,7 +4,8 @@ import Layout from '../../../layouts/PageLayout.astro';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
 
-export const getStaticPaths = (() => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
+export const getStaticPaths = (() =>
+  SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
@@ -39,7 +40,7 @@ const items = [
     color: 'var(--item-common)',
     colorDim: 'rgba(255, 255, 255, 0.25)',
     teaser: '[SPLINTERS]',
-    actionHref: `/${lang}/fragmente`,
+    actionHref: lang === 'de' ? '/de/fragmente' : '/en/fragments',
     actionLabel: lang === 'de' ? 'FRAGMENTE LESEN' : 'READ FRAGMENTS',
   },
   {
@@ -79,7 +80,9 @@ const metadata = {
   <section class="inv-shell px-4 sm:px-6 py-10 md:py-16 min-h-screen">
     <div class="grid-bg" aria-hidden="true"></div>
 
-    <header class="mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-4 max-w-5xl mx-auto border-b border-gray-800 pb-4">
+    <header
+      class="mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-4 max-w-5xl mx-auto border-b border-gray-800 pb-4"
+    >
       <div>
         <p class="text-xs text-yellow-400 mb-1">&gt; ACCESSING: SUPPLY_CRATE</p>
         <h1 class="text-4xl md:text-6xl font-bold tracking-tight uppercase">INVENTORY</h1>
@@ -104,17 +107,18 @@ const metadata = {
               data-action-href={item.actionHref}
               data-action-label={item.actionLabel}
             >
-              <div class="rarity-corner"></div>
+              <div class="rarity-corner" />
               <div class="slot-teaser">{item.teaser}</div>
               <div class="item-desc">
-                <strong class="block mb-1" style={`color:${item.color};`}>{item.label}</strong>
+                <strong class="block mb-1" style={`color:${item.color};`}>
+                  {item.label}
+                </strong>
                 <span class="text-gray-400">{item.desc}</span>
                 <div class="mt-2 text-right text-white font-bold">{item.price}</div>
               </div>
             </button>
           ))
         }
-
       </div>
 
       <section class="terminal border border-gray-800 bg-black p-5 text-sm">
@@ -126,8 +130,20 @@ const metadata = {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-2 text-gray-400">
             <p>&gt; {lang === 'de' ? 'Wähle ein Artefakt aus dem Grid.' : 'Select an artifact from the grid.'}</p>
-            <p>&gt; {lang === 'de' ? 'Alle öffentlichen Module führen in den Seez-Kosmos.' : 'Every public module leads into the Seez cosmos.'}</p>
-            <p>&gt; {lang === 'de' ? 'Aktueller Fokus: EP, Songs, Figuren, Proofs.' : 'Current focus: EP, songs, figures, proofs.'}</p>
+            <p>
+              &gt; {
+                lang === 'de'
+                  ? 'Alle öffentlichen Module führen in den Seez-Kosmos.'
+                  : 'Every public module leads into the Seez cosmos.'
+              }
+            </p>
+            <p>
+              &gt; {
+                lang === 'de'
+                  ? 'Aktueller Fokus: EP, Songs, Figuren, Proofs.'
+                  : 'Current focus: EP, songs, figures, proofs.'
+              }
+            </p>
             <p class="text-yellow-400 mt-4">! NOTE: NO SHOPPING CART. ONLY PORTALS.</p>
           </div>
 
@@ -223,7 +239,8 @@ const metadata = {
   .grid-bg {
     position: absolute;
     inset: 0;
-    background-image: linear-gradient(rgba(50, 50, 50, 0.1) 1px, transparent 1px),
+    background-image:
+      linear-gradient(rgba(50, 50, 50, 0.1) 1px, transparent 1px),
       linear-gradient(90deg, rgba(50, 50, 50, 0.1) 1px, transparent 1px);
     background-size: 20px 20px;
     pointer-events: none;

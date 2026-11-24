@@ -22,6 +22,9 @@ export const SECTION_SEGMENT: Record<Section, Record<Lang, string>> = {
 /** Pages whose slug differs between languages. */
 const SLUG_PAIRS: Record<string, string> = { 'meine-musik': 'my-music', 'my-music': 'meine-musik' };
 
+/** Sections whose sub-pages have no counterpart in the other language. */
+const INDEX_ONLY = new Set(['tags', 'texte']);
+
 /** `/de/musik`, `/en/music/spiegelkrise`, … */
 export function sectionUrl(lang: Lang, section: Section, slug?: string): string {
   const base = `/${lang}/${SECTION_SEGMENT[section][lang]}`;
@@ -45,9 +48,9 @@ export function counterpartPath(pathname: string, target: Lang): string {
   if (!m) return `/${target}`;
   const [, from, segment, rest = ''] = m;
   if (!segment) return `/${target}`;
-  const section = (Object.keys(SECTION_SEGMENT) as Section[]).find(
-    (s) => SECTION_SEGMENT[s][from as Lang] === segment
-  );
+  const section = (Object.keys(SECTION_SEGMENT) as Section[]).find((s) => SECTION_SEGMENT[s][from as Lang] === segment);
+  // Tag and text pages exist per language with different entries: fall back to the index.
+  if (INDEX_ONLY.has(segment) && rest) return `/${target}/${segment}`;
   const nextSegment = section ? SECTION_SEGMENT[section][target] : segment;
   const nextRest = rest.replace(/^\/([^/]+)/, (all, slug: string) => (SLUG_PAIRS[slug] ? `/${SLUG_PAIRS[slug]}` : all));
   return `/${target}/${nextSegment}${nextRest}`;

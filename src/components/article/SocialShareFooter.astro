@@ -73,10 +73,11 @@ const followPlatforms = [
     label: 'RSS',
   },
   {
-    name: 'Newsletter',
+    name: 'Kontakt',
     icon: 'tabler:mail-forward',
-    href: language === 'de' ? '/de/newsletter' : '/en/newsletter',
-    label: language === 'de' ? 'Newsletter' : 'Newsletter',
+    // There is no newsletter page; point to contact instead of a dead link.
+    href: language === 'de' ? '/de/contact' : '/en/contact',
+    label: language === 'de' ? 'Kontakt' : 'Contact',
   },
 ];
 ---

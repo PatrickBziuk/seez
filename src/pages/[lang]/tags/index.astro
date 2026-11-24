@@ -22,15 +22,15 @@ const { lang } = Astro.params as { lang: SupportedLanguage };
 const t = await getTranslations(lang);
 
 // Get content from relevant collections
-const [projects, music, texts, figures] = await Promise.all([
-  getPublicCollection('projects'),
+// Same collections as /[lang]/tags/[tag] (projects have no pages any more), so every tag links somewhere.
+const [music, texts, figures] = await Promise.all([
   getPublicCollection('music'),
   getPublicCollection('texts'),
   getPublicCollection('fragments'),
 ]);
 
 // Combine and filter by language
-const allContent = [...projects, ...music, ...texts, ...figures].filter((item) => item.data.language === lang);
+const allContent = [...music, ...texts, ...figures].filter((item) => item.data.language === lang);
 
 // Extract unique tags
 const tagCounts = new Map<string, number>();

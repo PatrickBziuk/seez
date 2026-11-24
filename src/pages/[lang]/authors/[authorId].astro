@@ -42,7 +42,7 @@ const frontmatter = {
   title: lang === 'de' ? `Über ${author.data.displayName}` : `About ${author.data.displayName}`,
   description: author.data.bio,
   language: lang as 'en' | 'de',
-  tags: ['author', 'about'],
+  tags: [] as string[], // no tag pages for 'author'/'about'
   status: author.data.status,
 };
 
