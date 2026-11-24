@@ -1,0 +1,487 @@
+---
+/**
+ * Videothek — the music videos of the Seelensplitter figures.
+ * Public build: only films pinned in src/data/videothek/releases.json.
+ * Local `pnpm dev:drafts`: every film from the catalog, drafts marked.
+ */
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../../layouts/PageLayout.astro';
+import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
+import type { SupportedLanguage } from '../../../utils/i18n';
+import { isPreview } from '~/utils/publication';
+import { characterAccent, characterName, getVisibleFilms, showVideothek } from '~/utils/videothek';
+
+// No page at all until the first film is released (local draft preview excepted).
+export const getStaticPaths = (() =>
+  showVideothek() ? SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } })) : []) satisfies GetStaticPaths;
+
+const { lang } = Astro.params as { lang: SupportedLanguage };
+const de = lang === 'de';
+const preview = isPreview();
+const films = getVisibleFilms();
+const releasedCount = films.filter((f) => f.released).length;
+
+const WORK_LABEL: Record<string, string> = {
+  final: de ? 'fertig' : 'final',
+  draft: de ? 'in Arbeit' : 'in progress',
+  test: 'Test',
+  dropped: de ? 'verworfen' : 'dropped',
+};
+const ASPECTS = [
+  ['g', de ? 'Gesamt' : 'Overall'],
+  ['w', de ? 'Welt' : 'World'],
+  ['c', de ? 'Figur' : 'Character'],
+  ['l', de ? 'Lyrics' : 'Lyrics'],
+  ['s', de ? 'Sync' : 'Sync'],
+] as const;
+
+const ratingValue = (f: (typeof films)[number], k: string) =>
+  f.rating ? (f.rating as unknown as Record<string, number>)[k] : '';
+
+const metadata = {
+  title: 'Videothek',
+  description: de
+    ? 'Musikvideos der Seelensplitter-Figuren: gebaut im Browser, Bild für Bild, mit eigener Engine.'
+    : 'Music videos of the Seelensplitter figures: built in the browser, frame by frame, with our own engine.',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="vt-shell px-4 sm:px-6 py-10 md:py-16 min-h-screen">
+    {
+      preview && (
+        <p class="vt-preview max-w-6xl mx-auto mb-6">
+          {de
+            ? 'ENTWURFSVORSCHAU, nur lokal. Nicht freigegebene Filme sind markiert und erscheinen nicht auf seez.eu.'
+            : 'DRAFT PREVIEW, local only. Unreleased films are marked and never appear on seez.eu.'}
+        </p>
+      )
+    }
+
+    <header class="mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-4 max-w-6xl mx-auto">
+      <div>
+        <p class="text-xs text-green-400 mb-1">&gt; MOUNTING: VIDEOTHEK</p>
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tight uppercase">Videothek</h1>
+        <p class="text-gray-400 mt-3 max-w-2xl">
+          {
+            de
+              ? 'Musikvideos zu den Songs der Figuren. Jedes Video ist eine eigene kleine Welt, gebaut im Browser mit unserer Canvas-Engine, Bild für Bild auf den Gesang gelegt.'
+              : 'Music videos for the figures’ songs. Each one is its own small world, built in the browser with our canvas engine and timed to the vocals frame by frame.'
+          }
+        </p>
+        {!de && <p class="text-xs text-gray-500 mt-2">Film notes are in German.</p>}
+      </div>
+      <div class="text-left md:text-right text-sm">
+        <p class="text-gray-500">{de ? 'Im Regal' : 'On the shelf'}</p>
+        <p class="text-green-400 font-bold">{releasedCount} {releasedCount === 1 ? 'Film' : de ? 'Filme' : 'films'}</p>
+        <a class="text-xs text-lime-300 hover:underline" href={`/${lang}/musik`}>Sonic Archive</a>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto">
+      {
+        films.length === 0 ? (
+          <div class="vt-empty">
+            <p class="text-xs text-amber-300 uppercase tracking-wide">{de ? 'Regal noch leer' : 'Shelf still empty'}</p>
+            <p class="mt-2 text-gray-300">
+              {de
+                ? 'Die ersten Filme werden gerade fertig geschnitten. Sobald einer vorzeigbar ist, steht er hier.'
+                : 'The first films are being finished. As soon as one is ready to show, it will be here.'}
+            </p>
+          </div>
+        ) : (
+          <ul class="vt-grid">
+            {films.map((f) => (
+              <li id={`film-${f.id}`}>
+                <button
+                  type="button"
+                  class:list={['vt-card', { 'vt-card--draft': !f.released }]}
+                  data-film={f.id}
+                  aria-haspopup="dialog"
+                >
+                  <span class="vt-cover">
+                    <img src={f.media.cover} alt="" loading="lazy" width="400" height="600" />
+                    <video muted loop playsinline preload="none" data-clip={f.media.clip} />
+                    {!f.released && <span class="vt-badge">{de ? 'Entwurf' : 'Draft'}</span>}
+                    <span class="vt-len">{f.length}</span>
+                  </span>
+                  <span class="vt-meta">
+                    <strong>{f.title}</strong>
+                    <span class="vt-sub">{f.subtitle}</span>
+                    <span class="vt-chars">
+                      {f.characters.map((c) => (
+                        <span style={`--fig:${characterAccent(c)}`}>{characterName(c)}</span>
+                      ))}
+                    </span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      <p class="mt-12 text-xs text-gray-500 max-w-2xl">
+        {
+          de
+            ? 'Wie die Videos entstehen, steht im Quellcode: Engine, Bausteine und Konzepte sind offen auf GitHub. Hier im Regal stehen nur die Filme, die wir freigegeben haben.'
+            : 'How the videos are made is in the source: engine, building blocks and concepts are open on GitHub. Only films we have released stand on this shelf.'
+        }
+      </p>
+    </main>
+  </section>
+
+  <dialog id="vt-player" class="vt-dialog" aria-labelledby="vt-title">
+    {
+      films.map((f) => (
+        <template data-film-detail={f.id}>
+          <div class="vt-detail">
+            <div class="vt-stage">
+              <video controls playsinline preload="none" poster={f.media.poster} data-src={f.media.full} />
+            </div>
+            <div class="vt-info">
+              <p class="text-xs text-green-400">
+                &gt; {f.characters.map(characterName).join(' · ').toUpperCase()} · {f.length}
+                {f.released && f.release && <span class="text-gray-500"> · v{f.release.version}</span>}
+                {!f.released && (
+                  <span class="vt-badge vt-badge--inline">
+                    {de ? 'Entwurf' : 'Draft'} · {WORK_LABEL[f.workStatus] || f.workStatus}
+                  </span>
+                )}
+              </p>
+              <h2 id="vt-title" class="text-2xl font-bold uppercase">
+                {f.title}
+              </h2>
+              <p class="text-gray-400">{f.subtitle}</p>
+              {f.song && (
+                <p class="text-xs text-gray-500 mt-1">
+                  Song: {f.song.title}
+                  {f.song.meta && <> · {f.song.meta}</>}
+                </p>
+              )}
+              <p class="mt-4 text-sm leading-relaxed text-gray-300">{f.how}</p>
+              <ul class="vt-thumbs">
+                {f.media.thumbs.map((t) => (
+                  <li>
+                    <img src={t} alt="" loading="lazy" width="480" height="270" />
+                  </li>
+                ))}
+              </ul>
+              {f.rating && (
+                <section class="vt-rating" aria-label={de ? 'Eigene Bewertung' : 'Own rating'}>
+                  <p class="text-xs text-amber-300 uppercase tracking-wide">{de ? 'Eigene Kritik' : 'Own critique'}</p>
+                  <dl>
+                    {ASPECTS.map(([k, label]) => (
+                      <div>
+                        <dt>{label}</dt>
+                        <dd>{ratingValue(f, k)}/10</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <p class="text-sm text-gray-400">{f.rating.why}</p>
+                </section>
+              )}
+              {f.tags.length > 0 && (
+                <ul class="vt-tags">
+                  {f.tags.map((t) => (
+                    <li>{t}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        </template>
+      ))
+    }
+    <div class="vt-dialog-body"></div>
+    <form method="dialog"><button class="vt-close" aria-label={de ? 'Schließen' : 'Close'}>[×]</button></form>
+  </dialog>
+</Layout>
+
+<script>
+  const dlg = document.getElementById('vt-player') as HTMLDialogElement | null;
+  const body = dlg?.querySelector('.vt-dialog-body') as HTMLElement | null;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function openFilm(id: string, push = true) {
+    if (!dlg || !body) return;
+    const tpl = dlg.querySelector<HTMLTemplateElement>(`template[data-film-detail="${CSS.escape(id)}"]`);
+    if (!tpl) return;
+    body.replaceChildren(tpl.content.cloneNode(true));
+    const v = body.querySelector<HTMLVideoElement>('video[data-src]');
+    if (v) v.src = v.dataset.src || '';
+    if (!dlg.open) dlg.showModal();
+    if (push) history.replaceState(null, '', `#film-${id}`);
+  }
+
+  dlg?.addEventListener('close', () => {
+    body?.querySelector('video')?.pause();
+    body?.replaceChildren();
+    if (location.hash.startsWith('#film-')) history.replaceState(null, '', location.pathname);
+  });
+  dlg?.addEventListener('click', (e) => {
+    if (e.target === dlg) dlg.close();
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.vt-card').forEach((card) => {
+    card.addEventListener('click', () => openFilm(card.dataset.film || ''));
+    const clip = card.querySelector<HTMLVideoElement>('video[data-clip]');
+    if (!clip || reduce) return;
+    const start = () => {
+      if (!clip.src) clip.src = clip.dataset.clip || '';
+      clip
+        .play()
+        .then(() => card.classList.add('is-playing'))
+        .catch(() => {});
+    };
+    const stop = () => {
+      clip.pause();
+      card.classList.remove('is-playing');
+    };
+    card.addEventListener('mouseenter', start);
+    card.addEventListener('focus', start);
+    card.addEventListener('mouseleave', stop);
+    card.addEventListener('blur', stop);
+  });
+
+  const m = /^#film-([a-z0-9_]+)$/.exec(location.hash);
+  if (m) openFilm(m[1], false);
+</script>
+
+<style>
+  .vt-shell {
+    --bg: #080808;
+    background:
+      radial-gradient(circle at 85% -5%, rgba(34, 211, 238, 0.12), transparent 30%),
+      radial-gradient(circle at 10% 8%, rgba(217, 119, 6, 0.12), transparent 26%), var(--bg);
+    color: #e5e7eb;
+  }
+  .vt-preview {
+    border: 1px dashed #f59e0b;
+    color: #fcd34d;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+  .vt-empty {
+    border: 1px solid #1f2937;
+    background: #0b1120;
+    padding: 1.5rem;
+    border-radius: 0.6rem;
+    max-width: 40rem;
+  }
+  .vt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+    gap: 1.25rem;
+  }
+  .vt-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+    text-align: left;
+    color: inherit;
+  }
+  .vt-card:focus-visible {
+    outline: 2px solid #4ade80;
+    outline-offset: 4px;
+  }
+  .vt-cover {
+    position: relative;
+    display: block;
+    aspect-ratio: 2 / 3;
+    border: 1px solid #1f2937;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    background: #020617;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .vt-card:hover .vt-cover,
+  .vt-card:focus-visible .vt-cover {
+    transform: translateY(-3px);
+    border-color: #4ade80;
+  }
+  .vt-cover img,
+  .vt-cover video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .vt-cover video {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .vt-card.is-playing .vt-cover video {
+    opacity: 1;
+  }
+  .vt-card--draft .vt-cover {
+    border-style: dashed;
+    border-color: #f59e0b;
+  }
+  .vt-badge {
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    background: #f59e0b;
+    color: #111;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.2rem;
+  }
+  .vt-badge--inline {
+    position: static;
+    margin-left: 0.5rem;
+  }
+  .vt-len {
+    position: absolute;
+    right: 0.4rem;
+    bottom: 0.4rem;
+    background: rgba(2, 6, 23, 0.8);
+    font-size: 0.7rem;
+    padding: 0.05rem 0.3rem;
+    border-radius: 0.2rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .vt-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .vt-meta strong {
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    line-height: 1.2;
+  }
+  .vt-sub {
+    font-size: 0.78rem;
+    color: #9ca3af;
+  }
+  .vt-chars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.6rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .vt-chars span {
+    color: var(--fig, #67e8f9);
+    border-left: 2px solid var(--fig, #67e8f9);
+    padding-left: 0.3rem;
+  }
+  .vt-dialog {
+    width: min(68rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    background: #0b0f17;
+    color: #e5e7eb;
+    border: 1px solid #1f2937;
+    border-radius: 0.6rem;
+    padding: 0;
+  }
+  .vt-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  .vt-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .vt-stage {
+    background: #000;
+  }
+  .vt-stage video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    background: #000;
+  }
+  .vt-info {
+    padding: 1.25rem 1.25rem 1.5rem;
+    min-width: 0;
+  }
+  .vt-thumbs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+  .vt-thumbs img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 0.2rem;
+  }
+  .vt-rating {
+    margin-top: 1.25rem;
+    border-top: 1px solid #1f2937;
+    padding-top: 1rem;
+  }
+  .vt-rating dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin: 0.4rem 0 0.6rem;
+    font-size: 0.8rem;
+  }
+  .vt-rating dl div {
+    display: flex;
+    gap: 0.3rem;
+  }
+  .vt-rating dt {
+    color: #9ca3af;
+  }
+  .vt-rating dd {
+    color: #4ade80;
+    font-variant-numeric: tabular-nums;
+  }
+  .vt-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 1rem;
+  }
+  .vt-tags li {
+    font-size: 0.7rem;
+    border: 1px solid #374151;
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+    color: #d1d5db;
+  }
+  .vt-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.6rem;
+    background: rgba(2, 6, 23, 0.85);
+    color: #e5e7eb;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.3rem;
+    font-size: 0.85rem;
+  }
+  .vt-close:hover {
+    color: #4ade80;
+  }
+  @media (min-width: 900px) {
+    .vt-detail {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      align-items: start;
+    }
+    .vt-info {
+      max-height: calc(100dvh - 4rem);
+      overflow-y: auto;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .vt-cover {
+      transition: none;
+    }
+  }
+</style>

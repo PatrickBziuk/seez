@@ -141,8 +141,10 @@ function detectFileMetadataChanges(filePath: string): MetadataChange | null {
     changeDescription = 'New content published';
   }
 
-  // Check if published content is missing required metadata (independent of other conditions)
-  if (currentStatus === 'published') {
+  // Check if published content is missing required metadata (independent of other conditions).
+  // `firstPublishedAt` is the schema's own publication date (src/content/config.ts); content
+  // that has it is not missing anything, and must not get today's date stamped on it.
+  if (currentStatus === 'published' && !currentFrontmatter.firstPublishedAt) {
     if (!currentFrontmatter.firstPublishDate || !currentFrontmatter.publishDate) {
       // If no other action was determined, set to metadata-update
       if (action === 'metadata-update') {
@@ -183,13 +185,13 @@ async function detectMetadataChanges(): Promise<MetadataChange[]> {
   const stagedFiles = getStagedContentFiles();
   const changes: MetadataChange[] = [];
 
-  console.log(`🔍 Checking ${stagedFiles.length} staged content files for metadata changes...`);
+  console.error(`🔍 Checking ${stagedFiles.length} staged content files for metadata changes...`);
 
   for (const filePath of stagedFiles) {
     const change = detectFileMetadataChanges(filePath);
     if (change) {
       changes.push(change);
-      console.log(`📝 ${filePath}: ${change.changeDescription}`);
+      console.error(`📝 ${filePath}: ${change.changeDescription}`);
     }
   }
 

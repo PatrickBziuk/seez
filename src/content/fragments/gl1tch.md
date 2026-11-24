@@ -5,14 +5,9 @@ authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T21:15:00Z'
 image: '/images/figures/gl1tch_at_home.png'
-additionalImages:
-  - '/images/figures/gl1tch_comic.png'
-  - '/images/figures/gl1tch_comic_2.png'
-  - '/images/figures/gl1tch_singing.png'
 notranslate: ['SZ-005', 'Gl1tch', 'Patch 1.0']
 alias: 'Der Meta, Liniengesicht, Patch 1.0'
 designation: 'SZ-005'
-colorCode: '#0ea5e9'
 symbolism:
   - icon: '📱'
     meaning: 'LED-Liniengesicht - Identität als Signal, das stören darf'

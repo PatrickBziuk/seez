@@ -9,7 +9,6 @@ additionalImages:
   - '/images/figures/splinter_comic.png'
 alias: 'Der Spiegelmann'
 designation: 'SZ-001'
-colorCode: '#0a0a0a'
 symbolism:
   - icon: '🪞'
     meaning: 'Gesplitterte Spiegelmaske — zeigt nie sich selbst, nur Reflexionen'

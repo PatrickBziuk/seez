@@ -197,34 +197,36 @@ const summaryA11yLabel = `${languageCodes[currentLanguage]} - ${currentLanguageA
     font-size: 1rem;
   }
 
-  /* Dark mode support */
-  @media (prefers-color-scheme: dark) {
-    .language-switcher-button {
-      color: rgb(209 213 219);
-    }
+  /* Dark mode (follows the site's .dark class, not the OS setting) */
+  :global(.dark) .language-switcher-button {
+    color: rgb(209 213 219);
+  }
+  :global(.dark) .language-switcher-button:hover,
+  :global(.dark) .language-switcher[open] .language-switcher-button {
+    background-color: rgb(55 65 81);
+    color: rgb(229 231 235);
+  }
+  :global(.dark) .language-dropdown {
+    background-color: rgb(31 41 55);
+    border-color: rgb(75 85 99);
+  }
+  :global(.dark) .language-option {
+    color: rgb(229 231 235);
+  }
+  :global(.dark) .language-option:hover {
+    background-color: rgb(55 65 81);
+  }
+  :global(.dark) .language-option.current {
+    background-color: rgb(30 58 138);
+    color: rgb(147 197 253);
+  }
 
-    .language-switcher-button:hover,
-    .language-switcher[open] .language-switcher-button {
-      background-color: rgb(55 65 81);
-      color: rgb(229 231 235);
-    }
+  :global(.dark) .current-indicator {
+    color: rgb(191 219 254);
+    opacity: 1;
+  }
 
-    .language-dropdown {
-      background-color: rgb(31 41 55);
-      border-color: rgb(75 85 99);
-    }
-
-    .language-option {
-      color: rgb(229 231 235);
-    }
-
-    .language-option:hover {
-      background-color: rgb(55 65 81);
-    }
-
-    .language-option.current {
-      background-color: rgb(30 58 138);
-      color: rgb(147 197 253);
-    }
+  :global(.dark) .language-option.current {
+    color: rgb(219 234 254);
   }
 </style>

@@ -1,5 +1,6 @@
 ---
-import { getCollection, type CollectionEntry, render } from 'astro:content';
+import { getPublicCollection } from '~/utils/publication';
+import { type CollectionEntry, render } from 'astro:content';
 import MarkdownLayout from '../../../layouts/MarkdownLayout.astro';
 import { getPermalink } from '../../../utils/permalinks';
 import RelatedContent from '../../../components/content/RelatedContent.astro';
@@ -12,7 +13,7 @@ export async function getStaticPaths() {
     props: { entry: CollectionEntry<'texts'> };
   }> = [];
   for (const lang of SUPPORTED_LANGUAGES) {
-    const items = (await getCollection('texts')) as CollectionEntry<'texts'>[];
+    const items = (await getPublicCollection('texts')) as CollectionEntry<'texts'>[];
     const langItems = items.filter((it) => it.data.language === lang || (!it.data.language && lang === 'en'));
     for (const it of langItems) {
       const cleanSlug = it.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');

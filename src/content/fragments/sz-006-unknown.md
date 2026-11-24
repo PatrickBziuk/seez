@@ -11,7 +11,6 @@ additionalImages:
   - '/images/figures/unknown_comic.png'
 designation: 'SZ-006'
 alias: 'Der Fremde'
-colorCode: '#8B9DC3'
 symbolism:
   - icon: '🚩'
     meaning: 'Überlagerte Flaggenflicken - Mehrfachzugehörigkeit als Muster'

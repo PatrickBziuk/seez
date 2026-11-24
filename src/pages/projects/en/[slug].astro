@@ -1,9 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
+import { getPublicCollection } from '~/utils/publication';
 import SeezRedirect from '../../../components/SeezRedirect.astro';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('projects');
+  const entries = await getPublicCollection('projects');
   return entries
     .filter((entry) => !entry.data.draft && entry.data.language === 'en')
     .map((entry) => ({ params: { slug: entry.id.replace('en/', '').replace(/\.mdx?$/, '') } }));

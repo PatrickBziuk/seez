@@ -13,6 +13,7 @@ import type { AstroIntegration } from 'astro';
 
 import astrowind from './vendor/integration';
 import pagefind from 'astro-pagefind';
+import videothek from './src/integrations/videothek';
 // import astroI18next from 'astro-i18next';
 
 import {
@@ -108,6 +109,9 @@ export default defineConfig({
     astrowind({
       config: './src/config.yaml',
     }),
+
+    // Videothek: copies only released (sha256-pinned) media into dist, after compress
+    videothek(),
 
     // Pagefind must be last integration for proper indexing
     pagefind(),

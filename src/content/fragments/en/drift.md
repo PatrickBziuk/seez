@@ -5,8 +5,6 @@ authors: ['seez']
 publicationStatus: 'published'
 firstPublishedAt: '2025-08-27T20:45:00Z'
 image: '/images/figures/drift.png'
-additionalImages:
-  - '/images/figures/drift_comic.png'
 alias: 'The Anchorless'
 designation: 'SZ-003'
 symbolism:

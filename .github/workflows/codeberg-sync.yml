@@ -97,6 +97,8 @@ jobs:
         run: |
           worktree="$(mktemp -d)"
           cp -a dist/. "${worktree}/"
+          # Videothek media are served from seez.eu (GitHub Pages) only; keep the mirror small.
+          rm -rf "${worktree}/videothek/media"
           cd "${worktree}"
 
           git init

@@ -3,6 +3,15 @@ set -euo pipefail
 
 echo "🔍 Pre-commit validation, metadata injection, and content analysis..."
 
+# AI steps (TL;DR, translations) send content to OpenAI. They run only with a key
+# (env or .env.local) and never block the commit. SEEZ_SKIP_AI=1 turns them off.
+AI_ENABLED=false
+if [ "${SEEZ_SKIP_AI:-0}" != "1" ]; then
+  if [ -n "${OPENAI_API_KEY:-}" ] || grep -qs '^OPENAI_API_KEY=.' .env.local .env; then
+    AI_ENABLED=true
+  fi
+fi
+
 # 1) Validate content & update registry if needed
 echo "📋 Validating content structure..."
 npx tsx scripts/validation/validate-content-precommit-simple.ts
@@ -46,14 +55,16 @@ if git diff --cached --name-only | grep -E '^src/content/.*\.(md|mdx)$' >/dev/nu
   echo "🧠 Analyzing content for missing TL;DR and tags..."
   
   # Check for missing TL;DR and generate them
-  echo "📄 Checking for content missing TL;DR summaries..."
-  if npx tsx scripts/content/ai/generate_tldr.ts > tldr-results.json 2>/dev/null; then
-    echo "✅ TL;DR generation completed"
-    if [ -f "tldr-results.json" ]; then
-      rm tldr-results.json
+  if [ "$AI_ENABLED" = true ]; then
+    echo "📄 Checking for content missing TL;DR summaries..."
+    if npx tsx scripts/content/ai/generate_tldr.ts > tldr-results.json 2>/dev/null; then
+      echo "✅ TL;DR generation completed"
+    else
+      echo "⚠️  TL;DR generation failed (commit continues)"
     fi
+    rm -f tldr-results.json
   else
-    echo "⚠️  TL;DR generation failed"
+    echo "ℹ️  TL;DR generation skipped (no OPENAI_API_KEY or SEEZ_SKIP_AI=1)"
   fi
   
   # TODO: Add tag analysis
@@ -79,13 +90,17 @@ if git diff --cached --name-only | grep -E '^src/content/.*\.(md|mdx)$' >/dev/nu
     first_char=$(head -c 1 translation-tasks.json)
     if [[ "$first_char" == "[" ]] || [[ "$first_char" == "{" ]]; then
       if [ "$(cat translation-tasks.json)" != "[]" ]; then
-        echo "🤖 Generating AI translations (will be marked as draft and require review)..."
-        cat translation-tasks.json | npx tsx scripts/translations/generate_translations_registry.ts
-        echo "✅ Translations generated successfully"
-        echo "📋 Note: Generated translations are marked as draft and require human review"
-        echo "   • Review the translations in the generated files"
-        echo "   • Set draft=false and status.review.translation=true when ready"
-        git add src/content
+        if [ "$AI_ENABLED" != true ]; then
+          echo "ℹ️  Translations pending but skipped (no OPENAI_API_KEY or SEEZ_SKIP_AI=1)"
+        elif cat translation-tasks.json | npx tsx scripts/translations/generate_translations_registry.ts; then
+          echo "✅ Translations generated successfully"
+          echo "📋 Note: Generated translations are marked as draft and require human review"
+          echo "   • Review the translations in the generated files"
+          echo "   • Set draft=false and status.review.translation=true when ready"
+          git add src/content
+        else
+          echo "⚠️  Translation generation failed (commit continues, nothing added)"
+        fi
       else
         echo "ℹ️ No translation tasks found"
       fi

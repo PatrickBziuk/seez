@@ -7,10 +7,8 @@ firstPublishedAt: '2025-08-27T20:15:00Z'
 image: '/images/figures/lume.png'
 additionalImages:
   - '/images/figures/lume_comic.png'
-  - '/images/figures/lume_gaming.png'
 alias: 'Die Träumerin, Die Entdeckerin'
 designation: 'SZ-002'
-colorCode: '#e6d7c8'
 symbolism:
   - icon: '🔬'
     meaning: 'Flakon-Amulett - Health-Potion-Vibe, Trost und Hoffnung'

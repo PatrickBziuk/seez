@@ -1,15 +1,16 @@
 ---
+import { getPublicCollection } from '~/utils/publication';
 import type { GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/PageLayout.astro';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
+import { getFigure, figureGlow } from '~/data/figures';
 
 export const getStaticPaths = (() => SUPPORTED_LANGUAGES.map((lang) => ({ params: { lang } }))) satisfies GetStaticPaths;
 
 const { lang } = Astro.params as { lang: SupportedLanguage };
 
-const all = await getCollection('fragments');
+const all = await getPublicCollection('fragments');
 type Entry = (typeof all)[number];
 
 const byBase = new Map<string, { de?: Entry; en?: Entry }>();
@@ -32,51 +33,39 @@ const cards = Array.from(byBase.entries())
 
 const toneBySlug: Record<
   string,
-  { color: string; glow: string; quoteDe: string; quoteEn: string; energy: number; stability: number }
+  { quoteDe: string; quoteEn: string; energy: number; stability: number }
 > = {
   drift: {
-    color: '#ff0055',
-    glow: 'rgba(255,0,85,0.25)',
     quoteDe: 'Stille ist lauter als jeder Absturz.',
     quoteEn: 'Silence is louder than any crash.',
     energy: 92,
     stability: 18,
   },
   splinter: {
-    color: '#a3a3a3',
-    glow: 'rgba(163,163,163,0.25)',
     quoteDe: 'Ich katalogisiere, was mich zerstoert.',
     quoteEn: 'I catalog what destroys me.',
     energy: 85,
     stability: 28,
   },
   shift: {
-    color: '#4b5563',
-    glow: 'rgba(75,85,99,0.25)',
     quoteDe: 'Wir arbeiten fuer ein Leben, das wir verpassen.',
     quoteEn: 'We work for a life we keep missing.',
     energy: 78,
     stability: 61,
   },
   lume: {
-    color: '#ffd700',
-    glow: 'rgba(255,215,0,0.25)',
     quoteDe: 'Ich glaube an Restlicht im dunkelsten Raum.',
     quoteEn: 'I believe in leftover light in the darkest room.',
     energy: 88,
     stability: 70,
   },
   'sz-006-unknown': {
-    color: '#ffffff',
-    glow: 'rgba(255,255,255,0.2)',
     quoteDe: 'Ich bin das Update, das niemand bestellt hat.',
     quoteEn: 'I am the update nobody ordered.',
     energy: 82,
     stability: 74,
   },
   gl1tch: {
-    color: '#00f3ff',
-    glow: 'rgba(0,243,255,0.25)',
     quoteDe: 'Fehler sind meine Handschrift.',
     quoteEn: 'Errors are my handwriting.',
     energy: 95,
@@ -138,12 +127,14 @@ const metadata = {
         {
           cards.map(({ baseSlug, entry }) => {
             const tone = toneBySlug[baseSlug] || toneBySlug['gl1tch'];
+            const accent = getFigure(baseSlug)?.accent.dark || '#e5e7eb';
+            const glow = figureGlow(baseSlug) || 'rgba(229,231,235,0.25)';
             const portrait = (entry.data.image as string | undefined) || portraitBySlug[baseSlug] || '';
             const href = `/${lang}/fragmente/${baseSlug}`;
             const quote = lang === 'de' ? tone.quoteDe : tone.quoteEn;
 
             return (
-              <article class="dossier-card" style={`--char-color:${tone.color};--char-glow:${tone.glow};`}>
+              <article class="dossier-card" style={`--char-color:${accent};--char-glow:${glow};`}>
                 <div class="portrait-wrap">
                   {portrait ? (
                     <img src={portrait} alt={entry.data.title} class="portrait" loading="lazy" />

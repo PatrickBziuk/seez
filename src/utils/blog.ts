@@ -1,5 +1,6 @@
+import { getPublicCollection } from '~/utils/publication';
 import type { PaginateFunction } from 'astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import type { Post } from '~/types';
 import { APP_BLOG } from 'astrowind:config';
@@ -112,7 +113,7 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
 };
 
 const load = async function (): Promise<Array<Post>> {
-  const posts = await getCollection('post');
+  const posts = await getPublicCollection('post');
   const normalizedPosts = posts.map(async (post) => await getNormalizedPost(post));
 
   const results = (await Promise.all(normalizedPosts))

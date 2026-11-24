@@ -11,6 +11,7 @@ import { Icon } from 'astro-icon/components';
 import Logo from '~/components/core/brand/Logo.astro';
 import ToggleTheme from '~/components/core/layout/ToggleTheme.astro';
 import ToggleMenu from '~/components/core/layout/ToggleMenu.astro';
+import { UI } from 'astrowind:config';
 import Button from '~/components/ui/forms/Button.astro';
 import LanguageSwitcher from '~/components/core/layout/LanguageSwitcher.astro';
 
@@ -80,6 +81,9 @@ const isLinkActive = (href: string) => {
 const logoUrl = getLocalizedUrl('/', safeLocale);
 // Ensure no trailing slash for logo URL
 const cleanLogoUrl = logoUrl.endsWith('/') && logoUrl !== '/' ? logoUrl.slice(0, -1) : logoUrl;
+// A fixed theme (e.g. 'dark:only') has no toggle.
+const themeLocked = String(UI.theme || '').endsWith(':only');
+
 // Show debug nav-mode indicator only in development
 const showDebugIndicator = import.meta.env.DEV;
 ---
@@ -296,7 +300,7 @@ const showDebugIndicator = import.meta.env.DEV;
                           class:list={[
                             'block px-5 py-3 min-h-[44px] text-[0.95rem] leading-6 hover:bg-gray-100 dark:hover:bg-gray-600',
                             {
-                              'active bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400':
+                              'active bg-blue-50 dark:bg-white/10 text-blue-600 dark:text-white':
                                 href2 === currentPath,
                             },
                           ]}
@@ -314,7 +318,7 @@ const showDebugIndicator = import.meta.env.DEV;
                   class:list={[
                     'block px-5 py-3.5 min-h-[44px] text-[0.95rem] leading-6 hover:bg-gray-100 dark:hover:bg-gray-700 border-l-4 border-transparent',
                     {
-                      'active bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400 border-blue-500':
+                      'active bg-blue-50 dark:bg-white/10 text-blue-600 dark:text-white border-blue-500 dark:border-green-400':
                         isLinkActive(href || ''),
                     },
                   ]}
@@ -332,11 +336,13 @@ const showDebugIndicator = import.meta.env.DEV;
       class:list={[
         { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
         'md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 md:p-0 md:justify-self-end',
+        // Phone: the icon bar floats over content, so it needs its own ground.
+        'z-40 bg-[#06070a]/95 backdrop-blur border-t border-white/10 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:bg-transparent md:backdrop-blur-none md:border-0 md:pb-0',
       ]}
     >
       <div class="items-center flex justify-between w-full md:w-auto">
         <div class="header-icons flex items-center gap-2 md:gap-4" style="position:relative;">
-          {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
+          {showToggleTheme && !themeLocked && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
           <LanguageSwitcher currentLanguage={safeLocale} />
           <!-- Search Button -->
           <button

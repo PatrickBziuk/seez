@@ -1,6 +1,6 @@
 ---
+import { getPublicCollection } from '~/utils/publication';
 import type { GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/PageLayout.astro';
 import { SUPPORTED_LANGUAGES } from '../../../utils/i18n';
 import type { SupportedLanguage } from '../../../utils/i18n';
@@ -19,7 +19,7 @@ function normalizeFigureRef(value: unknown): string {
   return 'SEEZ';
 }
 
-const contentTracks = (await getCollection('music'))
+const contentTracks = (await getPublicCollection('music'))
   .filter((item) => !item.data.draft && item.data.publicationStatus !== 'draft')
   .map((item, index) => {
     const slug = item.id.replace(/^[a-z]{2}\//, '').replace(/\.mdx?$/, '');

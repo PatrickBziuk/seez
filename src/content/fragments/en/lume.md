@@ -7,7 +7,6 @@ firstPublishedAt: '2025-08-27T20:15:00Z'
 image: '/images/figures/lume.png'
 additionalImages:
   - '/images/figures/lume_comic.png'
-  - '/images/figures/lume_gaming.png'
 alias: 'The Dreamer, The Explorer'
 designation: 'SZ-002'
 symbolism:

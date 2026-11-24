@@ -1,9 +1,9 @@
+import { getPublicCollection } from '~/utils/publication';
 /**
  * Project Links Utility - Maps project names to content URLs
  * Provides functionality to link mentioned projects in about pages to actual content
  */
 
-import { getCollection } from 'astro:content';
 import { getLocalizedUrl } from '~/utils/i18n';
 
 export interface ProjectLink {
@@ -39,7 +39,7 @@ export async function getProjectLink(projectName: string, language: 'en' | 'de' 
 
   try {
     // Get all projects
-    const projects = await getCollection('projects');
+    const projects = await getPublicCollection('projects');
 
     // Find the project in the specified language
     const project = projects.find((p) => p.id.includes(mapping.slug) && p.data.language === language);

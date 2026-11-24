@@ -221,7 +221,7 @@ const fragments = defineCollection({
     image: z.string().optional(),
     alias: z.string().optional(),
     designation: z.string().optional(), // SZ-001, etc.
-    colorCode: z.string().optional(),
+    colorCode: z.string().optional(), // deprecated: figure colours live in src/data/figures.json
     symbolism: z
       .array(
         z.object({

@@ -1,4 +1,4 @@
-import { getCollection } from 'astro:content';
+import { getPublicCollection } from '~/utils/publication';
 import type { CollectionEntry } from 'astro:content';
 import { getLocalizedUrl, type SupportedLanguage } from '~/utils/i18n';
 import { getSiteInfo, getRssConfig } from '~/config/seez.config';
@@ -37,7 +37,7 @@ export async function buildRssItems({ language, collection }: BuildRssOptions = 
   const allEntries: Entry[] = (
     await Promise.all(
       collections.map((c) =>
-        getCollection(c)
+        getPublicCollection(c)
           .then((arr) => arr as Entry[])
           .catch(() => {
             return [] as Entry[];
