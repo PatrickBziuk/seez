@@ -293,6 +293,15 @@ const metadata = {
         <div class="wiki-world">
           <FigureWorld figure={f} lang={lang} />
         </div>
+        {
+          f.id === 'lume' && (
+            <p class="wiki-p wiki-play">
+              <button type="button" class="sz-btn sz-btn--primary" data-sz-questlog>
+                {de ? '▶ Selbst spielen: QUESTLOG' : '▶ Play it yourself: QUESTLOG'}
+              </button>
+            </p>
+          )
+        }
       </section>
 
       <!-- Dossier -->
@@ -501,6 +510,9 @@ const metadata = {
 </Layout>
 
 <style>
+  .wiki-play {
+    margin-top: var(--sp-4);
+  }
   /* ---------- Hero: card + title ---------- */
   .fhero {
     position: relative;

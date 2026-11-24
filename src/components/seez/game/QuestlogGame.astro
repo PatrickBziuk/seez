@@ -1,0 +1,410 @@
+---
+/**
+ * QuestlogGame – kleines spielbares Stück aus Lumes Medium (16-Bit-Rollenspiel) als Dialog.
+ * Öffnen: jedes Element mit [data-sz-questlog], der Anker #spielen / #play, oder "questlog" tippen.
+ * Die Engine (seez-kit) lädt erst beim Öffnen; ohne JavaScript erscheint nichts.
+ * Zeilen kommen aus src/data/lyrics.json (QUESTLOG ist Teil der veröffentlichten EP).
+ */
+import { getLyrics, epTrack } from '~/data/songs';
+import { sectionUrl, type Lang } from '~/utils/routes';
+import { songFilm } from '~/utils/media';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === 'de';
+
+const track = epTrack('questlog');
+const text = getLyrics('questlog')?.text || '';
+const rows = text.split('\n').map((l) => l.trim());
+const pick = (start: string, join = 1) => {
+  const i = rows.findIndex((r) => r.startsWith(start));
+  return i < 0 ? '' : rows.slice(i, i + join).join(' ');
+};
+const lines = [
+  'Ich verliere mich',
+  "Jede Welt bleibt 'ne Quest",
+  'Neugier ist mein Treibstoff',
+  'Ich bin mehr Fan als Star',
+  'Vielleicht ist mein Chaos',
+  'Lichtern, Pixeln, Worten',
+  'Ich bau mir neue Level',
+  'Manchmal muss man ins Ungewisse',
+  'Es macht mich müde',
+  'Ich les dich wie ein Buch',
+  'Ein Herz voller Glitches',
+].map((l) => pick(l));
+lines.push(pick('Vielleicht bin ich nicht zu viel', 2));
+const ready = Boolean(track && text && lines.every(Boolean));
+const film = songFilm(track?.filmKey);
+const songUrl = sectionUrl(lang, 'music', 'questlog');
+
+const T = {
+  lines,
+  secret: pick('Dopamin wie Easter Eggs'),
+  finale: pick('Mein Questlog endlos'),
+  intro: de
+    ? 'Zwölf Restlichter liegen in der Nacht. Bring sie zum Speicherpunkt am Ende des Wegs.'
+    : 'Twelve residual lights lie in the night. Bring them to the save point at the end.',
+  hint: de ? 'Pfeiltasten oder WASD · Enter' : 'Arrow keys or WASD · Enter',
+  sign1: de
+    ? 'Restlichter leuchten gelb. Eins leuchtet anders – dort, wo niemand zurückgeht.'
+    : 'Residual lights glow yellow. One glows differently, where nobody walks back.',
+  sign2: de ? 'Der Speicherpunkt ist gleich da vorn.' : 'The save point is just ahead.',
+  missing: de
+    ? 'Der Kristall bleibt dunkel. Noch {n} Restlichter fehlen.'
+    : 'The crystal stays dark. {n} residual lights are still missing.',
+  found: de ? 'Restlicht {n}/12' : 'Residual light {n}/12',
+  secretFound: de ? 'Geheimes Restlicht' : 'Secret residual light',
+  saved: de ? 'Gespeichert.' : 'Saved.',
+};
+---
+
+{
+  ready && (
+    <dialog class="sz-qgame" aria-labelledby="sz-qgame-title" data-sz-qgame data-text={JSON.stringify(T)}>
+      <div class="sz-qgame__bar">
+        <p class="sz-label" id="sz-qgame-title">
+          QUESTLOG · {de ? 'ein kleines Spiel mit Lume' : 'a small game with Lume'}
+        </p>
+        <button type="button" class="sz-qgame__close" data-q-close aria-label={de ? 'Spiel schließen' : 'Close game'}>
+          ✕
+        </button>
+      </div>
+      <div class="sz-qgame__screen">
+        <canvas
+          width="320"
+          height="180"
+          tabindex="0"
+          data-q-canvas
+          role="img"
+          aria-label={
+            de
+              ? 'Pixelwelt bei Nacht: Lume läuft mit einem Falter einen Weg entlang und sammelt leuchtende Restlichter.'
+              : 'Pixel world at night: Lume walks a path with a moth and collects glowing residual lights.'
+          }
+        />
+        <p class="sz-qgame__loading" data-q-loading>
+          {de ? 'Lädt …' : 'Loading …'}
+        </p>
+        <div class="sz-qgame__end" data-q-end hidden>
+          <p class="sz-qgame__saved">{T.saved}</p>
+          <p>{de ? 'Alle zwölf Restlichter sind gespeichert.' : 'All twelve residual lights are saved.'}</p>
+          <div class="sz-btn-row">
+            <a class="sz-btn sz-btn--primary" href={`${songUrl}#lyrics`}>
+              {de ? 'Den ganzen Text lesen' : 'Read the full lyrics'}
+            </a>
+            {film && (
+              <a class="sz-btn" href={`${songUrl}#video`}>
+                {de ? 'Musikvideo ansehen' : 'Watch the music video'}
+              </a>
+            )}
+            <button type="button" class="sz-btn" data-q-again>
+              {de ? 'Nochmal' : 'Again'}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="sz-qgame__pad" aria-hidden="true">
+        <div class="sz-qgame__dpad">
+          <button type="button" tabindex="-1" data-q-key="up">
+            ▲
+          </button>
+          <button type="button" tabindex="-1" data-q-key="left">
+            ◀
+          </button>
+          <button type="button" tabindex="-1" data-q-key="right">
+            ▶
+          </button>
+          <button type="button" tabindex="-1" data-q-key="down">
+            ▼
+          </button>
+        </div>
+        <button type="button" tabindex="-1" class="sz-qgame__ok" data-q-key="ok">
+          A
+        </button>
+      </div>
+      <p class="sz-qgame__help">
+        {de
+          ? 'Laufen: Pfeiltasten oder WASD. Weiter: Enter oder Leertaste. Schließen: Esc. Auf dem Handy: Steuerkreuz und A.'
+          : 'Walk: arrow keys or WASD. Continue: Enter or Space. Close: Esc. On a phone: d-pad and A.'}
+      </p>
+      <p class="sr-only" aria-live="polite" data-q-live />
+    </dialog>
+  )
+}
+
+<script>
+  import { startGame, type GameText } from '~/scripts/questlog-game';
+
+  const dlg = document.querySelector<HTMLDialogElement>('[data-sz-qgame]');
+  if (dlg) {
+    const canvas = dlg.querySelector<HTMLCanvasElement>('[data-q-canvas]')!;
+    const live = dlg.querySelector<HTMLElement>('[data-q-live]')!;
+    const end = dlg.querySelector<HTMLElement>('[data-q-end]')!;
+    const loading = dlg.querySelector<HTMLElement>('[data-q-loading]')!;
+    const T = JSON.parse(dlg.dataset.text || '{}') as GameText;
+    let game: Awaited<ReturnType<typeof startGame>> | null = null;
+    let booting = false;
+
+    const open = async () => {
+      if (dlg.open) return;
+      dlg.showModal();
+      canvas.focus();
+      if (game) {
+        game.resume();
+        return;
+      }
+      if (booting) return;
+      booting = true;
+      try {
+        game = await startGame(canvas, T, {
+          onLine: (s) => (live.textContent = s),
+          onEnd: () => {
+            end.hidden = false;
+            end.querySelector<HTMLElement>('a, button')?.focus();
+          },
+        });
+        loading.hidden = true;
+        if (dlg.open) game.resume();
+      } catch {
+        loading.textContent = '✕';
+      } finally {
+        booting = false;
+      }
+    };
+
+    dlg.addEventListener('close', () => {
+      game?.pause();
+      if (/^#(spielen|play)$/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+    });
+    dlg.querySelector('[data-q-close]')?.addEventListener('click', () => dlg.close());
+    for (const a of end.querySelectorAll('a')) a.addEventListener('click', () => dlg.close());
+    dlg.querySelector('[data-q-again]')?.addEventListener('click', () => {
+      end.hidden = true;
+      game?.reset();
+      canvas.focus();
+    });
+
+    const KEYS: Record<string, string> = {
+      ArrowUp: 'up',
+      ArrowDown: 'down',
+      ArrowLeft: 'left',
+      ArrowRight: 'right',
+      w: 'up',
+      s: 'down',
+      a: 'left',
+      d: 'right',
+      W: 'up',
+      S: 'down',
+      A: 'left',
+      D: 'right',
+      Enter: 'ok',
+      ' ': 'ok',
+      e: 'ok',
+    };
+    const onKey = (e: KeyboardEvent, down: boolean) => {
+      const k = KEYS[e.key];
+      if (!k || !game || !end.hidden) return;
+      if (e.target instanceof HTMLButtonElement && k === 'ok') return;
+      e.preventDefault();
+      if (down && e.repeat && k === 'ok') return;
+      game.key(k, down);
+    };
+    dlg.addEventListener('keydown', (e) => onKey(e, true));
+    dlg.addEventListener('keyup', (e) => onKey(e, false));
+    canvas.addEventListener('pointerdown', () => game?.key('ok', true));
+
+    for (const b of dlg.querySelectorAll<HTMLButtonElement>('[data-q-key]')) {
+      const k = b.dataset.qKey!;
+      const up = () => game?.key(k, false);
+      b.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        try {
+          b.setPointerCapture(e.pointerId);
+        } catch {
+          /* ohne Capture geht es auch */
+        }
+        game?.key(k, true);
+      });
+      b.addEventListener('pointerup', up);
+      b.addEventListener('pointercancel', up);
+      b.addEventListener('lostpointercapture', up);
+    }
+
+    // Einstiege: Knöpfe/Links mit [data-sz-questlog], Anker #spielen, "questlog" tippen
+    document.addEventListener('click', (e) => {
+      const el = e.target instanceof Element ? e.target.closest('[data-sz-questlog]') : null;
+      if (!el) return;
+      e.preventDefault();
+      open();
+    });
+    const fromHash = () => /^#(spielen|play)$/.test(location.hash) && open();
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+    let typed = '';
+    document.addEventListener('keydown', (e) => {
+      if (dlg.open || e.metaKey || e.ctrlKey || e.altKey || e.key.length !== 1) return;
+      const t = e.target;
+      if (t instanceof Element && t.closest('input, textarea, select, [contenteditable]')) return;
+      typed = (typed + e.key.toLowerCase()).slice(-8);
+      if (typed === 'questlog') {
+        typed = '';
+        open();
+      }
+    });
+  }
+</script>
+
+<style>
+  .sz-qgame {
+    --q-ink: #0b0716;
+    --q-text: #f1e8ff;
+    --q-muted: #b8a8d8;
+    --q-acc: #c7a6ff;
+    width: min(100vw - 24px, 1000px);
+    max-width: none;
+    max-height: calc(100dvh - 24px);
+    padding: 12px;
+    border: 1px solid var(--q-acc);
+    border-radius: var(--radius);
+    background: var(--q-ink);
+    color: var(--q-text);
+    overflow: auto;
+  }
+  .sz-qgame::backdrop {
+    background: rgb(4 2 12 / 0.82);
+  }
+  .sz-qgame__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .sz-qgame__bar .sz-label {
+    color: var(--q-acc);
+  }
+  .sz-qgame__close {
+    min-width: 44px;
+    min-height: 44px;
+    border: 1px solid var(--q-muted);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--q-text);
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .sz-qgame__screen {
+    position: relative;
+    /* Spielbild 16:9, passt auch in niedrige Fenster */
+    width: min(100%, (100dvh - 220px) * 16 / 9);
+    margin-inline: auto;
+  }
+  .sz-qgame canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    image-rendering: pixelated;
+    background: #06060f;
+    outline-offset: 3px;
+    touch-action: none;
+  }
+  .sz-qgame canvas:focus-visible {
+    outline: 2px solid var(--q-acc);
+  }
+  .sz-qgame__loading {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--q-muted);
+    font-family: var(--font-mono, monospace);
+  }
+  .sz-qgame__loading[hidden] {
+    display: none;
+  }
+  .sz-qgame__end {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 12px;
+    padding: 16px;
+    text-align: center;
+    background: rgb(11 7 22 / 0.86);
+  }
+  .sz-qgame__end[hidden] {
+    display: none;
+  }
+  .sz-qgame__saved {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: var(--fs-2xl);
+    color: var(--q-acc);
+  }
+  .sz-qgame__end .sz-btn-row {
+    justify-content: center;
+  }
+  .sz-qgame__help {
+    margin-top: 8px;
+    font-size: var(--fs-sm);
+    color: var(--q-muted);
+  }
+  .sz-qgame__pad {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  @media (pointer: coarse) {
+    .sz-qgame__pad {
+      display: flex;
+    }
+  }
+  .sz-qgame__pad button {
+    width: 52px;
+    height: 52px;
+    border: 1px solid var(--q-muted);
+    border-radius: 10px;
+    background: #1a1236;
+    color: var(--q-text);
+    font-size: 18px;
+    touch-action: none;
+  }
+  .sz-qgame__pad button:active {
+    background: #3a2a6a;
+  }
+  .sz-qgame__dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 52px);
+    grid-template-rows: repeat(3, 52px);
+    gap: 2px;
+  }
+  .sz-qgame__dpad [data-q-key='up'] {
+    grid-area: 1 / 2;
+  }
+  .sz-qgame__dpad [data-q-key='left'] {
+    grid-area: 2 / 1;
+  }
+  .sz-qgame__dpad [data-q-key='right'] {
+    grid-area: 2 / 3;
+  }
+  .sz-qgame__dpad [data-q-key='down'] {
+    grid-area: 3 / 2;
+  }
+  .sz-qgame__pad .sz-qgame__ok {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border-color: var(--q-acc);
+    color: var(--q-acc);
+    font-weight: 900;
+    font-size: 22px;
+  }
+</style>
