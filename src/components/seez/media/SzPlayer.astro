@@ -1,0 +1,774 @@
+---
+/**
+ * SzPlayer – the site's video player with its own controls (logic: src/scripts/sz-player.ts).
+ * Layout like the familiar video platforms (centre play button, bar with progress, volume,
+ * time, speed, full screen), but no foreign logo or name: an embed could replace it later.
+ * Without JS the native controls stay. preload="none": nothing loads before "play".
+ * `lazySrc` instead of `src` keeps the file off the page until a script sets it (rental slip).
+ * `defer` leaves mounting to the caller (templates that are cloned first).
+ * `theater` shows the wide-view toggle; it switches data-wide on the closest [data-szp-theater].
+ */
+export interface Props {
+  src?: string;
+  lazySrc?: string;
+  poster?: string;
+  label: string;
+  lang: 'de' | 'en';
+  /** e.g. "3:12" – shown as total time before the file is loaded */
+  length?: string;
+  accent?: string;
+  theater?: boolean;
+  defer?: boolean;
+  class?: string;
+}
+
+const {
+  src,
+  lazySrc,
+  poster,
+  label,
+  lang,
+  length,
+  accent,
+  theater = false,
+  defer = false,
+  class: className = '',
+} = Astro.props;
+const de = lang === 'de';
+const speeds = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+---
+
+<div
+  class:list={['szp', className]}
+  data-szp
+  data-lang={lang}
+  data-length={length}
+  data-szp-defer={defer ? '' : undefined}
+  role="group"
+  aria-label={label}
+  tabindex="-1"
+  style={accent ? `--szp-accent:${accent}` : undefined}
+>
+  <video controls preload="none" playsinline poster={poster} src={src} data-src={lazySrc} aria-label={label}>
+    <slot />
+  </video>
+  <div class="szp__surface" data-szp-surface aria-hidden="true"></div>
+  <div class="szp__shade" aria-hidden="true"></div>
+  <span class="szp__spinner" aria-hidden="true"></span>
+  <span class="szp__flash" data-szp-flash aria-hidden="true">
+    <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"></path></svg>
+    <svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"></path></svg>
+  </span>
+  <span class="szp__hint" data-szp-hint aria-hidden="true"></span>
+
+  <button type="button" class="szp__big" data-szp-big aria-label={de ? 'Abspielen' : 'Play'}>
+    <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.5v13l10.5-6.5z"></path></svg>
+    <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"></path></svg
+    >
+    <svg class="i-replay" viewBox="0 0 24 24" aria-hidden="true"
+      ><path d="M12 5V2L7.5 6 12 10V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"></path></svg
+    >
+  </button>
+
+  <div class="szp__bar">
+    <div
+      class="szp__progress"
+      data-szp-progress
+      role="slider"
+      tabindex="0"
+      aria-label={de ? 'Suchen' : 'Seek'}
+      aria-valuemin="0"
+      aria-valuemax="0"
+      aria-valuenow="0"
+    >
+      <span class="szp__rail">
+        <span class="szp__buffered" data-szp-buffered></span>
+        <span class="szp__hover"></span>
+        <span class="szp__played" data-szp-played></span>
+      </span>
+      <span class="szp__handle" data-szp-handle></span>
+      <span class="szp__tip" data-szp-tip aria-hidden="true">0:00</span>
+    </div>
+
+    <div class="szp__row">
+      <button type="button" class="szp__btn" data-szp-play>
+        <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"></path></svg>
+        <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"
+          ><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"></path></svg
+        >
+        <svg class="i-replay" viewBox="0 0 24 24" aria-hidden="true"
+          ><path d="M12 5V2L7.5 6 12 10V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"></path></svg
+        >
+      </button>
+
+      <div class="szp__volume">
+        <button type="button" class="szp__btn" data-szp-mute>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path class="i-spk" d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"></path>
+            <path
+              class="i-w1"
+              d="M15 9.2a4 4 0 0 1 0 5.6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"></path>
+            <path
+              class="i-w2"
+              d="M17.6 6.6a7.6 7.6 0 0 1 0 10.8"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"></path>
+            <path
+              class="i-x"
+              d="M15.5 9.5l5 5m0-5l-5 5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"></path>
+          </svg>
+        </button>
+        <div
+          class="szp__vol"
+          data-szp-vol
+          role="slider"
+          tabindex="0"
+          aria-label={de ? 'Lautstärke' : 'Volume'}
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="100"
+        >
+          <span class="szp__voltrack"><span class="szp__volfill" data-szp-volfill></span></span>
+        </div>
+      </div>
+
+      <span class="szp__time">
+        <span data-szp-cur>0:00</span>
+        <span class="szp__sep">/</span>
+        <span data-szp-dur>{length || '0:00'}</span>
+      </span>
+
+      <span class="szp__spacer"></span>
+
+      <button type="button" class="szp__btn" data-szp-cc aria-pressed="false" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect>
+          <path
+            d="M10.5 10.5a2 2 0 1 0 0 3M16.5 10.5a2 2 0 1 0 0 3"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"></path>
+        </svg>
+      </button>
+
+      <div class="szp__settings">
+        <button type="button" class="szp__btn szp__gear" data-szp-gear aria-haspopup="menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="6.2" fill="none" stroke="currentColor" stroke-width="2"></circle>
+            <circle cx="12" cy="12" r="2.2"></circle>
+            <path
+              d="M12 2.5v3.3M12 18.2v3.3M2.5 12h3.3M18.2 12h3.3M5.3 5.3l2.3 2.3M16.4 16.4l2.3 2.3M5.3 18.7l2.3-2.3M16.4 7.6l2.3-2.3"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"></path>
+          </svg>
+          <span class="szp__badge" data-szp-speedval></span>
+        </button>
+        <div class="szp__menu" data-szp-menu role="menu" aria-label={de ? 'Geschwindigkeit' : 'Playback speed'} hidden>
+          <p class="szp__menuhead" aria-hidden="true">{de ? 'Geschwindigkeit' : 'Playback speed'}</p>
+          {
+            speeds.map((s) => (
+              <button
+                type="button"
+                role="menuitemradio"
+                tabindex="-1"
+                class="szp__item"
+                data-speed={s}
+                aria-checked={s === 1 ? 'true' : 'false'}
+              >
+                {s === 1 ? 'Normal' : de ? String(s).replace('.', ',') : String(s)}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      {
+        theater && (
+          <button type="button" class="szp__btn szp__wide" data-szp-wide aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect
+                x="2.5"
+                y="6.5"
+                width="19"
+                height="11"
+                rx="1.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+          </button>
+        )
+      }
+
+      <button type="button" class="szp__btn" data-szp-fs>
+        <svg class="i-fs" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="currentColor" stroke-width="2.2"></path>
+        </svg>
+        <svg class="i-fsx" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" fill="none" stroke="currentColor" stroke-width="2.2"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .szp {
+    --szp-accent: var(--text);
+    --szp-ui: #fff;
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    color: var(--szp-ui);
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    container-type: inline-size;
+    outline: none;
+  }
+  .szp [hidden] {
+    display: none !important;
+  }
+  .szp video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+    display: block;
+  }
+  /* Without JS: only the native video */
+  .szp:not(.is-js) > :not(video) {
+    display: none;
+  }
+  .szp:fullscreen {
+    aspect-ratio: auto;
+    width: 100%;
+    height: 100%;
+  }
+  .szp svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    display: block;
+  }
+
+  .szp__surface {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .szp.is-playing:not(.is-active) .szp__surface {
+    cursor: none;
+  }
+  /* bottom gradient behind the bar */
+  .szp__shade {
+    position: absolute;
+    inset: auto 0 0;
+    height: min(130px, 55%);
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.35) 45%, rgba(0, 0, 0, 0.78));
+    pointer-events: none;
+  }
+  .szp__shade,
+  .szp__bar {
+    opacity: 0;
+    transition: opacity 0.25s var(--ease);
+  }
+  .szp__bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 12px 2px;
+    pointer-events: none;
+  }
+  .szp:is(.is-active, .is-scrubbing, :focus-within) :is(.szp__shade, .szp__bar),
+  .szp.is-started.is-paused :is(.szp__shade, .szp__bar) {
+    opacity: 1;
+    transition-duration: 0.1s;
+  }
+  .szp:is(.is-active, .is-scrubbing, :focus-within) .szp__bar,
+  .szp.is-started.is-paused .szp__bar {
+    pointer-events: auto;
+  }
+
+  /* ---- big centre button ---- */
+  .szp__big {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 72px;
+    height: 72px;
+    margin: -36px 0 0 -36px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--szp-accent);
+    background: rgba(11, 11, 16, 0.72);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 24px -6px var(--szp-accent);
+    transition:
+      opacity 0.2s var(--ease),
+      transform 0.15s var(--ease),
+      background-color 0.15s var(--ease);
+  }
+  .szp__big svg {
+    width: 36px;
+    height: 36px;
+  }
+  .szp__big:hover {
+    background: color-mix(in srgb, var(--szp-accent) 30%, rgba(11, 11, 16, 0.8));
+    transform: scale(1.06);
+  }
+  .szp.is-playing .szp__big,
+  .szp.is-waiting .szp__big {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* touch: while playing, the controls bring the centre pause button (no hover there) */
+  @media (hover: none) {
+    .szp.is-playing.is-active:not(.is-waiting) .szp__big {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  /* icon switching */
+  .szp .i-pause,
+  .szp .i-replay,
+  .szp .i-fsx,
+  .szp .i-x {
+    display: none;
+  }
+  .szp.is-playing :is(.szp__big, [data-szp-play]) .i-play {
+    display: none;
+  }
+  .szp.is-playing :is(.szp__big, [data-szp-play]) .i-pause {
+    display: block;
+  }
+  .szp.is-ended :is(.szp__big, [data-szp-play]) :is(.i-play, .i-pause) {
+    display: none;
+  }
+  .szp.is-ended :is(.szp__big, [data-szp-play]) .i-replay {
+    display: block;
+  }
+  .szp.is-fs .i-fs {
+    display: none;
+  }
+  .szp.is-fs .i-fsx {
+    display: block;
+  }
+  .szp.is-muted .i-w1,
+  .szp.is-muted .i-w2,
+  .szp.is-quiet .i-w2 {
+    display: none;
+  }
+  .szp.is-muted .i-x {
+    display: inline;
+  }
+
+  /* ---- spinner, flash, hint ---- */
+  .szp__spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 52px;
+    height: 52px;
+    margin: -26px 0 0 -26px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.22);
+    border-top-color: var(--szp-accent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s 0.15s;
+  }
+  .szp.is-waiting .szp__spinner {
+    opacity: 1;
+    animation: szp-spin 0.9s linear infinite;
+  }
+  @keyframes szp-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .szp__flash {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .szp__flash svg {
+    width: 32px;
+    height: 32px;
+  }
+  .szp__flash[data-kind='pause'] .i-play {
+    display: none;
+  }
+  .szp__flash[data-kind='pause'] .i-pause {
+    display: block;
+  }
+  .szp__flash.is-on {
+    animation: szp-flash 0.5s ease-out both;
+  }
+  @keyframes szp-flash {
+    from {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.6);
+    }
+  }
+  .szp__hint {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    translate: -50% 0;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.65);
+    font: 600 14px/1.2 var(--font-mono);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .szp__hint.is-on {
+    animation: szp-hint 0.9s ease-out both;
+  }
+  @keyframes szp-hint {
+    0%,
+    55% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* ---- progress ---- */
+  .szp__progress {
+    position: relative;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    touch-action: none;
+    --hover: 0;
+  }
+  .szp__rail {
+    position: relative;
+    flex: 1;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.22);
+    transition: height 0.1s var(--ease);
+  }
+  .szp__rail > span {
+    position: absolute;
+    inset: 0;
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+  }
+  .szp__buffered {
+    background: rgba(255, 255, 255, 0.4);
+  }
+  .szp__hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+  .szp__played {
+    background: var(--szp-accent);
+  }
+  .szp__handle {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 13px;
+    height: 13px;
+    margin: -6.5px 0 0 -6.5px;
+    border-radius: 50%;
+    background: var(--szp-accent);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25);
+    transform: scale(0);
+    transition: transform 0.1s var(--ease);
+    pointer-events: none;
+  }
+  .szp__tip {
+    position: absolute;
+    bottom: 22px;
+    left: 0;
+    translate: -50% 0;
+    padding: 3px 7px;
+    border-radius: 3px;
+    background: rgba(18, 18, 24, 0.9);
+    font: 500 12px/1.3 var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .szp__progress:is(:hover, .is-scrub, :focus-visible) .szp__rail,
+  .szp.is-scrubbing .szp__rail {
+    height: 5px;
+  }
+  .szp__progress:is(:hover, :focus-visible) .szp__handle,
+  .szp.is-scrubbing .szp__handle {
+    transform: scale(1);
+  }
+  .szp__progress:hover .szp__hover {
+    transform: scaleX(var(--hover));
+  }
+  .szp__progress:hover .szp__tip,
+  .szp.is-scrubbing .szp__tip {
+    opacity: 1;
+  }
+  /* touch: always a visible handle while the bar is shown */
+  @media (hover: none) {
+    .szp__handle {
+      transform: scale(1);
+    }
+  }
+
+  /* ---- button row ---- */
+  .szp__row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 44px;
+  }
+  .szp__spacer {
+    flex: 1;
+  }
+  .szp__btn {
+    position: relative;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: none;
+    color: inherit;
+    opacity: 0.9;
+    cursor: pointer;
+  }
+  .szp__btn:hover {
+    opacity: 1;
+  }
+  .szp__btn[aria-pressed='true'] {
+    color: var(--szp-accent);
+  }
+  .szp button:focus-visible,
+  .szp [role='slider']:focus-visible {
+    outline: 2px solid var(--focus, #fff);
+    outline-offset: -2px;
+  }
+  .szp__progress:focus-visible {
+    outline-offset: 0;
+  }
+  .szp__volume {
+    display: flex;
+    align-items: center;
+  }
+  .szp__vol {
+    width: 0;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    touch-action: none;
+    transition: width 0.2s var(--ease);
+  }
+  .szp__volume:is(:hover, :focus-within) .szp__vol {
+    width: 64px;
+    padding: 0 6px;
+  }
+  .szp__voltrack {
+    position: relative;
+    flex: 1;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  .szp__volfill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: #fff;
+  }
+  .szp__volfill::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: -4px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #fff;
+  }
+  @media (hover: none) {
+    .szp__vol {
+      display: none;
+    }
+  }
+  .szp__time {
+    margin-left: 6px;
+    font: 500 13px/1 var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    opacity: 0.95;
+  }
+  .szp__sep {
+    opacity: 0.6;
+    margin: 0 2px;
+  }
+  .szp__badge {
+    position: absolute;
+    right: 0;
+    top: 3px;
+    padding: 0 3px;
+    border-radius: 2px;
+    background: var(--szp-accent);
+    color: #0b0b10;
+    font: 700 9px/1.4 var(--font-mono);
+  }
+  .szp__badge:empty {
+    display: none;
+  }
+
+  /* ---- settings menu ---- */
+  .szp__settings {
+    position: relative;
+  }
+  .szp__menu {
+    position: absolute;
+    right: -4px;
+    bottom: 46px;
+    min-width: 168px;
+    max-height: min(320px, 70cqh);
+    overflow: auto;
+    padding: 6px 0;
+    border-radius: 8px;
+    background: rgba(21, 21, 28, 0.94);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  }
+  .szp__menuhead {
+    margin: 0;
+    padding: 6px 14px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    font: 600 12px/1.2 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.8;
+  }
+  .szp__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 14px 8px 36px;
+    border: 0;
+    background: none;
+    color: #fff;
+    font: 500 14px/1.2 var(--font-sans);
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+  }
+  .szp__item:hover,
+  .szp__item:focus-visible {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .szp__item[aria-checked='true']::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    width: 10px;
+    height: 6px;
+    margin-top: -5px;
+    border: solid var(--szp-accent);
+    border-width: 0 0 2px 2px;
+    transform: rotate(-45deg);
+  }
+
+  /* wide view only where there is room beside the info column */
+  @media (max-width: 899px) {
+    .szp__wide {
+      display: none;
+    }
+  }
+  /* small players: tighter bar */
+  @container (max-width: 420px) {
+    .szp__bar {
+      padding: 0 6px 0;
+    }
+    .szp__btn {
+      width: 36px;
+      height: 36px;
+    }
+    .szp__time {
+      font-size: 12px;
+      margin-left: 2px;
+    }
+    .szp__big {
+      width: 60px;
+      height: 60px;
+      margin: -30px 0 0 -30px;
+    }
+    .szp__big svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  @container (max-width: 300px) {
+    .szp__gear {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .szp *,
+    .szp {
+      transition: none !important;
+    }
+    .szp.is-waiting .szp__spinner {
+      animation: none;
+    }
+    .szp__flash {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { bootPlayers } from '~/scripts/sz-player';
+  bootPlayers();
+  document.addEventListener('astro:page-load', bootPlayers);
+</script>

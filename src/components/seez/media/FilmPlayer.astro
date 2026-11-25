@@ -2,10 +2,12 @@
 /**
  * Music video of a song from seez.eu itself (released, sha256-pinned films only).
  * preload="none": the poster is shown, the film loads only after "play".
+ * Controls: SzPlayer (own player bar, native controls without JS).
  * Renders nothing when the song has no released film.
  */
 import { songFilm } from '~/utils/media';
 import { characterAccent } from '~/utils/videothek';
+import SzPlayer from './SzPlayer.astro';
 
 export interface Props {
   filmKey: string | undefined;
@@ -27,14 +29,13 @@ const videothek = `/${lang}/videothek`;
   film && film.released && (
     <figure class:list={['sz-film', className]} style={`--film-accent:${accent}`}>
       <div class="sz-film__frame">
-        <video
-          controls
-          preload="none"
-          playsinline
-          poster={film.media.poster}
+        <SzPlayer
           src={film.media.full}
-          aria-label={de ? `Musikvideo: ${title || film.title}` : `Music video: ${title || film.title}`}
-          data-film-video
+          poster={film.media.poster}
+          label={de ? `Musikvideo: ${title || film.title}` : `Music video: ${title || film.title}`}
+          lang={lang}
+          length={film.length}
+          accent={accent}
         />
       </div>
       <figcaption class="sz-film__cap">
@@ -75,13 +76,6 @@ const videothek = `/${lang}/videothek`;
   .sz-film__frame:focus-within {
     box-shadow: 0 0 0 1px var(--film-accent), 0 18px 60px -30px var(--film-accent);
   }
-  .sz-film video {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    background: #000;
-  }
   .sz-film__cap {
     display: flex;
     flex-wrap: wrap;
@@ -115,15 +109,3 @@ const videothek = `/${lang}/videothek`;
   }
 </style>
 
-<script>
-  const boot = () =>
-    document.querySelectorAll<HTMLVideoElement>('[data-film-video]').forEach((v) => {
-      if (v.dataset.ready) return;
-      v.dataset.ready = '1';
-      v.addEventListener('play', () =>
-        document.querySelectorAll<HTMLMediaElement>('audio, video').forEach((m) => m !== v && m.pause())
-      );
-    });
-  boot();
-  document.addEventListener('astro:page-load', boot);
-</script>
