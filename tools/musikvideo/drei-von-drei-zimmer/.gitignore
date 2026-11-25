@@ -1,0 +1,9 @@
+node_modules/
+assets/
+tex/
+song.mp3
+*.mp4
+*.jpg
+*.log
+parts.txt
+package-lock.json

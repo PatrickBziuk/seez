@@ -1,0 +1,6 @@
+{
+  "name": "drei-von-drei-zimmer",
+  "private": true,
+  "description": "Musikvideo-Generator: Ein Zimmer, drei Lampen (Three.js, Playwright, ffmpeg)",
+  "dependencies": { "three": "0.169.0", "playwright": "*" }
+}

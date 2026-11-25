@@ -1,0 +1,7 @@
+song.mp3
+song16.wav
+part*.mp4
+parts.txt
+*.mp4
+*.png
+__pycache__/
