@@ -25,7 +25,13 @@ export function trackAudio(slug: string | undefined): string | undefined {
 
 /** The music video of a song (best released film for the catalog song key). */
 export function songFilm(filmKey: string | undefined): Film | undefined {
-  return filmsForSong(filmKey).find((f) => f.released && f.workStatus === 'final') || filmsForSong(filmKey)[0];
+  // Several versions of a song can be released. The main film is the finished one that was
+  // released first, so releasing older versions later never swaps the film on a song page.
+  const list = filmsForSong(filmKey);
+  const finals = list
+    .filter((f) => f.released && f.workStatus === 'final')
+    .sort((a, b) => (a.release?.approvedAt || '').localeCompare(b.release?.approvedAt || ''));
+  return finals[0] || list[0];
 }
 
 export interface PlayableTrack {

@@ -43,33 +43,33 @@ TUMBLR TRÄUME (splinter, Phase 1) · STEMPEL AUS (shift, Phase 3) · ILLEGALE A
 | SZ-005 | Gl1tch | `#3FD8F0` | /images/figures/gl1tch-sheet.webp | en, de | 6 FUCK SUNO |
 | SZ-006 | Unknown | `#F39A4C` | /images/figures/unknown-sheet.webp | en, de | 1 WELTMEISTER |
 
-## Videos (23 im Katalog, 6 freigegeben)
+## Videos (23 im Katalog, 23 freigegeben)
 
 | ID | Titel | Song | Länge | Arbeitsstand | freigegeben |
 |---|---|---|---|---|---|
 | drift_seezler | KIFFEN KIPPEN ALK | kka | 2:35 | final | ja |
 | shift_planer | AUFSTIEGSTRAUM | aufstieg | 2:56 | final | ja |
-| latency_love | LATENCY LOVE | latency | 2:30 | final | nein |
-| lume_abblendlicht | ABBLENDLICHT | abblendlicht | 3:47 | final | nein |
+| latency_love | LATENCY LOVE | latency | 2:30 | final | ja |
+| lume_abblendlicht | ABBLENDLICHT | abblendlicht | 3:47 | final | ja |
 | lume_questlog | QUESTLOG | questlog | 2:51 | final | ja |
 | unknown_weltmeister | Weltmeister | weltmeister | 2:28 | final | ja |
 | splinter_spiegelkrise | SPIEGELKRISE | spiegelkrise | 2:40 | final | ja |
-| cve10_march | CVE-10 | cve10 | 0:08 | test | nein |
-| cve10 | CVE-10 | cve10 | 3:11 | final | nein |
-| fck_suno_anime3 | F*CK SUNO | fcksuno | 3:05 | final | nein |
-| fck_suno_anime | F*CK SUNO | fcksuno | 3:05 | draft | nein |
-| fck_suno_mv | F*CK SUNO | fcksuno | 3:05 | dropped | nein |
-| fck_suno_wan | F*CK SUNO | fcksuno | 0:12 | test | nein |
+| cve10_march | CVE-10 | cve10 | 0:08 | test | ja |
+| cve10 | CVE-10 | cve10 | 3:11 | final | ja |
+| fck_suno_anime3 | F*CK SUNO | fcksuno | 3:05 | final | ja |
+| fck_suno_anime | F*CK SUNO | fcksuno | 3:05 | draft | ja |
+| fck_suno_mv | F*CK SUNO | fcksuno | 3:05 | dropped | ja |
+| fck_suno_wan | F*CK SUNO | fcksuno | 0:12 | test | ja |
 | gen_laeuft | GENERIERUNG LÄUFT | fcksuno | 1:17 | final | ja |
-| kka_etage | Kiffen Kippen Alk | kka | 2:35 | final | nein |
-| kka_platz | Kiffen Kippen Alk | kka | 2:35 | final | nein |
-| kka_anime | Kiffen Kippen Alk | kka | 2:35 | draft | nein |
-| aufstieg_neu | Aufstiegstraum | aufstieg | 2:56 | final | nein |
-| aufstieg_mv | Aufstiegstraum | aufstieg | 2:56 | draft | nein |
-| generalist_era | GENERALIST ERA | ge | 2:30 | final | nein |
-| attention_baby | ATTENTION, BABY | ab | 2:03 | final | nein |
-| beach_is_closed | BEACH IS CLOSED | bic | 4:35 | draft | nein |
-| target_audience | TARGET_AUDIENCE | ta | 3:02 | final | nein |
+| kka_etage | Kiffen Kippen Alk | kka | 2:35 | final | ja |
+| kka_platz | Kiffen Kippen Alk | kka | 2:35 | final | ja |
+| kka_anime | Kiffen Kippen Alk | kka | 2:35 | draft | ja |
+| aufstieg_neu | Aufstiegstraum | aufstieg | 2:56 | final | ja |
+| aufstieg_mv | Aufstiegstraum | aufstieg | 2:56 | draft | ja |
+| generalist_era | GENERALIST ERA | ge | 2:30 | final | ja |
+| attention_baby | ATTENTION, BABY | ab | 2:03 | final | ja |
+| beach_is_closed | BEACH IS CLOSED | bic | 4:35 | draft | ja |
+| target_audience | TARGET_AUDIENCE | ta | 3:02 | final | ja |
 
 ## Texte
 
