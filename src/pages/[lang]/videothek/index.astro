@@ -9,6 +9,7 @@
  * per figure with its accent label, 2:3 sleeves, a rental slip as dialog.
  * Easter eggs (decorative, static text, nothing unreleased): a small sticker per shelf
  * in the figure's medium, and the Konami code switches Gl1tch's terminal light on.
+ * Films play in SzPlayer (own controls, wide view toggle on the slip).
  * Motion (motion.css): shelves and rows reveal on scroll, sleeves are pulled off the shelf
  * on hover, the sticker of a shelf wiggles once when you point at it, the rental slip
  * opens with a short rise. None of it with reduced motion.
@@ -19,6 +20,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import FigureChip from '~/components/seez/FigureChip.astro';
 import FigureGlyph from '~/components/seez/FigureGlyph.astro';
 import Notice from '~/components/seez/Notice.astro';
+import SzPlayer from '~/components/seez/media/SzPlayer.astro';
 import { SUPPORTED_LANGUAGES } from '~/utils/i18n';
 import { isPreview } from '~/utils/publication';
 import { getVisibleFilms, showVideothek, type Film } from '~/utils/videothek';
@@ -216,9 +218,18 @@ const metadata = {
     {
       films.map((f) => (
           <div hidden data-film-detail={f.id}>
-            <div class="slip" style={`--fig:${getFigure(f.characters[0])?.accent.dark}`}>
+            <div class="slip" style={`--fig:${getFigure(f.characters[0])?.accent.dark}`} data-szp-theater>
               <div class="slip__stage">
-                <video controls playsinline preload="none" poster={f.media.poster} data-src={f.media.full} />
+                <SzPlayer
+                  lazySrc={f.media.full}
+                  poster={f.media.poster}
+                  label={f.title}
+                  lang={lang}
+                  length={f.length}
+                  accent={getFigure(f.characters[0])?.accent.dark}
+                  theater
+                  defer
+                />
               </div>
               <div class="slip__info">
                 <p class="sz-label">
@@ -283,6 +294,8 @@ const metadata = {
 </Layout>
 
 <script>
+  import { mountPlayer } from '~/scripts/sz-player';
+
   const dlg = document.querySelector<HTMLDialogElement>('[data-vt-dialog]');
   const body = dlg?.querySelector<HTMLElement>('[data-vt-body]');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -299,6 +312,8 @@ const metadata = {
     body.replaceChildren(slip);
     const v = body.querySelector<HTMLVideoElement>('video[data-src]');
     if (v) v.src = v.dataset.src || '';
+    const player = body.querySelector<HTMLElement>('[data-szp]');
+    if (player) mountPlayer(player);
     if (!dlg.open) dlg.showModal();
     if (push) history.replaceState(null, '', `#${id}`);
   }
@@ -658,10 +673,8 @@ const metadata = {
     display: grid;
     border-top: 4px solid var(--fig);
   }
-  .slip__stage video {
-    width: 100%;
-    background: #000;
-    display: block;
+  .slip__stage {
+    min-width: 0;
   }
   .slip__info {
     padding: var(--sp-5);
@@ -706,6 +719,10 @@ const metadata = {
     }
     .slip {
       grid-template-columns: 1.5fr 1fr;
+    }
+    /* wide view (player button / t): film over the whole slip, info below */
+    .slip[data-wide] {
+      grid-template-columns: 1fr;
     }
   }
 </style>
