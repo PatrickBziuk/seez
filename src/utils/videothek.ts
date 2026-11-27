@@ -91,6 +91,20 @@ export function filmsForSong(key: string | undefined): Film[] {
   return getVisibleFilms().filter((f) => f.song?.key === key && f.workStatus !== 'dropped');
 }
 
+/** First date in the catalog's free-text date field ("09.11.2026, neu gebaut 23.11.") as a sortable number. */
+export function filmDate(f: { date?: string }): number {
+  const m = /(\d{2})\.(\d{2})\.(\d{4})/.exec(f.date || '');
+  return m ? Number(m[3] + m[2] + m[1]) : 0;
+}
+
+/** Every version of a song's video shown in this run, oldest first. Includes tests and discarded versions. */
+export function variantsForSong(key: string | undefined): Film[] {
+  if (!key) return [];
+  return getVisibleFilms()
+    .filter((f) => f.song?.key === key)
+    .sort((a, b) => filmDate(a) - filmDate(b) || a.id.localeCompare(b.id));
+}
+
 /** Films shown in this run with a given figure. Discarded versions never appear. */
 export function filmsForFigure(id: string): Film[] {
   return getVisibleFilms().filter((f) => f.characters.includes(id) && f.workStatus !== 'dropped');

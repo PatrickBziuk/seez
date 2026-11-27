@@ -3,7 +3,7 @@
  * Videothek — the music videos of the Seelensplitter figures (KONZEPT B9/B10).
  * Public build: only films pinned in src/data/videothek/releases.json; no page at all
  * until the first release. Local `pnpm dev:drafts`: every film from the catalog, drafts
- * marked, discarded versions hidden.
+ * marked. Tests and discarded versions are shown with a label.
  *
  * Look: a shop at night in the brand frame – white sign instead of neon red, one shelf
  * per figure with its accent label, 2:3 sleeves, a rental slip as dialog.
@@ -23,7 +23,7 @@ import Notice from '~/components/seez/Notice.astro';
 import SzPlayer from '~/components/seez/media/SzPlayer.astro';
 import { SUPPORTED_LANGUAGES } from '~/utils/i18n';
 import { isPreview } from '~/utils/publication';
-import { getVisibleFilms, showVideothek, type Film } from '~/utils/videothek';
+import { getVisibleFilms, showVideothek, variantsForSong, type Film } from '~/utils/videothek';
 import { FIGURES, getFigure } from '~/data/figures';
 import { EP_TRACKS } from '~/data/songs';
 import { getSongRecords } from '~/utils/music';
@@ -36,21 +36,25 @@ export const getStaticPaths = (() =>
 const { lang } = Astro.params as { lang: Lang };
 const de = lang === 'de';
 const preview = isPreview();
-const films = getVisibleFilms().filter((f) => f.workStatus !== 'dropped');
+// Every released version stands on the shelf, tests and discarded ones too (marked as such).
+const films = getVisibleFilms();
+const current = films.filter((f) => f.workStatus === 'final');
 const records = await getSongRecords();
 const songLink = (f: Film) => {
   const t = EP_TRACKS.find((x) => x.filmKey === f.song?.key);
   return t && records.some((r) => r.slug === t.slug) ? { href: sectionUrl(lang, 'music', t.slug), title: t.title } : undefined;
 };
 const songLinks = new Map(films.map((f) => [f.id, songLink(f)]));
-const tip = films.find((f) => f.released) || films[0];
-const fresh = films.slice(0, 6);
+const tip = current.find((f) => f.released) || films[0];
+const fresh = current.slice(0, 6);
+const variants = new Map(films.map((f) => [f.id, variantsForSong(f.song?.key)]));
 const shelves = FIGURES.map((fig) => ({ fig, films: films.filter((f) => f.characters[0] === fig.id) })).filter((s) => s.films.length);
 
 const WORK_LABEL: Record<string, string> = {
   final: de ? 'fertig' : 'final',
-  draft: de ? 'in Arbeit' : 'in progress',
+  draft: de ? 'Entwurf' : 'draft',
   test: 'Test',
+  dropped: de ? 'verworfen' : 'discarded',
 };
 const rate = (f: { rating?: unknown }, k: string) => (f.rating as Record<string, number> | undefined)?.[k];
 const ASPECTS = [
@@ -84,8 +88,8 @@ const metadata = {
       <div class="sz-container vt__preview">
         <Notice title={de ? 'Entwurfsvorschau' : 'Draft preview'}>
           {de
-            ? 'Nur lokal. Nicht freigegebene Filme sind markiert und erscheinen nicht auf seez.eu. Verworfene Fassungen werden nicht gezeigt.'
-            : 'Local only. Unreleased films are marked and never appear on seez.eu. Discarded versions are not shown.'}
+            ? 'Nur lokal. Nicht freigegebene Filme sind markiert und erscheinen nicht auf seez.eu.'
+            : 'Local only. Unreleased films are marked and never appear on seez.eu.'}
         </Notice>
       </div>
     )
@@ -185,6 +189,7 @@ const metadata = {
                   <img src={f.media.cover} alt="" loading="lazy" width="400" height="600" />
                   <video muted loop playsinline preload="none" data-clip={f.media.clip} />
                   {!f.released && <span class="vt__draft">{de ? 'Entwurf' : 'Draft'}</span>}
+                  {f.released && f.workStatus !== 'final' && <span class="vt__state">{WORK_LABEL[f.workStatus] || f.workStatus}</span>}
                 </span>
                 <span class="vt__title">{f.title}</span>
                 <span class="vt__meta">
@@ -235,6 +240,7 @@ const metadata = {
                 <p class="sz-label">
                   {de ? 'Leihschein' : 'Rental slip'} · {f.length}
                   {f.released && f.release && <> · v{f.release.version}</>}
+                  {f.released && f.workStatus !== 'final' && <span class="vt__draft vt__draft--inline">{WORK_LABEL[f.workStatus] || f.workStatus}</span>}
                   {!f.released && (
                     <span class="vt__draft vt__draft--inline">
                       {de ? 'Entwurf' : 'Draft'} · {WORK_LABEL[f.workStatus] || f.workStatus}
@@ -258,6 +264,29 @@ const metadata = {
                 <p class="slip__how" lang="de">
                   {f.how}
                 </p>
+                {(variants.get(f.id)?.length || 0) > 1 && (
+                  <section class="slip__versions" aria-label={de ? 'Alle Fassungen zu diesem Song' : 'All versions for this song'}>
+                    <p class="sz-label">
+                      {de ? 'Alle Fassungen zu diesem Song' : 'All versions for this song'} · {variants.get(f.id)!.length}
+                    </p>
+                    <ol>
+                      {variants.get(f.id)!.map((v, i) => (
+                        <li>
+                          <button type="button" data-film={v.id} aria-current={v.id === f.id ? 'true' : undefined}>
+                            <span class="slip__vno">{i + 1}</span>
+                            <img src={v.media.poster} alt="" loading="lazy" width="96" height="54" />
+                            <span class="slip__vtext">
+                              <span lang="de">{v.subtitle || v.title}</span>
+                              <span class="slip__vmeta">
+                                {(v.date || '').slice(0, 10)} · {WORK_LABEL[v.workStatus] || v.workStatus}
+                              </span>
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                )}
                 {f.rating && (
                   <section class="slip__rating" aria-label={de ? 'Eigene Bewertung' : 'Own rating'} lang="de">
                     <p class="sz-label">{de ? 'Eigene Kritik' : 'Own critique'}</p>
@@ -324,7 +353,14 @@ const metadata = {
     opener?.focus();
   });
   dlg?.addEventListener('click', (e) => {
-    if (e.target === dlg) dlg.close();
+    if (e.target === dlg) return dlg.close();
+    // switch between the versions of a song inside the slip
+    const pick = (e.target as HTMLElement).closest<HTMLElement>('[data-vt-body] [data-film]');
+    if (pick && pick.getAttribute('aria-current') !== 'true') {
+      body?.querySelector('video')?.pause();
+      openFilm(pick.dataset.film || '');
+      body?.scrollTo?.({ top: 0 });
+    }
   });
   document.querySelectorAll<HTMLButtonElement>('[data-film]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -568,6 +604,68 @@ const metadata = {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     padding: 2px 6px;
+  }
+  .vt__state {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    color: var(--text-muted);
+    font: 500 var(--fs-xs) / 1.4 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 6px;
+  }
+  .slip__versions ol {
+    list-style: none;
+    margin: var(--sp-2) 0 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+  }
+  .slip__versions button {
+    display: grid;
+    grid-template-columns: 1.5em 96px 1fr;
+    align-items: center;
+    gap: var(--sp-3);
+    width: 100%;
+    padding: 4px 8px 4px 4px;
+    background: none;
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--line-strong);
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    font-size: var(--fs-sm);
+  }
+  .slip__versions button:hover,
+  .slip__versions button:focus-visible {
+    border-left-color: var(--fig);
+    background: color-mix(in srgb, var(--fig) 8%, transparent);
+  }
+  .slip__versions button[aria-current] {
+    border-left-color: var(--fig);
+    cursor: default;
+  }
+  .slip__versions img {
+    width: 96px;
+    height: 54px;
+    object-fit: cover;
+    display: block;
+  }
+  .slip__vno {
+    font: 500 var(--fs-xs) var(--font-mono);
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .slip__vtext {
+    display: grid;
+    min-width: 0;
+  }
+  .slip__vmeta {
+    font: 500 var(--fs-xs) / 1.6 var(--font-mono);
+    color: var(--text-muted);
   }
   .vt__draft--inline {
     position: static;

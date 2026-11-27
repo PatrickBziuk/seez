@@ -6,7 +6,7 @@
  * Renders nothing when the song has no released film.
  */
 import { songFilm } from '~/utils/media';
-import { characterAccent } from '~/utils/videothek';
+import { characterAccent, variantsForSong } from '~/utils/videothek';
 import SzPlayer from './SzPlayer.astro';
 
 export interface Props {
@@ -23,6 +23,13 @@ const de = lang === 'de';
 const film = songFilm(filmKey);
 const accent = film ? characterAccent(film.characters[0]) : undefined;
 const videothek = `/${lang}/videothek`;
+const variants = withLink ? variantsForSong(filmKey).filter((f) => f.released) : [];
+const STATE: Record<string, string> = {
+  final: de ? 'fertig' : 'final',
+  draft: de ? 'Entwurf' : 'draft',
+  test: 'Test',
+  dropped: de ? 'verworfen' : 'discarded',
+};
 ---
 
 {
@@ -51,6 +58,22 @@ const videothek = `/${lang}/videothek`;
           </a>
         )}
       </figcaption>
+      {variants.length > 1 && (
+        <details class="sz-film__versions">
+          <summary>{de ? `Alle ${variants.length} Fassungen dieses Videos` : `All ${variants.length} versions of this video`}</summary>
+          <ol>
+            {variants.map((v) => (
+              <li>
+                <a href={`${videothek}#${v.id}`} aria-current={v.id === film.id ? 'true' : undefined}>
+                  <span class="sz-film__vdate">{(v.date || '').slice(0, 10)}</span>
+                  <span>{v.subtitle || v.title}</span>
+                  <span class="sz-film__vstate">{STATE[v.workStatus] || v.workStatus}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </details>
+      )}
     </figure>
   )
 }
@@ -101,6 +124,43 @@ const videothek = `/${lang}/videothek`;
   .sz-film__more {
     margin-left: auto;
     font-size: var(--fs-sm);
+  }
+  .sz-film__versions summary {
+    cursor: pointer;
+    font: 500 var(--fs-xs) var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+  .sz-film__versions ol {
+    list-style: none;
+    margin: var(--sp-2) 0 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .sz-film__versions a {
+    display: grid;
+    grid-template-columns: 6.5em 1fr auto;
+    gap: var(--sp-3);
+    padding: 6px 8px;
+    border-left: 2px solid var(--line-strong);
+    color: var(--text);
+    text-decoration: none;
+    font-size: var(--fs-sm);
+  }
+  .sz-film__versions a:hover,
+  .sz-film__versions a:focus-visible {
+    border-left-color: var(--film-accent);
+    background: color-mix(in srgb, var(--film-accent) 8%, transparent);
+  }
+  .sz-film__versions a[aria-current] {
+    border-left-color: var(--film-accent);
+  }
+  .sz-film__vdate,
+  .sz-film__vstate {
+    font: 500 var(--fs-xs) / 1.8 var(--font-mono);
+    color: var(--text-muted);
   }
   @media (prefers-reduced-motion: reduce) {
     .sz-film__frame {

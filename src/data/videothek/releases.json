@@ -294,6 +294,819 @@
           }
         ]
       }
+    },
+    "latency_love": {
+      "approvedAt": "2026-11-27",
+      "version": "09d72dcc",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "latency_love--09d72dcc--full.mp4",
+          "sha256": "09d72dcc5541cd718953039bd6e4184a24ff4562dd04abd28fe66aeb1ef4774b",
+          "bytes": 19374181
+        },
+        "cover": {
+          "asset": "latency_love--09d72dcc--cover.jpg",
+          "sha256": "4f4955344d9fd50e4a111ac4bce279518f87738c49657545b8a4670ccaa6835d",
+          "bytes": 30793
+        },
+        "clip": {
+          "asset": "latency_love--09d72dcc--clip.mp4",
+          "sha256": "d6fbdc1b437b6ed77de01c78598adf2d8b6cfdd222b807eb600be516a83032c1",
+          "bytes": 401162
+        },
+        "thumbs": [
+          {
+            "asset": "latency_love--09d72dcc--thumb1.jpg",
+            "sha256": "1c729a9cb3076fc12d4985dcc44238f15d7d5919d8c823551435af7bd354fd07",
+            "bytes": 13052
+          },
+          {
+            "asset": "latency_love--09d72dcc--thumb2.jpg",
+            "sha256": "a22812f2737614847105a9c21ed89fe6f1bdb010fe96db051ae1d4c0cd2a5de6",
+            "bytes": 19205
+          },
+          {
+            "asset": "latency_love--09d72dcc--thumb3.jpg",
+            "sha256": "3cadcd3362af59fe852628eac5af0a711830b2531a1453f60d6afa2895cbf9d0",
+            "bytes": 10822
+          },
+          {
+            "asset": "latency_love--09d72dcc--thumb4.jpg",
+            "sha256": "8d75063e58f8345e6085603f5dfc9d40ff933050741adade01034389cdd009ac",
+            "bytes": 12084
+          },
+          {
+            "asset": "latency_love--09d72dcc--thumb5.jpg",
+            "sha256": "a7c38a297f17245a8bacfad19ed63737a2eb72027487eef33aff66adcf9b0efa",
+            "bytes": 18940
+          }
+        ]
+      }
+    },
+    "lume_abblendlicht": {
+      "approvedAt": "2026-11-27",
+      "version": "bd86c6b5",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "lume_abblendlicht--bd86c6b5--full.mp4",
+          "sha256": "bd86c6b5f2353c68b26e70c87b5d783e244e6fa12b654650a917c076dcaa66a9",
+          "bytes": 19415912
+        },
+        "cover": {
+          "asset": "lume_abblendlicht--bd86c6b5--cover.jpg",
+          "sha256": "b1c224ad8d269d53bcc1cd19dc7b501faec9bcac907a89890e6eeafae9b2875b",
+          "bytes": 19393
+        },
+        "clip": {
+          "asset": "lume_abblendlicht--bd86c6b5--clip.mp4",
+          "sha256": "910cfb96adf30b002b6c0ba7812459415ba8a060702746a5c2cc2d8fbed65859",
+          "bytes": 163196
+        },
+        "thumbs": [
+          {
+            "asset": "lume_abblendlicht--bd86c6b5--thumb1.jpg",
+            "sha256": "88132c3232558e13a3df17a07d9c1c9adbeed1eab1e9093aee03f8cf307ec0e9",
+            "bytes": 10748
+          },
+          {
+            "asset": "lume_abblendlicht--bd86c6b5--thumb2.jpg",
+            "sha256": "703099e41351798a9ae57470aff4a670ea8caba89bb41e0ac9b6aebb28e0be06",
+            "bytes": 6243
+          },
+          {
+            "asset": "lume_abblendlicht--bd86c6b5--thumb3.jpg",
+            "sha256": "e06ce989900bf684c5f47ecde196e9a26921efc219f33d5614efcb1cc81393ce",
+            "bytes": 8979
+          },
+          {
+            "asset": "lume_abblendlicht--bd86c6b5--thumb4.jpg",
+            "sha256": "4f66ac99645a02b2fbc044979c9acefaac7705d9a2383499f5d09c04d1654964",
+            "bytes": 7620
+          },
+          {
+            "asset": "lume_abblendlicht--bd86c6b5--thumb5.jpg",
+            "sha256": "a4c835128b77dbb78efd840b72c489ffe826bb538d97225735d3bb9a02844776",
+            "bytes": 9339
+          }
+        ]
+      }
+    },
+    "cve10_march": {
+      "approvedAt": "2026-11-27",
+      "version": "707054de",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "cve10_march--707054de--full.mp4",
+          "sha256": "707054de058400839f1e4ad529a51a839126911c8bf4f2f40faa9a379ab90397",
+          "bytes": 2670692
+        },
+        "cover": {
+          "asset": "cve10_march--707054de--cover.jpg",
+          "sha256": "b87ed317fcd94baa4bb645ee29dd84724ee1e7510da2d2870d4252656dcc24e8",
+          "bytes": 43108
+        },
+        "clip": {
+          "asset": "cve10_march--707054de--clip.mp4",
+          "sha256": "74768a78af14b1532a3044d4057f1353a18bef77539c48611643a9c97d3a82ec",
+          "bytes": 904944
+        },
+        "thumbs": [
+          {
+            "asset": "cve10_march--707054de--thumb1.jpg",
+            "sha256": "937541105724fec7821dee4dab0d59865b39925c55ea195e77501a4be24774b3",
+            "bytes": 15708
+          }
+        ]
+      }
+    },
+    "cve10": {
+      "approvedAt": "2026-11-27",
+      "version": "94364f4a",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "cve10--94364f4a--full.mp4",
+          "sha256": "94364f4a7833bf20b90f6eebb792002d25e33fbb36e86e62a71941a9a025a5b1",
+          "bytes": 19403030
+        },
+        "cover": {
+          "asset": "cve10--94364f4a--cover.jpg",
+          "sha256": "62d5d280da4c33c93c7bdd05a604ef6609c46983b41c52b17bb3d602197eec3b",
+          "bytes": 39146
+        },
+        "clip": {
+          "asset": "cve10--94364f4a--clip.mp4",
+          "sha256": "9f377c743a668229470799888547ce0237bf532ea039b687e67ec79616f1caf2",
+          "bytes": 810110
+        },
+        "thumbs": [
+          {
+            "asset": "cve10--94364f4a--thumb1.jpg",
+            "sha256": "1b305173ff7756a7527bee31ea1cc06272f89e27ebc730f452c36647436a883d",
+            "bytes": 10161
+          },
+          {
+            "asset": "cve10--94364f4a--thumb2.jpg",
+            "sha256": "76de24b6e143cd8f052c01ebc97f0da403bde8168c6549824f48abf9e9e67354",
+            "bytes": 12086
+          },
+          {
+            "asset": "cve10--94364f4a--thumb3.jpg",
+            "sha256": "1cfbf372fe1b1218895c89c2e803bc039e0e2c16b0b38de84a9034912be326d5",
+            "bytes": 6255
+          },
+          {
+            "asset": "cve10--94364f4a--thumb4.jpg",
+            "sha256": "1732505e9084358f58e1add421b2b0bd24cf3561c294d707695bcccd268babda",
+            "bytes": 11048
+          },
+          {
+            "asset": "cve10--94364f4a--thumb5.jpg",
+            "sha256": "6df8f239f943eec43ee82760549844ad839da32028e73996be10dfb6845a7fec",
+            "bytes": 2908
+          }
+        ]
+      }
+    },
+    "fck_suno_anime3": {
+      "approvedAt": "2026-11-27",
+      "version": "2c6c6059",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "fck_suno_anime3--2c6c6059--full.mp4",
+          "sha256": "2c6c6059c86a0f9c65a50de721019298f86c7ce81318f0aaede70254e2743f38",
+          "bytes": 19426596
+        },
+        "cover": {
+          "asset": "fck_suno_anime3--2c6c6059--cover.jpg",
+          "sha256": "bf23c803d550c30e10553c78456d164a0afcd6a831d17a9c0c8f33c62fe6264b",
+          "bytes": 51472
+        },
+        "clip": {
+          "asset": "fck_suno_anime3--2c6c6059--clip.mp4",
+          "sha256": "a7422d934c33dcef30cdfad197a372d70bc9fac34f14af0261716df193ecea06",
+          "bytes": 1106460
+        },
+        "thumbs": [
+          {
+            "asset": "fck_suno_anime3--2c6c6059--thumb1.jpg",
+            "sha256": "a865bde94bddc0acec030f56aadb002d42a6d1555d778df74be95d332e9112a6",
+            "bytes": 37034
+          },
+          {
+            "asset": "fck_suno_anime3--2c6c6059--thumb2.jpg",
+            "sha256": "2b2c10e48acc34cc74d1d85376099262c7781df595d11995e97381dddc856b95",
+            "bytes": 18497
+          },
+          {
+            "asset": "fck_suno_anime3--2c6c6059--thumb3.jpg",
+            "sha256": "e8c493b55e14782fc5594d6e40650d9a43799f009abcd86a460b5ad71b83b83c",
+            "bytes": 25185
+          },
+          {
+            "asset": "fck_suno_anime3--2c6c6059--thumb4.jpg",
+            "sha256": "4194b86ee7854213fa33374bf7239554eeb3ea61178c01d02f2b209c93f5d4fb",
+            "bytes": 15913
+          },
+          {
+            "asset": "fck_suno_anime3--2c6c6059--thumb5.jpg",
+            "sha256": "8bf9fa9fea26a2cf8cd17e401d407323252d4dbf1950d2909004e6cd389c4f66",
+            "bytes": 17450
+          }
+        ]
+      }
+    },
+    "fck_suno_anime": {
+      "approvedAt": "2026-11-27",
+      "version": "6c0d22fb",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "fck_suno_anime--6c0d22fb--full.mp4",
+          "sha256": "6c0d22fb9702f341de2d0011b6379cdd6041833e22d8980ec0e2eba512341287",
+          "bytes": 19404816
+        },
+        "cover": {
+          "asset": "fck_suno_anime--6c0d22fb--cover.jpg",
+          "sha256": "ad9e51c427becb9554b53a5a421b5cdaf2f2accf4fbc671601d795d860c8e7d4",
+          "bytes": 40501
+        },
+        "clip": {
+          "asset": "fck_suno_anime--6c0d22fb--clip.mp4",
+          "sha256": "4558d377e00fa17c4454082cf5de2713c5ed482f9eb26a75ecd2bbc916457618",
+          "bytes": 379570
+        },
+        "thumbs": [
+          {
+            "asset": "fck_suno_anime--6c0d22fb--thumb1.jpg",
+            "sha256": "070974f6cd61999642f8a99bf908e536a205dcb200ab580c1912546eb353d16d",
+            "bytes": 36978
+          },
+          {
+            "asset": "fck_suno_anime--6c0d22fb--thumb2.jpg",
+            "sha256": "d874cceada6b6e99d6bae4c9c587ad269abb06957b7968b8aebec1e5d310945f",
+            "bytes": 23392
+          },
+          {
+            "asset": "fck_suno_anime--6c0d22fb--thumb3.jpg",
+            "sha256": "98e0a85bf515345533f32994847c704871c07cb284744bd7fc9bfa47870c4452",
+            "bytes": 26719
+          },
+          {
+            "asset": "fck_suno_anime--6c0d22fb--thumb4.jpg",
+            "sha256": "cad4abf9e918309f8e38cdd7c6c7f34b04c47a730d0cf23dcee5ad12bc21892a",
+            "bytes": 9061
+          },
+          {
+            "asset": "fck_suno_anime--6c0d22fb--thumb5.jpg",
+            "sha256": "d63ea01b47babea578918fe9fcfc0ba96eb8bb3ca5a67a9293b4bff7d8c77206",
+            "bytes": 15752
+          }
+        ]
+      }
+    },
+    "fck_suno_mv": {
+      "approvedAt": "2026-11-27",
+      "version": "3d40b443",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "fck_suno_mv--3d40b443--full.mp4",
+          "sha256": "3d40b443b22077ee459e57a88442a1de62ba72eeee10b8ab9b49804b550dd8b8",
+          "bytes": 19383798
+        },
+        "cover": {
+          "asset": "fck_suno_mv--3d40b443--cover.jpg",
+          "sha256": "e56983b35d7851dc25a8f31f394ecd11cb243286bd4183f4ec42b0965ff0275f",
+          "bytes": 33896
+        },
+        "clip": {
+          "asset": "fck_suno_mv--3d40b443--clip.mp4",
+          "sha256": "78d862c1ed79aba9c21a1036f2e2160d4cf8622962ddc5a14ad3fc269fefbfd0",
+          "bytes": 516746
+        },
+        "thumbs": [
+          {
+            "asset": "fck_suno_mv--3d40b443--thumb1.jpg",
+            "sha256": "21cf03ec048f8cd924eb145932fdd5c0c59061868b9288ec3fe7b823e6ffc5bf",
+            "bytes": 10882
+          },
+          {
+            "asset": "fck_suno_mv--3d40b443--thumb2.jpg",
+            "sha256": "b2e60aff63713b54318e0b7526e55b79381210555f920062cf3aa79775cb4ff3",
+            "bytes": 14981
+          },
+          {
+            "asset": "fck_suno_mv--3d40b443--thumb3.jpg",
+            "sha256": "a1d50896a1e7e447ab384dccb72e4bf60e191387d20f0e0043852047cdd24796",
+            "bytes": 14444
+          },
+          {
+            "asset": "fck_suno_mv--3d40b443--thumb4.jpg",
+            "sha256": "476ca25c96d4eb7db05112c01eabe53d1cd82a4c5d3227081171d3ae7cad761a",
+            "bytes": 17544
+          },
+          {
+            "asset": "fck_suno_mv--3d40b443--thumb5.jpg",
+            "sha256": "77d176b97fa146b16598fa6f6c659a640f73d4026c5b01a41e3b503494db1ab9",
+            "bytes": 19384
+          }
+        ]
+      }
+    },
+    "fck_suno_wan": {
+      "approvedAt": "2026-11-27",
+      "version": "70cc9832",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "fck_suno_wan--70cc9832--full.mp4",
+          "sha256": "70cc98326886e42183de9abb451a65203690802400a78e33bd0ced0050f972bb",
+          "bytes": 3919505
+        },
+        "cover": {
+          "asset": "fck_suno_wan--70cc9832--cover.jpg",
+          "sha256": "f9f469f5f82cdf2c7c2202a7acfe251b6399f92f8ce25178f5a7685eba4ddb7f",
+          "bytes": 51696
+        },
+        "clip": {
+          "asset": "fck_suno_wan--70cc9832--clip.mp4",
+          "sha256": "9ca586c57afa9a69093489e52f2c7c75dc12115d0fdc4898da3d4aa81ccf560f",
+          "bytes": 1629069
+        },
+        "thumbs": [
+          {
+            "asset": "fck_suno_wan--70cc9832--thumb1.jpg",
+            "sha256": "f4d8310a77c15f365bfc2ee7feba6ae49c052be47de099c80db7d68e0b03390b",
+            "bytes": 42861
+          },
+          {
+            "asset": "fck_suno_wan--70cc9832--thumb2.jpg",
+            "sha256": "b60b0acf4bad8644cb6a2af47e865702e43379b0325fedb2d7dce18754fc040c",
+            "bytes": 40715
+          },
+          {
+            "asset": "fck_suno_wan--70cc9832--thumb3.jpg",
+            "sha256": "b896646d6708db24ef403a353d971a5bebdcb76c0cad96c12899488307fc7440",
+            "bytes": 32044
+          },
+          {
+            "asset": "fck_suno_wan--70cc9832--thumb4.jpg",
+            "sha256": "483f3cad614b08c0fcd5f6e815759b2cc63164786b3548d5faf66b5a1e3b0bb1",
+            "bytes": 31180
+          },
+          {
+            "asset": "fck_suno_wan--70cc9832--thumb5.jpg",
+            "sha256": "dfa8aa3c5613cc92bc6da0d3c3cdc9d2edfce8bbdc7f54cf6ec5894c6180538a",
+            "bytes": 30868
+          }
+        ]
+      }
+    },
+    "kka_etage": {
+      "approvedAt": "2026-11-27",
+      "version": "3000ce1d",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "kka_etage--3000ce1d--full.mp4",
+          "sha256": "3000ce1d03e61846a4b5f3a74906e33806dd58c7ee280412c7cde0892cc463d5",
+          "bytes": 19270501
+        },
+        "cover": {
+          "asset": "kka_etage--3000ce1d--cover.jpg",
+          "sha256": "912b3d672d31f2f8d41752ec6f508fecd57839f33bd77338d57bf4caba4f7073",
+          "bytes": 27556
+        },
+        "clip": {
+          "asset": "kka_etage--3000ce1d--clip.mp4",
+          "sha256": "127486cf1f569fc1a96b347045a314c7f7ccc5d07e2f27c507fd30d52fdf6f0a",
+          "bytes": 128271
+        },
+        "thumbs": [
+          {
+            "asset": "kka_etage--3000ce1d--thumb1.jpg",
+            "sha256": "0ee8a7e170aae8dd4a16c9d2ec02b4ee0ad5fa5c72921b81e8c110512bd2682f",
+            "bytes": 10560
+          },
+          {
+            "asset": "kka_etage--3000ce1d--thumb2.jpg",
+            "sha256": "79029f5eea2aee61c1069b7071f1ba5696c3bc54562956d9f1dc5142dc4b0ff0",
+            "bytes": 21987
+          },
+          {
+            "asset": "kka_etage--3000ce1d--thumb3.jpg",
+            "sha256": "ec9dc5b51e489687e5f7da9933427702bbb2d1d742d7d728cbb096ebf8df57e3",
+            "bytes": 10040
+          },
+          {
+            "asset": "kka_etage--3000ce1d--thumb4.jpg",
+            "sha256": "5cb345bf6b540902d324ab4e87ea517c2adb10a62a1c908271b9a435b5d6996d",
+            "bytes": 9342
+          },
+          {
+            "asset": "kka_etage--3000ce1d--thumb5.jpg",
+            "sha256": "41ce81ea645a855f1d56835d893cef1eab696133298a2ab3cfd44e49f2eb57af",
+            "bytes": 11073
+          }
+        ]
+      }
+    },
+    "kka_platz": {
+      "approvedAt": "2026-11-27",
+      "version": "5ba412cc",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "kka_platz--5ba412cc--full.mp4",
+          "sha256": "5ba412cc6afa5106a5516c9fcb1a56fb224a8c16e30ae7a3d21cce7278b40286",
+          "bytes": 19258737
+        },
+        "cover": {
+          "asset": "kka_platz--5ba412cc--cover.jpg",
+          "sha256": "1ff64e2ec473ff734e44db8555aa2dfff932e45f1d543f262223bb4c3c9754e2",
+          "bytes": 31962
+        },
+        "clip": {
+          "asset": "kka_platz--5ba412cc--clip.mp4",
+          "sha256": "c34a44d31619c03f5b77c6ad53802274b049e2207033c564e2c8d749ec82302d",
+          "bytes": 260764
+        },
+        "thumbs": [
+          {
+            "asset": "kka_platz--5ba412cc--thumb1.jpg",
+            "sha256": "c84bb0a501077a6f8ed149ec38b146fc4bf057de607fb6fe858e88940e98e671",
+            "bytes": 19635
+          },
+          {
+            "asset": "kka_platz--5ba412cc--thumb2.jpg",
+            "sha256": "704a8d2b83d831f57101c166bf0f5e2b2022f2678825fe7176b965aa80757e57",
+            "bytes": 18748
+          },
+          {
+            "asset": "kka_platz--5ba412cc--thumb3.jpg",
+            "sha256": "1efb00ba018e94906f7e6e3d3f0acabfff097efbc265a7e42f21048f0846cc3f",
+            "bytes": 13305
+          },
+          {
+            "asset": "kka_platz--5ba412cc--thumb4.jpg",
+            "sha256": "d4e15e803960853de14217288decf8883ae7b81ceb047fed2ba2e1b96820adea",
+            "bytes": 9331
+          },
+          {
+            "asset": "kka_platz--5ba412cc--thumb5.jpg",
+            "sha256": "dcfa484358cabc813f07e8a321704008c1f05c9f45c8dd30165ea0acbe3324b1",
+            "bytes": 18068
+          }
+        ]
+      }
+    },
+    "kka_anime": {
+      "approvedAt": "2026-11-27",
+      "version": "dd6f7e4c",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "kka_anime--dd6f7e4c--full.mp4",
+          "sha256": "dd6f7e4cd637afcab09c93ff5a14e6d6c64f9e6c8ed938f84b807e74a1b23511",
+          "bytes": 19404466
+        },
+        "cover": {
+          "asset": "kka_anime--dd6f7e4c--cover.jpg",
+          "sha256": "d9d6edacb3e0f3173e549f946a848c76e31fa74220f63152d649f124ae375d18",
+          "bytes": 39944
+        },
+        "clip": {
+          "asset": "kka_anime--dd6f7e4c--clip.mp4",
+          "sha256": "ccaf901350856b37e7661f96db7711088c142cbad40b61b5be9c3287263ed9ef",
+          "bytes": 371022
+        },
+        "thumbs": [
+          {
+            "asset": "kka_anime--dd6f7e4c--thumb1.jpg",
+            "sha256": "ba292f3eb285ad0710e8545c7ce78bb363f90b22d361dc6eaeb0a1b175ebd79d",
+            "bytes": 12080
+          },
+          {
+            "asset": "kka_anime--dd6f7e4c--thumb2.jpg",
+            "sha256": "3f0a5f442146df77197b712723ca3903f96ad71dd50eeab8e02573777dd3d109",
+            "bytes": 30254
+          },
+          {
+            "asset": "kka_anime--dd6f7e4c--thumb3.jpg",
+            "sha256": "391867ac7c42dd54a7d98014107025ff4a64bffdb7d314f95e1eaa6808775c17",
+            "bytes": 22654
+          },
+          {
+            "asset": "kka_anime--dd6f7e4c--thumb4.jpg",
+            "sha256": "9a4b63540e77513c95da571117be71b7db6af75b9e481d55c80fb209edd874fa",
+            "bytes": 16149
+          },
+          {
+            "asset": "kka_anime--dd6f7e4c--thumb5.jpg",
+            "sha256": "48ec5072a8c9639f756e97e5aa86ad86033b76b79aef89ee1403e0826d2cd9c1",
+            "bytes": 10976
+          }
+        ]
+      }
+    },
+    "aufstieg_neu": {
+      "approvedAt": "2026-11-27",
+      "version": "b8ea1d89",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "aufstieg_neu--b8ea1d89--full.mp4",
+          "sha256": "b8ea1d89d68e483def21e0a83da553ecffe305237b94a4dcc1c9465f8aed32a6",
+          "bytes": 19320591
+        },
+        "cover": {
+          "asset": "aufstieg_neu--b8ea1d89--cover.jpg",
+          "sha256": "b6a214ace9fcfbf19181d5e20c2478ed208e1979835d4aba53038eb32a8cd544",
+          "bytes": 34372
+        },
+        "clip": {
+          "asset": "aufstieg_neu--b8ea1d89--clip.mp4",
+          "sha256": "c6d471585e6a08c0054f8dc3ec66600c0e78fc870f5c82d09292b9d363e94c41",
+          "bytes": 464363
+        },
+        "thumbs": [
+          {
+            "asset": "aufstieg_neu--b8ea1d89--thumb1.jpg",
+            "sha256": "90d6bdb85697f2a0eef692ddcaa7e7656313bd98318441f84eac8a1b42ddebef",
+            "bytes": 24381
+          },
+          {
+            "asset": "aufstieg_neu--b8ea1d89--thumb2.jpg",
+            "sha256": "c746de4cb892589e79661bf814458b1c84ddc48a0b0234a332cdcc165620d94d",
+            "bytes": 23997
+          },
+          {
+            "asset": "aufstieg_neu--b8ea1d89--thumb3.jpg",
+            "sha256": "eeb4bb3ada2b5a381863534655913815fb6c93e4d92f05d182b533fc83a15a48",
+            "bytes": 23744
+          },
+          {
+            "asset": "aufstieg_neu--b8ea1d89--thumb4.jpg",
+            "sha256": "e030409d072aaae92d8cb6f71be8fe69c6641c9f810d426c38dd19656780902e",
+            "bytes": 19028
+          },
+          {
+            "asset": "aufstieg_neu--b8ea1d89--thumb5.jpg",
+            "sha256": "fc526c28702cb34cec862b392262c758cb624b18fe93695869cb64fd99d3507e",
+            "bytes": 10902
+          }
+        ]
+      }
+    },
+    "aufstieg_mv": {
+      "approvedAt": "2026-11-27",
+      "version": "8e5f5d69",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "aufstieg_mv--8e5f5d69--full.mp4",
+          "sha256": "8e5f5d69d461b5c4d50daf66e4b86f4fbcc471cbc8690430531855a82cbf676b",
+          "bytes": 19316136
+        },
+        "cover": {
+          "asset": "aufstieg_mv--8e5f5d69--cover.jpg",
+          "sha256": "2de0b738515a006e243b11076a1cf9c402b33fc7ccbc2b2a23b096f2ae538463",
+          "bytes": 35058
+        },
+        "clip": {
+          "asset": "aufstieg_mv--8e5f5d69--clip.mp4",
+          "sha256": "aa38d38bb58345bcfe126a644acb64b66e1e7072b5022feed27af1b21f0b5d9f",
+          "bytes": 234922
+        },
+        "thumbs": [
+          {
+            "asset": "aufstieg_mv--8e5f5d69--thumb1.jpg",
+            "sha256": "32e78bd5b7375b779e4190ad5ea245145711f5dfab75d00edba12cf82cab7500",
+            "bytes": 24642
+          },
+          {
+            "asset": "aufstieg_mv--8e5f5d69--thumb2.jpg",
+            "sha256": "8b5865ef517b08c56db785549c8fee7226deb90fbde5bd001f1ea5857670a371",
+            "bytes": 25027
+          },
+          {
+            "asset": "aufstieg_mv--8e5f5d69--thumb3.jpg",
+            "sha256": "f60113e1bb85db3dcc727ee23dcbeffadf3110c530f2d3b9f8c26ff3a6facb28",
+            "bytes": 15830
+          },
+          {
+            "asset": "aufstieg_mv--8e5f5d69--thumb4.jpg",
+            "sha256": "ff8aae9c554d99f1818f0ae8c36afaea38d6952457a12edd5247c7f3a7bb7290",
+            "bytes": 16071
+          },
+          {
+            "asset": "aufstieg_mv--8e5f5d69--thumb5.jpg",
+            "sha256": "cccd118befbcfdeb9f947c4defdc722dfe424886c10ccc3f8f6809d11a19514f",
+            "bytes": 16471
+          }
+        ]
+      }
+    },
+    "generalist_era": {
+      "approvedAt": "2026-11-27",
+      "version": "08f42327",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "generalist_era--08f42327--full.mp4",
+          "sha256": "08f423272077732a27211fb0bf6721fb1135b8e2ceebb1221d1d8de83107531b",
+          "bytes": 19477058
+        },
+        "cover": {
+          "asset": "generalist_era--08f42327--cover.jpg",
+          "sha256": "350ad09b20763b36d828ca04cd6d2f592aae9d1d12e3f5bf23d7c9e84c71b589",
+          "bytes": 28242
+        },
+        "clip": {
+          "asset": "generalist_era--08f42327--clip.mp4",
+          "sha256": "3c4aa0dc3f1c80f31f50a91cafd3895c92c3a6fa34e09a7936ea6b84a5c0d4f6",
+          "bytes": 1528590
+        },
+        "thumbs": [
+          {
+            "asset": "generalist_era--08f42327--thumb1.jpg",
+            "sha256": "e4f5c871b60b085754bc83460fa053fc8ec61a0216cc97e9f562292d386a5020",
+            "bytes": 7461
+          },
+          {
+            "asset": "generalist_era--08f42327--thumb2.jpg",
+            "sha256": "dff3a8a3e71857fb67604c7dcb75b73a8d6e8e8ba877e5f529e1a60d7bc6c823",
+            "bytes": 10036
+          },
+          {
+            "asset": "generalist_era--08f42327--thumb3.jpg",
+            "sha256": "63f67443487f05398add3b33cbba818e8a17a004c5756b7bf3631825b3e57cd6",
+            "bytes": 6729
+          },
+          {
+            "asset": "generalist_era--08f42327--thumb4.jpg",
+            "sha256": "4303620f30ad1148c2b2a038ec7d5a183874ec672938ff16e7be03e19ad5d259",
+            "bytes": 16252
+          },
+          {
+            "asset": "generalist_era--08f42327--thumb5.jpg",
+            "sha256": "2bb86b500fdcdae70ee52dae8c2310de4e1ec35652ad4a93874ff0ae5c354131",
+            "bytes": 15607
+          }
+        ]
+      }
+    },
+    "attention_baby": {
+      "approvedAt": "2026-11-27",
+      "version": "cdc6ada5",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "attention_baby--cdc6ada5--full.mp4",
+          "sha256": "cdc6ada51e1993d001b8ee3763b97fe3888b8eac7d788b8a0d6b8da30d61828c",
+          "bytes": 19468681
+        },
+        "cover": {
+          "asset": "attention_baby--cdc6ada5--cover.jpg",
+          "sha256": "abddf09c99b39825af2e717c447b7c3cff750582d33bf30b6e755d56cc95e988",
+          "bytes": 37725
+        },
+        "clip": {
+          "asset": "attention_baby--cdc6ada5--clip.mp4",
+          "sha256": "58c34a93afdc873f984f2399fc9dc22785af315482e8dae69ddcc90e7d17759d",
+          "bytes": 266138
+        },
+        "thumbs": [
+          {
+            "asset": "attention_baby--cdc6ada5--thumb1.jpg",
+            "sha256": "2f3613c8f570a4e170f662d897ef06676b742d24862b35cf6e172310efca46f4",
+            "bytes": 9105
+          },
+          {
+            "asset": "attention_baby--cdc6ada5--thumb2.jpg",
+            "sha256": "bea1ebef10b7cfa86ae2c8f4c4a2738d40b9c0087ca2621b97efee20a418ee34",
+            "bytes": 18803
+          },
+          {
+            "asset": "attention_baby--cdc6ada5--thumb3.jpg",
+            "sha256": "41c5e1c465522c82fdaa4381779187b1ab281c6b396907e66c72f35c1844b424",
+            "bytes": 8756
+          },
+          {
+            "asset": "attention_baby--cdc6ada5--thumb4.jpg",
+            "sha256": "882ce53c0a7940ac2a3c6362e6234209366bb7bf8b1ddb3306a39ea402f7550b",
+            "bytes": 28054
+          },
+          {
+            "asset": "attention_baby--cdc6ada5--thumb5.jpg",
+            "sha256": "b7f24eda1ae2254e9a7019c0ab865858f229c362a0808bdbbfdff810a964f213",
+            "bytes": 5425
+          }
+        ]
+      }
+    },
+    "beach_is_closed": {
+      "approvedAt": "2026-11-27",
+      "version": "1cc72bf7",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "beach_is_closed--1cc72bf7--full.mp4",
+          "sha256": "1cc72bf7a2469135a38635e450ae431a23473b1faf4031bc90e1890a50bfba69",
+          "bytes": 19278436
+        },
+        "cover": {
+          "asset": "beach_is_closed--1cc72bf7--cover.jpg",
+          "sha256": "01df5e7bcc538b7d0f581cf6999cea0076d9c67206fa54de7909a904d6f34763",
+          "bytes": 18521
+        },
+        "clip": {
+          "asset": "beach_is_closed--1cc72bf7--clip.mp4",
+          "sha256": "d9cfe1ed9ae7806a3f71572851512915d7822c25d05f7fbcdf14ef002f8ba7c6",
+          "bytes": 287245
+        },
+        "thumbs": [
+          {
+            "asset": "beach_is_closed--1cc72bf7--thumb1.jpg",
+            "sha256": "d86e92b37db62544f6527cdc6dd29a59ac7317ff2bf3a5f5dc5fb47dab846c49",
+            "bytes": 20088
+          },
+          {
+            "asset": "beach_is_closed--1cc72bf7--thumb2.jpg",
+            "sha256": "036a43c3ea3fc47b5dc0fc014d60066bed2f9398e52354d332892dbf8177b978",
+            "bytes": 13449
+          },
+          {
+            "asset": "beach_is_closed--1cc72bf7--thumb3.jpg",
+            "sha256": "92fab87fcd4298ee066f243f8bc28df715f85f4d10856b5fcc74bd92fad02b89",
+            "bytes": 8961
+          },
+          {
+            "asset": "beach_is_closed--1cc72bf7--thumb4.jpg",
+            "sha256": "837d4baa3cdb2029933b85066e50aab59bb468665b7681315444d0a54dcb2607",
+            "bytes": 6461
+          },
+          {
+            "asset": "beach_is_closed--1cc72bf7--thumb5.jpg",
+            "sha256": "cd6ecbc1781d71408934680bd7877dfd2f8bbd22f77ea4b53a7c84364480b18d",
+            "bytes": 4560
+          }
+        ]
+      }
+    },
+    "target_audience": {
+      "approvedAt": "2026-11-27",
+      "version": "bd8d6939",
+      "note": "Alle Fassungen in die Videothek, Freigabe 27.11.2026",
+      "media": {
+        "full": {
+          "asset": "target_audience--bd8d6939--full.mp4",
+          "sha256": "bd8d6939103baf43cd763c289f7ba3bb5dbd204588e771fa14bc7c6fc758a84e",
+          "bytes": 19240890
+        },
+        "cover": {
+          "asset": "target_audience--bd8d6939--cover.jpg",
+          "sha256": "25f14548415a6d90f50e0bbd6988701777d5ef5a21efeab184151dc6a63e8519",
+          "bytes": 42457
+        },
+        "clip": {
+          "asset": "target_audience--bd8d6939--clip.mp4",
+          "sha256": "eb9ed4224f7c99dd4f65b46caaf95e2532c96fdcf62211ebb0bd5d5295ff8eb7",
+          "bytes": 979476
+        },
+        "thumbs": [
+          {
+            "asset": "target_audience--bd8d6939--thumb1.jpg",
+            "sha256": "88d8058554105089b96c95ab3d51ced9397f5a5b3f843ee8edddfaad07c86718",
+            "bytes": 9651
+          },
+          {
+            "asset": "target_audience--bd8d6939--thumb2.jpg",
+            "sha256": "771a780d40332f21cf761d4afc74331cea0f0120bcaa254f9be0987aa60581dd",
+            "bytes": 1285
+          },
+          {
+            "asset": "target_audience--bd8d6939--thumb3.jpg",
+            "sha256": "200bb0bd89644c8ba4b53cf07a42fc68b6fa53164602cab3adc1e2bb070e903c",
+            "bytes": 11034
+          },
+          {
+            "asset": "target_audience--bd8d6939--thumb4.jpg",
+            "sha256": "a2de46efe6728a4ec23044cc08ef5a8e0bc1d2661e308da2ea20c39c1f2b2b9c",
+            "bytes": 22128
+          },
+          {
+            "asset": "target_audience--bd8d6939--thumb5.jpg",
+            "sha256": "98a03bde0cba42d385bfdb8e568d8094da0cea14432777dd89ba9b812280068b",
+            "bytes": 1189
+          }
+        ]
+      }
     }
   },
   "tracks": {
