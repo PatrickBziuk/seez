@@ -51,50 +51,50 @@
       }
     },
     "lume_questlog": {
-      "approvedAt": "2026-11-24",
-      "version": "253210a7",
-      "note": "Figuren-Reihe, Freigabe 24.11.2026",
+      "approvedAt": "2026-11-27",
+      "version": "5d250cae",
+      "note": "Fassung v5 (neues Konzept), Freigabe 27.11.2026",
       "media": {
         "full": {
-          "asset": "lume_questlog--253210a7--full.mp4",
-          "sha256": "253210a723be5faf7b0a73ba0be6227f62bdf4f15dc7c0c1e910d84d3ddd33a4",
-          "bytes": 19366994
+          "asset": "lume_questlog--5d250cae--full.mp4",
+          "sha256": "5d250cae0a2a4ab70e60e06de27020d521147be9cbc4d1b96dd8b64c097d305b",
+          "bytes": 29392854
         },
         "cover": {
-          "asset": "lume_questlog--253210a7--cover.jpg",
-          "sha256": "5e14ff9dd152847cb07d3d126be963860126780124d80bc6ac6c41ef7c64534d",
-          "bytes": 35970
+          "asset": "lume_questlog--5d250cae--cover.jpg",
+          "sha256": "43c840ccdd1769841aad2ff8635298cd972e676c248413b3198c517bba709c72",
+          "bytes": 98960
         },
         "clip": {
-          "asset": "lume_questlog--253210a7--clip.mp4",
-          "sha256": "7fc0ad92c056d3dd685fb9a6908461636aeab612440849bb510c101b03264a19",
-          "bytes": 168076
+          "asset": "lume_questlog--5d250cae--clip.mp4",
+          "sha256": "a918072ce6b403dde4d0410a724b30f5db2280bb32a17080ca893cfcd1389012",
+          "bytes": 413842
         },
         "thumbs": [
           {
-            "asset": "lume_questlog--253210a7--thumb1.jpg",
-            "sha256": "8fe7708dd3cd3ea8acbec8bce2dae54a844c8a4a5417c4d04988a4497288e5e5",
-            "bytes": 20858
+            "asset": "lume_questlog--5d250cae--thumb1.jpg",
+            "sha256": "a59586c1b1729702f937fead81cce0eea894fee35f45be89c7bf3fffd210d9ec",
+            "bytes": 28335
           },
           {
-            "asset": "lume_questlog--253210a7--thumb2.jpg",
-            "sha256": "c973b0208f7b1c10c0b494fd112f6d90dc0a95e41e8d8d655f19c68cb4de54a3",
-            "bytes": 12238
+            "asset": "lume_questlog--5d250cae--thumb2.jpg",
+            "sha256": "3bd9e50927e1d5a1094f2031c5d69389e0244a2f950a469964e886af8ce37c37",
+            "bytes": 41016
           },
           {
-            "asset": "lume_questlog--253210a7--thumb3.jpg",
-            "sha256": "0b0332ef16c05e0ccbe7555a9a5407307404ef0e021e1ba8832e60c68bd81e98",
-            "bytes": 20592
+            "asset": "lume_questlog--5d250cae--thumb3.jpg",
+            "sha256": "b50e5f0cd40859cb98974f3addb841b498e6847fbbf8e986770db1284f62d6a5",
+            "bytes": 48530
           },
           {
-            "asset": "lume_questlog--253210a7--thumb4.jpg",
-            "sha256": "9d147007cb3880f3c4f80c2e7f7c0a2dd972b24e61a421ae549b26ce8273f99d",
-            "bytes": 16456
+            "asset": "lume_questlog--5d250cae--thumb4.jpg",
+            "sha256": "a4b4de74228f79377e40eb77def9f7874d0c57e4448a7573f86c04f211b60430",
+            "bytes": 15254
           },
           {
-            "asset": "lume_questlog--253210a7--thumb5.jpg",
-            "sha256": "b461c6ff52c033bbae24d17fea1e3e01a35e21dae3f1fba12d2f413f49e3a235",
-            "bytes": 18656
+            "asset": "lume_questlog--5d250cae--thumb5.jpg",
+            "sha256": "a5e970b7fdf7711eed28a9b56705464e17563c703a93a0578b16e5854523645f",
+            "bytes": 60239
           }
         ]
       }
